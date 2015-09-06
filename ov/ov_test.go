@@ -1,10 +1,8 @@
 package ov
 import (
 	"os"
-	"testing"
-	"fmt"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/docker/machine/drivers/oneview/rest"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats
@@ -27,7 +25,7 @@ import (
 //    ... repeat steps 2
 func getTestDriverA() (*OVClient) {
   client := &OVClient{
-    Client{
+    rest.Client{
       User:       os.Getenv("ONEVIEW_OV_USER"),
       Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
 			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
@@ -44,7 +42,7 @@ func getTestDriverA() (*OVClient) {
 // Unit test
 func getTestDriverU() (*OVClient) {
   client := &OVClient{
-    Client{
+    rest.Client{
       User:       "foo",
       Password:   "bar",
 			Domain:     "LOCAL",
@@ -56,81 +54,4 @@ func getTestDriverU() (*OVClient) {
   }
 	// fmt.Println("Setting up test with getTestDriverU")
 	return client
-}
-
-// Test GetAPIVersion
-func TestGetAPIVersion(t *testing.T) {
-	var (
-		c *OVClient
-	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		data, err := c.GetAPIVersion()
-		// fmt.Printf("after GetAPIVersion: %s -> (err) %s", data.CurrentVersion, err)
-		// assert.Error(t,err, fmt.Sprintf("Error caught as expected: %s",err))
-		assert.NoError(t, err, "GetAPIVersion threw error -> %s", err)
-		assert.Equal(t, 120, data.CurrentVersion)
-		assert.Equal(t, 1, data.MinimumVersion)
-	} else {
-		c = getTestDriverU()
-		data, err := c.GetAPIVersion()
-		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
-	}
-
-}
-
-// Test SessionLogin
-func TestSessionLogin(t *testing.T) {
-	var (
-		c *OVClient
-	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		data, err := c.SessionLogin()
-		// fmt.Printf("after SessionLogin: %s -> (err) %s", data.ID, err)
-		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
-		assert.NotEmpty(t, data.ID, fmt.Sprintf("SessionLogin is empty! something went wrong, err -> %s, data -> %+v\n", err, data) )
-		assert.Equal(t, "none", c.APIKey)
-	} else {
-		c = getTestDriverU()
-		data, err := c.SessionLogin()
-		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
-		assert.Equal(t, "none", c.APIKey)
-	}
-}
-
-// TestGetProfileNameBySN
-// Acceptance test ->
-// /rest/server-profiles
-// ?filter=serialNumber matches '2M25090RMW'&sort=name:asc
-func TestGetProfileNameBySN(t *testing.T) {
-	var (
-		c *OVClient
-		testSerial string = "2M25090RMW"
-	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		data, err := c.GetProfileNameBySN(testSerial)
-		// fmt.Printf("after GetProfileNameBySN: %s -> (err) %s", data, err)
-		assert.NoError(t, err, "GetProfileNameBySN threw error -> %s", err)
-		assert.Equal(t, testSerial, data.SerialNumber)
-
-		data, err = c.GetProfileNameBySN("foo")
-		assert.NoError(t, err, "GetProfileNameBySN with fake serial number -> %+v", err)
-		assert.Equal(t, "", data.SerialNumber)
-
-	} else {
-		c = getTestDriverU()
-		data, err := c.GetProfileNameBySN(testSerial)
-		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
-	}
 }

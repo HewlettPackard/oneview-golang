@@ -1,16 +1,16 @@
-package ov
+package icsp
 
 import (
 	"github.com/docker/machine/drivers/oneview/rest"
 )
-// OVClient - wrapper class for ov api's
-type OVClient struct {
+// ICSPClient - wrapper class for icsp api's
+type ICSPClient struct {
 	rest.Client
 }
 
 // new Client
-func (c *OVClient) NewOVClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int) (*OVClient) {
-	return &OVClient{
+func (c *ICSPClient) NewICSPClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int) (*ICSPClient) {
+	return &ICSPClient{
 		rest.Client{
 			User:       user,
 			Password:   password,

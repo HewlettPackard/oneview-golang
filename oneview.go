@@ -8,6 +8,7 @@ import (
 	"github.com/codegangsta/cli"
 	"github.com/docker/machine/drivers"
 	"github.com/docker/machine/drivers/oneview/ov"
+	"github.com/docker/machine/drivers/oneview/icsp"
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/ssh"
 	"github.com/docker/machine/state"
@@ -19,7 +20,7 @@ type Driver struct {
 	SSHUser        string
 	SSHPort        int
 	SSHPublicKey   string
-	ClientICSP     *ov.ICSPClient
+	ClientICSP     *icsp.ICSPClient
 	ClientOV       *ov.OVClient
 	ServerTemplate string
 	OSBuildPlan    string
@@ -164,29 +165,20 @@ func (d *Driver) GetSSHUsername() string {
 // SetConfigFromFlags - gets the cli configuration flags
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	log.Debug("SetConfigFromFlags...")
-	d.ClientICSP = &ov.ICSPClient{
-		ov.Client{
-			User:       flags.String("oneview-icsp-user"),
-			Password:   flags.String("oneview-icsp-password"),
-			Domain:     flags.String("oneview-icsp-domain"),
-			Endpoint:   flags.String("oneview-icsp-endpoint"),
-			SSLVerify:  flags.Bool("oneview-sslverify"),
-			APIVersion: flags.Int("oneview-apiversion"),
-			APIKey:     "none",
-		},
-	}
 
-	d.ClientOV = &ov.OVClient{
-		ov.Client{
-			User:       flags.String("oneview-ov-user"),
-			Password:   flags.String("oneview-ov-password"),
-			Domain:     flags.String("oneview-ov-domain"),
-			Endpoint:   flags.String("oneview-ov-endpoint"),
-			SSLVerify:  flags.Bool("oneview-sslverify"),
-			APIVersion: flags.Int("oneview-apiversion"),
-			APIKey:     "none",
-		},
-	}
+	d.ClientICSP = d.ClientICSP.NewICSPClient( flags.String("oneview-icsp-user"),
+																						 flags.String("oneview-icsp-password"),
+																						 flags.String("oneview-icsp-domain"),
+																						 flags.String("oneview-icsp-endpoint"),
+																						 flags.Bool("oneview-sslverify"),
+																						 flags.Int("oneview-apiversion"))
+
+	d.ClientOV = d.ClientOV.NewOVClient( flags.String("oneview-ov-user"),
+																			 flags.String("oneview-ov-password"),
+																			 flags.String("oneview-ov-domain"),
+																			 flags.String("oneview-ov-endpoint"),
+																			 flags.Bool("oneview-sslverify"),
+																			 flags.Int("oneview-apiversion"))
 
 	d.SSHUser = flags.String("oneview-ssh-user")
 	d.SSHPort = flags.Int("oneview-ssh-port")

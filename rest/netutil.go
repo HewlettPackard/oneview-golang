@@ -1,4 +1,4 @@
-package ov
+package rest
 
 import (
 	"bytes"
@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/docker/machine/log"
 )
@@ -19,25 +18,9 @@ type Options struct {
 	Query map[string]string
 }
 
-// Create a Method type
-type Method int
-const (
-	GET    Method = 1 + iota
-	POST
-	PUT
-	DELETE
-)
-
-var method = [...]string{
-	"GET",
-	"POST",
-	"PUT",
-	"DELETE",
-}
-func (m Method) String() string { return method[m-1] }
-
 // Client - generic REST api client
 type Client struct {
+	Method
 	User       string
 	Password   string
 	Domain     string
@@ -175,13 +158,4 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	}
 
 	return data, nil
-}
-
-////////////////////////////////////
-// Helpers
-func (c *Client) Sanatize(s string) (string) {
-	if strings.LastIndex(s, "/") > 0 {
-		s = strings.Trim(s, "/")
-	}
-	return s
 }
