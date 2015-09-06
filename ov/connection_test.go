@@ -14,7 +14,7 @@ func TestConnections(t *testing.T) {
 	var (
 		c *OVClient
 		testSerial string = "2M25090RMW"
-		getsmac    string = "34:64:A9:BB:E6:98"
+		expectsMAC    string = "34:64:A9:BB:E6:98"
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		c = getTestDriverA()
@@ -24,7 +24,7 @@ func TestConnections(t *testing.T) {
 		data, err := c.GetProfileBySN(testSerial)
 		assert.NoError(t, err, "GetProfileBySN threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
-		assert.Equal(t, getsmac, data.Connections[0].MAC)
+		assert.Equal(t, expectsMAC, data.Connections[0].MAC)
 
 	}
 }
