@@ -9,6 +9,7 @@ import (
 
 // ServerProfile , server profile object for ov
 type ServerProfile struct {
+	Connections            []Connection `json:"connections,omitempty"`
 	Type                   string `json:"type,omitempty"`                  // "type": "ServerProfileV4",
 	URI                    string `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
 	Name                   string `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
@@ -41,36 +42,64 @@ type ServerProfileList struct {
 	URI          string  `json:"uri,omitempty"`          // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
 	Members      []ServerProfile `json:"members,omitempty"`   //"members":[]
 }
-// GetProfileNameBySN  accepts serial number
-func (c *OVClient) GetProfileNameBySN(serialnum string)(ServerProfile, error) {
+
+// get a server profile by name
+func (c *OVClient) GetProfileByName(name string)(ServerProfile, error) {
+	var (
+		profile ServerProfile
+	)
+	profiles, err := c.GetProfiles( fmt.Sprintf("name matches '%s'",name), "name:asc" )
+	if profiles.Total > 0 {
+		return profiles.Members[0], err
+	} else {
+		return profile, err
+	}
+}
+
+// GetProfileBySN  accepts serial number
+func (c *OVClient) GetProfileBySN(serialnum string)(ServerProfile, error) {
+	var (
+		profile ServerProfile
+	)
+	profiles, err := c.GetProfiles( fmt.Sprintf("serialNumber matches '%s'",serialnum), "name:asc" )
+	if profiles.Total > 0 {
+		return profiles.Members[0], err
+	} else {
+		return profile, err
+	}
+}
+
+// get a server profiles
+func (c *OVClient) GetProfiles(filter string, sort string)(ServerProfileList, error) {
 	var (
 		uri    = "/rest/server-profiles"
-		q      = map[string]string{
-									"filter": fmt.Sprintf("serialNumber matches '%s'",serialnum),
-									"sort":   "name:asc",
-								}
-		profile ServerProfile
+		q      = map[string]string{}
 		profiles ServerProfileList
 	)
+
+	if filter != "" {
+		q["filter"] = filter
+	}
+
+  if sort != "" {
+		q["sort"] = sort
+	}
+
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions( c.GetAuthHeaderMap() )
 	// Setup query
-	c.SetQueryString(q)
+	if len(q) > 0 {
+		c.SetQueryString(q)
+	}
 	data, err := c.RestAPICall(rest.GET, uri , nil)
 	if err != nil {
-		return profile, err
+		return profiles, err
 	}
 
-	// fail "Failed to get oneview profile by serialNumber: #{serialNumber}. Response: #{matching_profiles}" unless matching_profiles['count']
-	// return matching_profiles['members'].first if matching_profiles['count'] > 0
-	log.Debugf("GetProfileNameBySN %s", data)
+	log.Debugf("GetProfiles %s", data)
 	if err := json.Unmarshal([]byte(data), &profiles); err != nil {
-		return profile, err
+		return profiles, err
 	}
-	if profiles.Total > 0 {
-		return profiles.Members[0], nil
-	} else {
-		return profile, nil
-	}
+	return profiles, nil
 }
