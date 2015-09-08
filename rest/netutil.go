@@ -42,6 +42,7 @@ func (c *Client) isOkStatus(code int) bool {
 	codes := map[int]bool{
 		200: true,
 		201: true,
+		202: true,
 		204: true,
 		400: false,
 		404: false,

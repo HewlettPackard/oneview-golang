@@ -47,6 +47,7 @@ type ServerHardware struct {
 	UUID                   string  `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
 	VirtualSerialNumber    string  `json:"VirtualSerialNumber,omitempty"`   // "virtualSerialNumber": "",
 	VirtualUUID            string  `json:"virtualUuid,omitempty"`           // "virtualUuid": "00000000-0000-0000-0000-000000000000"
+	Client                 *OVClient
 }
 
 // get a server profiles
@@ -67,5 +68,6 @@ func (c *OVClient) GetServerHardware(uri string)(ServerHardware, error) {
 	if err := json.Unmarshal([]byte(data), &hardware); err != nil {
 		return hardware, err
 	}
+	hardware.Client = c
 	return hardware, nil
 }

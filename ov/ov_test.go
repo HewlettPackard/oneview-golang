@@ -24,6 +24,7 @@ import (
 //    docker rm -f goaccept
 //    ... repeat steps 2
 func getTestDriverA() (*OVClient) {
+	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
   client := &OVClient{
     rest.Client{
       User:       os.Getenv("ONEVIEW_OV_USER"),
