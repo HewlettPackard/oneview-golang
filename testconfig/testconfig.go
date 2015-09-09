@@ -24,8 +24,8 @@ type TestConfig struct {
 }
 
 // setup Testing
-func (tc *TestConfig) NewTestConfig(config_name string)(*TestConfig){
-	return &TestConfig{Name:       config_name,
+func (tc *TestConfig) NewTestConfig()(*TestConfig){
+	return &TestConfig{Name:  "",
 										 Cases: []TestCases{},}
 }
 
@@ -47,7 +47,6 @@ func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
 // log.Infof("is test enabled -> %+v \n", tc.IsTestEnabled("TestGetAPIVersion"))
 //
 func (tc *TestConfig) GetTestingConfiguration(config_name string) {
-	tc = tc.NewTestConfig(config_name)
 	var (
 		package_root  string
     Pkg           PackageInfo

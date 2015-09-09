@@ -25,14 +25,29 @@ import (
 //    docker rm -f goaccept
 //    ... repeat steps 2
 type OVTest struct {
-	Tc testconfig.TestConfig
+	Tc     *testconfig.TestConfig
 	Client *OVClient
+	Env    string
 }
+// get Environment
+func (ot *OVTest) GetEnvironment() {
+	if os.Getenv("ONEVIEW_TEST_ENV") != "" {
+		ot.Env = os.Getenv("ONEVIEW_TEST_ENV")
+		return
+	}
+	ot.Env = "dev"
+	return
+}
+
+// get a test driver for acceptance testing
 func getTestDriverA() (*OVTest, *OVClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *OVTest
+	var tc *testconfig.TestConfig
+	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
+	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-  client := &OVClient{
+  ot.Client = &OVClient{
     rest.Client{
       User:       os.Getenv("ONEVIEW_OV_USER"),
       Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
@@ -45,14 +60,14 @@ func getTestDriverA() (*OVTest, *OVClient) {
     },
   }
 	// fmt.Println("Setting up test with getTestDriverA")
-  ot.Client = &client
-  return &ot, &client
+  return ot, ot.Client
 }
 
 // Unit test
 func getTestDriverU() (*OVTest, *OVClient) {
 	var ot *OVTest
-  client := &OVClient{
+	ot = &OVTest{Env: "dev"}
+  ot.Client = &OVClient{
     rest.Client{
       User:       "foo",
       Password:   "bar",
@@ -64,6 +79,5 @@ func getTestDriverU() (*OVTest, *OVClient) {
     },
   }
 	// fmt.Println("Setting up test with getTestDriverU")
-  ot.Client = &client
-  return &ot, &client
+  return ot, ot.Client
 }

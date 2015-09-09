@@ -9,12 +9,15 @@ import (
 // get server hardware test
 func TestServerHardware(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testData    string = "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57"
-		expectsData string = "2M25090RMW"
+		testData string
+		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
+		testData    = d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string)
+		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -29,12 +32,15 @@ func TestServerHardware(t *testing.T) {
 // get server hardware test
 func TestGetAvailableHardware(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testHwType_URI  string = "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C"
-		testHWGroup_URI string = "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039"
+		testHwType_URI  string
+		testHWGroup_URI string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
+		testHwType_URI  = d.Tc.GetTestData(d.Env, "HardwareTypeURI").(string)
+		testHWGroup_URI = d.Tc.GetTestData(d.Env, "GroupURI").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}

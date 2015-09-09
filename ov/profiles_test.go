@@ -10,11 +10,13 @@ import (
 // find Server_Profile_scs79
 func TestGetProfileByName(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testname string = "Server_Profile_scs79"
+		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
+		testname  = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -27,7 +29,8 @@ func TestGetProfileByName(t *testing.T) {
 		assert.Equal(t, "", data.Name)
 
 	} else {
-		c = getTestDriverU()
+		d, c = getTestDriverU()
+		testname  = d.Tc.GetExpectsData(d.Env, "ServerProfileName").(string)
 		data, err := c.GetProfileByName(testname)
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
 	}
@@ -40,11 +43,13 @@ func TestGetProfileByName(t *testing.T) {
 // ?filter=serialNumber matches '2M25090RMW'&sort=name:asc
 func TestGetProfileBySN(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testSerial string = "2M25090RMW"
+		testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
+		testSerial  = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -57,7 +62,8 @@ func TestGetProfileBySN(t *testing.T) {
 		assert.Equal(t, "", data.SerialNumber)
 
 	} else {
-		c = getTestDriverU()
+		d, c = getTestDriverU()
+		testSerial  = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		data, err := c.GetProfileBySN(testSerial)
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
 	}
@@ -66,10 +72,11 @@ func TestGetProfileBySN(t *testing.T) {
 // TestGetProfiles
 func TestGetProfiles(t *testing.T) {
 	var (
+		// d *OVTest
 		c *OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		_, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -80,7 +87,7 @@ func TestGetProfiles(t *testing.T) {
 		assert.NoError(t, err, "GetProfiles name:asc error -> %s, %+v", err, data)
 
 	} else {
-		c = getTestDriverU()
+		_, c = getTestDriverU()
 		data, err := c.GetProfiles("","")
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}

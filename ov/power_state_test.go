@@ -10,12 +10,15 @@ import (
 // testing power state type
 func TestPowerState(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testData    string = "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57"
-		expectsData string = "2M25090RMW"
+		testData    string
+		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
+		testData    = d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string)
+		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}

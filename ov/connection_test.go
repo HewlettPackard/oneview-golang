@@ -12,19 +12,18 @@ import (
 // ?filter=serialNumber matches '2M25090RMW'&sort=name:asc
 func TestConnections(t *testing.T) {
 	var (
+		d *OVTest
 		c *OVClient
-		testSerial string = "2M25090RMW"
-		expectsMAC    string = "34:64:A9:BB:E6:98"
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		d, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetProfileBySN(testSerial)
+		data, err := c.GetProfileBySN(d.Tc.GetTestData(d.Env, "SerialNumber").(string))
 		assert.NoError(t, err, "GetProfileBySN threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
-		assert.Equal(t, expectsMAC, data.Connections[0].MAC)
+		assert.Equal(t, d.Tc.GetExpectsData(d.Env, "MACAddress").(string), data.Connections[0].MAC)
 
 	}
 }

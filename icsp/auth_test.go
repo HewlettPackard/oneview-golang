@@ -14,7 +14,7 @@ func TestSessionLogin(t *testing.T) {
 		c *OVClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
-		c = getTestDriverA()
+		_, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -24,7 +24,7 @@ func TestSessionLogin(t *testing.T) {
 		assert.NotEmpty(t, data.ID, fmt.Sprintf("SessionLogin is empty! something went wrong, err -> %s, data -> %+v\n", err, data))
 		assert.Equal(t, "none", c.APIKey)
 	} else {
-		c = getTestDriverU()
+		_, c = getTestDriverU()
 		data, err := c.SessionLogin()
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 		assert.Equal(t, "none", c.APIKey)
