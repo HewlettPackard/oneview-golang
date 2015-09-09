@@ -12,7 +12,7 @@ func (c *Client) Sanatize(s string) string {
 
 // IsEmpty ...
 func IsEmpty(s string) bool {
-	if s == null || len(strings.TrimSpace(s)) == 0 {
+	if s == "" || len(strings.TrimSpace(s)) == 0 {
 		return true
 	}
 	return false

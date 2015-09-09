@@ -3,6 +3,7 @@ import (
 	"os"
 
 	"github.com/docker/machine/drivers/oneview/rest"
+  "github.com/docker/machine/drivers/oneview/testconfig"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats
@@ -23,25 +24,34 @@ import (
 // 4) to refresh env options, use
 //    docker rm -f goaccept
 //    ... repeat steps 2
-func getTestDriverA() (*OVClient) {
+type OVTest struct {
+	Tc testconfig.TestConfig
+	Client *OVClient
+}
+func getTestDriverA() (*OVTest, *OVClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
+	var ot *OVTest
+	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
   client := &OVClient{
     rest.Client{
       User:       os.Getenv("ONEVIEW_OV_USER"),
       Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
 			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
       Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			// ConfigDir:
       SSLVerify:  false,
       APIVersion: 120,
 			APIKey:     "none",
     },
   }
 	// fmt.Println("Setting up test with getTestDriverA")
-  return client
+  ot.Client = &client
+  return &ot, &client
 }
 
 // Unit test
-func getTestDriverU() (*OVClient) {
+func getTestDriverU() (*OVTest, *OVClient) {
+	var ot *OVTest
   client := &OVClient{
     rest.Client{
       User:       "foo",
@@ -54,5 +64,6 @@ func getTestDriverU() (*OVClient) {
     },
   }
 	// fmt.Println("Setting up test with getTestDriverU")
-	return client
+  ot.Client = &client
+  return &ot, &client
 }
