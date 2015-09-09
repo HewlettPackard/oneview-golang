@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/docker/machine/log"
 )
@@ -15,7 +16,7 @@ import (
 // Options for REST call
 type Options struct {
   Headers map[string]string
-	Query map[string]string
+	Query map[string]interface{}
 }
 
 // Client - generic REST api client
@@ -55,7 +56,7 @@ func (c *Client) isOkStatus(code int) bool {
 }
 
 // SetQueryString - set the query strings to use
-func (c *Client) SetQueryString(query map[string]string) {
+func (c *Client) SetQueryString(query map[string]interface{}) {
 	// TODO: uuencode the query String
 	c.Option.Query = query
 }
@@ -67,7 +68,14 @@ func (c *Client) GetQueryString(u *url.URL) {
 	}
 	parameters := url.Values{}
 	for k, v := range  c.Option.Query {
-		parameters.Add(k, v)
+		var r []string
+	  if reflect.TypeOf(v) == reflect.TypeOf(r) {
+			for _, va := range v.([]string) {
+				parameters.Add(k, va)
+			}
+	  } else {
+			parameters.Add(k, v.(string))
+	  }
 		u.RawQuery = parameters.Encode()
 	}
 	return

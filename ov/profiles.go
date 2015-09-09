@@ -75,10 +75,10 @@ func (c *OVClient) GetProfileBySN(serialnum string)(ServerProfile, error) {
 func (c *OVClient) GetProfiles(filter string, sort string)(ServerProfileList, error) {
 	var (
 		uri    = "/rest/server-profiles"
-		q      = map[string]string{}
+		q      map[string]interface{}
 		profiles ServerProfileList
 	)
-
+  q = make(map[string]interface{})
 	if filter != "" {
 		q["filter"] = filter
 	}

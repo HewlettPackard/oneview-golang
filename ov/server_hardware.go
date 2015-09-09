@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 	"errors"
-
+	"net/url"
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/rest"
 )
@@ -135,15 +135,15 @@ func (c *OVClient) GetServerHardware(uri string)(ServerHardware, error) {
 func (c *OVClient) GetServerHardwareList(filters []string, sort string)(ServerHardwareList, error) {
 	var (
 		uri    = "/rest/server-hardware"
-		q      = map[string]string{}
+		q      map[string]interface{}
 		serverlist ServerHardwareList
 	)
-
-  for _, f := range filters {
-		q["filter"] = f
+  q = make(map[string]interface{})
+	if len(filters) > 0 {
+		q["filter"] = filters
 	}
 
-  if sort != "" {
+	if sort != "" {
 		q["sort"] = sort
 	}
 
@@ -155,6 +155,13 @@ func (c *OVClient) GetServerHardwareList(filters []string, sort string)(ServerHa
 		c.SetQueryString(q)
 	}
 	data, err := c.RestAPICall(rest.GET, uri , nil)
+
+	var Url *url.URL
+	Url, err = url.Parse(c.Sanatize(c.Endpoint))
+	Url.Path += uri
+	c.GetQueryString(Url)
+
+	log.Infof("uri -> %s qs -> %s , data -> %+v, error %s", uri, Url.RawQuery, data, err)
 	if err != nil {
 		return serverlist, err
 	}
