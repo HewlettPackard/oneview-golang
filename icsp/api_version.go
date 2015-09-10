@@ -7,6 +7,12 @@ import (
 	"github.com/docker/machine/log"
 )
 
+// URLEndPoint ...
+type URLEndPoint string
+
+// URLEndPoint export this constant
+const URLEndPoint = "/rest/version"
+
 // APIVersion struct
 type APIVersion struct {
 	CurrentVersion int `json:"currentVersion,omitempty"`
@@ -15,9 +21,9 @@ type APIVersion struct {
 
 // GetAPIVersion - returns the api version for OneView server
 // returns structure APIVersion
-func (c *OVClient) GetAPIVersion() (APIVersion, error) {
+func (c *ICSPClient) GetAPIVersion() (APIVersion, error) {
 	var (
-		uri        = "/rest/version"
+		uri        = URLEndPoint
 		apiversion APIVersion
 	)
 

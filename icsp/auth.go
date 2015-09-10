@@ -23,7 +23,7 @@ type AuthHeader struct {
 }
 
 // GetAuthHeaderMap Generate an auth Header map ...
-func (c *OVClient) GetAuthHeaderMap() map[string]string {
+func (c *ICSPClient) GetAuthHeaderMap() map[string]string {
 	return map[string]string{
 		"Content-Type":  "application/json; charset=utf-8",
 		"X-API-Version": strconv.Itoa(c.APIVersion),
@@ -45,7 +45,7 @@ type Auth struct {
 
 // RefreshLogin Refresh login authkey
 // Should make sure we have a valid APIKey
-func (c *OVClient) RefreshLogin() error {
+func (c *ICSPClient) RefreshLogin() error {
 	if c.APIKey == "" || len(strings.TrimSpace(c.APIKey)) == 0 || c.APIKey == "none" {
 		log.Debugf("Getting new session id")
 		s, err := c.SessionLogin()
@@ -60,7 +60,7 @@ func (c *OVClient) RefreshLogin() error {
 
 // SessionLogin  to OneView and get a session ID
 // returns Session structure
-func (c *OVClient) SessionLogin() (Session, error) {
+func (c *ICSPClient) SessionLogin() (Session, error) {
 	var (
 		uri     = URLEndPoint
 		body    = Auth{UserName: c.User, Password: c.Password, Domain: c.Domain}
