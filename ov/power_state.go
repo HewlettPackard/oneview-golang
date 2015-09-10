@@ -55,29 +55,30 @@ func (pc PowerControl) String() string { return powercontrols[pc-1] }
 
 // Provides power execution status
 type PowerTask struct {
-	Blade       *ServerHardware
+	Blade       ServerHardware
   State       PowerState       // current power state
-  TaskStatus  bool             // when true, task are done
-	CurrentTask *Task            // the uri to the task that has been submitted
-	Timeout     int              // time before timeout on Executor
-	WaitTime    time.Duration    // time between task checks
+	Task
 }
 
 // Create a new power task manager
 func ( pt *PowerTask ) NewPowerTask( b ServerHardware)(*PowerTask) {
-	return &PowerTask{Blade:       &b,
-										State:       P_UKNOWN,
-										TaskStatus:  false,
-										CurrentTask: &Task {  URI: "", Name: "", Owner: ""},
-										Timeout:     36, // default 6min
-										WaitTime:    10} // default 10sec, impacts Timeout
-}
-
-// reset the power task back to off
-func ( pt *PowerTask) ResetTask() {
-	pt.State       = P_UKNOWN
-	pt.TaskStatus  = false
-	pt.CurrentTask = &Task{ URI: "", Name: "", Owner: ""}
+	pt = &PowerTask{Blade:       b,
+										State:       P_UKNOWN}//,
+										// TaskIsDone:  false,
+										// Client:      b.Client,
+										// URI:         "",
+										// Name:        "",
+										// Owner:       "",
+										// Timeout:     36, // default 6min
+										// WaitTime:    10} // default 10sec, impacts Timeout
+	pt.TaskIsDone = false
+	pt.Client     = b.Client
+	pt.URI        = ""
+	pt.Name       = ""
+	pt.Owner      = ""
+	pt.Timeout    = 36
+	pt.WaitTime   = 10
+	return pt
 }
 
 // get current power state
@@ -99,7 +100,7 @@ func ( pt *PowerTask) GetCurrentPowerState()(error) {
 		pt.State = P_UKNOWN
 	}
   // Reassign the current blade and state of that blade
-	pt.Blade = &b
+	pt.Blade = b
 	return nil
 }
 
@@ -120,69 +121,49 @@ func ( pt *PowerTask) SubmitPowerState(s PowerState) {
 	  log.Infof("Powering %s server %s for %s.",s,pt.Blade.Name, pt.Blade.SerialNumber)
 		var (
 			body = PowerRequest{PowerState: s.String(), PowerControl: P_MOMPRESS.String()}
-			uri  = strings.Join([]string{	pt.Blade.URI,
+			uri  = strings.Join([]string{	pt.Blade.URI.String(),
 																		"/powerState" },"")
 		)
 		log.Debugf("REST : %s \n %+v\n", uri, body)
 		log.Debugf("pt -> %+v", pt)
 		data, err := pt.Blade.Client.RestAPICall(rest.PUT, uri , body)
 		if err != nil {
-			pt.TaskStatus = true
+			pt.TaskIsDone = true
 			log.Errorf("Error with power state request: %s", err)
 			return
 		 }
 
 		log.Debugf("SubmitPowerState %s", data)
-		if err := json.Unmarshal([]byte(data), &pt.CurrentTask); err != nil {
-			pt.TaskStatus = true
+		if err := json.Unmarshal([]byte(data), &pt); err != nil {
+			pt.TaskIsDone = true
 			log.Errorf("Error with power state un-marshal: %s", err)
 			return
 		}
 	} else {
 		log.Infof("Desired Power State already set -> %s", pt.State)
-		pt.TaskStatus = true
+		pt.TaskIsDone = true
 	}
 
 	return
-}
-
-// Get current task status
-func ( pt *PowerTask) GetCurrentTaskStatus()(error) {
-	log.Debugf("Working on getting current blade task status")
-	var (
-		uri  = pt.CurrentTask.URI
-	)
-	if uri != "" {
-		data, err := pt.Blade.Client.RestAPICall(rest.GET, uri, nil)
-		if err != nil {
-			return err
-		}
-		log.Debugf("data: %s",data)
-		if err := json.Unmarshal([]byte(data), &pt.CurrentTask); err != nil {
-			return err
-		}
-	} else {
-		log.Debugf("Unable to get current task, no URI found")
-	}
-	return nil
 }
 
 // Submit desired power state and wait
 // Most of our concurrency will happen in PowerExecutor
 func ( pt *PowerTask) PowerExecutor(s PowerState)(error) {
 	currenttime := 0
+	pt.State     = P_UKNOWN
 	pt.ResetTask()
 	go pt.SubmitPowerState(s)
-	for !pt.TaskStatus && (currenttime < pt.Timeout) {
+	for !pt.TaskIsDone && (currenttime < pt.Timeout) {
 		if err := pt.GetCurrentTaskStatus(); err != nil {
 			return err
 		}
-		if pt.CurrentTask.URI != "" && T_COMPLETED.Equal(pt.CurrentTask.TaskState) {
-			pt.TaskStatus = true
+		if pt.URI != "" && T_COMPLETED.Equal(pt.TaskState) {
+			pt.TaskIsDone = true
 		}
-		if pt.CurrentTask.URI != "" {
+		if pt.URI != "" {
 			log.Debugf("Waiting to set power state %s for blade %s, %s", s, pt.Blade.Name)
-			log.Infof("Working on power state,%d%%, %s.", pt.CurrentTask.ComputedPercentComplete, pt.CurrentTask.TaskStatus)
+			log.Infof("Working on power state,%d%%, %s.", pt.ComputedPercentComplete, pt.TaskStatus)
 		} else {
 			log.Info("Working on power state.")
 		}

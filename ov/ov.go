@@ -82,7 +82,7 @@ func (c *OVClient) CreateMachine(host_name string, server_template string) (err 
 	}
 
 	// create a template with the new blade
-	if err = c.CreateProfileFromTemplate(template, blade); err != nil {
+	if err = c.CreateProfileFromTemplate(host_name, template, blade); err != nil {
 		log.Errorf("Error creating a new profile from template: %s", err)
 		return err
 	}

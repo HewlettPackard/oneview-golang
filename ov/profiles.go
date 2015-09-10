@@ -10,25 +10,25 @@ import (
 // ServerProfile , server profile object for ov
 type ServerProfile struct {
 	Connections            []Connection `json:"connections,omitempty"`
-	Type                   string `json:"type,omitempty"`                  // "type": "ServerProfileV4",
-	URI                    string `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
-	Name                   string `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
-	Description            string `json:"description,omitempty"`           // "description": "Docker Machine Bay 16",
-	SerialNumber           string `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
-	UUID                   string `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
-	ServerHardwareURI      string `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
-	ServerHardwareTypeURI  string `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-	EnclosureGroupURI      string `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
-	EnclosureURI           string `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
-	EnclosureBay           int    `json:"enclosureBay,omitempty"`          // "enclosureBay": 16,
-	Affinity               string `json:"affinity,omitempty"`              // "affinity": "Bay",
-	Created                string `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
-	Modified               string `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
-	Status                 string `json:"status,omitempty"`                // "status": "Critical",
-	State                  string `json:"state,omitempty"`                 // "state": "Normal",
-	InProgress             bool   `json:"inProgress,omitempty"`            // "inProgress": false,
-	TaskURI                string `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
-	ETAG                   string `json:"eTag,omitempty"`        	         // "eTag": "1441036118675/8"
+	Type                   string  `json:"type,omitempty"`                  // "type": "ServerProfileV4",
+	URI                    Nstring `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
+	Name                   string  `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
+	Description            string  `json:"description,omitempty"`           // "description": "Docker Machine Bay 16",
+	SerialNumber           Nstring `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
+	UUID                   Nstring `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
+	ServerHardwareURI      Nstring  `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+	ServerHardwareTypeURI  Nstring  `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+	EnclosureGroupURI      Nstring  `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+	EnclosureURI           Nstring  `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
+	EnclosureBay           int     `json:"enclosureBay,omitempty"`          // "enclosureBay": 16,
+	Affinity               string  `json:"affinity,omitempty"`              // "affinity": "Bay",
+	Created                string  `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
+	Modified               string  `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
+	Status                 string  `json:"status,omitempty"`                // "status": "Critical",
+	State                  string  `json:"state,omitempty"`                 // "state": "Normal",
+	InProgress             bool    `json:"inProgress,omitempty"`            // "inProgress": false,
+	TaskURI                Nstring  `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
+	ETAG                   string  `json:"eTag,omitempty"`        	         // "eTag": "1441036118675/8"
 
 }
 
@@ -39,9 +39,9 @@ type ServerProfileList struct {
 	Total        int     `json:"total,omitempty"`        // "total": 1,
 	Count        int     `json:"count,omitempty"`        // "count": 1,
 	Start        int     `json:"start,omitempty"`        // "start": 0,
-	PrevPageURI  string  `json:"prevPageUri,omitempty"`  // "prevPageUri": null,
-	NextPageURI  string  `json:"nextPageUri,omitempty"`  //"nextPageUri": null,
-	URI          string  `json:"uri,omitempty"`          // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
+	PrevPageURI  Nstring  `json:"prevPageUri,omitempty"`  // "prevPageUri": null,
+	NextPageURI  Nstring  `json:"nextPageUri,omitempty"`  //"nextPageUri": null,
+	URI          Nstring `json:"uri,omitempty"`          // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
 	Members      []ServerProfile `json:"members,omitempty"`   //"members":[]
 }
 
@@ -106,9 +106,23 @@ func (c *OVClient) GetProfiles(filter string, sort string)(ServerProfileList, er
 	return profiles, nil
 }
 
-// TODO: implement server_profile creation
+// submit new profile template
+func (c *OVClient) SubmitNewProfile(p ServerProfile) (error) {
+  return nil
+}
 // create profile from template
-func (c *OVClient) CreateProfileFromTemplate( profile ServerProfile, blade ServerHardware) (error) {
+func (c *OVClient) CreateProfileFromTemplate(name string, new_template ServerProfile, blade ServerHardware) (error) {
+	new_template.Name              = name
+	new_template.URI.Nil()
+	new_template.SerialNumber.Nil()
+	new_template.UUID.Nil()
+	for _, c := range new_template.Connections {
+		c.WWNN.Nil()
+		c.WWPN.Nil()
+		c.MAC.Nil()
+	}
+	new_template.ServerHardwareURI = blade.URI
+
 	// # New-HPOVProfileFromTemplate
 	// # Create new profile instance from template
 	// action_handler.perform_action "Initialize creation of server profile for #{machine_spec.name}" do
@@ -128,6 +142,7 @@ func (c *OVClient) CreateProfileFromTemplate( profile ServerProfile, blade Serve
 	// 	end
 	//
 	// 	new_template_profile['serverHardwareUri'] = chosen_blade['uri']
+
 	// 	task = rest_api(:oneview, :post, '/rest/server-profiles', { 'body' => new_template_profile })
 	// 	task_uri = task['uri']
 	// 	# Poll task resource to see when profile has finished being applied

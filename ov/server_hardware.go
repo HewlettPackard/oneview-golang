@@ -80,15 +80,15 @@ type ServerHardware struct {
 	ProcessorType          string  `json:"processorType,omitempty"`         // "processorType": "Intel(R) Xeon(R) CPU E5-2695 v3 @ 2.30GHz",
 	RefreshState           string  `json:"refreshState,omitempty"`          // "refreshState": "NotRefreshing",
 	RomVersion             string  `json:"romVersion,omitempty"`            // "romVersion": "I36 11/03/2014",
-	SerialNumber           string  `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
-	ServerGroupURI         string  `json:"serverGroupUri,omitempty"`        // "serverGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
-	ServerHardwareTypeURI  string  `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-	ServerProfileURI       string  `json:"serverProfileUri,omitempty"`      // "serverProfileUri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
+	SerialNumber           Nstring `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
+	ServerGroupURI         Nstring `json:"serverGroupUri,omitempty"`        // "serverGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+	ServerHardwareTypeURI  Nstring `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+	ServerProfileURI       Nstring `json:"serverProfileUri,omitempty"`      // "serverProfileUri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
 	ShortModel             string  `json:"shortModel,omitempty"`            // "shortModel": "BL460c Gen9",
 	Status                 string  `json:"status,omitempty"`                // "status": "Warning",
-	URI                    string  `json:"uri,omitempty"`                   // "uri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
-	UUID                   string  `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
-	VirtualSerialNumber    string  `json:"VirtualSerialNumber,omitempty"`   // "virtualSerialNumber": "",
+	URI                    Nstring `json:"uri,omitempty"`                   // "uri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+	UUID                   Nstring `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
+	VirtualSerialNumber    Nstring `json:"VirtualSerialNumber,omitempty"`   // "virtualSerialNumber": "",
 	VirtualUUID            string  `json:"virtualUuid,omitempty"`           // "virtualUuid": "00000000-0000-0000-0000-000000000000"
 	Client                 *OVClient
 }
@@ -110,7 +110,7 @@ type ServerHardwareList struct {
 }
 
 // get a server hardware with uri
-func (c *OVClient) GetServerHardware(uri string)(ServerHardware, error) {
+func (c *OVClient) GetServerHardware(uri Nstring)(ServerHardware, error) {
 
 	var hardware ServerHardware
 	// refresh login
@@ -118,7 +118,7 @@ func (c *OVClient) GetServerHardware(uri string)(ServerHardware, error) {
 	c.SetAuthHeaderOptions( c.GetAuthHeaderMap() )
 
 	// rest call
-	data, err := c.RestAPICall(rest.GET, uri , nil)
+	data, err := c.RestAPICall(rest.GET, uri.String() , nil)
 	if err != nil {
 		return hardware, err
 	}
@@ -156,15 +156,14 @@ func (c *OVClient) GetServerHardwareList(filters []string, sort string)(ServerHa
 	}
 	data, err := c.RestAPICall(rest.GET, uri , nil)
 
+  // parse the url and setup any query strings
 	var Url *url.URL
 	Url, err = url.Parse(c.Sanatize(c.Endpoint))
-	Url.Path += uri
-	c.GetQueryString(Url)
-
-	log.Infof("uri -> %s qs -> %s , data -> %+v, error %s", uri, Url.RawQuery, data, err)
 	if err != nil {
 		return serverlist, err
 	}
+	Url.Path += uri
+	c.GetQueryString(Url)
 
 	log.Debugf("GetServerHardwareList %s", data)
 	if err := json.Unmarshal([]byte(data), &serverlist); err != nil {
@@ -175,10 +174,11 @@ func (c *OVClient) GetServerHardwareList(filters []string, sort string)(ServerHa
 
 // get available server
 // blades = rest_api(:oneview, :get, "/rest/server-hardware?sort=name:asc&filter=serverHardwareTypeUri='#{server_hardware_type_uri}'&filter=serverGroupUri='#{enclosure_group_uri}'")
-func (c *OVClient) GetAvailableHardware(hardwaretype_uri string, servergroup_uri string) (hw ServerHardware, err error) {
+func (c *OVClient) GetAvailableHardware(hardwaretype_uri Nstring, servergroup_uri Nstring) (hw ServerHardware, err error) {
 	var (
 		hwlist ServerHardwareList
-		f      = []string{	hardwaretype_uri, servergroup_uri }
+		f      = []string{	"serverHardwareTypeUri='" + hardwaretype_uri.String() + "'",
+												"serverGroupUri='" + servergroup_uri.String() + "'" }
 	)
 	if hwlist, err = c.GetServerHardwareList( f, "name:asc"); err != nil {
 		return hw, err

@@ -2,6 +2,11 @@ package ov
 
 import (
   "strings"
+  "encoding/json"
+  "time"
+
+  "github.com/docker/machine/log"
+  "github.com/docker/machine/drivers/oneview/rest"
 )
 // associated resource
 type AssociatedResource struct {
@@ -95,5 +100,49 @@ type Task struct {
   ETAG                    string             `json:"eTag,omitempty"`               // "eTag": "0",
   Created                 string             `json:"created,omitempty"`            // "created": "2015-09-07T03:25:54.844Z",
   Modified                string             `json:"modified,omitempty"`           // "modified": "2015-09-07T03:25:54.844Z",
-  URI                     string             `json:"uri,omitempty"`                // "uri": "/rest/tasks/145F808A-A8DD-4E1B-8C86-C2379C97B3B2"
+  URI                     Nstring             `json:"uri,omitempty"`                // "uri": "/rest/tasks/145F808A-A8DD-4E1B-8C86-C2379C97B3B2"
+  TaskIsDone  bool             // when true, task are done
+	Timeout     int              // time before timeout on Executor
+	WaitTime    time.Duration    // time between task checks
+  Client      *OVClient
+}
+
+// Create New Task
+func ( t *Task ) NewProfileTask(c *OVClient)(*Task) {
+	return &Task{ TaskIsDone:  false,
+                Client:      c,
+                URI:         "",
+                Name:        "",
+                Owner:       "",
+  							Timeout:     36, // default 6min
+  							WaitTime:    10} // default 10sec, impacts Timeout
+}
+
+// reset the power task back to off
+func ( t *Task) ResetTask() {
+	t.TaskIsDone  = false
+	t.URI         = ""
+  t.Name        = ""
+  t.Owner       = ""
+}
+
+// Get the current status
+func ( t *Task ) GetCurrentTaskStatus()(error) {
+  log.Debugf("Working on getting current task status")
+	var (
+		uri  = t.URI
+	)
+	if uri != "" {
+		data, err := t.Client.RestAPICall(rest.GET, uri.String(), nil)
+		if err != nil {
+			return err
+		}
+		log.Debugf("data: %s",data)
+		if err := json.Unmarshal([]byte(data), &t); err != nil {
+			return err
+		}
+	} else {
+		log.Debugf("Unable to get current task, no URI found")
+	}
+	return nil
 }

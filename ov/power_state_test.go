@@ -12,12 +12,12 @@ func TestPowerState(t *testing.T) {
 	var (
 		d *OVTest
 		c *OVClient
-		testData    string
+		testData    Nstring
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
-		testData    = d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string)
+		testData    = Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
