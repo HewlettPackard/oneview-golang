@@ -92,3 +92,39 @@ func TestGetProfiles(t *testing.T) {
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
+
+// CreateProfileFromTemplate(name string, new_template ServerProfile, blade ServerHardware)
+// test create profile
+func TestCreateProfileFromTemplate(t *testing.T) {
+	var (
+		d *OVTest
+		c *OVClient
+		testHostName     string
+		testBladeSerial  string
+		testTemplateName string
+		testBlades       ServerHardwareList
+		testTemplate     ServerProfile
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testHostName     = d.Tc.GetTestData(d.Env, "HostName").(string)
+		testBladeSerial  = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		testTemplateName = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
+
+		testBlades, _    = c.GetServerHardwareList([]string{fmt.Sprintf("serialNumber matches '%s'", testBladeSerial)}, "name:asc")
+		assert.True(t, (len(testBlades.Members) > 0), "Did not get any blades from server hardware list")
+
+		testTemplate, _ = c.GetProfileByName(testTemplateName)
+		assert.Equal(t, testTemplateName, testTemplate.Name, fmt.Sprintf("Problem getting template name, %+v", testTemplate ))
+
+		err             := c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
+		assert.NoError(t, err, "CreateProfileFromTemplate error -> %s", err)
+
+		err             = c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
+		assert.Error(t, err, "CreateProfileFromTemplate should error because a template already exist, err-> %s", err)
+	}
+
+}

@@ -3,6 +3,8 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
+	"time"
+
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/rest"
 )
@@ -31,6 +33,78 @@ type ServerProfile struct {
 	ETAG                   string  `json:"eTag,omitempty"`        	         // "eTag": "1441036118675/8"
 
 }
+
+// firmware
+type FirmwareOption struct {    																				// "firmware": {
+	ForceInstallFirmware	bool    `json:"forceInstallFirmware,omitempty"`	// 		"forceInstallFirmware": false,
+	FirmwareBaselineUri		Nstring	`json:"firmwareBaselineUri,omitempty"`	// 		"firmwareBaselineUri": null,
+	ManageFirmware				bool		`json:"manageFirmware,omitempty"`				// 		"manageFirmware": false
+}																																				// },
+
+// Boot mode option
+type BootModeOption {																			// "bootMode": {
+	ManageMode  bool  `json:"manageMode,omitempty"` 				// 		"manageMode": true,
+	Mode        string `json:"mode,omitempty"`							// 		"mode": "BIOS",
+	PXEBootPolicy  Nstring `json:"pxeBootPolicy,omitempty"`	// 		"pxeBootPolicy": null
+}																													// 		},
+
+// Boot management
+type BootManagement { 														// 	"boot": {
+	ManageBoot  bool `json:"manageBoot,omitempty"`	// 			"manageBoot": true,
+	Order       []string `json:"order,omitempty"` 	// 			"order": ["CD","USB","HardDisk","PXE"]
+}																									// 	},
+
+// Bios Settings
+type BiosSettings {
+	ID    string `json:"id,omitempty"`    // id
+	Value string `json:"value,omitempty"` // value
+}
+
+// bios options
+type BiosOption {																													// 		"bios": {
+	ManageBios          bool `json:"manageBios,omitempty"`  								// 				"manageBios": false,
+	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"`	// 				"overriddenSettings": []
+}																																					// 		},
+
+//
+// // ServerProfile
+// type ServerProfile struct {
+// 	Type               string `json:"type,omitempty"`	// "type": "ServerProfileV4",
+// 		// "uri": "/rest/server-profiles/b7c0b635-e49f-4cc2-aca7-62491bb9a7db",
+// 		// "name": "docker_server_template",
+// 		// "description": "Docker Machine OneView Driver",
+// 		// "serialNumber": null,
+// 		// "uuid": null,
+// 		// "serverHardwareUri": null,
+// 		// "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+// 		// "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+// 		// "enclosureUri": null,
+// 		// "enclosureBay": null,
+// 		// "affinity": "Bay",
+// 		// "associatedServer": null,
+// 		// "hideUnusedFlexNics": false,
+	Firmware   FirmwareOption  `json:"firmware,omitempty"` // "firmware": { },
+// 		"macType": "Physical",
+// 		"wwnType": "Physical",
+// 		"serialNumberType": "Physical",
+// 		"category": "server-profiles",
+// 		"created": "20150911T041930.809Z",
+// 		"modified": "20150911T041931.712Z",
+// 		"status": "OK",
+// 		"state": "Normal",
+// 		"inProgress": false,
+// 		"taskUri": "/rest/tasks/C5A53CF1-E663-4C36-B52B-BD613D4C778F",
+	Connections   []Commiection  `json:"connections,omitempty"`				// "connections": [],
+	BootMode      BootModeOption `json:"bootMode,omitempty"`					// "bootMode": {},
+	Boot          BootManagement `json:"boot,omitempty"`  						// "boot": { },
+	Bios          BiosOption     `json:"bios,omitempty"`							// "bios": {	},
+	LocalStorage  LocalStorageOptions `json:"localStorage,omitempty"`	// "localStorage": {},
+// 		"sanStorage": {
+// 				"volumeAttachments": [],
+// 				"manageSanStorage": false
+// 		},
+// 		"eTag": "1441945171477/3"
+// }
 
 // ServerProfileList a list of ServerProfile objects
 // TODO: missing properties, need to think how we can make a higher lvl structure like an OVList
@@ -107,45 +181,74 @@ func (c *OVClient) GetProfiles(filter string, sort string)(ServerProfileList, er
 }
 
 // submit new profile template
-func (c *OVClient) SubmitNewProfile(p ServerProfile) (error) {
-  return nil
-}
-// create profile from template
-func (c *OVClient) CreateProfileFromTemplate(name string, new_template ServerProfile, blade ServerHardware) (error) {
-	new_template.Name              = name
-	new_template.URI.Nil()
-	new_template.SerialNumber.Nil()
-	new_template.UUID.Nil()
-	for _, c := range new_template.Connections {
-		c.WWNN.Nil()
-		c.WWPN.Nil()
-		c.MAC.Nil()
-	}
-	new_template.ServerHardwareURI = blade.URI
-
-	// # New-HPOVProfileFromTemplate
-	// # Create new profile instance from template
-	// action_handler.perform_action "Initialize creation of server profile for #{machine_spec.name}" do
-	// 	action_handler.report_progress "INFO: Initializing creation of server profile for #{machine_spec.name}"
-	//
-	// 	new_template_profile = rest_api(:oneview, :get, "#{template_uri}")
-	//
-	// 	# Take response, add name & hardware uri, and post back to /rest/server-profiles
-	// 	new_template_profile['name'] = host_name
-	// 	new_template_profile['uri'] = nil
-	// 	new_template_profile['serialNumber'] = nil
-	// 	new_template_profile['uuid'] = nil
-	// 	new_template_profile['connections'].each do |c|
-	// 		c['wwnn'] = nil
-	// 		c['wwpn'] = nil
-	// 		c['mac']  = nil
-	// 	end
-	//
-	// 	new_template_profile['serverHardwareUri'] = chosen_blade['uri']
-
+func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
+	log.Infof("Initializing creation of server profile for %s.",p.Name)
+	var (
+		uri  = "/rest/server-profiles"
 	// 	task = rest_api(:oneview, :post, '/rest/server-profiles', { 'body' => new_template_profile })
-	// 	task_uri = task['uri']
-	// 	# Poll task resource to see when profile has finished being applied
+	)
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Infof("REST : %s \n %+v\n", uri, p)
+	log.Debugf("task -> %+v", t)
+	data, err := c.RestAPICall(rest.POST, uri , p)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error submitting new profile request: %s", err)
+		return t, err
+	}
+
+	log.Debugf("Response NewProfile %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with power state un-marshal: %s", err)
+		return t, err
+	}
+
+	return t, err
+}
+
+// create profile from template
+func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile, blade ServerHardware) (error) {
+	var (
+		currenttime int = 0
+	)
+	log.Infof("TEMPLATE : %+v\n", template)
+  // var connection = Connection{  WWNN: Nstring.Nil(),
+	// 															WWPN: Nstring.Nil(),
+	// 															MAC:  Nstring.Nil()}
+	var new_template = ServerProfile{ Name: name,
+																		Type: template.Type,
+																		URI: Nstring(""),
+																		SerialNumber: Nstring(""),
+																		UUID: Nstring(""),
+																		// Connections: [{connection}],
+																		ServerHardwareURI: blade.URI }
+	t, err := c.SubmitNewProfile(new_template)
+	if err != nil { return err }
+	for !t.TaskIsDone && (currenttime < t.Timeout) {
+		if err := t.GetCurrentTaskStatus(); err != nil {
+			return err
+		}
+		if t.URI != "" && T_COMPLETED.Equal(t.TaskState) {
+			t.TaskIsDone = true
+		}
+		if t.URI != "" {
+			log.Debugf("Waiting for task to complete, for %s ", name)
+			log.Infof("Working on profile creation,%d%%, %s.", t.ComputedPercentComplete, t.TaskStatus)
+		} else {
+			log.Info("Working on profile creation.")
+		}
+
+		// wait time before next check
+		time.Sleep(time.Millisecond * (1000 * t.WaitTime)) // wait 10sec before checking the status again
+		currenttime++
+	}
+	if !(currenttime < t.Timeout) {
+		log.Warn("Task timed out.")
+	}
+	log.Infof("Create server profile Completed")
+
 	// 	60.times do # Wait for up to 5 min
 	// 		matching_profiles = rest_api(:oneview, :get, "/rest/server-profiles?filter=name matches '#{host_name}'&sort=name:asc")
 	// 		break if matching_profiles['count'] > 0
