@@ -9,114 +9,114 @@ import (
 	"github.com/docker/machine/drivers/oneview/rest"
 )
 
-// ServerProfile , server profile object for ov
-type ServerProfile struct {
-	Connections            []Connection `json:"connections,omitempty"`
-	Type                   string  `json:"type,omitempty"`                  // "type": "ServerProfileV4",
-	URI                    Nstring `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
-	Name                   string  `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
-	Description            string  `json:"description,omitempty"`           // "description": "Docker Machine Bay 16",
-	SerialNumber           Nstring `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
-	UUID                   Nstring `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
-	ServerHardwareURI      Nstring  `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
-	ServerHardwareTypeURI  Nstring  `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-	EnclosureGroupURI      Nstring  `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
-	EnclosureURI           Nstring  `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
-	EnclosureBay           int     `json:"enclosureBay,omitempty"`          // "enclosureBay": 16,
-	Affinity               string  `json:"affinity,omitempty"`              // "affinity": "Bay",
-	Created                string  `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
-	Modified               string  `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
-	Status                 string  `json:"status,omitempty"`                // "status": "Critical",
-	State                  string  `json:"state,omitempty"`                 // "state": "Normal",
-	InProgress             bool    `json:"inProgress,omitempty"`            // "inProgress": false,
-	TaskURI                Nstring  `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
-	ETAG                   string  `json:"eTag,omitempty"`        	         // "eTag": "1441036118675/8"
-
+// firmware
+type FirmwareOption struct {
+	ForceInstallFirmware  bool    `json:"forceInstallFirmware,omitempty"` // "forceInstallFirmware": false,
+	FirmwareBaselineUri   Nstring `json:"firmwareBaselineUri,omitempty"`  // "firmwareBaselineUri": null,
+	ManageFirmware        bool    `json:"manageFirmware,omitempty"`       // "manageFirmware": false
 }
 
-// firmware
-type FirmwareOption struct {    																				// "firmware": {
-	ForceInstallFirmware	bool    `json:"forceInstallFirmware,omitempty"`	// 		"forceInstallFirmware": false,
-	FirmwareBaselineUri		Nstring	`json:"firmwareBaselineUri,omitempty"`	// 		"firmwareBaselineUri": null,
-	ManageFirmware				bool		`json:"manageFirmware,omitempty"`				// 		"manageFirmware": false
-}																																				// },
-
 // Boot mode option
-type BootModeOption {																			// "bootMode": {
-	ManageMode  bool  `json:"manageMode,omitempty"` 				// 		"manageMode": true,
-	Mode        string `json:"mode,omitempty"`							// 		"mode": "BIOS",
-	PXEBootPolicy  Nstring `json:"pxeBootPolicy,omitempty"`	// 		"pxeBootPolicy": null
-}																													// 		},
+type BootModeOption struct {
+	ManageMode     bool       `json:"manageMode,omitempty"`     // "manageMode": true,
+	Mode           string     `json:"mode,omitempty"`           // "mode": "BIOS",
+	PXEBootPolicy  Nstring    `json:"pxeBootPolicy,omitempty"`  // "pxeBootPolicy": null
+}
 
 // Boot management
-type BootManagement { 														// 	"boot": {
-	ManageBoot  bool `json:"manageBoot,omitempty"`	// 			"manageBoot": true,
-	Order       []string `json:"order,omitempty"` 	// 			"order": ["CD","USB","HardDisk","PXE"]
-}																									// 	},
+type BootManagement struct {
+	ManageBoot  bool     `json:"manageBoot,omitempty"` // "manageBoot": true,
+	Order       []string `json:"order,omitempty"`      // "order": ["CD","USB","HardDisk","PXE"]
+}
 
 // Bios Settings
-type BiosSettings {
+type BiosSettings struct {
 	ID    string `json:"id,omitempty"`    // id
 	Value string `json:"value,omitempty"` // value
 }
 
 // bios options
-type BiosOption {																													// 		"bios": {
-	ManageBios          bool `json:"manageBios,omitempty"`  								// 				"manageBios": false,
-	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"`	// 				"overriddenSettings": []
-}																																					// 		},
+type BiosOption struct {
+	ManageBios          bool `json:"manageBios,omitempty"`                    // "manageBios": false,
+	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"`   // "overriddenSettings": []
+}
 
-//
-// // ServerProfile
-// type ServerProfile struct {
-// 	Type               string `json:"type,omitempty"`	// "type": "ServerProfileV4",
-// 		// "uri": "/rest/server-profiles/b7c0b635-e49f-4cc2-aca7-62491bb9a7db",
-// 		// "name": "docker_server_template",
-// 		// "description": "Docker Machine OneView Driver",
-// 		// "serialNumber": null,
-// 		// "uuid": null,
-// 		// "serverHardwareUri": null,
-// 		// "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-// 		// "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
-// 		// "enclosureUri": null,
-// 		// "enclosureBay": null,
-// 		// "affinity": "Bay",
-// 		// "associatedServer": null,
-// 		// "hideUnusedFlexNics": false,
-	Firmware   FirmwareOption  `json:"firmware,omitempty"` // "firmware": { },
-// 		"macType": "Physical",
-// 		"wwnType": "Physical",
-// 		"serialNumberType": "Physical",
-// 		"category": "server-profiles",
-// 		"created": "20150911T041930.809Z",
-// 		"modified": "20150911T041931.712Z",
-// 		"status": "OK",
-// 		"state": "Normal",
-// 		"inProgress": false,
-// 		"taskUri": "/rest/tasks/C5A53CF1-E663-4C36-B52B-BD613D4C778F",
-	Connections   []Commiection  `json:"connections,omitempty"`				// "connections": [],
-	BootMode      BootModeOption `json:"bootMode,omitempty"`					// "bootMode": {},
-	Boot          BootManagement `json:"boot,omitempty"`  						// "boot": { },
-	Bios          BiosOption     `json:"bios,omitempty"`							// "bios": {	},
-	LocalStorage  LocalStorageOptions `json:"localStorage,omitempty"`	// "localStorage": {},
-// 		"sanStorage": {
-// 				"volumeAttachments": [],
-// 				"manageSanStorage": false
-// 		},
-// 		"eTag": "1441945171477/3"
-// }
+// ServerProfile , server profile object for ov
+type ServerProfile struct {
+	Affinity               string              `json:"affinity,omitempty"`              // "affinity": "Bay",
+	AssociatedServer       Nstring             `json:"associatedServer,omitempty"`      // "associatedServer": null,
+	Bios                   BiosOption          `json:"bios,omitempty"`                  // "bios": {	},
+	Boot                   BootManagement      `json:"boot,omitempty"`                  // "boot": { },
+	BootMode               BootModeOption      `json:"bootMode,omitempty"`              // "bootMode": {},
+	Category               string              `json:"category,omitempty"`              // "category": "server-profiles",
+	Connections            []Connection        `json:"connections,omitempty"`
+	Description            string              `json:"description,omitempty"`           // "description": "Docker Machine Bay 16",
+	Created                string              `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
+	ETAG                   string              `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8"
+	EnclosureBay           int                 `json:"enclosureBay,omitempty"`          // "enclosureBay": 16,
+	EnclosureGroupURI      Nstring             `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+	EnclosureURI           Nstring             `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
+	Firmware               FirmwareOption      `json:"firmware,omitempty"`              // "firmware": { },
+	HideUnusedFlexNics     bool                `json:"hideUnusedFlexNics,omitempty"`    // "hideUnusedFlexNics": false,
+	InProgress             bool                `json:"inProgress,omitempty"`            // "inProgress": false,
+	LocalStorage           LocalStorageOptions `json:"localStorage,omitempty"`          // "localStorage": {},
+	MACType                string              `json:"macType,omitempty"`               // "macType": "Physical",
+	Modified               string              `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
+	Name                   string              `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
+	SanStorage             SanStorageOptions   `json:"sanStorage,omitempty"`            // "sanStorage": {},
+	SerialNumber           Nstring             `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
+	SerialNumberType       string              `json:"serialNumberType,omitempty"`      // "serialNumberType": "Physical",
+	ServerHardwareTypeURI  Nstring             `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+	ServerHardwareURI      Nstring             `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+	State                  string              `json:"state,omitempty"`                 // "state": "Normal",
+	Status                 string              `json:"status,omitempty"`                // "status": "Critical",
+	TaskURI                Nstring             `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
+	Type                   string              `json:"type,omitempty"`                  // 	Type               string `json:"type,omitempty"`	// "type": "ServerProfileV4",
+	URI                    Nstring             `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
+	UUID                   Nstring             `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
+	WWNType                string              `json:"wwnType,omitempty"`               // "wwnType": "Physical",
+}
+
+// Clone server profile
+func (s ServerProfile) Clone() (ServerProfile) {
+  var ca []Connection
+  for _, c := range s.Connections {
+    ca = append(ca, c.Clone())
+  }
+
+  return ServerProfile {
+				Affinity               : s.Affinity,
+				Bios                   : s.Bios,
+				Boot                   : s.Boot,
+				BootMode               : s.BootMode,
+				Connections            : ca,
+				Description            : s.Description,
+				EnclosureBay           : s.EnclosureBay,
+				EnclosureGroupURI      : s.EnclosureGroupURI,
+				EnclosureURI           : s.EnclosureURI,
+				Firmware               : s.Firmware,
+				HideUnusedFlexNics     : s.HideUnusedFlexNics,
+				LocalStorage           : s.LocalStorage.Clone(),
+				MACType                : s.MACType,
+				Name                   : s.Name,
+				SanStorage             : s.SanStorage.Clone(),
+				SerialNumberType       : s.SerialNumberType,
+				Type                   : s.Type,
+				WWNType                : s.WWNType,
+  }
+}
 
 // ServerProfileList a list of ServerProfile objects
 // TODO: missing properties, need to think how we can make a higher lvl structure like an OVList
 // Then things like Members are inherited
 type ServerProfileList struct {
-	Total        int     `json:"total,omitempty"`        // "total": 1,
-	Count        int     `json:"count,omitempty"`        // "count": 1,
-	Start        int     `json:"start,omitempty"`        // "start": 0,
-	PrevPageURI  Nstring  `json:"prevPageUri,omitempty"`  // "prevPageUri": null,
-	NextPageURI  Nstring  `json:"nextPageUri,omitempty"`  //"nextPageUri": null,
-	URI          Nstring `json:"uri,omitempty"`          // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
-	Members      []ServerProfile `json:"members,omitempty"`   //"members":[]
+	Total        int      `json:"total,omitempty"`           // "total": 1,
+	Count        int      `json:"count,omitempty"`           // "count": 1,
+	Start        int      `json:"start,omitempty"`           // "start": 0,
+	PrevPageURI  Nstring  `json:"prevPageUri,omitempty"`     // "prevPageUri": null,
+	NextPageURI  Nstring  `json:"nextPageUri,omitempty"`     // "nextPageUri": null,
+	URI          Nstring  `json:"uri,omitempty"`             // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
+	Members      []ServerProfile `json:"members,omitempty"`  // "members":[]
 }
 
 // get a server profile by name
@@ -214,16 +214,12 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		currenttime int = 0
 	)
 	log.Infof("TEMPLATE : %+v\n", template)
-  // var connection = Connection{  WWNN: Nstring.Nil(),
-	// 															WWPN: Nstring.Nil(),
-	// 															MAC:  Nstring.Nil()}
-	var new_template = ServerProfile{ Name: name,
-																		Type: template.Type,
-																		URI: Nstring(""),
-																		SerialNumber: Nstring(""),
-																		UUID: Nstring(""),
-																		// Connections: [{connection}],
-																		ServerHardwareURI: blade.URI }
+
+	var new_template = template.Clone()
+	new_template.ServerHardwareURI = blade.URI
+	new_template.Description += name
+	new_template.Name = name
+
 	t, err := c.SubmitNewProfile(new_template)
 	if err != nil { return err }
 	for !t.TaskIsDone && (currenttime < t.Timeout) {
