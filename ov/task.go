@@ -133,7 +133,7 @@ func ( t *Task ) NewProfileTask(c *OVClient)(*Task) {
                 URI:         "",
                 Name:        "",
                 Owner:       "",
-  							Timeout:     36, // default 6min
+  							Timeout:     144, // default 24min
   							WaitTime:    10} // default 10sec, impacts Timeout
 }
 
@@ -173,4 +173,40 @@ func ( t *Task ) GetCurrentTaskStatus()(error) {
     return errors.New(errmsg)
   }
 	return nil
+}
+
+// wait on task to complete
+func ( t *Task ) Wait()(error) {
+  var (
+		currenttime int = 0
+	)
+	log.Debugf("task : %+v", t)
+
+  for !t.TaskIsDone && (currenttime < t.Timeout) {
+    if err := t.GetCurrentTaskStatus(); err != nil {
+      t.TaskIsDone = true
+      return err
+    }
+    if t.URI != "" && T_COMPLETED.Equal(t.TaskState) {
+      t.TaskIsDone = true
+    }
+    if t.URI != "" {
+      log.Debugf("Waiting for task to complete, for %s ", t.Name)
+      log.Infof("Waiting on, %s, %d%%, %s.", t.Name, t.ComputedPercentComplete, t.TaskStatus)
+    } else {
+      log.Info("Waiting on task creation.")
+    }
+
+    // wait time before next check
+    time.Sleep(time.Millisecond * (1000 * t.WaitTime)) // wait 10sec before checking the status again
+    currenttime++
+  }
+  if !(currenttime < t.Timeout) {
+    log.Warn("Task timed out.")
+  }
+
+  if (t.Name != "") {
+    log.Infof("Task, %s, completed", t.Name)
+  }
+  return nil
 }

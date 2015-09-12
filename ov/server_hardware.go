@@ -109,6 +109,20 @@ type ServerHardwareList struct {
 	Members      []ServerHardware `json:"members,omitempty"`     //"members":[]
 }
 
+// server hardware power off
+func (s ServerHardware) PowerOff()(error) {
+	var pt *PowerTask
+	pt = pt.NewPowerTask(s)
+  return pt.PowerExecutor(P_OFF)
+}
+
+// server hardware power on
+func (s ServerHardware) PowerOn()(error) {
+	var pt *PowerTask
+	pt = pt.NewPowerTask(s)
+  return pt.PowerExecutor(P_ON)
+}
+
 // get a server hardware with uri
 func (c *OVClient) GetServerHardware(uri Nstring)(ServerHardware, error) {
 

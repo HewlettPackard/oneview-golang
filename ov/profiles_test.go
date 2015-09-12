@@ -128,3 +128,59 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 	}
 
 }
+
+// test for not found profile
+// should not delete a profile that doesn't exist
+func TestDeleteProfileNotFound(t *testing.T) {
+	var (
+		c *OVClient
+		testProfileName  = "fake_profile_doesnt_exist"
+		testProfile      ServerProfile
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		err             := c.DeleteProfile(testProfileName)
+		assert.NoError(t, err, "DeleteProfile err-> %s", err)
+
+		testProfile, err = c.GetProfileByName(testProfileName)
+		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
+		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile ))
+	} else {
+		_, c = getTestDriverU()
+		err := c.DeleteProfile(testProfileName)
+		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
+	}
+}
+
+// test DeleteProfile
+func TestDeleteProfile(t *testing.T) {
+	var (
+		d *OVTest
+		c *OVClient
+		testProfileName  string
+		testProfile      ServerProfile
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testProfileName  = d.Tc.GetTestData(d.Env, "HostName").(string)
+
+		err             := c.DeleteProfile(testProfileName)
+		assert.NoError(t, err, "DeleteProfile err-> %s", err)
+
+		testProfile, err = c.GetProfileByName(testProfileName)
+		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
+		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile ))
+	} else {
+		_, c = getTestDriverU()
+		err := c.DeleteProfile("footest")
+		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
+	}
+
+}

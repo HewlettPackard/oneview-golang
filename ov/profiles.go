@@ -3,7 +3,6 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/rest"
@@ -189,7 +188,7 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 	)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Infof("REST : %s \n %+v\n", uri, p)
+	log.Debugf("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri , p)
 	if err != nil {
@@ -201,7 +200,7 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 	log.Debugf("Response NewProfile %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error with power state un-marshal: %s", err)
+		log.Errorf("Error with task un-marshal: %s", err)
 		return t, err
 	}
 
@@ -210,51 +209,90 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 
 // create profile from template
 func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile, blade ServerHardware) (error) {
-	var (
-		currenttime int = 0
-	)
-	log.Infof("TEMPLATE : %+v\n", template)
+	log.Debugf("TEMPLATE : %+v\n", template)
 
 	var new_template = template.Clone()
 	new_template.ServerHardwareURI = blade.URI
-	new_template.Description += name
+	new_template.Description += " " + name
 	new_template.Name = name
 
 	t, err := c.SubmitNewProfile(new_template)
+	err = t.Wait()
 	if err != nil { return err }
-	for !t.TaskIsDone && (currenttime < t.Timeout) {
-		if err := t.GetCurrentTaskStatus(); err != nil {
-			return err
+	return nil
+}
+
+// submit new profile template
+func (c *OVClient) SubmitDeleteProfile(p ServerProfile) (t *Task, err error) {
+	var (
+		uri  = p.URI.String()
+	// 	task = rest_api(:oneview, :post, '/rest/server-profiles', { 'body' => new_template_profile })
+	)
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Debugf("REST : %s \n %+v\n", uri, p)
+	log.Debugf("task -> %+v", t)
+	if uri == "" {
+		log.Warn("Unable to post delete, no uri found.")
+		t.TaskIsDone = true
+		return t, err
+	}
+	data, err := c.RestAPICall(rest.DELETE, uri , nil)
+	if err != nil {
+		log.Errorf("Error submitting new profile request: %s", err)
+		t.TaskIsDone = true
+		return t, err
+	}
+
+	log.Debugf("Response delete profile %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return t, err
+	}
+
+	return t, err
+}
+
+// delete a profile, assign the server and remove the profile from the system
+func (c *OVClient) DeleteProfile(name string) (error) {
+	// get the profile for this server
+	var (
+		 servernamemsg string
+		 server        ServerHardware
+		 profile       ServerProfile
+		 err           error
+	)
+
+	servernamemsg = "'no server'"
+	profile, err  = c.GetProfileByName(name)
+	if err != nil { return err }
+
+	if profile.Name != "" {
+		if profile.ServerHardwareURI != "" {
+			server, err = c.GetServerHardware(profile.ServerHardwareURI)
+			if err != nil {
+				log.Warnf("Problem getting server hardware, %s", err)
+			} else {
+				if server.Name != "" { servernamemsg = server.Name}
+			}
 		}
-		if t.URI != "" && T_COMPLETED.Equal(t.TaskState) {
-			t.TaskIsDone = true
-		}
-		if t.URI != "" {
-			log.Debugf("Waiting for task to complete, for %s ", name)
-			log.Infof("Working on profile creation,%d%%, %s.", t.ComputedPercentComplete, t.TaskStatus)
-		} else {
-			log.Info("Working on profile creation.")
+    log.Infof("Delete server profile %s from oneview, %s will be unassigned.", profile.Name, servernamemsg)
+
+		// power off the server so that we can remove it
+		if server.Name != "" {
+			server.PowerOff()
 		}
 
-		// wait time before next check
-		time.Sleep(time.Millisecond * (1000 * t.WaitTime)) // wait 10sec before checking the status again
-		currenttime++
-	}
-	if !(currenttime < t.Timeout) {
-		log.Warn("Task timed out.")
-	}
-	log.Infof("Create server profile Completed")
+		// submit delete task
+ 		t, err := c.SubmitDeleteProfile(profile)
+		err = t.Wait()
+		if err != nil { return err }
 
-	// 	60.times do # Wait for up to 5 min
-	// 		matching_profiles = rest_api(:oneview, :get, "/rest/server-profiles?filter=name matches '#{host_name}'&sort=name:asc")
-	// 		break if matching_profiles['count'] > 0
-	// 		print '.'
-	// 		sleep 5
-	// 	end
-	// 	unless matching_profiles['count'] > 0
-	// 		task = rest_api(:oneview, :get, task_uri)
-	// 		fail "Server profile couldn't be created! #{task['taskStatus']}. #{task['taskErrors'].first['message']}"
-	// 	end
-	// end
+		// check for task execution
+
+	} else {
+		log.Infof("Profile could not be found to delete, %s, skipping delete ...", name)
+	}
 	return nil
 }
