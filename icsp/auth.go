@@ -9,18 +9,16 @@ import (
 	"github.com/docker/machine/log"
 )
 
-// URLEndPoint ...
-type URLEndPoint string
-
 // URLEndPoint export this constant
-const URLEndPoint = "/rest/login-sessions"
+const URLEndPointSession = "/rest/login-sessions"
 
 // AuthHeader Marshal a json into a auth header
-type AuthHeader struct {
+/*type AuthHeader struct {
 	ContentType string `json:"Content-Type,omitempty"`
 	XAPIVersion int    `json:"X-API-Version,omitempty"`
 	Auth        string `json:"auth,omitempty"`
 }
+*/
 
 // GetAuthHeaderMap Generate an auth Header map ...
 func (c *ICSPClient) GetAuthHeaderMap() map[string]string {
@@ -62,7 +60,7 @@ func (c *ICSPClient) RefreshLogin() error {
 // returns Session structure
 func (c *ICSPClient) SessionLogin() (Session, error) {
 	var (
-		uri     = URLEndPoint
+		uri     = URLEndPointSession
 		body    = Auth{UserName: c.User, Password: c.Password, Domain: c.Domain}
 		session Session
 	)

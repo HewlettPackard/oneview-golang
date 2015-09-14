@@ -7,11 +7,8 @@ import (
 	"github.com/docker/machine/log"
 )
 
-// URLEndPoint ...
-type URLEndPoint string
-
 // URLEndPoint export this constant
-const URLEndPoint = "/rest/version"
+const URLEndPointVersion = "/rest/version"
 
 // APIVersion struct
 type APIVersion struct {
@@ -23,7 +20,7 @@ type APIVersion struct {
 // returns structure APIVersion
 func (c *ICSPClient) GetAPIVersion() (APIVersion, error) {
 	var (
-		uri        = URLEndPoint
+		uri        = URLEndPointVersion
 		apiversion APIVersion
 	)
 
