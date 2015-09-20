@@ -11,8 +11,8 @@ import (
 // Test GetAPIVersion
 func TestGetAPIVersion(t *testing.T) {
 	var (
-		d *OVTest
-		c *OVClient
+		d *ICSPTest
+		c *ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -23,8 +23,8 @@ func TestGetAPIVersion(t *testing.T) {
 		// fmt.Printf("after GetAPIVersion: %s -> (err) %s", data.CurrentVersion, err)
 		// assert.Error(t,err, fmt.Sprintf("Error caught as expected: %s",err))
 		assert.NoError(t, err, "GetAPIVersion threw error -> %s", err)
-		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env, "CurrentVersion"), data.CurrentVersion))
-		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env, "MinimumVersion"), data.MinimumVersion))
+		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env + "_icsp", "CurrentVersion"), data.CurrentVersion))
+		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env + "_icsp", "MinimumVersion"), data.MinimumVersion))
 	} else {
 		_, c = getTestDriverU()
 		data, err := c.GetAPIVersion()
