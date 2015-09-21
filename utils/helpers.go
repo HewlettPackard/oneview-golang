@@ -1,4 +1,4 @@
-package rest
+package utils
 
 import "strings"
 
