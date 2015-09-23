@@ -41,6 +41,8 @@ func (c *ICSPClient) GetAllBuildPlans() (APIVersion, error) {
 
 // GetBuildPlan -  returns a build plan
 //
-func (c *ICSPClient) GetBuildPlan() (APIVersion, build_id, error) {
+// func (c *ICSPClient) GetBuildPlan() (APIVersion, build_id, error) {
+func (c *ICSPClient) GetBuildPlan() (int, error) {
 	//TODO
+ return 0, nil
 }

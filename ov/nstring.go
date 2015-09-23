@@ -15,7 +15,7 @@ func (n *Nstring) UnmarshalJSON(b []byte) (err error) {
 
 func (n *Nstring) String()(string) {
 	if n.IsNil() {
-		return ""
+		return "null"
 	} else {
 		return string(*n)
 	}

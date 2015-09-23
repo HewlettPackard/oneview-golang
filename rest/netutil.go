@@ -11,6 +11,7 @@ import (
 	"reflect"
 
 	"github.com/docker/machine/log"
+	"github.com/docker/machine/drivers/oneview/utils"
 )
 
 // Options for REST call
@@ -88,7 +89,7 @@ func (c *Client) SetAuthHeaderOptions(headers map[string]string) {
 
 // RestAPICall - general rest method caller
 func (c *Client) RestAPICall(method Method, path string, options interface{}) ([]byte, error) {
-	log.Debugf("RestAPICall %s - %s%s", method, c.Sanatize(c.Endpoint), path)
+	log.Debugf("RestAPICall %s - %s%s", method, utils.Sanatize(c.Endpoint), path)
 
 	var (
 		Url *url.URL
@@ -96,7 +97,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 		req *http.Request
 	)
 
-	Url, err = url.Parse(c.Sanatize(c.Endpoint))
+	Url, err = url.Parse(utils.Sanatize(c.Endpoint))
 	if err != nil {
 		return nil, err
 	}

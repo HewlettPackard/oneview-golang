@@ -23,6 +23,7 @@ func TestServerHardware(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		data, err := c.GetServerHardware(testData)
+		log.Debugf("%+v", data)
 		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
 		assert.Equal(t, expectsData, data.SerialNumber)

@@ -61,6 +61,7 @@ type PowerTask struct {
 }
 
 // Create a new power task manager
+// TODO: refactor PowerTask to use Task vs overloading it here.
 func ( pt *PowerTask ) NewPowerTask( b ServerHardware)(*PowerTask) {
 	pt = &PowerTask{Blade:       b,
 										State:       P_UKNOWN}//,

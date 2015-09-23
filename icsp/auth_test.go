@@ -11,7 +11,7 @@ import (
 // Test SessionLogin
 func TestSessionLogin(t *testing.T) {
 	var (
-		c *OVClient
+		c *ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()

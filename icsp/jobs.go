@@ -2,7 +2,7 @@ package icsp
 
 // URLEndPoint(s) export this constant
 const (
-	URLEndPointDeploymentServers = "/rest/os-deployment-jobs"
+	URLEndPointDeploymentJobs = "/rest/os-deployment-jobs"
 )
 
 // Job struct

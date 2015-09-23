@@ -66,7 +66,10 @@ func getTestDriverA() (*OVTest, *OVClient) {
 // Unit test
 func getTestDriverU() (*OVTest, *OVClient) {
 	var ot *OVTest
-	ot = &OVTest{Env: "dev"}
+	var tc *testconfig.TestConfig
+	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
+	ot.GetEnvironment()
+	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
   ot.Client = &OVClient{
     rest.Client{
       User:       "foo",
