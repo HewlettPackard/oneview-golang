@@ -17,13 +17,13 @@ import (
 // ONEVIEW_ICSP_DOMAIN=LOCAL
 // ONEVIEW_SSLVERIFY=true
 // 2) setup gotest container
-//    docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name goaccept docker-machine
+//    docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name testicsp docker-machine
 //    exit
 //    docker start goaccept
 // 3) setup alias:
-//   alias goaccept='docker exec goaccept godep go test -test.v=true --short'
+//   alias testicsp='docker exec goaccept godep go test -test.v=true --short'
 // 4) to refresh env options, use
-//    docker rm -f goaccept
+//    docker rm -f testicsp
 //    ... repeat steps 2
 type ICSPTest struct {
 	Tc     *testconfig.TestConfig

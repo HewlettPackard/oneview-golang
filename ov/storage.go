@@ -1,5 +1,9 @@
 package ov
 
+import (
+	"github.com/docker/machine/drivers/oneview/utils"
+)
+
 // logical drive options
 type LogicalDrive struct {
   Bootable   bool `json:"bootable,omitempty"`    // "bootable": true,
@@ -55,9 +59,9 @@ type VolumeAttachment struct {
   VolumeProvisionType string   `json:"volumeProvisionType,omitempty"`  // The provisioning type of the new volume: Thin or Thick. This attribute is required when creating a volume.
   VolumeProvisionedCapacityBytes string `json:"volumeProvisionedCapacityBytes,omitempty"` // The requested provisioned capacity of the storage volume in bytes. This attribute is required when creating a volume.
   VolumeShareable     bool     `json:"volumeShareable,omitempty"`          // Identifies whether the storage volume is shared or private. If false, then the volume will be private. If true, then the volume will be shared. This attribute is required when creating a volume.
-  VolumeStoragePoolURI   Nstring `json:"volumeStoragePoolUri,omitempty"`   // The URI of the storage pool associated with this volume attachment's volume. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage pool associated with a volume.
-  VolumeStorageSystemURI Nstring `json:"volumeStorageSystemUri,omitempty"` // The URI of the storage system associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage system associated with a volume.
-  VolumeURI              Nstring `json:"volumenUri,omitempty"`             // The URI of the storage volume associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URIs of available storage volumes.
+  VolumeStoragePoolURI   utils.Nstring `json:"volumeStoragePoolUri,omitempty"`   // The URI of the storage pool associated with this volume attachment's volume. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage pool associated with a volume.
+  VolumeStorageSystemURI utils.Nstring `json:"volumeStorageSystemUri,omitempty"` // The URI of the storage system associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage system associated with a volume.
+  VolumeURI              utils.Nstring `json:"volumenUri,omitempty"`             // The URI of the storage volume associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URIs of available storage volumes.
 }
 
 // clone volume attachment for submits
@@ -95,13 +99,13 @@ type SanStorageOptions struct { // sanStorage
   VolumeAttachments  []VolumeAttachment   `json:"volumeAttachments,omitempty"` // volumeAttachments, The list of storage volume attachments. array of Volume Attachment
   SerialNumber       string      `json:"serialNumber,omitempty"`     // serialNumber (searchable) A 10-byte value that is exposed to the Operating System as the server hardware's Serial Number. The value can be a virtual serial number, user defined serial number or physical serial number read from the server's ROM. It cannot be modified after the profile is created.
   SerialNumberType   string      `json:"serialNumberType,omitempty"` // serialNumberType (searchable) Specifies the type of Serial Number and UUID to be programmed into the server ROM. The value can be 'Virtual', 'UserDefined', or 'Physical'. The serialNumberType defaults to 'Virtual' when serialNumber or uuid are not specified. It cannot be modified after the profile is created.
-  ServerHardwareTypeURI Nstring  `json:"serverHardwareTypeUri,omitempty"` // serverHardwareTypeUri Identifies the server hardware type for which the Server Profile was designed. The serverHardwareTypeUri is determined when the profile is created and cannot be modified. Use GET /rest/server-hardware-types to retrieve the list of server hardware types.
-  ServerHardwareURI     Nstring  `json:"serverHardwareUri,omitempty"`     // serverHardwareUri Identifies the server hardware to which the server profile is currently assigned, if applicable. Use GET /rest/server-profiles/available-targets to retrieve the list of available servers.
+  ServerHardwareTypeURI utils.Nstring  `json:"serverHardwareTypeUri,omitempty"` // serverHardwareTypeUri Identifies the server hardware type for which the Server Profile was designed. The serverHardwareTypeUri is determined when the profile is created and cannot be modified. Use GET /rest/server-hardware-types to retrieve the list of server hardware types.
+  ServerHardwareURI     utils.Nstring  `json:"serverHardwareUri,omitempty"`     // serverHardwareUri Identifies the server hardware to which the server profile is currently assigned, if applicable. Use GET /rest/server-profiles/available-targets to retrieve the list of available servers.
   State                 string   `json:"state,omitempty"`                 // state (searchable, readonly) Current State of this Server Profile
   Status                string   `json:"status,omitempty"`                // status (searchable, readonly) Overall health status of this Server Profile
-  TaskURI               Nstring  `json:"taskUri,omitempty"`               // taskUri (read only) URI of the task currently executing or most recently executed on this server profile.
+  TaskURI               utils.Nstring  `json:"taskUri,omitempty"`               // taskUri (read only) URI of the task currently executing or most recently executed on this server profile.
   Type                  string   `json:"type,omitempty"`                  // type (read only) Identifies the resource type. This field should always be set to 'ServerProfileV4'.
-  URI                   Nstring  `json:"uri,omitempty"`                   // uri (searchable, readonly) URI of this Server Profile. The URI is automatically generated when the server profile is created and cannot be modified.
+  URI                   utils.Nstring  `json:"uri,omitempty"`                   // uri (searchable, readonly) URI of this Server Profile. The URI is automatically generated when the server profile is created and cannot be modified.
   UUID                  string   `json:"uuid,omitempty"`                  // uuid (searchable) A 36-byte value that is exposed to the Operating System as the server hardware's UUID. The value can be a virtual uuid, user defined uuid or physical uuid read from the server's ROM. It cannot be modified after the profile is created.
   WWNType               string   `json:"wwnType,omitempty"`               // wwnType (searchable) Specifies the type of WWN address to be programmed into the IO devices. The value can be 'Virtual' or 'Physical'. It cannot be modified after the profile is created.
 }

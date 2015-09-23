@@ -19,7 +19,7 @@ func TestSessionLogin(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		data, err := c.SessionLogin()
-		// fmt.Printf("after SessionLogin: %s -> (err) %s", data.ID, err)
+		// fmt.Printf("after SessionLogin: %s -> (err) %+v", data.ID, err)
 		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
 		assert.NotEmpty(t, data.ID, fmt.Sprintf("SessionLogin is empty! something went wrong, err -> %s, data -> %+v\n", err, data))
 		assert.Equal(t, "none", c.APIKey)

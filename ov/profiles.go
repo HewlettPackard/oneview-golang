@@ -6,12 +6,13 @@ import (
 
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/rest"
+	"github.com/docker/machine/drivers/oneview/utils"
 )
 
 // firmware
 type FirmwareOption struct {
 	ForceInstallFirmware  bool    `json:"forceInstallFirmware,omitempty"` // "forceInstallFirmware": false,
-	FirmwareBaselineUri   Nstring `json:"firmwareBaselineUri,omitempty"`  // "firmwareBaselineUri": null,
+	FirmwareBaselineUri   utils.Nstring `json:"firmwareBaselineUri,omitempty"`  // "firmwareBaselineUri": null,
 	ManageFirmware        bool    `json:"manageFirmware,omitempty"`       // "manageFirmware": false
 }
 
@@ -19,7 +20,7 @@ type FirmwareOption struct {
 type BootModeOption struct {
 	ManageMode     bool       `json:"manageMode,omitempty"`     // "manageMode": true,
 	Mode           string     `json:"mode,omitempty"`           // "mode": "BIOS",
-	PXEBootPolicy  Nstring    `json:"pxeBootPolicy,omitempty"`  // "pxeBootPolicy": null
+	PXEBootPolicy  utils.Nstring    `json:"pxeBootPolicy,omitempty"`  // "pxeBootPolicy": null
 }
 
 // Boot management
@@ -43,7 +44,7 @@ type BiosOption struct {
 // ServerProfile , server profile object for ov
 type ServerProfile struct {
 	Affinity               string              `json:"affinity,omitempty"`              // "affinity": "Bay",
-	AssociatedServer       Nstring             `json:"associatedServer,omitempty"`      // "associatedServer": null,
+	AssociatedServer       utils.Nstring             `json:"associatedServer,omitempty"`      // "associatedServer": null,
 	Bios                   BiosOption          `json:"bios,omitempty"`                  // "bios": {	},
 	Boot                   BootManagement      `json:"boot,omitempty"`                  // "boot": { },
 	BootMode               BootModeOption      `json:"bootMode,omitempty"`              // "bootMode": {},
@@ -53,8 +54,8 @@ type ServerProfile struct {
 	Created                string              `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
 	ETAG                   string              `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8"
 	EnclosureBay           int                 `json:"enclosureBay,omitempty"`          // "enclosureBay": 16,
-	EnclosureGroupURI      Nstring             `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
-	EnclosureURI           Nstring             `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
+	EnclosureGroupURI      utils.Nstring             `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+	EnclosureURI           utils.Nstring             `json:"enclosureUri,omitempty"`          // "enclosureUri": "/rest/enclosures/092SN51207RR",
 	Firmware               FirmwareOption      `json:"firmware,omitempty"`              // "firmware": { },
 	HideUnusedFlexNics     bool                `json:"hideUnusedFlexNics,omitempty"`    // "hideUnusedFlexNics": false,
 	InProgress             bool                `json:"inProgress,omitempty"`            // "inProgress": false,
@@ -63,16 +64,16 @@ type ServerProfile struct {
 	Modified               string              `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
 	Name                   string              `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
 	SanStorage             SanStorageOptions   `json:"sanStorage,omitempty"`            // "sanStorage": {},
-	SerialNumber           Nstring             `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
+	SerialNumber           utils.Nstring             `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
 	SerialNumberType       string              `json:"serialNumberType,omitempty"`      // "serialNumberType": "Physical",
-	ServerHardwareTypeURI  Nstring             `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-	ServerHardwareURI      Nstring             `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+	ServerHardwareTypeURI  utils.Nstring             `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+	ServerHardwareURI      utils.Nstring             `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
 	State                  string              `json:"state,omitempty"`                 // "state": "Normal",
 	Status                 string              `json:"status,omitempty"`                // "status": "Critical",
-	TaskURI                Nstring             `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
+	TaskURI                utils.Nstring             `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
 	Type                   string              `json:"type,omitempty"`                  // 	Type               string `json:"type,omitempty"`	// "type": "ServerProfileV4",
-	URI                    Nstring             `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
-	UUID                   Nstring             `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
+	URI                    utils.Nstring             `json:"uri,omitempty"`                   // "uri": "/rest/server-profiles/9979b3a4-646a-4c3e-bca6-80ca0b403a93",
+	UUID                   utils.Nstring             `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
 	WWNType                string              `json:"wwnType,omitempty"`               // "wwnType": "Physical",
 }
 
@@ -112,9 +113,9 @@ type ServerProfileList struct {
 	Total        int      `json:"total,omitempty"`           // "total": 1,
 	Count        int      `json:"count,omitempty"`           // "count": 1,
 	Start        int      `json:"start,omitempty"`           // "start": 0,
-	PrevPageURI  Nstring  `json:"prevPageUri,omitempty"`     // "prevPageUri": null,
-	NextPageURI  Nstring  `json:"nextPageUri,omitempty"`     // "nextPageUri": null,
-	URI          Nstring  `json:"uri,omitempty"`             // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
+	PrevPageURI  utils.Nstring  `json:"prevPageUri,omitempty"`     // "prevPageUri": null,
+	NextPageURI  utils.Nstring  `json:"nextPageUri,omitempty"`     // "nextPageUri": null,
+	URI          utils.Nstring  `json:"uri,omitempty"`             // "uri": "/rest/server-profiles?filter=serialNumber%20matches%20%272M25090RMW%27&sort=name:asc"
 	Members      []ServerProfile `json:"members,omitempty"`  // "members":[]
 }
 

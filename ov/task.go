@@ -8,13 +8,14 @@ import (
 
   "github.com/docker/machine/log"
   "github.com/docker/machine/drivers/oneview/rest"
+  "github.com/docker/machine/drivers/oneview/utils"
 )
 // associated resource
 type AssociatedResource struct {
-  ResourceName     Nstring `json:"resourceName,omitempty"`     // "resourceName": "se05, bay 16",
+  ResourceName     utils.Nstring `json:"resourceName,omitempty"`     // "resourceName": "se05, bay 16",
   AssociationType  string `json:"associationType,omitempty"`  // "associationType": "MANAGED_BY",
   ResourceCateogry string `json:"resourceCategory,omitempty"` // "resourceCategory": "server-hardware",
-  ResourceURI      Nstring `json:"resourceUri,omitempty"`      // "resourceUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57"
+  ResourceURI      utils.Nstring `json:"resourceUri,omitempty"`      // "resourceUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57"
 }
 
 // task state
@@ -80,7 +81,7 @@ type TaskError struct {
   Details             string                 `json:"details,omitempty"`            // "details":"",
   NestedErrors        []string               `json:"nestedErrors,omitempty"`       // "nestedErrors":[],
   Message             string                 `json:"message,omitempty"`            // "message":"When macType is not user defined, mac type should be same as the global Mac assignment Virtual."
-  ErrorSource         Nstring                `json:"errorSource,omitempty"`        // "errorSource":null,
+  ErrorSource         utils.Nstring                `json:"errorSource,omitempty"`        // "errorSource":null,
   RecommendedActions  []string               `json:"recommendedActions,omitempty"` // "recommendedActions":["Verify parameters and try again."],
 }
 
@@ -94,18 +95,18 @@ type ProgressUpdate struct {
 // Task structure
 type Task struct {
   Type                    string             `json:"type,omitempty"`               // "type": "TaskResourceV2",
-  Data                    Nstring            `json:"data,omitempty"`               // "data": null,
+  Data                    utils.Nstring            `json:"data,omitempty"`               // "data": null,
   Category                string             `json:"category,omitempty"`           // "category": "tasks",
   Hidden                  bool               `json:"hidden,omitempty"`             // "hidden": false,
   StateReason             string             `json:"stateReason,omitempty"`        // "stateReason": null,
   User                    string             `json:"User,omitempty"`               // "taskType": "User",
   AssociatedRes           AssociatedResource `json:"associatedResource,omitempty"` // "associatedResource": { },
   PercentComplete         int                `json:"percentComplete,omitempty"`    // "percentComplete": 0,
-  AssociatedTaskUri       Nstring            `json:"associatedTaskUri,omitempty"`  // "associatedTaskUri": null,
+  AssociatedTaskUri       utils.Nstring            `json:"associatedTaskUri,omitempty"`  // "associatedTaskUri": null,
   CompletedSteps          int                `json:"completedSteps,omitempty"`     // "completedSteps": 0,
   ComputedPercentComplete int                `json:"computedPercentComplete,omitempty"` //     "computedPercentComplete": 0,
   ExpectedDuration        int                `json:"expectedDuration,omitempty"`   // "expectedDuration": 300,
-  ParentTaskUri           Nstring            `json:"parentTaskUri,omitempty"`      // "parentTaskUri": null,
+  ParentTaskUri           utils.Nstring            `json:"parentTaskUri,omitempty"`      // "parentTaskUri": null,
   ProgressUpdates         []ProgressUpdate   `json:"progressUpdates,omitempty"`    // "progressUpdates": [],
   TaskErrors              []TaskError        `json:"taskErrors,omitempty"`         // "taskErrors": [],
   TaskOutput              []string           `json:"taskOutput,omitempty"`         // "taskOutput": [],
@@ -119,7 +120,7 @@ type Task struct {
   ETAG                    string             `json:"eTag,omitempty"`               // "eTag": "0",
   Created                 string             `json:"created,omitempty"`            // "created": "2015-09-07T03:25:54.844Z",
   Modified                string             `json:"modified,omitempty"`           // "modified": "2015-09-07T03:25:54.844Z",
-  URI                     Nstring             `json:"uri,omitempty"`                // "uri": "/rest/tasks/145F808A-A8DD-4E1B-8C86-C2379C97B3B2"
+  URI                     utils.Nstring             `json:"uri,omitempty"`                // "uri": "/rest/tasks/145F808A-A8DD-4E1B-8C86-C2379C97B3B2"
   TaskIsDone  bool             // when true, task are done
 	Timeout     int              // time before timeout on Executor
 	WaitTime    time.Duration    // time between task checks

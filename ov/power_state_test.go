@@ -5,6 +5,7 @@ import (
 
 	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
+	"github.com/docker/machine/drivers/oneview/utils"
 )
 
 // testing power state type
@@ -12,12 +13,12 @@ func TestPowerState(t *testing.T) {
 	var (
 		d *OVTest
 		c *OVClient
-		testData    Nstring
+		testData    utils.Nstring
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
-		testData    = Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
+		testData    = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
