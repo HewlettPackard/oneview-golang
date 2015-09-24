@@ -6,10 +6,11 @@ import (
 	"fmt"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/docker/machine/log"
 )
 
 // TestGetProfiles
-func TestGetServers(t *testing.T) {
+func TestGetJobs(t *testing.T) {
 	var (
 		// d *OVTest
 		c *ICSPClient
@@ -19,14 +20,15 @@ func TestGetServers(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetServers()
-		assert.NoError(t, err, "GetServers threw error -> %s, %+v\n", err, data)
-
+		data, err := c.GetJobs()
+		assert.NoError(t, err, "GetJobs threw error -> %s, %+v\n", err, data)
+    if (data.Total > 0) {
+      log.Debugf("data -> %+v", data.Members[0])
+      assert.Condition(t,func() bool { return len(data.Members[0].URI) > 0 }, "has no uri content")
+    }
 	} else {
 		_, c = getTestDriverU()
-		data, err := c.GetServers()
+		data, err := c.GetJobs()
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
-
-//TODO: implement test for delete

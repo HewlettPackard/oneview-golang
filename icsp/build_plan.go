@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/docker/machine/drivers/oneview/rest"
+	"github.com/docker/machine/drivers/oneview/utils"
 	"github.com/docker/machine/log"
 )
 

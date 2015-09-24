@@ -239,17 +239,20 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 func (c *ICSPClient) DeleteServer(uuid string) error {
 	var (
 		uri     = "/rest/os-deployment-servers"
-		servers ServerList
 	)
 
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	//TODO: should check to make sure server uri has a real server
+	//      and it's status is managed
 	data, err := c.RestAPICall(rest.DELETE, uri, nil)
+	//TODO : this should be returning a jobs uri
 	if err != nil {
-		return servers, err
+		return err
 	}
+	//TODO: implement wait for delete
 
-	log.Debugf("DeleteServer %s", data)
-
+	log.Debugf("DeleteServer %+v", data)
+  return nil
 }
