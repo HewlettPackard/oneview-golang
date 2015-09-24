@@ -259,17 +259,20 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 
 // save Server
 // submit new profile template
-func (c *ICSPClient) SaveServer(s Server) (err error) {
+func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
 	log.Infof("Saving server attributes for %s.",s.Name)
 	var (
 		uri  = s.URI
 	)
 	log.Debugf("REST : %s \n %+v\n", uri, s)
-	data, err := c.RestAPICall(rest.PUT, uri , s)
+	data, err := c.RestAPICall(rest.PUT, uri.String() , s)
 	if err != nil {
 		log.Errorf("Error submitting new server request: %s", err)
-		return err
+		return o, err
+	}
+	if err := json.Unmarshal([]byte(data), &o); err != nil {
+		return o, err
 	}
 
-	return err
+	return o, err
 }
