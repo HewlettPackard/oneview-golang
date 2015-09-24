@@ -256,3 +256,20 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	log.Debugf("DeleteServer %+v", data)
   return nil
 }
+
+// save Server
+// submit new profile template
+func (c *ICSPClient) SaveServer(s Server) (err error) {
+	log.Infof("Saving server attributes for %s.",s.Name)
+	var (
+		uri  = s.URI
+	)
+	log.Debugf("REST : %s \n %+v\n", uri, s)
+	data, err := c.RestAPICall(rest.PUT, uri , s)
+	if err != nil {
+		log.Errorf("Error submitting new server request: %s", err)
+		return err
+	}
+
+	return err
+}
