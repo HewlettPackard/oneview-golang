@@ -74,6 +74,7 @@ Running Unit Test cases
 
 ```bash
 sed -i '' 's/ONEVIEW_TEST_ACCEPTANCE=.*/ONEVIEW_TEST_ACCEPTANCE=false/g' "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env"
+sed -i '' 's/ICSP_TEST_ACCEPTANCE=.*/ICSP_TEST_ACCEPTANCE=false/g' "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env"
 
 docker rm -f ${TEST_CONTAINER_NAME}
 docker run -it \
