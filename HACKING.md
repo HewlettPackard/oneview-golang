@@ -13,7 +13,7 @@ We still need to integrate into the normal bats testing done for the overall pro
 craete an environment, `drivers/oneview/.oneview.env`, script to export these values:
 
 ```bash
-cat > "$(git rev-parse --show-toplevel)/.oneview.env" << ONEVIEW
+cat > "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env" << ONEVIEW
 ONEVIEW_APIVERSION=120
 
 ONEVIEW_ICSP_ENDPOINT=https://15.x.x.x
