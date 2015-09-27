@@ -9,7 +9,7 @@ import (
 	"github.com/docker/machine/log"
 )
 
-// storage device type
+// StorageDevice storage device type
 type StorageDevice struct {
 	Capacity   int    `json:"capacity,omitempty"`   // capacity Capacity of the storage in megabytes integer
 	DeviceName string `json:"deviceName,omitempty"` // deviceName Device name, such as "C:" for Windows or "sda" for Linux string
@@ -18,7 +18,7 @@ type StorageDevice struct {
 	Vendor     string `json:"vendor,omitempty"`     // vendor Manufacturer of the device string
 }
 
-// stage const
+// Stage stage const
 type Stage int
 
 const (
@@ -37,17 +37,20 @@ var stagelist = [...]string{
 	"UNKNOWN",       // - The managed Server is in an unknown stage - this is the default value for the field;
 }
 
-func (o Stage) String() string      { return stagelist[o-1] }
+// String helper for stage
+func (o Stage) String() string { return stagelist[o-1] }
+
+// Equal helper for stage
 func (o Stage) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
-// server location type
+// ServerLocationItem server location type
 type ServerLocationItem struct {
 	Bay       string `json:"bay,omitempty"`       // bay Slot number in a rack where the Server is located string
 	Enclosure string `json:"enclosure,omitempty"` // enclosure Name of an enclosure where the Server is physically located string
 	Rack      string `json:"rack,omitempty"`      // rack Name of a rack where the Server is physically located string
 }
 
-// opsw lifecycle
+// OpswLifecycle opsw lifecycle
 type OpswLifecycle int
 
 const (
@@ -68,12 +71,15 @@ var opswlifecycle = [...]string{
 	"PRE_UNPROVISIONED", // - A managed Server in this state is defined, but has not yet booted and registered with the appliance. An example of this is an iLO that was added without booting to maintenance;
 }
 
+// String helper for OpswLifecycle
 func (o OpswLifecycle) String() string { return opswlifecycle[o-1] }
+
+// Equal helper for OpswLifecycle
 func (o OpswLifecycle) Equal(s string) bool {
 	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
 }
 
-// job history type
+// JobHistory job history type
 type JobHistory struct {
 	Description   string        `json:"description,omitempty"`   // description Description of the job, string
 	EndDate       string        `json:"endDate,omitempty"`       // endDate Date and time when job was finished, string
@@ -85,7 +91,7 @@ type JobHistory struct {
 	URIOfJobType  utils.Nstring `json:"uriOfJobType,omitempty"`  // uriOfJobType The canonical URI of the OS Build Plan, string
 }
 
-// Interface
+// Interface struct
 type Interface struct {
 	DHCPEnabled bool   `json:"dhcpEnabled,omitempty"` // dhcpEnabled Flag that indicates whether the interface IP address is configured using DHCP, Boolean
 	Duplex      string `json:"duplex,omitempty"`      // duplex Reported duplex of the interface, string
@@ -98,7 +104,7 @@ type Interface struct {
 	Type        string `json:"type,omitempty"`        // type Interface type. For example, ETHERNET, string
 }
 
-// ilo type
+// Ilo struct
 type Ilo struct {
 	Category       string        `json:"category,omitempty"`       // category The category is used to help identify the kind of resource, string
 	Created        string        `json:"created,omitempty"`        // created Date and time when iLO was first discovered by Insight Control Server Provisioning, timestamp
@@ -119,26 +125,26 @@ type Ilo struct {
 	Username       string        `json:"username,omitempty"`       // username Username used to log in to iLO, string
 }
 
-// devicegroup type
+// DeviceGroup struct
 type DeviceGroup struct {
 	Name  string        `json:"name,omitempty"`  // name Display name for the resource, string
 	REFID int           `json:"refID,omitempty"` // refID The unique numerical identifier, integer
 	URI   utils.Nstring `json:"uri,omitempty"`   // uri The canonical URI of the device group, string
 }
 
-// value item type
+// ValueItem struct
 type ValueItem struct {
 	Scope string `json:"scope,omitempty"` // scope of value
 	Value string `json:"value,omitempty"` // value of information
 }
 
-// customattribute type
+// CustomAttribute struct
 type CustomAttribute struct {
 	Key    string      `json:"key,omitempty"` // key for name value pairs
 	Values []ValueItem `json:"values,omitempty"`
 }
 
-// cpu type
+// CPU struct
 type CPU struct {
 	CacheSize string `json:"cacheSize,omitempty"` // cacheSize CPU's cache size  , string
 	Family    string `json:"family,omitempty"`    // family CPU's family. For example, "x86_64"  , string
@@ -197,7 +203,7 @@ type Server struct {
 	UUID                   string             `json:"uuid,omitempty"`                   // uuid Server's UUID  , string
 }
 
-// List of Servers
+// ServerList List of Servers
 type ServerList struct {
 	Category    string        `json:"category,omitempty"`    // Resource category used for authorizations and resource type groupings
 	Count       int           `json:"count,omitempty"`       // The actual number of resources returned in the specified page
@@ -213,7 +219,7 @@ type ServerList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`         // uri to page
 }
 
-// get a servers from icsp
+// GetServers get a servers from icsp
 func (c *ICSPClient) GetServers() (ServerList, error) {
 	var (
 		uri     = "/rest/os-deployment-servers"
@@ -235,10 +241,10 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
-// DeleteServer - deletes a server in icsp appliance instance
+// DeleteServer deletes a server in icsp appliance instance
 func (c *ICSPClient) DeleteServer(uuid string) error {
 	var (
-		uri     = "/rest/os-deployment-servers"
+		uri = "/rest/os-deployment-servers"
 	)
 
 	// refresh login
@@ -254,18 +260,18 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	//TODO: implement wait for delete
 
 	log.Debugf("DeleteServer %+v", data)
-  return nil
+	return nil
 }
 
-// save Server
+// SaveServer save Server
 // submit new profile template
 func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
-	log.Infof("Saving server attributes for %s.",s.Name)
+	log.Infof("Saving server attributes for %s.", s.Name)
 	var (
-		uri  = s.URI
+		uri = s.URI
 	)
 	log.Debugf("REST : %s \n %+v\n", uri, s)
-	data, err := c.RestAPICall(rest.PUT, uri.String() , s)
+	data, err := c.RestAPICall(rest.PUT, uri.String(), s)
 	if err != nil {
 		log.Errorf("Error submitting new server request: %s", err)
 		return o, err
@@ -275,4 +281,47 @@ func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
 	}
 
 	return o, err
+}
+
+// SetCustomAttribute  set a custom attribute for server
+func (s *Server) SetCustomAttribute(key string, scope string, value string) {
+	//CustomAttributes
+	var bfound bool
+	bfound = false
+	for index, attribute := range s.CustomAttributes {
+		if attribute.Key == key {
+			var vifound bool
+			vifound = false
+			for vindex, vitem := range attribute.Values {
+				if vitem.Scope == scope {
+					vitem.Value = value
+					attribute.Values[vindex] = vitem
+					s.CustomAttributes[index] = attribute
+					vifound = true
+					break
+				}
+			}
+			if vifound == false {
+				var newvalueitem ValueItem
+				newvalueitem.Scope = scope
+				newvalueitem.Value = value
+				attribute.Values = append(attribute.Values, newvalueitem)
+				s.CustomAttributes[index] = attribute
+			}
+			bfound = true
+			break
+		}
+	}
+	if bfound == false {
+		// add the attribute when it's not found
+		var (
+			newattribute CustomAttribute
+			newvalueitem ValueItem
+		)
+		newattribute.Key = key
+		newvalueitem.Scope = scope
+		newvalueitem.Value = value
+		newattribute.Values = append(newattribute.Values, newvalueitem)
+		s.CustomAttributes = append(s.CustomAttributes, newattribute)
+	}
 }
