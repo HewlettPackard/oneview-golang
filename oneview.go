@@ -21,6 +21,7 @@ type Driver struct {
 	ClientOV       *ov.OVClient
 	IloUser        string
 	IloPassword    string
+	IloPort        int
 	OSBuildPlan    string
 	SSHUser        string
 	SSHPort        int
@@ -139,6 +140,12 @@ func GetCreateFlags() []cli.Flag {
 			Value:  "",
 			EnvVar: "ONEVIEW_ILO_PASSWORD",
 		},
+		cli.IntFlag{
+			Name:   "oneview-ilo-port",
+			Usage:  "optional ILO port to use.",
+			Value:  443,
+			EnvVar: "ONEVIEW_ILO_PORT",
+		},
 	}
 }
 
@@ -186,6 +193,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 
 	d.IloUser = flags.String("oneview-ilo-user")
 	d.IloPassword = flags.String("oneview-ilo-password")
+	d.IloPort = flags.Int("oneview-ilo-port")
 
 	d.SSHUser = flags.String("oneview-ssh-user")
 	d.SSHPort = flags.Int("oneview-ssh-port")

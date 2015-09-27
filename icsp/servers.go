@@ -207,6 +207,49 @@ type ServerList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`         // uri to page
 }
 
+// ServerCreate structure for create server
+type ServerCreate struct {
+	IPAddress string `json:"ipAddress,omitempty"` // PXE managed ip address
+	Port      int    `json:"port,omitempty"`      // port number to use
+	UserName  string `json:"username,omitempty"`  // iLo username
+	Password  string `json:"password,omitempty"`  // iLO password
+}
+
+// NewServerCreate make a new servercreate object
+func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port int) ServerCreate {
+	return ServerCreate{
+		IPAddress: ip,
+		Port:      port,
+		UserName:  user,
+		Password:  pass,
+	}
+}
+
+// CreateServer create a new server in icsp
+func (c *ICSPClient) CreateServer(user string, pass string, ip string, port int) error {
+	var (
+		uri = "/rest/os-deployment-servers"
+		sc  ServerCreate
+	)
+
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	sc = sc.NewServerCreate(user, pass, ip, port)
+	log.Debugf("REST : %s \n %+v\n", uri, sc)
+
+	data, err := c.RestAPICall(rest.POST, uri, sc)
+	//TODO : this should be returning a jobs uri
+	if err != nil {
+		return err
+	}
+	//TODO: implement wait for delete
+
+	log.Debugf("DeleteServer %+v", data)
+	return nil
+}
+
 // GetServers get a servers from icsp
 func (c *ICSPClient) GetServers() (ServerList, error) {
 	var (
