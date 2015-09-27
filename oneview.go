@@ -7,8 +7,8 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/docker/machine/drivers"
-	"github.com/docker/machine/drivers/oneview/ov"
 	"github.com/docker/machine/drivers/oneview/icsp"
+	"github.com/docker/machine/drivers/oneview/ov"
 	"github.com/docker/machine/log"
 	"github.com/docker/machine/ssh"
 	"github.com/docker/machine/state"
@@ -17,13 +17,15 @@ import (
 // Driver OneView driver structure
 type Driver struct {
 	*drivers.BaseDriver
+	ClientICSP     *icsp.ICSPClient
+	ClientOV       *ov.OVClient
+	IloUser        string
+	IloPassword    string
+	OSBuildPlan    string
 	SSHUser        string
 	SSHPort        int
 	SSHPublicKey   string
-	ClientICSP     *icsp.ICSPClient
-	ClientOV       *ov.OVClient
 	ServerTemplate string
-	OSBuildPlan    string
 }
 
 const (
@@ -39,16 +41,6 @@ func init() {
 
 // GetCreateFlags registers the flags this driver adds to
 // "docker hosts create"
-// --oneview-ov-user        : String User to OneView
-// --oneview-ov-password    : String Password to OneView
-// --oneview-ov-endpoint    : String url end point, base path
-//
-// --oneview-icsp-user      : String User to ICSP
-// --oneview-icsp-password  : String Password to ICSP
-// --oneview-icsp-endpoint  : String url end point, base path
-//
-// --oneview-sslverify      : Bool false means no https verification
-// --oneview-apiversion     : Int version of api to use 120 is default
 //
 func GetCreateFlags() []cli.Flag {
 	return []cli.Flag{
@@ -135,6 +127,18 @@ func GetCreateFlags() []cli.Flag {
 			Value:  "RHEL71_DOCKER_1.8",
 			EnvVar: "ONEVIEW_OS_PLAN",
 		},
+		cli.StringFlag{
+			Name:   "oneview-ilo-user",
+			Usage:  "ILO User id that is used during ICSP server creation.",
+			Value:  "docker",
+			EnvVar: "ONEVIEW_ILO_USER",
+		},
+		cli.StringFlag{
+			Name:   "oneview-ilo-password",
+			Usage:  "ILO password that is used during ICSP server creation.",
+			Value:  "",
+			EnvVar: "ONEVIEW_ILO_PASSWORD",
+		},
 	}
 }
 
@@ -166,19 +170,22 @@ func (d *Driver) GetSSHUsername() string {
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	log.Debug("SetConfigFromFlags...")
 
-	d.ClientICSP = d.ClientICSP.NewICSPClient( flags.String("oneview-icsp-user"),
-																						 flags.String("oneview-icsp-password"),
-																						 flags.String("oneview-icsp-domain"),
-																						 flags.String("oneview-icsp-endpoint"),
-																						 flags.Bool("oneview-sslverify"),
-																						 flags.Int("oneview-apiversion"))
+	d.ClientICSP = d.ClientICSP.NewICSPClient(flags.String("oneview-icsp-user"),
+		flags.String("oneview-icsp-password"),
+		flags.String("oneview-icsp-domain"),
+		flags.String("oneview-icsp-endpoint"),
+		flags.Bool("oneview-sslverify"),
+		flags.Int("oneview-apiversion"))
 
-	d.ClientOV = d.ClientOV.NewOVClient( flags.String("oneview-ov-user"),
-																			 flags.String("oneview-ov-password"),
-																			 flags.String("oneview-ov-domain"),
-																			 flags.String("oneview-ov-endpoint"),
-																			 flags.Bool("oneview-sslverify"),
-																			 flags.Int("oneview-apiversion"))
+	d.ClientOV = d.ClientOV.NewOVClient(flags.String("oneview-ov-user"),
+		flags.String("oneview-ov-password"),
+		flags.String("oneview-ov-domain"),
+		flags.String("oneview-ov-endpoint"),
+		flags.Bool("oneview-sslverify"),
+		flags.Int("oneview-apiversion"))
+
+	d.IloUser = flags.String("oneview-ilo-user")
+	d.IloPassword = flags.String("oneview-ilo-password")
 
 	d.SSHUser = flags.String("oneview-ssh-user")
 	d.SSHPort = flags.Int("oneview-ssh-port")

@@ -16,11 +16,13 @@ craete an environment, `drivers/oneview/.oneview.env`, script to export these va
 cat > "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env" << ONEVIEW
 ONEVIEW_APIVERSION=120
 
+ONEVIEW_ILO_USER=docker
+ONEVIEW_ILO_PASSWORD=password
+
 ONEVIEW_ICSP_ENDPOINT=https://15.x.x.x
 ONEVIEW_ICSP_USER=username
 ONEVIEW_ICSP_PASSWORD=password
 ONEVIEW_ICSP_DOMAIN=LOCAL
-
 
 ONEVIEW_OV_ENDPOINT=https://15.x.x.x
 ONEVIEW_OV_USER=username
