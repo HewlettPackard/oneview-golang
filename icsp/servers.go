@@ -21,7 +21,7 @@ type StorageDevice struct {
 	Vendor     string `json:"vendor,omitempty"`     // vendor Manufacturer of the device string
 }
 
-// stage const
+// Stage stage const
 type Stage int
 
 const (
@@ -40,17 +40,20 @@ var stagelist = [...]string{
 	"UNKNOWN",       // - The managed Server is in an unknown stage - this is the default value for the field;
 }
 
-func (o Stage) String() string      { return stagelist[o-1] }
+// String helper for stage
+func (o Stage) String() string { return stagelist[o-1] }
+
+// Equal helper for stage
 func (o Stage) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
-// server location type
+// ServerLocationItem server location type
 type ServerLocationItem struct {
 	Bay       string `json:"bay,omitempty"`       // bay Slot number in a rack where the Server is located string
 	Enclosure string `json:"enclosure,omitempty"` // enclosure Name of an enclosure where the Server is physically located string
 	Rack      string `json:"rack,omitempty"`      // rack Name of a rack where the Server is physically located string
 }
 
-// opsw lifecycle
+// OpswLifecycle opsw lifecycle
 type OpswLifecycle int
 
 const (
@@ -71,12 +74,15 @@ var opswlifecycle = [...]string{
 	"PRE_UNPROVISIONED", // - A managed Server in this state is defined, but has not yet booted and registered with the appliance. An example of this is an iLO that was added without booting to maintenance;
 }
 
+// String helper for OpswLifecycle
 func (o OpswLifecycle) String() string { return opswlifecycle[o-1] }
+
+// Equal helper for OpswLifecycle
 func (o OpswLifecycle) Equal(s string) bool {
 	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
 }
 
-// job history type
+// JobHistory job history type
 type JobHistory struct {
 	Description   string        `json:"description,omitempty"`   // description Description of the job, string
 	EndDate       string        `json:"endDate,omitempty"`       // endDate Date and time when job was finished, string
@@ -88,7 +94,7 @@ type JobHistory struct {
 	URIOfJobType  utils.Nstring `json:"uriOfJobType,omitempty"`  // uriOfJobType The canonical URI of the OS Build Plan, string
 }
 
-// Interface
+// Interface struct
 type Interface struct {
 	DHCPEnabled bool   `json:"dhcpEnabled,omitempty"` // dhcpEnabled Flag that indicates whether the interface IP address is configured using DHCP, Boolean
 	Duplex      string `json:"duplex,omitempty"`      // duplex Reported duplex of the interface, string
@@ -101,7 +107,7 @@ type Interface struct {
 	Type        string `json:"type,omitempty"`        // type Interface type. For example, ETHERNET, string
 }
 
-// ilo type
+// Ilo struct
 type Ilo struct {
 	Category       string        `json:"category,omitempty"`       // category The category is used to help identify the kind of resource, string
 	Created        string        `json:"created,omitempty"`        // created Date and time when iLO was first discovered by Insight Control Server Provisioning, timestamp
@@ -122,26 +128,14 @@ type Ilo struct {
 	Username       string        `json:"username,omitempty"`       // username Username used to log in to iLO, string
 }
 
-// devicegroup type
+// DeviceGroup struct
 type DeviceGroup struct {
 	Name  string        `json:"name,omitempty"`  // name Display name for the resource, string
 	REFID int           `json:"refID,omitempty"` // refID The unique numerical identifier, integer
 	URI   utils.Nstring `json:"uri,omitempty"`   // uri The canonical URI of the device group, string
 }
 
-// value item type
-type ValueItem struct {
-	Scope string `json:"scope,omitempty"` // scope of value
-	Value string `json:"value,omitempty"` // value of information
-}
-
-// customattribute type
-type CustomAttribute struct {
-	Key    string      `json:"key,omitempty"` // key for name value pairs
-	Values []ValueItem `json:"values,omitempty"`
-}
-
-// cpu type
+// CPU struct
 type CPU struct {
 	CacheSize string `json:"cacheSize,omitempty"` // cacheSize CPU's cache size  , string
 	Family    string `json:"family,omitempty"`    // family CPU's family. For example, "x86_64"  , string
@@ -200,7 +194,7 @@ type Server struct {
 	UUID                   string             `json:"uuid,omitempty"`                   // uuid Server's UUID  , string
 }
 
-// List of Servers
+// ServerList List of Servers
 type ServerList struct {
 	Category    string        `json:"category,omitempty"`    // Resource category used for authorizations and resource type groupings
 	Count       int           `json:"count,omitempty"`       // The actual number of resources returned in the specified page
@@ -216,7 +210,77 @@ type ServerList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`         // uri to page
 }
 
-// get a servers from icsp
+// ServerCreate structure for create server
+type ServerCreate struct {
+	IPAddress string `json:"ipAddress,omitempty"` // PXE managed ip address
+	Port      int    `json:"port,omitempty"`      // port number to use
+	UserName  string `json:"username,omitempty"`  // iLo username
+	Password  string `json:"password,omitempty"`  // iLO password
+}
+
+// NewServerCreate make a new servercreate object
+func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port int) ServerCreate {
+	if user == "" {
+		log.Fatal("ilo user missing, please specify with ONEVIEW_ILO_USER or --oneview-ilo-user arguments.")
+	}
+	if user == "" {
+		log.Fatal("ilo password missing, please specify with ONEVIEW_ILO_PASSWORD or --oneview-ilo-password arguments.")
+	}
+	return ServerCreate{
+		IPAddress: ip,
+		Port:      port,
+		UserName:  user,
+		Password:  pass,
+	}
+}
+
+// SubmitNewServer submit new profile template
+func (c *ICSPClient) SubmitNewServer(sc ServerCreate) (jt *JobTask, err error) {
+	log.Infof("Initializing creation of server for ICSP, %s.", sc.IPAddress)
+	var (
+		uri  = "/rest/os-deployment-servers"
+		juri ODSUri
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	jt = jt.NewJobTask(c)
+	jt.Reset()
+	data, err := c.RestAPICall(rest.POST, uri, sc)
+	if err != nil {
+		jt.IsDone = true
+		log.Errorf("Error submitting new server request: %s", err)
+		return jt, err
+	}
+
+	log.Debugf("Response submit new server %s", data)
+	if err := json.Unmarshal([]byte(data), &juri); err != nil {
+		jt.IsDone = true
+		jt.JobURI = juri
+		log.Errorf("Error with task un-marshal: %s", err)
+		return jt, err
+	}
+	jt.JobURI = juri
+
+	return jt, err
+}
+
+// CreateServer create profile from template
+func (c *ICSPClient) CreateServer(user string, pass string, ip string, port int) error {
+
+	var sc ServerCreate
+	sc = sc.NewServerCreate(user, pass, ip, port)
+
+	jt, err := c.SubmitNewServer(sc)
+	err = jt.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// GetServers get a servers from icsp
 func (c *ICSPClient) GetServers() (ServerList, error) {
 	var (
 		uri     = "/rest/os-deployment-servers"
@@ -329,7 +393,7 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	return nil
 }
 
-// save Server
+// SaveServer save Server
 // submit new profile template
 func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
 	log.Infof("Saving server attributes for %s.", s.Name)

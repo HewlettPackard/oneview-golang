@@ -8,7 +8,8 @@ import (
 	"github.com/docker/machine/drivers/oneview/utils"
 	"github.com/docker/machine/log"
 )
-// elementJobStatus type
+
+// ElementJobStatus type
 type ElementJobStatus int
 
 const (
@@ -25,10 +26,15 @@ var elementjobstatuslist = [...]string{
 	"STATUS_WARNING", // - Status for server that have warnings;
 }
 
-func (o ElementJobStatus) String()        string  { return elementjobstatuslist[o-1] }
-func (o ElementJobStatus) Equal(s string) bool    { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+// String helper for ElementJobStatus
+func (o ElementJobStatus) String() string { return elementjobstatuslist[o-1] }
 
-// jobServerInclusionStatus
+// Equal helper for ElementJobStatus
+func (o ElementJobStatus) Equal(s string) bool {
+	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
+}
+
+// JobServerInclusionStatus type
 type JobServerInclusionStatus int
 
 const (
@@ -43,10 +49,15 @@ var jobserverinclusionstatus = [...]string{
 	"REMOVED_INCLUSION_STATUS",  // - Inclusion status to indicate that a server was present at schedule time but removed at run time because membership in a server group changed;
 }
 
-func (o JobServerInclusionStatus) String()        string  { return jobserverinclusionstatus[o-1] }
-func (o JobServerInclusionStatus) Equal(s string) bool    { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+// String helper for JobServerInclusionStatus
+func (o JobServerInclusionStatus) String() string { return jobserverinclusionstatus[o-1] }
 
-// jobStatusOnServer Status of the Job on a server
+// Equal helper for JobServerInclusionStatus
+func (o JobServerInclusionStatus) Equal(s string) bool {
+	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
+}
+
+// JobStatusOnServer Status of the Job on a server
 type JobStatusOnServer int
 
 const (
@@ -67,10 +78,15 @@ var jobstatusonserver = [...]string{
 	"WARNING_STATUS",   // - Status value to indicate a job completed but had warning for this server;
 }
 
-func (o JobStatusOnServer) String()        string  { return jobstatusonserver[o-1] }
-func (o JobStatusOnServer) Equal(s string) bool    { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+// String helper for JobStatusOnServer
+func (o JobStatusOnServer) String() string { return jobstatusonserver[o-1] }
 
-// job sate
+// Equal helper for JobStatusOnServer
+func (o JobStatusOnServer) Equal(s string) bool {
+	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
+}
+
+// JobState type
 type JobState int
 
 const (
@@ -111,70 +127,114 @@ var jobstatelist = [...]string{
 	"STATUS_ZOMBIE",      // - The command engine was stopped while the job was running, leaving it in an orphaned state
 }
 
-func (o JobState) String()        string  { return jobstatelist[o-1] }
-func (o JobState) Equal(s string) bool    { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+// String helper for JobState
+func (o JobState) String() string { return jobstatelist[o-1] }
 
-// OSDJobServerInfo
+// Equal helper for JobState
+func (o JobState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
+// JobStatus type
+type JobStatus int
+
+const (
+	JOB_STATUS_OK JobStatus = 1 + iota
+	JOB_STATUS_WARNING
+	JOB_STATUS_ERROR
+	JOB_STATUS_UNKNOWN
+)
+
+var jobstatuslist = [...]string{
+	"ok",      // The job was completed successfully
+	"warning", // The job completed with warnings
+	"error",   // The job had errors
+	"unknown", // The status of the Job is unknown
+}
+
+// String helper for JobStatus
+func (o JobStatus) String() string { return jobstatuslist[o-1] }
+
+// Equal helper for JobStatus
+func (o JobStatus) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
+// JobRunning running state
+type JobRunning int
+
+const (
+	JOB_RUNNING_YES JobRunning = 1 + iota
+	JOB_RUNNING_NO
+)
+
+var jobrunninglist = [...]string{
+	"TRUE",  // The job is running
+	"FALSE", // The job is not running
+}
+
+// String helper for JobRunning
+func (o JobRunning) String() string { return jobrunninglist[o-1] }
+
+// Equal helper for JobStatus
+func (o JobRunning) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
+// OSDJobServerInfo struct
 type OSDJobServerInfo struct {
-	DeviceType                string         `json:"deviceType,omitempty"`                // deviceType The only supported type: os-deployment-servers, string
-	JobServerInclusionStatus  string         `json:"jobServerInclusionStatus,omitempty"`  // jobServerInclusionStatus Information about a server that was affected by a job. Each server has information about how it was associated with the job (inclusion status) and the status of the job on that server (status). Inclusion values: string
-	JobServerURI              utils.Nstring  `json:"jobServerUri,omitempty"`              // jobServerUri The canonical URI of a server within the Job, string
-	JobStatusOnServer         string         `json:"jobStatusOnServer,omitempty"`         // jobStatusOnServer Status of the Job on a server where this Job was executed. Status values: string
-	ServerName                string         `json:"serverName,omitempty"`                // serverName Name of the server string
+	DeviceType               string        `json:"deviceType,omitempty"`               // deviceType The only supported type: os-deployment-servers, string
+	JobServerInclusionStatus string        `json:"jobServerInclusionStatus,omitempty"` // jobServerInclusionStatus Information about a server that was affected by a job. Each server has information about how it was associated with the job (inclusion status) and the status of the job on that server (status). Inclusion values: string
+	JobServerURI             utils.Nstring `json:"jobServerUri,omitempty"`             // jobServerUri The canonical URI of a server within the Job, string
+	JobStatusOnServer        string        `json:"jobStatusOnServer,omitempty"`        // jobStatusOnServer Status of the Job on a server where this Job was executed. Status values: string
+	ServerName               string        `json:"serverName,omitempty"`               // serverName Name of the server string
 }
 
-// OSDJobResult
+// OSDJobResult struct
 type OSDJobResult struct {
-	JobMessage               string        `json:"jobMessage,omitempty"`              // jobMessage Job result message  , string
-	JobResultCompletedSteps  int           `json:"jobResultCompletedSteps,omitempty"` // jobResultCompletedSteps Total number of completed steps  , integer
-	JobResultErrorDetails    string        `json:"jobResultErrorDetails,omitempty"`   // jobResultErrorDetails Error details for the Job  , string
-	JobResultLogDetails      string        `json:"jobResultLogDetails,omitempty"`     // jobResultLogDetails Log details for the Job  , string
-	JobResultTotalSteps      int           `json:"jobResultTotalSteps,omitempty"`     // jobResultTotalSteps Total number of steps for the Job  , integer
-	JobServerURI             utils.Nstring `json:"jobServerUri,omitempty"`            // jobServerUri The canonical URI of a server within the Job  , string
+	JobMessage              string        `json:"jobMessage,omitempty"`              // jobMessage Job result message  , string
+	JobResultCompletedSteps int           `json:"jobResultCompletedSteps,omitempty"` // jobResultCompletedSteps Total number of completed steps  , integer
+	JobResultErrorDetails   string        `json:"jobResultErrorDetails,omitempty"`   // jobResultErrorDetails Error details for the Job  , string
+	JobResultLogDetails     string        `json:"jobResultLogDetails,omitempty"`     // jobResultLogDetails Log details for the Job  , string
+	JobResultTotalSteps     int           `json:"jobResultTotalSteps,omitempty"`     // jobResultTotalSteps Total number of steps for the Job  , integer
+	JobServerURI            utils.Nstring `json:"jobServerUri,omitempty"`            // jobServerUri The canonical URI of a server within the Job  , string
 }
 
-// OSDJobProgress
+// OSDJobProgress struct
 type OSDJobProgress struct {
-	CurrentStepName    string          `json:"currentStepName,omitempty"`   // currentStepName The name of the step that this Job is currently on  , string
-	ElementJobStatus   string          `json:"elementJobStatus,omitempty"`  // elementJobStatus The status of an individual server within the Job, string
-	JobCompletedSteps  int             `json:"jobCompletedSteps,omitempty"` // jobCompletedSteps Total number of completed steps of the Job, integer
-	JobServerURI       utils.Nstring   `json:"jobServerUri,omitempty"`      // jobServerUri The canonical URI of a server within the Job, string
-	JobTotalSteps      int             `json:"jobTotalSteps,omitempty"`     // jobTotalSteps Total number of steps that the Job has, integer
+	CurrentStepName   string        `json:"currentStepName,omitempty"`   // currentStepName The name of the step that this Job is currently on  , string
+	ElementJobStatus  string        `json:"elementJobStatus,omitempty"`  // elementJobStatus The status of an individual server within the Job, string
+	JobCompletedSteps int           `json:"jobCompletedSteps,omitempty"` // jobCompletedSteps Total number of completed steps of the Job, integer
+	JobServerURI      utils.Nstring `json:"jobServerUri,omitempty"`      // jobServerUri The canonical URI of a server within the Job, string
+	JobTotalSteps     int           `json:"jobTotalSteps,omitempty"`     // jobTotalSteps Total number of steps that the Job has, integer
 }
 
-// job type
+// Job type
 type Job struct {
-	Category        string             `json:"category,omitempty"`         // category The category is used to help identify the kind of resource, string
-	Created         string             `json:"created,omitempty"`          // created Date and time when the Job was created, timestamp
-	Description     string             `json:"description,omitempty"`      // description Text description of the type of the Job, string
-	ETAG            string             `json:"eTag,omitempty"`             // eTag Entity tag/version ID of the resource , string
-	JobDeviceGroups []string           `json:"jobDeviceGroups,omitempty"`  // jobDeviceGroups An array of device groups associated with this Job , array of string
-	JobProgress     []OSDJobProgress   `json:"jobProgress,omitempty"`      // jobProgress An array of Job progress. A single Job can contain progress for multiple servers. Job progress is only available when the job is running. For a single Job this is the number of steps competed for this Job on the target server. When a set of jobs is run together user will see one Job listed. The progress for this Job is the number of jobs that have been completed
-	JobResult       []OSDJobResult     `json:"jobResult,omitempty"`        // jobResult  An array of Job results. A single Job can contain results for multiple servers. Job result is only available once the Job completes. For a single Job this provides total steps completed, errors that happened during Job execution and logs
-	JobServerInfo   []OSDJobServerInfo `json:"jobServerInfo,omitempty"`    // jobServerInfo An array of servers and their details associated with this Job
-	JobUserName     string             `json:"jobUserName,omitempty"`      // jobUserName The name of the user under whose authority this Job was invoked string
-	Modified        string             `json:"modified,omitempty"`         // modified Date and time when the Job was last modified timestamp
-	Name            string             `json:"name,omitempty"`             // name Name of the job string
-	NameOfJobType   string             `json:"nameOfJobType,omitempty"`    // nameOfJobType The name of the type of the Job. In some cases has the same value as the field "name" string
-	Running         string             `json:"running,omitempty"`          // running Indicates whether the Job is running
-	State           string             `json:"state,omitempty"`            // JobState  state A constant to help explain what state a Job is in. Possible values:
-	Status          string             `json:"status,omitempty"`           // status Overall status of the Job. Values: string
-	Type            string             `json:"type,omitempty"`             // type Uniquely identifies the type of the JSON object
-	TypeOfJobType   string             `json:"typeOfJobType,omitempty"`    // typeOfJobType A constant that indicates what type of Job it is:
-	URI             utils.Nstring      `json:"uri,omitempty"`              // uri The canonical URI of the resource string
-	URIOfJobType    utils.Nstring      `json:"uriOfJobType,omitempty"`     // uriOfJobType The canonical URI of the OS Build Plan string
+	Category        string             `json:"category,omitempty"`        // category The category is used to help identify the kind of resource, string
+	Created         string             `json:"created,omitempty"`         // created Date and time when the Job was created, timestamp
+	Description     string             `json:"description,omitempty"`     // description Text description of the type of the Job, string
+	ETAG            string             `json:"eTag,omitempty"`            // eTag Entity tag/version ID of the resource , string
+	JobDeviceGroups []string           `json:"jobDeviceGroups,omitempty"` // jobDeviceGroups An array of device groups associated with this Job , array of string
+	JobProgress     []OSDJobProgress   `json:"jobProgress,omitempty"`     // jobProgress An array of Job progress. A single Job can contain progress for multiple servers. Job progress is only available when the job is running. For a single Job this is the number of steps competed for this Job on the target server. When a set of jobs is run together user will see one Job listed. The progress for this Job is the number of jobs that have been completed
+	JobResult       []OSDJobResult     `json:"jobResult,omitempty"`       // jobResult  An array of Job results. A single Job can contain results for multiple servers. Job result is only available once the Job completes. For a single Job this provides total steps completed, errors that happened during Job execution and logs
+	JobServerInfo   []OSDJobServerInfo `json:"jobServerInfo,omitempty"`   // jobServerInfo An array of servers and their details associated with this Job
+	JobUserName     string             `json:"jobUserName,omitempty"`     // jobUserName The name of the user under whose authority this Job was invoked string
+	Modified        string             `json:"modified,omitempty"`        // modified Date and time when the Job was last modified timestamp
+	Name            string             `json:"name,omitempty"`            // name Name of the job string
+	NameOfJobType   string             `json:"nameOfJobType,omitempty"`   // nameOfJobType The name of the type of the Job. In some cases has the same value as the field "name" string
+	Running         string             `json:"running,omitempty"`         // running Indicates whether the Job is running
+	State           string             `json:"state,omitempty"`           // JobState  state A constant to help explain what state a Job is in. Possible values:
+	Status          string             `json:"status,omitempty"`          // status Overall status of the Job. Values: string
+	Type            string             `json:"type,omitempty"`            // type Uniquely identifies the type of the JSON object
+	TypeOfJobType   string             `json:"typeOfJobType,omitempty"`   // typeOfJobType A constant that indicates what type of Job it is:
+	URI             utils.Nstring      `json:"uri,omitempty"`             // uri The canonical URI of the resource string
+	URIOfJobType    utils.Nstring      `json:"uriOfJobType,omitempty"`    // uriOfJobType The canonical URI of the OS Build Plan string
 }
 
 // determine if Running property is 'TRUE' or 'FALSE'
-func (o Job) isRunning()  bool  {
+func (o Job) isRunning() bool {
 	if strings.ToUpper(o.Running) == "TRUE" {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
-// List of jobs
+// JobsList List of jobs
 type JobsList struct {
 	Category    string        `json:"category,omitempty"`    // Resource category used for authorizations and resource type groupings
 	Count       int           `json:"count,omitempty"`       // The actual number of resources returned in the specified page
@@ -190,13 +250,13 @@ type JobsList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`         // uri to page
 }
 
-// get a jobs from icsp
+// GetJobs get a jobs from icsp
 func (c *ICSPClient) GetJobs() (JobsList, error) {
 	var (
-		uri     = "/rest/os-deployment-jobs"
+		uri  = "/rest/os-deployment-jobs"
 		jobs JobsList
 	)
-  //TODO: need to ask icsp team how we can get limitted data set
+	//TODO: need to ask icsp team how we can get limitted data set
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -210,4 +270,24 @@ func (c *ICSPClient) GetJobs() (JobsList, error) {
 		return jobs, err
 	}
 	return jobs, nil
+}
+
+// GetJob get a job with the ODSUri
+func (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
+	var (
+		job Job
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, u.URI.String(), nil)
+	if err != nil {
+		return job, err
+	}
+
+	log.Debugf("GetJob %+v", data)
+	if err := json.Unmarshal([]byte(data), &job); err != nil {
+		return job, err
+	}
+	return job, nil
 }

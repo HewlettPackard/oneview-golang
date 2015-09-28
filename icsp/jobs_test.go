@@ -1,15 +1,15 @@
 package icsp
 
 import (
+	"fmt"
 	"os"
 	"testing"
-	"fmt"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/docker/machine/log"
+	"github.com/stretchr/testify/assert"
 )
 
-// TestGetProfiles
+// TestGetJobs
 func TestGetJobs(t *testing.T) {
 	var (
 		// d *OVTest
@@ -22,13 +22,15 @@ func TestGetJobs(t *testing.T) {
 		}
 		data, err := c.GetJobs()
 		assert.NoError(t, err, "GetJobs threw error -> %s, %+v\n", err, data)
-    if (data.Total > 0) {
-      log.Debugf("data -> %+v", data.Members[0])
-      assert.Condition(t,func() bool { return len(data.Members[0].URI) > 0 }, "has no uri content")
-    }
+		if data.Total > 0 {
+			log.Debugf("data -> %+v", data.Members[0])
+			assert.Condition(t, func() bool { return len(data.Members[0].URI) > 0 }, "has no uri content")
+			data, err := c.GetJob(ODSUri{URI: data.Members[0].URI})
+			assert.NoError(t, err, "GetJob threw error -> %s, %+v\n", err, data)
+		}
 	} else {
 		_, c = getTestDriverU()
 		data, err := c.GetJobs()
-		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
