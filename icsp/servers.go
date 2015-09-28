@@ -225,28 +225,49 @@ func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port
 	}
 }
 
-// CreateServer create a new server in icsp
-func (c *ICSPClient) CreateServer(user string, pass string, ip string, port int) error {
+// SubmitNewServer submit new profile template
+func (c *ICSPClient) SubmitNewServer(sc ServerCreate) (jt *JobTask, err error) {
+	log.Infof("Initializing creation of server for ICSP, %s.", sc.IPAddress)
 	var (
-		uri = "/rest/os-deployment-servers"
-		sc  ServerCreate
+		uri  = "/rest/os-deployment-servers"
+		juri ODSUri
 	)
-
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	sc = sc.NewServerCreate(user, pass, ip, port)
-	log.Debugf("REST : %s \n %+v\n", uri, sc)
-
+	jt = jt.NewJobTask(c)
+	jt.Reset()
 	data, err := c.RestAPICall(rest.POST, uri, sc)
-	//TODO : this should be returning a jobs uri
+	if err != nil {
+		jt.IsDone = true
+		log.Errorf("Error submitting new server request: %s", err)
+		return jt, err
+	}
+
+	log.Debugf("Response submit new server %s", data)
+	if err := json.Unmarshal([]byte(data), &juri); err != nil {
+		jt.IsDone = true
+		jt.JobURI = juri
+		log.Errorf("Error with task un-marshal: %s", err)
+		return jt, err
+	}
+	jt.JobURI = juri
+
+	return jt, err
+}
+
+// CreateServer create profile from template
+func (c *ICSPClient) CreateServer(user string, pass string, ip string, port int) error {
+
+	var sc ServerCreate
+	sc = sc.NewServerCreate(user, pass, ip, port)
+
+	jt, err := c.SubmitNewServer(sc)
+	err = jt.Wait()
 	if err != nil {
 		return err
 	}
-	//TODO: implement wait for delete
-
-	log.Debugf("DeleteServer %+v", data)
 	return nil
 }
 

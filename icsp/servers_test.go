@@ -9,12 +9,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//TODO: implement create server
+//TODO: implement create server unt test
 func TestCreateServer(t *testing.T) {
+	var (
+		d              *ICSPTest
+		c              *ICSPClient
+		user, pass, ip string
+	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		user = os.Getenv("ONEVIEW_ILO_USER")
+		pass = os.Getenv("ONEVIEW_ILO_PASSWORD")
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		ip = d.Tc.GetTestData(d.Env, "IloIPAddress").(string)
 		log.Debug("implements acceptance test for TestCreateServer")
-		// check that the server doesn't exist
 		// create the server
+		err := c.CreateServer(user, pass, ip, 443)
+		assert.NoError(t, err, "CreateServer threw error -> %s\n", err)
+
 		// check if the server now exist
 	} else {
 		log.Debug("implements unit test for TestCreateServer")

@@ -133,6 +133,48 @@ func (o JobState) String() string { return jobstatelist[o-1] }
 // Equal helper for JobState
 func (o JobState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
+// JobStatus type
+type JobStatus int
+
+const (
+	JOB_STATUS_OK JobStatus = 1 + iota
+	JOB_STATUS_WARNING
+	JOB_STATUS_ERROR
+	JOB_STATUS_UNKNOWN
+)
+
+var jobstatuslist = [...]string{
+	"ok",      // The job was completed successfully
+	"warning", // The job completed with warnings
+	"error",   // The job had errors
+	"unknown", // The status of the Job is unknown
+}
+
+// String helper for JobStatus
+func (o JobStatus) String() string { return jobstatuslist[o-1] }
+
+// Equal helper for JobStatus
+func (o JobStatus) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
+// JobRunning running state
+type JobRunning int
+
+const (
+	JOB_RUNNING_YES JobRunning = 1 + iota
+	JOB_RUNNING_NO
+)
+
+var jobrunninglist = [...]string{
+	"TRUE",  // The job is running
+	"FALSE", // The job is not running
+}
+
+// String helper for JobRunning
+func (o JobRunning) String() string { return jobrunninglist[o-1] }
+
+// Equal helper for JobStatus
+func (o JobRunning) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
 // OSDJobServerInfo struct
 type OSDJobServerInfo struct {
 	DeviceType               string        `json:"deviceType,omitempty"`               // deviceType The only supported type: os-deployment-servers, string
