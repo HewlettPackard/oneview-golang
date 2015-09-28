@@ -56,7 +56,7 @@ docker run -it \
 ```
 2. setup alias:
 ```bash
-   alias ${TEST_CONTAINER_NAME}='docker exec '${TEST_CONTAINER_NAME}' godep go test -test.v=true --short'
+   alias ${TEST_CONTAINER_NAME}='docker exec '${TEST_CONTAINER_NAME}' godep go test -test.timeout=60m -test.v=true --short'
 ```
 3. to refresh env options, use
 ```bash

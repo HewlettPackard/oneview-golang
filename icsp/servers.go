@@ -217,6 +217,12 @@ type ServerCreate struct {
 
 // NewServerCreate make a new servercreate object
 func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port int) ServerCreate {
+	if user == "" {
+		log.Fatal("ilo user missing, please specify with ONEVIEW_ILO_USER or --oneview-ilo-user arguments.")
+	}
+	if user == "" {
+		log.Fatal("ilo password missing, please specify with ONEVIEW_ILO_PASSWORD or --oneview-ilo-password arguments.")
+	}
 	return ServerCreate{
 		IPAddress: ip,
 		Port:      port,

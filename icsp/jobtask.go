@@ -30,7 +30,7 @@ func (jt *JobTask) NewJobTask(c *ICSPClient) *JobTask {
 	return &JobTask{
 		IsDone:   false,
 		Client:   c,
-		Timeout:  144, // default 24min
+		Timeout:  360, // default 1hr
 		WaitTime: 10}  // default 10sec, impacts Timeout
 }
 
@@ -87,32 +87,42 @@ func (jt *JobTask) GetComplettedStatus() string {
 
 }
 
+// GetPercentProgress get the progress as a percentage
+func (jt *JobTask) GetPercentProgress() float64 {
+	var progress float64
+	lastjobstep := len(jt.JobProgress)
+	stepscompleted := jt.JobProgress[lastjobstep-1].JobCompletedSteps + 1
+	totalcompleted := jt.JobProgress[lastjobstep-1].JobTotalSteps + 1
+	if totalcompleted > 1 {
+		progress = (float64(stepscompleted) / float64(totalcompleted)) * 100
+	}
+	log.Debugf("steps => %d, totalsteps => %d, progress => %0.0f", stepscompleted, totalcompleted, progress)
+	return progress
+}
+
 // Wait - wait on job task to complete
 func (jt *JobTask) Wait() error {
 	var (
 		currenttime int
 	)
 	log.Debugf("task : %+v", jt)
+	if err := jt.GetCurrentStatus(); err != nil {
+		jt.IsDone = true
+		return err
+	}
 
-	for !jt.IsDone && (currenttime < jt.Timeout) {
-		if err := jt.GetCurrentStatus(); err != nil {
-			jt.IsDone = true
-			return err
-		}
-		if jt.JobURI.URI != "" && JOB_RUNNING_YES.Equal(jt.Running) {
-			jt.IsDone = true
-		}
-		if jt.JobURI.URI != "" {
+	for JOB_RUNNING_YES.Equal(jt.Running) && (currenttime < jt.Timeout) {
+		log.Debugf("jt => %+v", jt)
+		if jt.JobURI.URI.String() != "" {
 			log.Debugf("Waiting for job to complete, %s ", jt.Description)
 			lastjobstep := len(jt.JobProgress)
 			if lastjobstep > 0 {
-				stepscompleted := jt.JobProgress[lastjobstep-1].JobCompletedSteps
-				totalcompleted := jt.JobProgress[lastjobstep-1].JobTotalSteps
-				progress := 0
-				if totalcompleted > 0 {
-					progress = stepscompleted / totalcompleted
+				statusmessage := jt.GetLastStatusUpdate()
+				if statusmessage == "" {
+					log.Infof("Waiting on, %s, %0.0f%%", jt.Description, jt.GetPercentProgress())
+				} else {
+					log.Infof("Waiting on, %s, %0.0f%%, %s", jt.Description, jt.GetPercentProgress(), statusmessage)
 				}
-				log.Infof("Waiting on, %s, %d%%, %s", jt.Description, progress, jt.GetLastStatusUpdate())
 			}
 		} else {
 			log.Info("Waiting on job creation.")
@@ -121,6 +131,12 @@ func (jt *JobTask) Wait() error {
 		// wait time before next check
 		time.Sleep(time.Millisecond * (1000 * jt.WaitTime)) // wait 10sec before checking the status again
 		currenttime++
+
+		// get the current status
+		if err := jt.GetCurrentStatus(); err != nil {
+			jt.IsDone = true
+			return err
+		}
 	}
 	if !(currenttime < jt.Timeout) {
 		log.Warn("Task timed out.")
@@ -128,6 +144,9 @@ func (jt *JobTask) Wait() error {
 
 	if JOB_RUNNING_NO.Equal(jt.Running) {
 		log.Infof("Job, %s, completed", jt.GetComplettedStatus())
+	} else {
+		log.Warn("Job still running un-expected.")
 	}
+	jt.IsDone = true
 	return nil
 }

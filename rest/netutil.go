@@ -10,14 +10,14 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/utils"
+	"github.com/docker/machine/log"
 )
 
 // Options for REST call
 type Options struct {
-  Headers map[string]string
-	Query map[string]interface{}
+	Headers map[string]string
+	Query   map[string]interface{}
 }
 
 // Client - generic REST api client
@@ -68,15 +68,15 @@ func (c *Client) GetQueryString(u *url.URL) {
 		return
 	}
 	parameters := url.Values{}
-	for k, v := range  c.Option.Query {
+	for k, v := range c.Option.Query {
 		var r []string
-	  if reflect.TypeOf(v) == reflect.TypeOf(r) {
+		if reflect.TypeOf(v) == reflect.TypeOf(r) {
 			for _, va := range v.([]string) {
 				parameters.Add(k, va)
 			}
-	  } else {
+		} else {
 			parameters.Add(k, v.(string))
-	  }
+		}
 		u.RawQuery = parameters.Encode()
 	}
 	return
@@ -117,8 +117,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 		if err != nil {
 			return nil, err
 		}
-		// TODO: remove comment when done with dev
-		// fmt.Printf("*******  %+v\n",bytes.NewBuffer(OptionsJSON))
+		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
 		req, err = http.NewRequest(string(method), Url.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
 		req, err = http.NewRequest(string(method), Url.String(), nil)
@@ -129,10 +128,10 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	}
 
 	// build the auth headerU
-	for k, v := range  c.Option.Headers {
-		log.Debugf("Headers -> %s -> %+v\n",k,v)
+	for k, v := range c.Option.Headers {
+		log.Debugf("Headers -> %s -> %+v\n", k, v)
 		req.Header.Add(k, v)
-  }
+	}
 
 	// req.SetBasicAuth(c.User, c.APIKey)
 	req.Method = fmt.Sprintf("%s", method)
