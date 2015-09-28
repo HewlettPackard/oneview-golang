@@ -91,3 +91,19 @@ Proceed to run test
    cd "$(git rev-parse  --show-toplevel)"
    testov ./drivers/oneview/ov
 ```
+
+Running debug log output
+-------------------------
+Add to the .oneview.env the DEBUG env.  This applies to all docker-machine code using log pacakge.
+
+```bash
+echo 'DEBUG=true' >> "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env"
+```
+Follow section in setup container to refresh the env vars for the test container.
+
+Run a single specific test
+---------------------------
+Sometimes it's usefull to run just a single test case.
+```bash
+testov ./drivers/oneview/ov -test.run=TestCreateProfileFromTemplate
+```
