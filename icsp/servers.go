@@ -9,7 +9,10 @@ import (
 	"github.com/docker/machine/log"
 )
 
-// StorageDevice storage device type
+// URLEndPoint export this constant
+const URLEndPointServer = "/rest/os-deployment-servers"
+
+// storage device type
 type StorageDevice struct {
 	Capacity   int    `json:"capacity,omitempty"`   // capacity Capacity of the storage in megabytes integer
 	DeviceName string `json:"deviceName,omitempty"` // deviceName Device name, such as "C:" for Windows or "sda" for Linux string
@@ -299,7 +302,75 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
-// DeleteServer deletes a server in icsp appliance instance
+func (c *ICSPClient) GetServerByName(name string) (Server, error) {
+	var (
+		servers ServerList
+		server  Server
+	)
+	servers, err := c.GetServers()
+	if err != nil {
+		return server, err
+	}
+	log.Debugf("GetServerByName: server count: %d", servers.Count)
+	// grab the target
+	var srv Server
+	for _, server := range servers.Members {
+		if strings.EqualFold(server.Name, name) {
+			log.Debugf("server name: %v", server.Name)
+			srv = server
+			break
+		}
+	}
+	return srv, nil
+}
+
+func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
+	var (
+		servers ServerList
+		server  Server
+	)
+	servers, err := c.GetServers()
+	if err != nil {
+		return server, err
+	}
+	log.Debugf("GetServerByHostName: server count: %d", servers.Count)
+	// grab the target
+	var srv Server
+	for _, server := range servers.Members {
+		log.Debugf("server host: %v", server.HostName)
+		if strings.EqualFold(server.HostName, hostname) {
+			log.Debugf("found server host: %v", server.HostName)
+			srv = server
+			break
+		}
+	}
+	return srv, nil
+}
+
+func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
+	var (
+		servers ServerList
+		server  Server
+	)
+	servers, err := c.GetServers()
+	if err != nil {
+		return server, err
+	}
+	log.Debugf("GetServerBySerialNumber: server count: %d", servers.Count)
+	// grab the target
+	var srv Server
+	for _, server := range servers.Members {
+		log.Debugf("server: %v", server.HostName)
+		if strings.EqualFold(server.SerialNumber, serial) {
+			log.Debugf("found server host: %v", server.HostName)
+			srv = server
+			break
+		}
+	}
+	return srv, nil
+}
+
+// DeleteServer - deletes a server in icsp appliance instance
 func (c *ICSPClient) DeleteServer(uuid string) error {
 	var (
 		uri = "/rest/os-deployment-servers"
@@ -310,12 +381,13 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	//TODO: should check to make sure server uri has a real server
 	//      and it's status is managed
+
 	data, err := c.RestAPICall(rest.DELETE, uri, nil)
-	//TODO : this should be returning a jobs uri
+
 	if err != nil {
 		return err
 	}
-	//TODO: implement wait for delete
+	//TODO: no wait for it?? - no way to do it.
 
 	log.Debugf("DeleteServer %+v", data)
 	return nil
