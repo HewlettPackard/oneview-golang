@@ -2,6 +2,7 @@ package icsp
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/docker/machine/drivers/oneview/rest"
 	"github.com/docker/machine/drivers/oneview/utils"
@@ -77,6 +78,7 @@ type OSBuildPlan struct {
 
 // GetAllBuildPlans - returns all OS build plans
 // returns BuildPlan
+// note: this call is crap slow...API: should include filters/query params
 func (c *ICSPClient) GetAllBuildPlans() (OSBuildPlan, error) {
 	var (
 		uri   = URLEndPointBuildPlan
@@ -98,13 +100,22 @@ func (c *ICSPClient) GetAllBuildPlans() (OSBuildPlan, error) {
 	return plans, err
 }
 
-// GetBuildPlan -  returns a build plan
-//
-// func (c *ICSPClient) GetBuildPlan() (APIVersion, build_id, error) {
-/*func (c *ICSPClient) GetBuildPlanByName(planName string) (int, error) {
-	var plans OSDBuildPlan
+// GetBuildPlanByName -  returns a build plan
+func (c *ICSPClient) GetBuildPlanByName(planName string) (OSDBuildPlan, error) {
 
-	c.GetAllBuildPlans()
-	return 0, nil
+	var bldplan OSDBuildPlan
+	plans, err := c.GetAllBuildPlans()
+	if err != nil {
+		return bldplan, err
+	}
+	log.Debugf("GetBuildPlanByName: server count: %d", plans.Count)
+	// grab the target
+	for _, plan := range plans.Members {
+		if strings.EqualFold(plan.Name, planName) {
+			log.Debugf("plan name: %v", plan.Name)
+			bldplan = plan
+			break
+		}
+	}
+	return bldplan, nil
 }
-*/
