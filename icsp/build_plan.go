@@ -40,9 +40,23 @@ type BuildPlanCustAttrs struct {
 
 // OSDBuildPlan struct
 type OSDBuildPlan struct {
-	Arch              string             `json:"arch,omitempty"`
-	BuildPlanHistory  []BuildPlanHistory `json:"buildPlanHistory,omitempty"` // buildPlanHistory array
-	BuildPlanStepType string             `json:"buildPlanStepType,omitempty"`
+	Arch               string               `json:"arch,omitempty"`
+	BuildPlanHistory   []BuildPlanHistory   `json:"buildPlanHistory,omitempty"` // buildPlanHistory array
+	BuildPlanStepType  string               `json:"buildPlanStepType,omitempty"`
+	IsCustomerContent  bool                 `json:"isCustomerContent,omitempty"`
+	OS                 string               `json:"os,omitempty"`
+	BuildPlanCustAttrs []BuildPlanCustAttrs `json:"buildPlanCustAttrs,omitempty"`
+	BuildPlanItems     []BuildPlanItem      `json:"buildPlanItems,omitempty"`
+	ModifiedBy         string               `json:"modifiedBy,omitempty"`
+	CreatedBy          string               `json:"createdBy,omitempty"`
+	LifeCycle          string               `json:lifeCycle,omitstring`
+	Description        string               `json:"description,omitempty"`
+	Status             string               `json:"status,omitempty"`
+	Name               string               `json:"name,omitempty"`
+	ETAG               string               `json:"eTag,omitempty"` // eTag Entity tag/version ID of the resource
+	Modified           string               `json:"modified,omitempty"`
+	Created            string               `json:"created,omitempty"`
+	URI                utils.Nstring        `json:"uri,omitempty"` // uri The canonical URI of the buildplan
 }
 
 // OSBuildPlan
@@ -57,34 +71,40 @@ type OSBuildPlan struct {
 	PrevPageURI utils.Nstring  `json:"prevPageURI,omitempty"` // PrevPageURI - URI pointing to the page of resources preceding the list of resources contained in the specified collection
 	Start       int            `json:"start,omitempty"`       // Start - The row or record number of the first resource returned in the specified page
 	Total       int            `json:"total,omitempty"`       // Total -  The total number of resources that would be returned from the query (including any filters), without pagination or enforced resource limits
+	URI         utils.Nstring  `json:"uri,omitempty"`         //  URI -
+	Type        string         `json:"type,omitempty"`        // Type - type of paging
 }
 
 // GetAllBuildPlans - returns all OS build plans
 // returns BuildPlan
-func (c *ICSPClient) GetAllBuildPlans() (APIVersion, error) {
+func (c *ICSPClient) GetAllBuildPlans() (OSBuildPlan, error) {
 	var (
-		uri        = URLEndPointBuildPlan
-		apiversion APIVersion
+		uri   = URLEndPointBuildPlan
+		plans OSBuildPlan
 	)
 
-	//c.AuthHeaders := map[string]interface{}{"auth": []interface{}{auth}}
+	// refresh login
+	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
-		return apiversion, err
+		return plans, err
 	}
 
 	log.Debugf("GetAllBuildPlans %s", data)
-	if err := json.Unmarshal([]byte(data), &apiversion); err != nil {
-		return apiversion, err
+	if err := json.Unmarshal([]byte(data), &plans); err != nil {
+		return plans, err
 	}
-	return apiversion, err
+	return plans, err
 }
 
 // GetBuildPlan -  returns a build plan
 //
 // func (c *ICSPClient) GetBuildPlan() (APIVersion, build_id, error) {
-func (c *ICSPClient) GetBuildPlanByName(osdbuildPan string) (int, error) {
-	//TODO
+/*func (c *ICSPClient) GetBuildPlanByName(planName string) (int, error) {
+	var plans OSDBuildPlan
+
+	c.GetAllBuildPlans()
 	return 0, nil
 }
+*/
