@@ -194,6 +194,21 @@ type Server struct {
 	UUID                   string             `json:"uuid,omitempty"`                   // uuid Server's UUID  , string
 }
 
+// Clone server profile
+func (s Server) Clone() Server {
+	var ca []CustomAttribute
+	for _, c := range s.CustomAttributes {
+		ca = append(ca, c)
+	}
+
+	return Server{
+		Description:      s.Description,
+		CustomAttributes: ca,
+		Name:             s.Name,
+		Type:             s.Type,
+	}
+}
+
 // ServerList List of Servers
 type ServerList struct {
 	Category    string        `json:"category,omitempty"`    // Resource category used for authorizations and resource type groupings
@@ -302,6 +317,7 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
+// GetServerByName use the server name to get the server type
 func (c *ICSPClient) GetServerByName(name string) (Server, error) {
 	var (
 		servers ServerList
@@ -324,6 +340,7 @@ func (c *ICSPClient) GetServerByName(name string) (Server, error) {
 	return srv, nil
 }
 
+//GetServerByHostName use the server hostname automatically assigned to get the server
 func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
 	var (
 		servers ServerList
@@ -347,6 +364,7 @@ func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
 	return srv, nil
 }
 
+//GetServerBySerialNumber use the serial number to find the server
 func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 	var (
 		servers ServerList
@@ -393,15 +411,24 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	return nil
 }
 
-// SaveServer save Server
-// submit new profile template
+// SaveServer save Server, submit new profile template
 func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
 	log.Infof("Saving server attributes for %s.", s.Name)
 	var (
 		uri = s.URI
 	)
-	log.Debugf("REST : %s \n %+v\n", uri, s)
-	data, err := c.RestAPICall(rest.PUT, uri.String(), s)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMapForPut())
+
+	s.Type = "OSDServer"
+	log.Infof("name -> %s, description -> %s", s.Name, s.Description)
+	log.Infof("CustomAttributes -> %+v", s.CustomAttributes)
+	log.Infof("type -> %s", s.Type)
+	sc := s.Clone()
+	log.Infof("options -> %+v", c.Option)
+	log.Infof("REST : %s \n %+v\n", uri, sc)
+	data, err := c.RestAPICall(rest.PUT, uri.String(), sc)
 	if err != nil {
 		log.Errorf("Error submitting new server request: %s", err)
 		return o, err

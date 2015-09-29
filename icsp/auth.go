@@ -29,6 +29,14 @@ func (c *ICSPClient) GetAuthHeaderMap() map[string]string {
 	}
 }
 
+// GetAuthHeaderMapForPut  auth header for put operations differ
+func (c *ICSPClient) GetAuthHeaderMapForPut() map[string]string {
+	return map[string]string{
+		"Content-Type": "application/json",
+		"auth":         c.APIKey,
+	}
+}
+
 // Session struct
 type Session struct {
 	ID string `json:"sessionID,omitempty"`
