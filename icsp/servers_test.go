@@ -159,5 +159,20 @@ func TestDeleteServer(t *testing.T) {
 	} else {
 		log.Debug("implements unit test for TestDeleteServer")
 	}
+}
 
+func TestIsServerManaged(t *testing.T) {
+	var (
+		//d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		data, err := c.IsServerManaged("2M251204DZ")
+		assert.NoError(t, err, "IsServerManaged -> %s, %+v\n", err, data)
+		assert.True(t, data)
+	}
 }

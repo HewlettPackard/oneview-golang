@@ -388,6 +388,18 @@ func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 	return srv, nil
 }
 
+// IsServerManaged - returns true if server is managed
+func (c *ICSPClient) IsServerManaged(serial string) (bool, error) {
+	data, err := c.GetServerBySerialNumber(serial)
+	log.Debugf("found server host: %v, serial: %v cycle: %v hw model: %v", data.HostName, data.SerialNumber,
+		data.OpswLifecycle, data.HardwareModel)
+	if err != nil {
+		return false, err
+	}
+	log.Debugf("found server host: %v, serial: %v cycle: %v", data.HostName, data.SerialNumber, data.OpswLifecycle)
+	return strings.EqualFold(data.OpswLifecycle, MANAGED.String()), err
+}
+
 // DeleteServer - deletes a server in icsp appliance instance
 func (c *ICSPClient) DeleteServer(uuid string) error {
 	var (
