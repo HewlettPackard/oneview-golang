@@ -2,6 +2,7 @@ package icsp
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/docker/machine/drivers/oneview/rest"
@@ -56,13 +57,14 @@ type ServerLocationItem struct {
 // OpswLifecycle opsw lifecycle
 type OpswLifecycle int
 
+// Life-cycle value for the managed Server. The following are the valid values for the life-cycle of the Server:
 const (
-	DEACTIVATED OpswLifecycle = 1 + iota
-	MANAGED
-	PROVISION_FAILED
-	PROVISIONING
-	UNPROVISIONED
-	PRE_UNPROVISIONED
+	DEACTIVATED       OpswLifecycle = iota // 0
+	MANAGED                                // 1
+	PROVISION_FAILED                       // 2
+	PROVISIONING                           // 3
+	UNPROVISIONED                          // 4
+	PRE_UNPROVISIONED                      // 5
 )
 
 var opswlifecycle = [...]string{
@@ -75,7 +77,7 @@ var opswlifecycle = [...]string{
 }
 
 // String helper for OpswLifecycle
-func (o OpswLifecycle) String() string { return opswlifecycle[o-1] }
+func (o OpswLifecycle) String() string { return opswlifecycle[o] }
 
 // Equal helper for OpswLifecycle
 func (o OpswLifecycle) Equal(s string) bool {
@@ -175,7 +177,7 @@ type Server struct {
 	NetBios                string              `json:"netBios,omitempty"`                // netBios Server's Net BIOS name, string
 	OperatingSystem        string              `json:"operatingSystem,omitempty"`        // operatingSystem Operating system installed on the Server, string
 	OperatingSystemVersion string              `json:"operatingSystemVersion,omitempty"` // operatingSystemVersion Version of the operating system installed on the Server, string
-	OpswLifecycle          string              `json:"opswLifcycle,omitempty"`           // Use type OpswLifcycle
+	OpswLifecycle          string              `json:"opswLifecycle,omitempty"`          // Use type OpswLifecycle
 	OSFlavor               string              `json:"osFlavor,omitempty"`               // osFlavor Additional information about an operating system flavor, string
 	OSSPVersion            string              `json:"osSPVersion,omitempty"`            // osSPVersion Windows Service Pack version info, string
 	PeerIP                 string              `json:"peerIP,omitempty"`                 // peerIP Server's peer IP address, string
@@ -335,6 +337,30 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
+// GetServerById - get a server from icsp - faster then getting all servers
+// and ranging over them
+func (c *ICSPClient) GetServerById(mid string) (Server, error) {
+	var (
+		uri    = fmt.Sprintf("/rest/os-deployment-servers/%v", mid)
+		server Server
+	)
+
+	log.Debugf("GetServer uri %s", uri)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return server, err
+	}
+
+	log.Debugf("GetServer %s", data)
+	if err := json.Unmarshal([]byte(data), &server); err != nil {
+		return server, err
+	}
+	return server, nil
+}
+
 // GetServerByName use the server name to get the server type
 func (c *ICSPClient) GetServerByName(name string) (Server, error) {
 	var (
@@ -421,8 +447,6 @@ func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 // IsServerManaged - returns true if server is managed
 func (c *ICSPClient) IsServerManaged(serial string) (bool, error) {
 	data, err := c.GetServerBySerialNumber(serial)
-	log.Debugf("found server host: %v, serial: %v cycle: %v hw model: %v", data.HostName, data.SerialNumber,
-		data.OpswLifecycle, data.HardwareModel)
 	if err != nil {
 		return false, err
 	}

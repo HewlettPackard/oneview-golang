@@ -177,8 +177,24 @@ func TestIsServerManaged(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.IsServerManaged("2M251204DZ")
+		data, err := c.IsServerManaged("2M251204DF")
+		log.Debugf("test : %v", data)
 		assert.NoError(t, err, "IsServerManaged -> %s, %+v\n", err, data)
 		assert.True(t, data)
+	}
+}
+
+func TestGetServerById(t *testing.T) {
+	var (
+		//d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		data, err := c.GetServerById("490001")
+		assert.NoError(t, err, "GetServerByName threw error -> %s, %+v\n", err, data)
 	}
 }
