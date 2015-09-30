@@ -220,7 +220,7 @@ func (s Server) ReloadFull(c *ICSPClient) (Server, error) {
 		return s, err
 	}
 
-	log.Debugf("GetServerByURI %s", data)
+	log.Debugf("ReloadFull %s", data)
 	if err := json.Unmarshal([]byte(data), &s); err != nil {
 		return s, err
 	}
