@@ -148,53 +148,53 @@ type CPU struct {
 
 // Server type
 type Server struct {
-	Architecture           string             `json:"architecture,omitempty"`           // architecture Server's architecture, string
-	Category               string             `json:"category,omitempty"`               // category The category is used to help identify the kind of resource, string
-	Cpus                   []CPU              `json:"cpus,omitempty"`                   // array of CPU's
-	Created                string             `json:"created,omitempty"`                // created Date and time when the Server was discovered, timestamp
-	CustomAttributes       []CustomAttribute  `json:"customAttributes,omitempty"`       // array of custom attributes
-	DefaultGateway         string             `json:"defaultGateway,omitempty"`         // defaultGateway Gateway for this Server, string
-	Description            string             `json:"description,omitempty"`            // description Brief description of the Server, string
-	DeviceGroups           []DeviceGroup      `json:"deviceGroups,omitempty"`           // deviceGroups An array of device groups associated with the Server
-	DiscoveredDate         string             `json:"discoveredDate,omitempty"`         // discoveredDate Date and time when the Server was discovered. Same as created date
-	ETAG                   string             `json:"eTag,omitempty"`                   // eTag Entity tag/version ID of the resource
-	Facility               string             `json:"facility,omitempty"`               // facility A facility represents the collection of servers. A facility can be all or part of a data center, Server room, or computer lab. Facilities are used as security boundaries with user groups
-	HardwareModel          string             `json:"hardwareModel,omitempty"`          // hardwareModel The model name of the target server
-	HostName               string             `json:"hostName,omitempty"`               // hostName The name of the server as reported by the server
-	ILO                    Ilo                `json:"ilo,omitempty"`                    // information on ilo
-	Interfaces             []Interface        `json:"interfaces,omitempty"`             // list of interfaces
-	JobsHistory            []JobHistory       `json:"jobsHistory,omitempty"`            // array of previous run jobs
-	LastScannedDate        string             `json:"lastScannedDate,omitempty"`        // lastScannedDate Date and time when the Server was detected last , string
-	Locale                 string             `json:"locale,omitempty"`                 // locale Server's configured locale , string
-	LoopbackIP             string             `json:"loopbackIP,omitempty"`             // loopbackIP Server's loopback IP address in dotted decimal format, string
-	ManagementIP           string             `json:"managementIP,omitempty"`           // managementIP Server's management IP address in dotted decimal format, string
-	Manufacturer           string             `json:"manufacturer,omitempty"`           // manufacturer Manufacturer as reported by the Server  , string
-	MID                    string             `json:"mid,omitempty"`                    // mid A unique ID assigned to the Server by Server Automation, string
-	Modified               string             `json:"modified,omitempty"`               // modified Date and time when the Server was last modified , timestamp
-	Name                   string             `json:"name,omitempty"`                   // name The display name of the server. This is what shows on the left hand side of the UI. It is not the same as the host name. , string
-	NetBios                string             `json:"netBios,omitempty"`                // netBios Server's Net BIOS name, string
-	OperatingSystem        string             `json:"operatingSystem,omitempty"`        // operatingSystem Operating system installed on the Server, string
-	OperatingSystemVersion string             `json:"operatingSystemVersion,omitempty"` // operatingSystemVersion Version of the operating system installed on the Server, string
-	OpswLifecycle          string             `json:"opswLifcycle,omitempty"`           // Use type OpswLifcycle
-	OSFlavor               string             `json:"osFlavor,omitempty"`               // osFlavor Additional information about an operating system flavor, string
-	OSSPVersion            string             `json:"osSPVersion,omitempty"`            // osSPVersion Windows Service Pack version info, string
-	PeerIP                 string             `json:"peerIP,omitempty"`                 // peerIP Server's peer IP address, string
-	RAM                    string             `json:"ram,omitempty"`                    // ram Amount of free memory on the Server, string
-	Reporting              bool               `json:"reporting,omitempty"`              // reporting Flag that indicates if the client on the Server is reporting to the core, Boolean
-	Running                string             `json:"running,omitempty"`                // running Flag that indicates whether provisioning is performed on the Server, string
-	SerialNumber           string             `json:"serialNumber,omitempty"`           // serialNumber The serial number assigned to the Server, string
-	ServerLocation         ServerLocationItem `json:"serverLocation,omitempty"`         // serverLocation The Server location information such as rack and enclosure etc
-	Stage                  string             `json:"stage,omitempty"`                  // stage type //stage When a managed Server is rolled out into production it typically passes to various stages of deployment.The following are the valid values for the stages of the Server:
-	State                  string             `json:"state,omitempty"`                  // state Indicates the state of the agent on the target server. The following are the valid values for the state:
-	Status                 string             `json:"status,omitempty"`                 // status Unified status of the target Server. Supported values:
-	StorageDevices         []StorageDevice    `json:"storageDevices,omitempty"`         // storage devices on the server
-	Swap                   string             `json:"swap,omitempty"`                   // swap Amount of swap space on the Server  , string
-	Type                   string             `json:"type,omitempty"`                   // type Uniquely identifies the type of the JSON object  , string (readonly)
-	URI                    utils.Nstring      `json:"uri,omitempty"`                    // uri The canonical URI of the Server  , string
-	UUID                   string             `json:"uuid,omitempty"`                   // uuid Server's UUID  , string
+	Architecture           string              `json:"architecture,omitempty"`           // architecture Server's architecture, string
+	Category               string              `json:"category,omitempty"`               // category The category is used to help identify the kind of resource, string
+	Cpus                   []CPU               `json:"cpus,omitempty"`                   // array of CPU's
+	Created                string              `json:"created,omitempty"`                // created Date and time when the Server was discovered, timestamp
+	CustomAttributes       []CustomAttribute   `json:"customAttributes,omitempty"`       // array of custom attributes
+	DefaultGateway         string              `json:"defaultGateway,omitempty"`         // defaultGateway Gateway for this Server, string
+	Description            string              `json:"description,omitempty"`            // description Brief description of the Server, string
+	DeviceGroups           []DeviceGroup       `json:"deviceGroups,omitempty"`           // deviceGroups An array of device groups associated with the Server
+	DiscoveredDate         string              `json:"discoveredDate,omitempty"`         // discoveredDate Date and time when the Server was discovered. Same as created date
+	ETAG                   string              `json:"eTag,omitempty"`                   // eTag Entity tag/version ID of the resource
+	Facility               string              `json:"facility,omitempty"`               // facility A facility represents the collection of servers. A facility can be all or part of a data center, Server room, or computer lab. Facilities are used as security boundaries with user groups
+	HardwareModel          string              `json:"hardwareModel,omitempty"`          // hardwareModel The model name of the target server
+	HostName               string              `json:"hostName,omitempty"`               // hostName The name of the server as reported by the server
+	ILO                    *Ilo                `json:"ilo,omitempty"`                    // information on ilo
+	Interfaces             []Interface         `json:"interfaces,omitempty"`             // list of interfaces
+	JobsHistory            []JobHistory        `json:"jobsHistory,omitempty"`            // array of previous run jobs
+	LastScannedDate        string              `json:"lastScannedDate,omitempty"`        // lastScannedDate Date and time when the Server was detected last , string
+	Locale                 string              `json:"locale,omitempty"`                 // locale Server's configured locale , string
+	LoopbackIP             string              `json:"loopbackIP,omitempty"`             // loopbackIP Server's loopback IP address in dotted decimal format, string
+	ManagementIP           string              `json:"managementIP,omitempty"`           // managementIP Server's management IP address in dotted decimal format, string
+	Manufacturer           string              `json:"manufacturer,omitempty"`           // manufacturer Manufacturer as reported by the Server  , string
+	MID                    string              `json:"mid,omitempty"`                    // mid A unique ID assigned to the Server by Server Automation, string
+	Modified               string              `json:"modified,omitempty"`               // modified Date and time when the Server was last modified , timestamp
+	Name                   string              `json:"name,omitempty"`                   // name The display name of the server. This is what shows on the left hand side of the UI. It is not the same as the host name. , string
+	NetBios                string              `json:"netBios,omitempty"`                // netBios Server's Net BIOS name, string
+	OperatingSystem        string              `json:"operatingSystem,omitempty"`        // operatingSystem Operating system installed on the Server, string
+	OperatingSystemVersion string              `json:"operatingSystemVersion,omitempty"` // operatingSystemVersion Version of the operating system installed on the Server, string
+	OpswLifecycle          string              `json:"opswLifcycle,omitempty"`           // Use type OpswLifcycle
+	OSFlavor               string              `json:"osFlavor,omitempty"`               // osFlavor Additional information about an operating system flavor, string
+	OSSPVersion            string              `json:"osSPVersion,omitempty"`            // osSPVersion Windows Service Pack version info, string
+	PeerIP                 string              `json:"peerIP,omitempty"`                 // peerIP Server's peer IP address, string
+	RAM                    string              `json:"ram,omitempty"`                    // ram Amount of free memory on the Server, string
+	Reporting              bool                `json:"reporting,omitempty"`              // reporting Flag that indicates if the client on the Server is reporting to the core, Boolean
+	Running                string              `json:"running,omitempty"`                // running Flag that indicates whether provisioning is performed on the Server, string
+	SerialNumber           string              `json:"serialNumber,omitempty"`           // serialNumber The serial number assigned to the Server, string
+	ServerLocation         *ServerLocationItem `json:"serverLocation,omitempty"`         // serverLocation The Server location information such as rack and enclosure etc
+	Stage                  string              `json:"stage,omitempty"`                  // stage type //stage When a managed Server is rolled out into production it typically passes to various stages of deployment.The following are the valid values for the stages of the Server:
+	State                  string              `json:"state,omitempty"`                  // state Indicates the state of the agent on the target server. The following are the valid values for the state:
+	Status                 string              `json:"status,omitempty"`                 // status Unified status of the target Server. Supported values:
+	StorageDevices         []StorageDevice     `json:"storageDevices,omitempty"`         // storage devices on the server
+	Swap                   string              `json:"swap,omitempty"`                   // swap Amount of swap space on the Server  , string
+	Type                   string              `json:"type,omitempty"`                   // type Uniquely identifies the type of the JSON object  , string (readonly)
+	URI                    utils.Nstring       `json:"uri,omitempty"`                    // uri The canonical URI of the Server  , string
+	UUID                   string              `json:"uuid,omitempty"`                   // uuid Server's UUID  , string
 }
 
-// Clone server profile
+// Clone server profile so we can submit write attributes
 func (s Server) Clone() Server {
 	var ca []CustomAttribute
 	for _, c := range s.CustomAttributes {
@@ -207,6 +207,24 @@ func (s Server) Clone() Server {
 		Name:             s.Name,
 		Type:             s.Type,
 	}
+}
+
+// ReloadFull GetServers() only returns a partial object, reload it to get everything
+func (s Server) ReloadFull(c *ICSPClient) (Server, error) {
+	var uri = s.URI
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return s, err
+	}
+
+	log.Debugf("GetServerByURI %s", data)
+	if err := json.Unmarshal([]byte(data), &s); err != nil {
+		return s, err
+	}
+	return s, nil
 }
 
 // ServerList List of Servers
@@ -334,6 +352,10 @@ func (c *ICSPClient) GetServerByName(name string) (Server, error) {
 		if strings.EqualFold(server.Name, name) {
 			log.Debugf("server name: %v", server.Name)
 			srv = server
+			srv, err = srv.ReloadFull(c)
+			if err != nil {
+				return srv, err
+			}
 			break
 		}
 	}
@@ -358,6 +380,10 @@ func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
 		if strings.EqualFold(server.HostName, hostname) {
 			log.Debugf("found server host: %v", server.HostName)
 			srv = server
+			srv, err = srv.ReloadFull(c)
+			if err != nil {
+				return srv, err
+			}
 			break
 		}
 	}
@@ -382,6 +408,10 @@ func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 		if strings.EqualFold(server.SerialNumber, serial) {
 			log.Debugf("found server host: %v", server.HostName)
 			srv = server
+			srv, err = srv.ReloadFull(c)
+			if err != nil {
+				return srv, err
+			}
 			break
 		}
 	}
@@ -419,15 +449,15 @@ func (c *ICSPClient) SaveServer(s Server) (o Server, err error) {
 	)
 	// refresh login
 	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMapForPut())
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	s.Type = "OSDServer"
-	log.Infof("name -> %s, description -> %s", s.Name, s.Description)
-	log.Infof("CustomAttributes -> %+v", s.CustomAttributes)
-	log.Infof("type -> %s", s.Type)
+	log.Debugf("name -> %s, description -> %s", s.Name, s.Description)
+	log.Debugf("CustomAttributes -> %+v", s.CustomAttributes)
+
 	sc := s.Clone()
-	log.Infof("options -> %+v", c.Option)
-	log.Infof("REST : %s \n %+v\n", uri, sc)
+
+	log.Debugf("options -> %+v", c.Option)
+	log.Debugf("REST : %s \n %+v\n", uri, sc)
 	data, err := c.RestAPICall(rest.PUT, uri.String(), sc)
 	if err != nil {
 		log.Errorf("Error submitting new server request: %s", err)
