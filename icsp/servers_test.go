@@ -110,6 +110,12 @@ func TestGetServerByName(t *testing.T) {
 		IcspName := d.Tc.GetTestData(d.Env, "IcspName").(string)
 		data, err := c.GetServerByName(IcspName)
 		assert.NoError(t, err, "GetServerByName threw error -> %s, %+v\n", err, data)
+
+		IcspName2 := d.Tc.GetTestData(d.Env, "IcspName2").(string)
+		expectsIcspName2 := d.Tc.GetExpectsData(d.Env, "IcspName2").(string)
+		data, err = c.GetServerByName(IcspName2)
+		assert.NoError(t, err, "GetServerByName IcspName2 threw error -> %s, %+v\n", err, data)
+		assert.Equal(t, expectsIcspName2, data.Name, "GetServerByName IcspName2 on fake should be nil")
 	}
 }
 
