@@ -26,11 +26,11 @@ type StorageDevice struct {
 type Stage int
 
 const (
-	S_IN_DEPLOYMENT Stage = 1 + iota
-	S_LIVE
-	S_OFFLINE
-	S_OPS_READY
-	S_UNKNOWN
+	S_IN_DEPLOYMENT Stage = iota // 0
+	S_LIVE                       // 1
+	S_OFFLINE                    // 2
+	S_OPS_READY                  // 3
+	S_UNKNOWN                    // 4
 )
 
 var stagelist = [...]string{
@@ -42,7 +42,7 @@ var stagelist = [...]string{
 }
 
 // String helper for stage
-func (o Stage) String() string { return stagelist[o-1] }
+func (o Stage) String() string { return stagelist[o] }
 
 // Equal helper for stage
 func (o Stage) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
