@@ -126,10 +126,18 @@ func TestGetServerBySerialNumber(t *testing.T) {
 
 //TODO: implement test for delete
 func TestDeleteServer(t *testing.T) {
+	var c *ICSPClient
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestDeleteServer")
 		// check if the server exist
-		// delete the server
+		_, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		// mid: A unique ID assigned to the Server by Server Automation
+		data, err := c.DeleteServer("510001")
+		assert.True(t, data)
+		assert.NoError(t, err, "DeleteServer threw error -> %s, %+v\n", err, data)
 	} else {
 		log.Debug("implements unit test for TestDeleteServer")
 	}
