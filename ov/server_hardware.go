@@ -127,6 +127,16 @@ func (s ServerHardware) PowerOn() error {
 	return pt.PowerExecutor(P_ON)
 }
 
+// get the power state
+func (s ServerHardware) GetPowerState() (PowerState, error) {
+	var pt *PowerTask
+	pt = pt.NewPowerTask(s)
+	if err := pt.GetCurrentPowerState(); err != nill {
+		return P_UKNOWN, err
+	}
+	return pt.State, nil
+}
+
 // get a server hardware with uri
 func (c *OVClient) GetServerHardware(uri utils.Nstring) (ServerHardware, error) {
 

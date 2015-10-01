@@ -181,19 +181,28 @@ func (d *Driver) GetSSHUsername() string {
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	log.Debug("SetConfigFromFlags...")
 
+	var icsp_version, ov_version int
+	if flags.Int("oneview-apiversion") == 120 {
+		icsp_version = 108
+		ov_version = 120
+	} else {
+		icsp_version = 108
+		ov_version = 120
+	}
+
 	d.ClientICSP = d.ClientICSP.NewICSPClient(flags.String("oneview-icsp-user"),
 		flags.String("oneview-icsp-password"),
 		flags.String("oneview-icsp-domain"),
 		flags.String("oneview-icsp-endpoint"),
 		flags.Bool("oneview-sslverify"),
-		flags.Int("oneview-apiversion"))
+		icsp_version)
 
 	d.ClientOV = d.ClientOV.NewOVClient(flags.String("oneview-ov-user"),
 		flags.String("oneview-ov-password"),
 		flags.String("oneview-ov-domain"),
 		flags.String("oneview-ov-endpoint"),
 		flags.Bool("oneview-sslverify"),
-		flags.Int("oneview-apiversion"))
+		ov_version)
 
 	d.IloUser = flags.String("oneview-ilo-user")
 	d.IloPassword = flags.String("oneview-ilo-password")
@@ -204,6 +213,11 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 
 	d.ServerTemplate = flags.String("oneview-server-template")
 	d.OSBuildPlan = flags.String("oneview-os-plan")
+
+	d.SwarmMaster = flags.Bool("swarm-master")
+	d.SwarmHost = flags.String("swarm-host")
+	d.SwarmDiscovery = flags.String("swarm-discovery")
+
 	// TODO : we should verify settings for each client
 
 	// check for the ov endpoint
@@ -274,12 +288,7 @@ func (d *Driver) Create() error {
 	log.Debugf("client 2 *******---> %+v", machineBlade.Client.APIKey)
 
 	// power on the server, and leave it in that state
-	log.Debugf("***> PowerOn Server")
-	var pt *ov.PowerTask
-	pt = pt.NewPowerTask(machineBlade)
-	pt.Timeout = 46 // timeout is 20 sec
-	err = pt.PowerExecutor(ov.P_ON)
-	if err != nil {
+	if err := machineBlade.PowerOn(); err != nil {
 		return err
 	}
 
@@ -340,47 +349,129 @@ func (d *Driver) GetIP() (string, error) {
 // GetState - get the running state of the target machine
 func (d *Driver) GetState() (state.State, error) {
 	log.Debug("GetState...")
-	//  addr := fmt.Sprintf("%s:%d", d.IPAddress, d.SSHPort)
-	//  _, err := net.DialTimeout("tcp", addr, defaultTimeout)
-	//  var st state.State
-	//  if err != nil {
-	//    st = state.Stopped
-	//  } else {
-	//    st = state.Running
-	//  }
-	return state.Stopped, nil
+
+	// get the blade for this driver
+	_, machineBlade, server, err := d.getBlade()
+	if err != nil {
+		return err
+	}
+	if icsp.OpswLifecycle.PROVISIONING.Equal(server.OpswLifecycle) {
+		return state.Starting, nil
+	}
+	if icsp.OpswLifecycle.UNPROVISIONED.Equal(server.OpswLifecycle) ||
+		icsp.OpswLifecycle.PRE_UNPROVISIONED.Equal(server.OpswLifecycle) {
+		return state.Stopping, nil
+	}
+	if icsp.OpswLifecycle.DEACTIVATED.Equal(server.OpswLifecycle) {
+		return state.Stopped, nil
+	}
+	if icsp.OpswLifecycle.PROVISION_FAILED.Equal(server.OpswLifecycle) {
+		return state.Error, nil
+	}
+	// use power state to determine status
+	switch machineBlade.GetPowerState() {
+	case ov.P_ON:
+		return state.Running, nil
+	case ov.P_OFF:
+		return state.Stopped, nil
+	case ov.P_UKNOWN:
+		return state.Error, nil
+	default:
+		return state.Error, nil
+	}
+	return state.None, nil
+
 }
 
 // Start - start the docker machine target
 func (d *Driver) Start() error {
-	log.Debug("Start...")
-	return fmt.Errorf("oneview driver does not support start")
-	// TODO: implement power on with oneview, TestPowerState
-	// TODO: implement icsp check for is in maintenance mode or started
+	log.Infof("Starting ... %s", d.MachineName)
+
+	// get the blade for this driver
+	_, machineBlade, _, err := d.getBlade()
+	if err != nil {
+		return err
+	}
+
+	// power on the server, and leave it in that state
+	if err := machineBlade.PowerOn(); err != nil {
+		return err
+	}
+	// implement icsp check for is in maintenance mode or started
+	isManaged, err := d.ClientICSP.IsServerManaged(machineBlade.SerialNumber.String())
+	if err != nil {
+		return err
+	}
+	if !isManaged {
+		return errors.New("Server was started but not ready, check icsp status")
+	}
+	return nil
 }
 
 // Stop - stop the docker machine target
 func (d *Driver) Stop() error {
 	log.Debug("Stop...")
-	return fmt.Errorf("oneview driver does not support stop")
-	// TODO: call power off from oneview, TestPowerState
+	log.Infof("Stop ... %s", d.MachineName)
+	// gracefully attempt to stop the os
+
+	if _, err := drivers.RunSSHCommandFromDriver(d, "sudo shutdown -P now"); err != nil {
+		log.Warnf("Problem shutting down gracefully : %s", err)
+	}
+
+	// get the blade for this driver
+	_, machineBlade, _, err := d.getBlade()
+	if err != nil {
+		return err
+	}
+
+	// power on the server, and leave it in that state
+	if err := machineBlade.PowerOff(); err != nil {
+		return err
+	}
+	return nil
 }
 
 // Remove - remove the docker machine target
 //    Should remove the ICSP provisioned plan and the Server Profile from OV
 func (d *Driver) Remove() error {
 	log.Debug("Remove...")
-	//TODO: remove the ssh keys
-	//TODO: destroy the server in icsp
-	//TODO: power off the blade, call Stop()
-	//TODO: delete the server profile in ov : TestDeleteProfile
+	// remove the ssh keys
+	if err := d.deleteKeyPair(); err != nil {
+		return err
+	}
+	if err := d.Stop(); err != nil {
+		return err
+	}
+	profile, machineBlade, server, err := d.getBlade()
+	if err != nil {
+		return err
+	}
+	// destroy the server in icsp
+	isDeleted, err := d.ClientICSP.DeleteServer(server.MID)
+	if err != nil {
+		return err
+	}
+	if !isDeleted {
+		return fmt.Errorf("Unable to delete the server from icsp : %s, %s", d.MachineName, server.MID)
+	}
+	// delete the server profile in ov : TestDeleteProfile
+	t, err := d.ClientOV.SubmitDeleteProfile(profile)
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 // Restart - restart the target machine
 func (d *Driver) Restart() error {
 	log.Debug("Restarting...")
-	//TODO: should power off / on the server, TestPowerState
+	if err := d.Stop(); err != nil {
+		return err
+	}
+	if err := d.Start(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -399,6 +490,36 @@ func (d *Driver) publicSSHKeyPath() string {
 
 // /////////  HELPLERS /////////////
 
+func (d *Driver) getBlade() (profile ov.ServerProfile, sh ov.ServerHardware, s icsp.Server, err error) {
+	log.Debug("In getBlade()")
+
+	profile, err := d.ClientOV.GetProfileByName(d.MachineName)
+	if err != nil {
+		return profile, sh, s, err
+	}
+
+	log.Debugf("***> check if we got a profile")
+	if profile.URI.IsNil() {
+		err = fmt.Errorf("Attempting to get machine profile information, unable to find machine in oneview: %s", d.MachineName)
+		return profile, sh, s, err
+	}
+
+	// power on the server
+	// get the server hardware associated with that test profile
+	log.Debugf("***> GetServerHardware")
+	sh, err = d.ClientOV.GetServerHardware(profile.ServerHardwareURI)
+	if sh.URI.IsNil() {
+		err = fmt.Errorf("Attempting to get machine blade information, unable to find machine: %s", d.MachineName)
+		return profile, sh, s, err
+	}
+	// get an icsp server
+	s, err = d.ClientICSP.GetServerBySerialNumber(sh.SerialNumber.String())
+	if err != nil {
+		return profile, sh, s, err
+	}
+	return profile, sh, s, err
+}
+
 // createKeyPair - generate key files needed
 func (d *Driver) createKeyPair() error {
 
@@ -413,5 +534,16 @@ func (d *Driver) createKeyPair() error {
 
 	log.Debugf("created keys => %s", string(publicKey))
 	d.SSHPublicKey = string(publicKey)
+	return nil
+}
+
+// deleteKeyPair
+func (d *Driver) deleteKeyPair() error {
+	if err := os.Remove(d.GetSSHKeyPath()); err != nil {
+		return err
+	}
+	if err := os.Remove(d.GetSSHKeyPath() + ".pub"); err != nil {
+		return err
+	}
 	return nil
 }

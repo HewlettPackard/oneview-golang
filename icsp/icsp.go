@@ -64,7 +64,7 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	if err != nil {
 		return err
 	}
-	if !s.URI.IsNil() {
+	if s.SerialNumber != cs.SerialNumber {
 		if err := c.CreateServer(cs.ILoUser, cs.IloPassword, cs.IloIPAddress, cs.IloPort); err != nil {
 			return err
 		}
