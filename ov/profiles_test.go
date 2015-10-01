@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -120,11 +121,30 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 		testTemplate, _ = c.GetProfileByName(testTemplateName)
 		assert.Equal(t, testTemplateName, testTemplate.Name, fmt.Sprintf("Problem getting template name, %+v", testTemplate))
 
-		err := c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
-		assert.NoError(t, err, "CreateProfileFromTemplate error -> %s", err)
+		// get the test profile that was created with testHostname
+		testProfile, err := c.GetProfileByName(testHostName)
+		assert.NoError(t, err, "CreateProfileFromTemplate get the server profile error -> %s", err)
 
-		err = c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
-		assert.Error(t, err, "CreateProfileFromTemplate should error because a template already exist, err-> %s", err)
+		if len(testBlades.Members) > 0 && testProfile.URI == "" {
+			err := c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
+			assert.NoError(t, err, "CreateProfileFromTemplate error -> %s", err)
+
+			err = c.CreateProfileFromTemplate(testHostName, testTemplate, testBlades.Members[0])
+			assert.Error(t, err, "CreateProfileFromTemplate should error because a template already exist, err-> %s", err)
+
+		}
+
+		// get the server hardware associated with that test profile
+		testBlade, err := c.GetServerHardware(testProfile.ServerHardwareURI)
+		assert.NoError(t, err, "CreateProfileFromTemplate call to GetServerHardware got error -> %s", err)
+
+		// power on the server, and leave it in that state
+		var pt *PowerTask
+		pt = pt.NewPowerTask(testBlade)
+		pt.Timeout = 46 // timeout is 20 sec
+		log.Info("------- Setting Power to On")
+		err = pt.PowerExecutor(P_ON)
+		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
 	}
 
 }

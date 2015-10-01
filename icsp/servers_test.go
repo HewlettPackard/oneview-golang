@@ -9,42 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// implement create server unt test
-func TestCreateServer(t *testing.T) {
-	var (
-		d              *ICSPTest
-		c              *ICSPClient
-		user, pass, ip string
-	)
-	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
-		user = os.Getenv("ONEVIEW_ILO_USER")
-		pass = os.Getenv("ONEVIEW_ILO_PASSWORD")
-		d, c = getTestDriverA()
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		ip = d.Tc.GetTestData(d.Env, "IloIPAddress").(string)
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
-		log.Debug("implements acceptance test for TestCreateServer")
-		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
-		assert.NoError(t, err, "GetServerBySerialNumber fake threw error -> %s, %+v\n", err, s)
-		if s.URI.String() != "null" {
-			// create the server
-			err := c.CreateServer(user, pass, ip, 443)
-			assert.NoError(t, err, "CreateServer threw error -> %s\n", err)
-		} else {
-			// create the server
-			err := c.CreateServer(user, pass, ip, 443)
-			assert.Error(t, err, "CreateServer should throw conflict error  -> %s\n", err)
-		}
-		// check if the server now exist
-	} else {
-		log.Debug("implements unit test for TestCreateServer")
-		err := c.CreateServer("foo", "bar", "127.0.0.1", 443)
-		assert.Error(t, err, "CreateServer should throw error  -> %s\n", err)
-	}
-}
-
 // TestSaveServer implement save server
 func TestSaveServer(t *testing.T) {
 	var (
