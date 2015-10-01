@@ -455,9 +455,10 @@ func (c *ICSPClient) IsServerManaged(serial string) (bool, error) {
 }
 
 // DeleteServer - deletes a server in icsp appliance instance
-func (c *ICSPClient) DeleteServer(uuid string) error {
+func (c *ICSPClient) DeleteServer(mid string) (bool, error) {
 	var (
-		uri = "/rest/os-deployment-servers"
+		uri   = fmt.Sprintf("/rest/os-deployment-servers/%v", mid)
+		isDel bool
 	)
 
 	// refresh login
@@ -466,15 +467,17 @@ func (c *ICSPClient) DeleteServer(uuid string) error {
 	//TODO: should check to make sure server uri has a real server
 	//      and it's status is managed
 
-	data, err := c.RestAPICall(rest.DELETE, uri, nil)
+	_, err := c.RestAPICall(rest.DELETE, uri, nil)
 
 	if err != nil {
-		return err
+		return isDel, err
 	}
-	//TODO: no wait for it?? - no way to do it.
-
-	log.Debugf("DeleteServer %+v", data)
-	return nil
+	isDel = true // at this point server was deleted
+	//As per API
+	//HTTP/1.1 204 No Content
+	//Content-Type: application/json
+	//...so,lets tell the consumer things went well :)
+	return isDel, err
 }
 
 // SaveServer save Server, submit new profile template
