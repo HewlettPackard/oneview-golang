@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-//TODO: implement create server unt test
+// implement create server unt test
 func TestCreateServer(t *testing.T) {
 	var (
 		d              *ICSPTest
@@ -37,10 +37,11 @@ func TestCreateServer(t *testing.T) {
 			err := c.CreateServer(user, pass, ip, 443)
 			assert.Error(t, err, "CreateServer should throw conflict error  -> %s\n", err)
 		}
-
 		// check if the server now exist
 	} else {
 		log.Debug("implements unit test for TestCreateServer")
+		err := c.CreateServer("foo", "bar", "127.0.0.1", 443)
+		assert.Error(t, err, "CreateServer should throw error  -> %s\n", err)
 	}
 }
 
@@ -74,6 +75,9 @@ func TestSaveServer(t *testing.T) {
 		assert.Equal(t, "docker", testValue2.Value, "Should return the saved custom attribute")
 	} else {
 		log.Debug("implements unit test for TestCreateServer")
+		var s Server
+		s, err := c.SaveServer(s)
+		assert.Error(t, err, "SaveServer threw error -> %s, %+v\n", err, s)
 	}
 }
 
@@ -169,15 +173,16 @@ func TestDeleteServer(t *testing.T) {
 
 func TestIsServerManaged(t *testing.T) {
 	var (
-		//d *ICSPTest
+		d *ICSPTest
 		c *ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		d, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.IsServerManaged("2M251204DF")
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		data, err := c.IsServerManaged(serialNumber)
 		log.Debugf("test : %v", data)
 		assert.NoError(t, err, "IsServerManaged -> %s, %+v\n", err, data)
 		assert.True(t, data)

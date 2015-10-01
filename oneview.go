@@ -207,6 +207,8 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 // PreCreateCheck - pre create check
 func (d *Driver) PreCreateCheck() error {
 	log.Debug("PreCreateCheck...")
+	// TODO: verify you can connect to ov
+	// TODO: verify you can connect to icsp
 	return nil
 }
 
@@ -219,7 +221,12 @@ func (d *Driver) Create() error {
 
 	log.Debugf("ICSP Endpoint is: %s", d.ClientICSP.Endpoint)
 	log.Debugf("OV Endpoint is: %s", d.ClientOV.Endpoint)
-
+	//TODO: create the server profile in oneview, we need a hostname and a template name
+	// Teh hostname should be the same as docker-machine create <name>   , <name> == hostname
+	// d.MachineName
+	// func (c *OVClient) CreateMachine(host_name string, server_template string) (err error) {
+	// TODO: add the server to icsp, TestCreateServer
+	// TODO: apply a build plan, TestApplyDeploymentJobs
 	return nil
 }
 
@@ -235,6 +242,7 @@ func (d *Driver) GetURL() (string, error) {
 
 // GetIP - get server host or ip address
 // TODO: we need to get ip of server from icsp or ov??
+// currently the only way i can see to get this is with sudo ifconfig|grep inet
 func (d *Driver) GetIP() (string, error) {
 	log.Debug("GetIP...")
 	if d.ClientICSP.Endpoint == "" {
@@ -261,39 +269,46 @@ func (d *Driver) GetState() (state.State, error) {
 func (d *Driver) Start() error {
 	log.Debug("Start...")
 	return fmt.Errorf("oneview driver does not support start")
+	// TODO: implement power on with oneview, TestPowerState
+	// TODO: implement icsp check for is in maintenance mode or started
 }
 
 // Stop - stop the docker machine target
 func (d *Driver) Stop() error {
 	log.Debug("Stop...")
 	return fmt.Errorf("oneview driver does not support stop")
+	// TODO: call power off from oneview, TestPowerState
 }
 
 // Remove - remove the docker machine target
 //    Should remove the ICSP provisioned plan and the Server Profile from OV
 func (d *Driver) Remove() error {
 	log.Debug("Remove...")
+	//TODO: remove the ssh keys
+	//TODO: destroy the server in icsp
+	//TODO: power off the blade, call Stop()
+	//TODO: delete the server profile in ov : TestDeleteProfile
 	return nil
 }
 
 // Restart - restart the target machine
 func (d *Driver) Restart() error {
 	log.Debug("Restarting...")
-
+	//TODO: should power off / on the server, TestPowerState
 	return nil
 }
 
 // Kill - kill the docker machine
 func (d *Driver) Kill() error {
 	log.Debug("Killing...")
-
+	//TODO: implement power off , is there a force?
 	return nil
 }
 
 // publicSSHKeyPath - get the path to public ssh key
 func (d *Driver) publicSSHKeyPath() string {
 	log.Debug("publicSSHKeyPath...")
-	return ""
+	return d.GetSSHKeyPath() + ".pub"
 }
 
 // /////////  HELPLERS /////////////
