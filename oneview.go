@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -282,8 +283,36 @@ func (d *Driver) Create() error {
 		return err
 	}
 
-	// TODO: add the server to icsp, TestCreateServer
-	// TODO: apply a build plan, TestApplyDeploymentJobs
+	// add the server to icsp, TestCreateServer
+	// apply a build plan, TestApplyDeploymentJobs
+	var sp *icsp.CustomServerAttributes
+	sp = sp.New()
+	sp.Set("docker_user", d.SSHUser)
+	sp.Set("public_key", d.SSHPublicKey)
+	// TODO: make a util for this
+	if len(os.Getenv("proxy_enable")) > 0 {
+		sp.Set("proxy_enable", os.Getenv("proxy_enable"))
+	} else {
+		sp.Set("proxy_enable", "false")
+	}
+	sp.Set("proxyhost", os.Getenv("http_proxy"))
+	sp.Set("http_proxy", os.Getenv("http_proxy"))
+	sp.Set("https_proxy", os.Getenv("https_proxy"))
+	sp.Set("no_proxy", os.Getenv("no_proxy"))
+
+	cs := icsp.CustomizeServer{
+		HostName:         d.MachineName,                      // machine-rack-enclosure-bay
+		SerialNumber:     machineBlade.SerialNumber.String(), // get it
+		ILoUser:          d.IloUser,
+		IloPassword:      d.IloPassword,
+		IloIPAddress:     machineBlade.MpIpAddress,
+		IloPort:          d.IloPort,
+		OSBuildPlan:      d.OSBuildPlan, // name of the OS build plan
+		ServerProperties: sp,
+	}
+	if err := d.ClientICSP.CustomizeServer(cs); err != nil {
+		return err
+	}
 	return nil
 }
 

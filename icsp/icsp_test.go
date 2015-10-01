@@ -169,3 +169,12 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		assert.Error(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, s)
 	}
 }
+
+// TestCustomServerAttributes test CustomServerAttributes
+func TestCustomServerAttributes(t *testing.T) {
+	var testServerAttributes *CustomServerAttributes
+	testServerAttributes = testServerAttributes.New()
+	testServerAttributes.Set("ssh_user", "docker")
+	log.Infof("testServer -> %+v", testServerAttributes)
+	assert.Equal(t, "docker", testServerAttributes.Get("ssh_user"), "should be equal when called for ssh_user")
+}
