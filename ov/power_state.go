@@ -2,95 +2,101 @@ package ov
 
 import (
 	"encoding/json"
-	"time"
-	"strings"
 	"errors"
+	"strings"
+	"time"
 
-	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/rest"
+	"github.com/docker/machine/log"
 )
+
 // Create a PowerState type
 type PowerState int
 
 type Power struct {
-	Blade *ServerHardware
-  State PowerState
-  TaskStatus bool
+	Blade      *ServerHardware
+	State      PowerState
+	TaskStatus bool
 }
 
 const (
-	P_ON    PowerState = 1 + iota
+	P_ON PowerState = 1 + iota
 	P_OFF
 	P_UKNOWN
 )
 
-var powerstates = [...]string {
+var powerstates = [...]string{
 	"On",
 	"Off",
 	"UNKNOWN",
 }
 
-func (p PowerState) String() string { return powerstates[p-1] }
-func (p PowerState) Equal(s string) (bool) {return (strings.ToUpper(s) == strings.ToUpper(p.String()))}
+func (p PowerState) String() string      { return powerstates[p-1] }
+func (p PowerState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(p.String())) }
 
 // Power control
 type PowerControl int
 
-const(
-	P_COLDBOOT   PowerControl = 1 + iota
+const (
+	P_COLDBOOT PowerControl = 1 + iota
 	P_MOMPRESS
 	P_RESET
 )
 
-var powercontrols = [...]string {
-	"ColdBoot", 			// ColdBoot       - A hard reset that immediately removes power from the server
-										//                hardware and then restarts the server after approximately six seconds.
+var powercontrols = [...]string{
+	"ColdBoot", // ColdBoot       - A hard reset that immediately removes power from the server
+	//                hardware and then restarts the server after approximately six seconds.
 	"MomentaryPress", // MomentaryPress - Power on or a normal (soft) power off,
-										//                  depending on powerState. PressAndHold
-										//                  An immediate (hard) shutdown.
-	"Reset",					// Reset          - A normal server reset that resets the device in an orderly sequence.
+	//                  depending on powerState. PressAndHold
+	//                  An immediate (hard) shutdown.
+	"Reset", // Reset          - A normal server reset that resets the device in an orderly sequence.
 }
 
 func (pc PowerControl) String() string { return powercontrols[pc-1] }
 
 // Provides power execution status
 type PowerTask struct {
-	Blade       ServerHardware
-  State       PowerState       // current power state
+	Blade ServerHardware
+	State PowerState // current power state
 	Task
 }
 
 // Create a new power task manager
 // TODO: refactor PowerTask to use Task vs overloading it here.
-func ( pt *PowerTask ) NewPowerTask( b ServerHardware)(*PowerTask) {
-	pt = &PowerTask{Blade:       b,
-										State:       P_UKNOWN}//,
-										// TaskIsDone:  false,
-										// Client:      b.Client,
-										// URI:         "",
-										// Name:        "",
-										// Owner:       "",
-										// Timeout:     36, // default 6min
-										// WaitTime:    10} // default 10sec, impacts Timeout
+func (pt *PowerTask) NewPowerTask(b ServerHardware) *PowerTask {
+	pt = &PowerTask{Blade: b,
+		State: P_UKNOWN} //,
+	// TaskIsDone:  false,
+	// Client:      b.Client,
+	// URI:         "",
+	// Name:        "",
+	// Owner:       "",
+	// Timeout:     36, // default 6min
+	// WaitTime:    10} // default 10sec, impacts Timeout
 	pt.TaskIsDone = false
-	pt.Client     = b.Client
-	pt.URI        = ""
-	pt.Name       = ""
-	pt.Owner      = ""
-	pt.Timeout    = 36
-	pt.WaitTime   = 10
+	pt.Client = b.Client
+	pt.URI = ""
+	pt.Name = ""
+	pt.Owner = ""
+	pt.Timeout = 36
+	pt.WaitTime = 10
 	return pt
 }
 
 // get current power state
-func ( pt *PowerTask) GetCurrentPowerState()(error) {
+func (pt *PowerTask) GetCurrentPowerState() error {
 	// Quick check to make sure we have a proper hardware blade
-	if pt.Blade.URI == "" {pt.State = P_UKNOWN; return errors.New("Can't get power on blade without hardware") }
+	if pt.Blade.URI.IsNil() {
+		pt.State = P_UKNOWN
+		return errors.New("Can't get power on blade without hardware")
+	}
 
 	// get the latest state based on current blade uri
 	b, err := pt.Blade.Client.GetServerHardware(pt.Blade.URI)
-	if err != nil { return err}
-  log.Debugf("GetCurrentPowerState() blade -> %+v",b)
+	if err != nil {
+		return err
+	}
+	log.Debugf("GetCurrentPowerState() blade -> %+v", b)
 	// Set the current state of the blade as a constant
 	if P_OFF.Equal(b.PowerState) {
 		pt.State = P_OFF
@@ -100,7 +106,7 @@ func ( pt *PowerTask) GetCurrentPowerState()(error) {
 		log.Warnf("Un-known power state detected %s, for %s.", b.PowerState, b.Name)
 		pt.State = P_UKNOWN
 	}
-  // Reassign the current blade and state of that blade
+	// Reassign the current blade and state of that blade
 	pt.Blade = b
 	return nil
 }
@@ -108,31 +114,33 @@ func ( pt *PowerTask) GetCurrentPowerState()(error) {
 // PowerRequest
 // { 'body' => { 'powerState' => state.capitalize, 'powerControl' => 'MomentaryPress' } })
 type PowerRequest struct {
-	PowerState    string `json:"powerState,omitempty"`
-	PowerControl  string `json:"powerControl,omitempty"`
+	PowerState   string `json:"powerState,omitempty"`
+	PowerControl string `json:"powerControl,omitempty"`
 }
 
+// TODO: new parameter for submit power state to do P_RESET
+
 // Submit desired power state
-func ( pt *PowerTask) SubmitPowerState(s PowerState) {
+func (pt *PowerTask) SubmitPowerState(s PowerState) {
 	if err := pt.GetCurrentPowerState(); err != nil {
 		log.Errorf("Error getting current power state: %s", err)
 		return
 	}
 	if s != pt.State {
-	  log.Infof("Powering %s server %s for %s.",s,pt.Blade.Name, pt.Blade.SerialNumber)
+		log.Infof("Powering %s server %s for %s.", s, pt.Blade.Name, pt.Blade.SerialNumber)
 		var (
 			body = PowerRequest{PowerState: s.String(), PowerControl: P_MOMPRESS.String()}
-			uri  = strings.Join([]string{	pt.Blade.URI.String(),
-																		"/powerState" },"")
+			uri  = strings.Join([]string{pt.Blade.URI.String(),
+				"/powerState"}, "")
 		)
 		log.Debugf("REST : %s \n %+v\n", uri, body)
 		log.Debugf("pt -> %+v", pt)
-		data, err := pt.Blade.Client.RestAPICall(rest.PUT, uri , body)
+		data, err := pt.Blade.Client.RestAPICall(rest.PUT, uri, body)
 		if err != nil {
 			pt.TaskIsDone = true
 			log.Errorf("Error with power state request: %s", err)
 			return
-		 }
+		}
 
 		log.Debugf("SubmitPowerState %s", data)
 		if err := json.Unmarshal([]byte(data), &pt); err != nil {
@@ -150,9 +158,9 @@ func ( pt *PowerTask) SubmitPowerState(s PowerState) {
 
 // Submit desired power state and wait
 // Most of our concurrency will happen in PowerExecutor
-func ( pt *PowerTask) PowerExecutor(s PowerState)(error) {
+func (pt *PowerTask) PowerExecutor(s PowerState) error {
 	currenttime := 0
-	pt.State     = P_UKNOWN
+	pt.State = P_UKNOWN
 	pt.ResetTask()
 	go pt.SubmitPowerState(s)
 	for !pt.TaskIsDone && (currenttime < pt.Timeout) {

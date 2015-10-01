@@ -1,6 +1,9 @@
 package oneview
 
 import (
+	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"time"
@@ -201,6 +204,19 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.ServerTemplate = flags.String("oneview-server-template")
 	d.OSBuildPlan = flags.String("oneview-os-plan")
 	// TODO : we should verify settings for each client
+
+	// check for the ov endpoint
+	if d.ClientOV.Endpoint == "" {
+		return errors.New("Missing option --oneview-ov-endpoint or environment ONEVIEW_OV_ENDPOINT")
+	}
+	// check for the icsp endpoint
+	if d.ClientICSP.Endpoint == "" {
+		return errors.New("Missing option --oneview-icsp-endpoint or environment ONEVIEW_ICSP_ENDPOINT")
+	}
+	// check for the template name
+	if d.ServerTemplate == "" {
+		return errors.New("Missing option --oneview-server-template or environment ONEVIEW_SERVER_TEMPLATE")
+	}
 	return nil
 }
 
@@ -221,10 +237,51 @@ func (d *Driver) Create() error {
 
 	log.Debugf("ICSP Endpoint is: %s", d.ClientICSP.Endpoint)
 	log.Debugf("OV Endpoint is: %s", d.ClientOV.Endpoint)
-	//TODO: create the server profile in oneview, we need a hostname and a template name
-	// Teh hostname should be the same as docker-machine create <name>   , <name> == hostname
-	// d.MachineName
-	// func (c *OVClient) CreateMachine(host_name string, server_template string) (err error) {
+	// create the server profile in oneview, we need a hostname and a template name
+
+	// TODO: delete when done
+	dJSON, err := json.Marshal(d)
+	if err != nil {
+		return err
+	}
+	log.Debugf("Creating machine -> %+v", bytes.NewBuffer(dJSON))
+
+	log.Debugf("***> CreateMachine")
+	if err := d.ClientOV.CreateMachine(d.MachineName, d.ServerTemplate); err != nil {
+		return err
+	}
+
+	log.Debugf("***> GetProfileByName")
+	profileMachineName, err := d.ClientOV.GetProfileByName(d.MachineName)
+	if err != nil {
+		return err
+	}
+
+	log.Debugf("***> check GetProfileByName")
+	if profileMachineName.URI.IsNil() {
+		err := fmt.Errorf("Attempting to get machine profile information, unable to find machine: %s", d.MachineName)
+		return err
+	}
+
+	// get the server hardware associated with that test profile
+	log.Debugf("***> GetServerHardware")
+	machineBlade, err := d.ClientOV.GetServerHardware(profileMachineName.ServerHardwareURI)
+	if machineBlade.URI.IsNil() {
+		err := fmt.Errorf("Attempting to get machine blade information, unable to find machine: %s", d.MachineName)
+		return err
+	}
+	log.Debugf("client 2 *******---> %+v", machineBlade.Client.APIKey)
+
+	// power on the server, and leave it in that state
+	log.Debugf("***> PowerOn Server")
+	var pt *ov.PowerTask
+	pt = pt.NewPowerTask(machineBlade)
+	pt.Timeout = 46 // timeout is 20 sec
+	err = pt.PowerExecutor(ov.P_ON)
+	if err != nil {
+		return err
+	}
+
 	// TODO: add the server to icsp, TestCreateServer
 	// TODO: apply a build plan, TestApplyDeploymentJobs
 	return nil

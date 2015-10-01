@@ -107,3 +107,12 @@ Sometimes it's usefull to run just a single test case.
 ```bash
 testov ./drivers/oneview/ov -test.run=TestCreateProfileFromTemplate
 ```
+
+Build one executable example
+-----------------------------
+Sometimes we need to be able to target building 1 executable
+```bash
+# checkout the script/build script for different target options, arg 1 and 2
+script/build  -os="darwin" -arch="amd64"
+alias build_machine='script/build  -os="darwin" -arch="amd64"'
+```
