@@ -1,8 +1,6 @@
 package oneview
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -31,6 +29,10 @@ type Driver struct {
 	SSHPort        int
 	SSHPublicKey   string
 	ServerTemplate string
+	PublicSlotID   int
+	Profile        ov.ServerProfile
+	Hardware       ov.ServerHardware
+	Server         icsp.Server
 }
 
 const (
@@ -150,6 +152,12 @@ func GetCreateFlags() []cli.Flag {
 			Value:  443,
 			EnvVar: "ONEVIEW_ILO_PORT",
 		},
+		cli.IntFlag{
+			Name:   "oneview-public-slotid",
+			Usage:  "optional slot id of the public interface, ie; ethX where X is the id.",
+			Value:  1,
+			EnvVar: "ONEVIEW_PUBLIC_SLOTID",
+		},
 	}
 }
 
@@ -208,6 +216,8 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.IloPassword = flags.String("oneview-ilo-password")
 	d.IloPort = flags.Int("oneview-ilo-port")
 
+	d.PublicSlotID = flags.Int("oneview-public-slotid")
+
 	d.SSHUser = flags.String("oneview-ssh-user")
 	d.SSHPort = flags.Int("oneview-ssh-port")
 
@@ -236,10 +246,24 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 }
 
 // PreCreateCheck - pre create check
-func (d *Driver) PreCreateCheck() error {
+func (d *Driver) PreCreateCheck() (err error) {
 	log.Debug("PreCreateCheck...")
-	// TODO: verify you can connect to ov
-	// TODO: verify you can connect to icsp
+	// verify you can connect to ov
+	oVersion, err := d.ClientOV.GetAPIVersion()
+	if err != nil {
+		return err
+	}
+	if oVersion.CurrentVersion <= 0 {
+		return fmt.Errorf("Unable to get a valid version from OneView,  %+v\n", oVersion)
+	}
+	// verify you can connect to icsp
+	oVersion, err = d.ClientICSP.GetAPIVersion()
+	if err != nil {
+		return err
+	}
+	if oVersion.CurrentVersion <= 0 {
+		return fmt.Errorf("Unable to get a valid version from ICsp,  %+v\n", oVersion)
+	}
 	return nil
 }
 
@@ -254,41 +278,17 @@ func (d *Driver) Create() error {
 	log.Debugf("OV Endpoint is: %s", d.ClientOV.Endpoint)
 	// create the server profile in oneview, we need a hostname and a template name
 
-	// TODO: delete when done
-	dJSON, err := json.Marshal(d)
-	if err != nil {
-		return err
-	}
-	log.Debugf("Creating machine -> %+v", bytes.NewBuffer(dJSON))
-
 	log.Debugf("***> CreateMachine")
 	if err := d.ClientOV.CreateMachine(d.MachineName, d.ServerTemplate); err != nil {
 		return err
 	}
 
-	log.Debugf("***> GetProfileByName")
-	profileMachineName, err := d.ClientOV.GetProfileByName(d.MachineName)
-	if err != nil {
+	if err := d.getBlade(); err != nil {
 		return err
 	}
-
-	log.Debugf("***> check GetProfileByName")
-	if profileMachineName.URI.IsNil() {
-		err := fmt.Errorf("Attempting to get machine profile information, unable to find machine: %s", d.MachineName)
-		return err
-	}
-
-	// get the server hardware associated with that test profile
-	log.Debugf("***> GetServerHardware")
-	machineBlade, err := d.ClientOV.GetServerHardware(profileMachineName.ServerHardwareURI)
-	if machineBlade.URI.IsNil() {
-		err := fmt.Errorf("Attempting to get machine blade information, unable to find machine: %s", d.MachineName)
-		return err
-	}
-	log.Debugf("client 2 *******---> %+v", machineBlade.Client.APIKey)
 
 	// power on the server, and leave it in that state
-	if err := machineBlade.PowerOn(); err != nil {
+	if err := d.Hardware.PowerOn(); err != nil {
 		return err
 	}
 
@@ -310,19 +310,17 @@ func (d *Driver) Create() error {
 	sp.Set("no_proxy", os.Getenv("no_proxy"))
 
 	cs := icsp.CustomizeServer{
-		HostName:         d.MachineName,                      // machine-rack-enclosure-bay
-		SerialNumber:     machineBlade.SerialNumber.String(), // get it
+		HostName:         d.MachineName,                    // machine-rack-enclosure-bay
+		SerialNumber:     d.Hardware.SerialNumber.String(), // get it
 		ILoUser:          d.IloUser,
 		IloPassword:      d.IloPassword,
-		IloIPAddress:     machineBlade.MpIpAddress,
+		IloIPAddress:     d.Hardware.MpIpAddress,
 		IloPort:          d.IloPort,
-		OSBuildPlan:      d.OSBuildPlan, // name of the OS build plan
+		OSBuildPlan:      d.OSBuildPlan,  // name of the OS build plan
+		PublicSlotID:     d.PublicSlotID, // this is the slot id of the public interface
 		ServerProperties: sp,
 	}
-	if err := d.ClientICSP.CustomizeServer(cs); err != nil {
-		return err
-	}
-	return nil
+	return d.ClientICSP.CustomizeServer(cs)
 }
 
 // GetURL - get docker url
@@ -340,10 +338,18 @@ func (d *Driver) GetURL() (string, error) {
 // currently the only way i can see to get this is with sudo ifconfig|grep inet
 func (d *Driver) GetIP() (string, error) {
 	log.Debug("GetIP...")
-	if d.ClientICSP.Endpoint == "" {
+	// get the blade for this driver
+	if err := d.getBlade(); err != nil {
+		return "", err
+	}
+	sPublicIPv4, err := d.Server.GetPublicIPV4()
+	if err != nil {
+		return "", err
+	}
+	if sPublicIPv4 == "" {
 		return "", fmt.Errorf("IP address is not set")
 	}
-	return d.ClientICSP.Endpoint, nil
+	return sPublicIPv4, nil
 }
 
 // GetState - get the running state of the target machine
@@ -351,25 +357,24 @@ func (d *Driver) GetState() (state.State, error) {
 	log.Debug("GetState...")
 
 	// get the blade for this driver
-	_, machineBlade, server, err := d.getBlade()
-	if err != nil {
+	if err := d.getBlade(); err != nil {
 		return state.Error, err
 	}
-	if icsp.PROVISIONING.Equal(server.OpswLifecycle) {
+	if icsp.PROVISIONING.Equal(d.Server.OpswLifecycle) {
 		return state.Starting, nil
 	}
-	if icsp.UNPROVISIONED.Equal(server.OpswLifecycle) ||
-		icsp.PRE_UNPROVISIONED.Equal(server.OpswLifecycle) {
+	if icsp.UNPROVISIONED.Equal(d.Server.OpswLifecycle) ||
+		icsp.PRE_UNPROVISIONED.Equal(d.Server.OpswLifecycle) {
 		return state.Stopping, nil
 	}
-	if icsp.DEACTIVATED.Equal(server.OpswLifecycle) {
+	if icsp.DEACTIVATED.Equal(d.Server.OpswLifecycle) {
 		return state.Stopped, nil
 	}
-	if icsp.PROVISION_FAILED.Equal(server.OpswLifecycle) {
+	if icsp.PROVISION_FAILED.Equal(d.Server.OpswLifecycle) {
 		return state.Error, nil
 	}
 	// use power state to determine status
-	ps, err := machineBlade.GetPowerState()
+	ps, err := d.Hardware.GetPowerState()
 	if err != nil {
 		return state.Error, err
 	}
@@ -392,17 +397,16 @@ func (d *Driver) Start() error {
 	log.Infof("Starting ... %s", d.MachineName)
 
 	// get the blade for this driver
-	_, machineBlade, _, err := d.getBlade()
-	if err != nil {
+	if err := d.getBlade(); err != nil {
 		return err
 	}
 
 	// power on the server, and leave it in that state
-	if err := machineBlade.PowerOn(); err != nil {
+	if err := d.Hardware.PowerOn(); err != nil {
 		return err
 	}
 	// implement icsp check for is in maintenance mode or started
-	isManaged, err := d.ClientICSP.IsServerManaged(machineBlade.SerialNumber.String())
+	isManaged, err := d.ClientICSP.IsServerManaged(d.Hardware.SerialNumber.String())
 	if err != nil {
 		return err
 	}
@@ -423,13 +427,12 @@ func (d *Driver) Stop() error {
 	}
 
 	// get the blade for this driver
-	_, machineBlade, _, err := d.getBlade()
-	if err != nil {
+	if err := d.getBlade(); err != nil {
 		return err
 	}
 
 	// power on the server, and leave it in that state
-	if err := machineBlade.PowerOff(); err != nil {
+	if err := d.Hardware.PowerOff(); err != nil {
 		return err
 	}
 	return nil
@@ -446,20 +449,19 @@ func (d *Driver) Remove() error {
 	if err := d.Stop(); err != nil {
 		return err
 	}
-	profile, _, server, err := d.getBlade()
-	if err != nil {
+	if err := d.getBlade(); err != nil {
 		return err
 	}
 	// destroy the server in icsp
-	isDeleted, err := d.ClientICSP.DeleteServer(server.MID)
+	isDeleted, err := d.ClientICSP.DeleteServer(d.Server.MID)
 	if err != nil {
 		return err
 	}
 	if !isDeleted {
-		return fmt.Errorf("Unable to delete the server from icsp : %s, %s", d.MachineName, server.MID)
+		return fmt.Errorf("Unable to delete the server from icsp : %s, %s", d.MachineName, d.Server.MID)
 	}
 	// delete the server profile in ov : TestDeleteProfile
-	t, err := d.ClientOV.SubmitDeleteProfile(profile)
+	t, err := d.ClientOV.SubmitDeleteProfile(d.Profile)
 	err = t.Wait()
 	if err != nil {
 		return err
@@ -473,10 +475,7 @@ func (d *Driver) Restart() error {
 	if err := d.Stop(); err != nil {
 		return err
 	}
-	if err := d.Start(); err != nil {
-		return err
-	}
-	return nil
+	return d.Start()
 }
 
 // Kill - kill the docker machine
@@ -494,34 +493,34 @@ func (d *Driver) publicSSHKeyPath() string {
 
 // /////////  HELPLERS /////////////
 
-func (d *Driver) getBlade() (profile ov.ServerProfile, sh ov.ServerHardware, s icsp.Server, err error) {
+func (d *Driver) getBlade() (err error) {
 	log.Debug("In getBlade()")
 
-	profile, err = d.ClientOV.GetProfileByName(d.MachineName)
+	d.Profile, err = d.ClientOV.GetProfileByName(d.MachineName)
 	if err != nil {
-		return profile, sh, s, err
+		return err
 	}
 
 	log.Debugf("***> check if we got a profile")
-	if profile.URI.IsNil() {
+	if d.Profile.URI.IsNil() {
 		err = fmt.Errorf("Attempting to get machine profile information, unable to find machine in oneview: %s", d.MachineName)
-		return profile, sh, s, err
+		return err
 	}
 
 	// power on the server
 	// get the server hardware associated with that test profile
 	log.Debugf("***> GetServerHardware")
-	sh, err = d.ClientOV.GetServerHardware(profile.ServerHardwareURI)
-	if sh.URI.IsNil() {
+	d.Hardware, err = d.ClientOV.GetServerHardware(d.Profile.ServerHardwareURI)
+	if d.Hardware.URI.IsNil() {
 		err = fmt.Errorf("Attempting to get machine blade information, unable to find machine: %s", d.MachineName)
-		return profile, sh, s, err
+		return err
 	}
 	// get an icsp server
-	s, err = d.ClientICSP.GetServerBySerialNumber(sh.SerialNumber.String())
+	d.Server, err = d.ClientICSP.GetServerBySerialNumber(d.Hardware.SerialNumber.String())
 	if err != nil {
-		return profile, sh, s, err
+		return err
 	}
-	return profile, sh, s, err
+	return err
 }
 
 // createKeyPair - generate key files needed

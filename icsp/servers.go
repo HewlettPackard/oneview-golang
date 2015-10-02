@@ -237,6 +237,7 @@ func (s Server) Clone() Server {
 }
 
 // GetInterfaces get a list of interfaces that have an ip address assigned
+// usually called durring provisioning, and before we apply an os build plan
 func (s Server) GetInterfaces() (interfaces []Interface) {
 	for _, inrface := range s.Interfaces {
 		if len(inrface.IPV4Addr) > 0 {
@@ -244,6 +245,27 @@ func (s Server) GetInterfaces() (interfaces []Interface) {
 		}
 	}
 	return interfaces
+}
+
+// GetPublicIP returns the public ip interface
+// usually called after an os build plan is applied
+func (s Server) GetPublicIPV4() (string, error) {
+	var position int
+	position, inetItem := s.GetValueItem("public_interface", "server")
+	if position >= 0 {
+		inetJSON := inetItem.Value
+		if len(inetJSON) > 0 {
+			var inet *Interface
+			err := json.Unmarshal([]byte(inetJSON), &inet)
+			if err != nil {
+				log.Debugf("inetJSON -> %+v", inetJSON)
+				return "", err
+			}
+			log.Debugf("inet -> %+v", inet)
+			return inet.IPV4Addr, nil
+		}
+	}
+	return "", nil
 }
 
 // ReloadFull GetServers() only returns a partial object, reload it to get everything

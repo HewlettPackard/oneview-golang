@@ -61,6 +61,7 @@ type CustomizeServer struct {
 	IloPort          int                     // port number for ilo server
 	OSBuildPlan      string                  // name of the OS build plan
 	ServerProperties *CustomServerAttributes // name value pairs for server custom attributes
+	PublicSlotID     int                     // the public interface that will be used to get public ipaddress
 }
 
 // PreApplyDeploymentJobs - will attempt to identify the public interface for this job
@@ -119,6 +120,22 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 		log.Infof("ICSP server was already created, %s, skipping", cs.HostName)
 	}
 
+	// reload that server
+	s, err = c.GetServerBySerialNumber(cs.SerialNumber)
+	if err != nil {
+		return err
+	}
+
+	// verify that the server actually has a URI
+	if s.URI.IsNil() {
+		return fmt.Errorf("Server customization failure, unable to get a valid server from icsp for serial number: %s", cs.SerialNumber)
+	}
+
+	// verify that the server retrieved matches it's serial number
+	if s.SerialNumber != cs.SerialNumber {
+		return fmt.Errorf("Server customization failure, server serial numbers mismatch for %s.", cs.SerialNumber)
+	}
+
 	// save the server attributes to the server
 	for k, v := range cs.ServerProperties.Values {
 		s.SetCustomAttribute(k, "server", v)
@@ -127,6 +144,11 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	// save it
 	new_server, err := c.SaveServer(s)
 	if err != nil {
+		return err
+	}
+
+	// call to capture the public_interface attribute
+	if err := c.PreApplyDeploymentJobs(new_server, cs.PublicSlotID); err != nil {
 		return err
 	}
 

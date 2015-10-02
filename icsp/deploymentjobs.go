@@ -53,9 +53,9 @@ type OSDPersonalityDataV2 struct {
 
 // OSDPersonalizeServerDataV2  server data
 type OSDPersonalizeServerDataV2 struct {
-	PersonalityData OSDPersonalityDataV2 `json:"personalityData,omitempty"`
-	ServerURI       string               `json:"serverUri,omitempty"`  // serverUri string
-	SkipReboot      bool                 `json:"skipReboot,omitempty"` // skipReboot Boolean
+	PersonalityData *OSDPersonalityDataV2 `json:"personalityData,omitempty"`
+	ServerURI       string                `json:"serverUri,omitempty"`  // serverUri string
+	SkipReboot      bool                  `json:"skipReboot,omitempty"` // skipReboot Boolean
 }
 
 // DeploymentJobs is used for creating a new os build plan

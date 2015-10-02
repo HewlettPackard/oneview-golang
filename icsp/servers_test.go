@@ -10,6 +10,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// func (s Server) GetPublicIPV4() (string, error) {
+// TestGetPublicIPV4 try to test for getting interface from custom attribute
+func TestGetPublicIPV4(t *testing.T) {
+	var (
+		d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		log.Debug("implements acceptance test for TestGetPublicIPV4")
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		s, err := c.GetServerBySerialNumber(serialNumber)
+		testIP, err := s.GetPublicIPV4()
+		assert.NoError(t, err, "Should GetPublicIPV4 without error -> %s, %+v\n", err, s)
+		log.Debugf(" testIP -> %s", testIP)
+		assert.True(t, (len(testIP) > 0), "Should return an ip address string")
+	} else {
+		// TODO: implement a test
+		// need to simplate createing public_interface custom attribute object
+		// need to read custom attribute object, see server_customattribute_test.go
+		log.Debug("implements unit test for TestGetPublicIPV4")
+	}
+}
+
 // TestGetInterfaces  verify that interfaces works
 func TestGetInterfaces(t *testing.T) {
 
