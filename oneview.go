@@ -353,23 +353,27 @@ func (d *Driver) GetState() (state.State, error) {
 	// get the blade for this driver
 	_, machineBlade, server, err := d.getBlade()
 	if err != nil {
-		return err
+		return state.Error, err
 	}
-	if icsp.OpswLifecycle.PROVISIONING.Equal(server.OpswLifecycle) {
+	if icsp.PROVISIONING.Equal(server.OpswLifecycle) {
 		return state.Starting, nil
 	}
-	if icsp.OpswLifecycle.UNPROVISIONED.Equal(server.OpswLifecycle) ||
-		icsp.OpswLifecycle.PRE_UNPROVISIONED.Equal(server.OpswLifecycle) {
+	if icsp.UNPROVISIONED.Equal(server.OpswLifecycle) ||
+		icsp.PRE_UNPROVISIONED.Equal(server.OpswLifecycle) {
 		return state.Stopping, nil
 	}
-	if icsp.OpswLifecycle.DEACTIVATED.Equal(server.OpswLifecycle) {
+	if icsp.DEACTIVATED.Equal(server.OpswLifecycle) {
 		return state.Stopped, nil
 	}
-	if icsp.OpswLifecycle.PROVISION_FAILED.Equal(server.OpswLifecycle) {
+	if icsp.PROVISION_FAILED.Equal(server.OpswLifecycle) {
 		return state.Error, nil
 	}
 	// use power state to determine status
-	switch machineBlade.GetPowerState() {
+	ps, err := machineBlade.GetPowerState()
+	if err != nil {
+		return state.Error, err
+	}
+	switch ps {
 	case ov.P_ON:
 		return state.Running, nil
 	case ov.P_OFF:
@@ -442,7 +446,7 @@ func (d *Driver) Remove() error {
 	if err := d.Stop(); err != nil {
 		return err
 	}
-	profile, machineBlade, server, err := d.getBlade()
+	profile, _, server, err := d.getBlade()
 	if err != nil {
 		return err
 	}
@@ -493,7 +497,7 @@ func (d *Driver) publicSSHKeyPath() string {
 func (d *Driver) getBlade() (profile ov.ServerProfile, sh ov.ServerHardware, s icsp.Server, err error) {
 	log.Debug("In getBlade()")
 
-	profile, err := d.ClientOV.GetProfileByName(d.MachineName)
+	profile, err = d.ClientOV.GetProfileByName(d.MachineName)
 	if err != nil {
 		return profile, sh, s, err
 	}

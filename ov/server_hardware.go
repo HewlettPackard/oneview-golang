@@ -131,7 +131,7 @@ func (s ServerHardware) PowerOn() error {
 func (s ServerHardware) GetPowerState() (PowerState, error) {
 	var pt *PowerTask
 	pt = pt.NewPowerTask(s)
-	if err := pt.GetCurrentPowerState(); err != nill {
+	if err := pt.GetCurrentPowerState(); err != nil {
 		return P_UKNOWN, err
 	}
 	return pt.State, nil
