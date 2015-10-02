@@ -1,7 +1,9 @@
 package icsp
 
 import (
+	"encoding/json"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/docker/machine/drivers/oneview/rest"
@@ -109,7 +111,7 @@ func TestCreateServer(t *testing.T) {
 		log.Debug("implements acceptance test for TestCreateServer")
 		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
 		assert.NoError(t, err, "GetServerBySerialNumber fake threw error -> %s, %+v\n", err, s)
-		if s.URI.String() != "null" {
+		if s.URI.IsNil() {
 			// create the server
 			err := c.CreateServer(user, pass, ip, 443)
 			assert.NoError(t, err, "CreateServer threw error -> %s\n", err)
@@ -126,8 +128,55 @@ func TestCreateServer(t *testing.T) {
 	}
 }
 
+// TestInterface verify we can parse interfaces
+func TestInterface(t *testing.T) {
+	var testSlots []string
+	testSlots = []string{"eth0", "eth1", "eth2"}
+	for i, slot := range testSlots {
+		x, _ := strconv.Atoi(slot[len(slot)-1:])
+		assert.Equal(t, i, x, "the slot should match the index")
+	}
+}
+
+// TestPreApplyDeploymentJobs - setup some information from icsp
+//TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
+func TestPreApplyDeploymentJobs(t *testing.T) {
+	var (
+		d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		log.Debug("implements acceptance test for ApplyDeploymentJobs")
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		s, err := c.GetServerBySerialNumber(serialNumber)
+		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
+
+		log.Infof("server opslf -> %+v", s.OpswLifecycle)
+		assert.True(t, PRE_UNPROVISIONED.Equal(s.OpswLifecycle), "should be unprovisioned")
+
+		log.Infof("server state -> %+v", s.State)
+		assert.True(t, S_MAINTENANCE.Equal(s.State), "server should be in maintenance mode")
+
+		err = c.PreApplyDeploymentJobs(s, 1) // responsible for configuring the Pulbic IP CustomAttributes
+		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)
+
+		// verify that the server attribute was saved by getting the server again and checking the value
+		_, testValue2 := s.GetValueItem("public_interface", "server")
+		// unmarshal the custom attribute
+		var inet *Interface
+		err = json.Unmarshal([]byte(testValue2.Value), &inet)
+		assert.NoError(t, err, "Unmarshal Interface threw error -> %s, %+v\n", err, testValue2.Value)
+
+		log.Infof("We got public ip addr -> %s", inet.IPV4Addr)
+		assert.Equal(t, "15.244.58.254", inet.IPV4Addr, "Should return the saved custom attribute for ipaddress")
+	}
+}
+
 // integrated acceptance test
-// TODO: ApplyDeploymentJobs
 // TestSaveServer implement save server
 func TestApplyDeploymentJobs(t *testing.T) {
 	var (

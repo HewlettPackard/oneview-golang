@@ -22,6 +22,31 @@ type StorageDevice struct {
 	Vendor     string `json:"vendor,omitempty"`     // vendor Manufacturer of the device string
 }
 
+// OSDState status
+type OSDState int
+
+// OK - The target server is running a production OS with a production version of the agent and is reachable;
+// UNREACHABLE - The managed Server is unreachable by the appliance;
+// MAINTENANCE - The Server has been booted to maintenance, and a maintenance version of the agent has been registered with the appliance.;
+
+const (
+	S_OK          OSDState = iota // 0
+	S_UNREACHABLE                 // 1
+	S_MAINTENANCE                 // 2
+)
+
+var statelist = [...]string{
+	"OK",          // OK - The target server is running a production OS with a production version of the agent and is reachable;
+	"UNREACHABLE", // UNREACHABLE - The managed Server is unreachable by the appliance;
+	"MAINTENANCE", // MAINTENANCE - The Server has been booted to maintenance, and a maintenance version of the agent has been registered with the appliance.;
+}
+
+// String helper for state
+func (o OSDState) String() string { return statelist[o] }
+
+// Equal helper for state
+func (o OSDState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+
 // Stage stage const
 type Stage int
 
@@ -211,6 +236,16 @@ func (s Server) Clone() Server {
 	}
 }
 
+// GetInterfaces get a list of interfaces that have an ip address assigned
+func (s Server) GetInterfaces() (interfaces []Interface) {
+	for _, inrface := range s.Interfaces {
+		if len(inrface.IPV4Addr) > 0 {
+			interfaces = append(interfaces, inrface)
+		}
+	}
+	return interfaces
+}
+
 // ReloadFull GetServers() only returns a partial object, reload it to get everything
 func (s Server) ReloadFull(c *ICSPClient) (Server, error) {
 	var uri = s.URI
@@ -308,6 +343,9 @@ func (c *ICSPClient) CreateServer(user string, pass string, ip string, port int)
 	sc = sc.NewServerCreate(user, pass, ip, port)
 
 	jt, err := c.SubmitNewServer(sc)
+	if err != nil {
+		return err
+	}
 	err = jt.Wait()
 	if err != nil {
 		return err

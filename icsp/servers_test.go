@@ -1,6 +1,7 @@
 package icsp
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"testing"
@@ -8,6 +9,53 @@ import (
 	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
 )
+
+// TestGetInterfaces  verify that interfaces works
+func TestGetInterfaces(t *testing.T) {
+
+	var (
+		d *ICSPTest
+		c *ICSPClient
+		s Server
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		log.Debug("implements acceptance test for TestGetInterfaces")
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		s, err := c.GetServerBySerialNumber(serialNumber)
+		data := s.GetInterfaces()
+		assert.NoError(t, err, "GetInterfaces threw error -> %s, %+v\n", err, data)
+		assert.True(t, len(data) > 0, "Failed to get a valid list of interfaces -> %+v", data)
+		for _, inet := range data {
+			log.Infof("inet -> %+v", inet)
+			log.Infof("inet ip -> %+v", inet.IPV4Addr)
+			log.Infof("inet ip -> %+v", inet.Slot)
+			log.Infof("inet ip -> %+v", inet.MACAddr)
+		}
+	} else {
+		log.Debug("implements unit test for TestGetInterfaces")
+		d, c = getTestDriverU()
+		jsonServerData := d.Tc.GetTestData(d.Env, "ServerJSONString").(string)
+		log.Debugf("jsonServerData => %s", jsonServerData)
+		err := json.Unmarshal([]byte(jsonServerData), &s)
+		assert.NoError(t, err, "Unmarshal Server threw error -> %s, %+v\n", err, jsonServerData)
+
+		log.Debugf("server -> %v", s)
+
+		data := s.GetInterfaces()
+		log.Debugf("Interfaces -> %+v", data)
+		assert.True(t, len(data) > 0, "Failed to get a valid list of interfaces -> %+v", data)
+		for _, inet := range data {
+			log.Debugf("inet -> %+v", inet)
+			log.Debugf("inet ip -> %+v", inet.IPV4Addr)
+			log.Debugf("inet ip -> %+v", inet.Slot)
+			log.Debugf("inet ip -> %+v", inet.MACAddr)
+		}
+	}
+}
 
 // TestSaveServer implement save server
 func TestSaveServer(t *testing.T) {
