@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -280,6 +279,7 @@ func (d *Driver) Create() error {
 	// create the server profile in oneview, we need a hostname and a template name
 
 	log.Debugf("***> CreateMachine")
+	// create d.Hardware and d.Profile
 	if err := d.ClientOV.CreateMachine(d.MachineName, d.ServerTemplate); err != nil {
 		return err
 	}
@@ -310,7 +310,7 @@ func (d *Driver) Create() error {
 		os.Getenv("http_proxy"), os.Getenv("https_proxy"), os.Getenv("no_proxy"))
 	sp.Set("proxy", strProxy)
 
-	sp.Set("docker_hostname", d.MachineName+"-"+strings.ToLower(d.Server.Name))
+	sp.Set("docker_hostname", d.MachineName+"-@server_name@")
 
 	cs := icsp.CustomizeServer{
 		HostName:         d.MachineName,                    // machine-rack-enclosure-bay
@@ -323,6 +323,7 @@ func (d *Driver) Create() error {
 		PublicSlotID:     d.PublicSlotID, // this is the slot id of the public interface
 		ServerProperties: sp,
 	}
+	// create d.Server and apply a build plan and configure the custom attributes
 	return d.ClientICSP.CustomizeServer(cs)
 }
 

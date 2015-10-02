@@ -1,18 +1,5 @@
 #!/bin/bash
 
-#TODO: find a place to save this in the build plan
-# http_proxy="@http_proxy@"
-# https_proxy="@https_proxy@"
-# HTTP_PROXY="@http_proxy@"
-# HTTPS_PROXY="@https_proxy@"
-# no_proxy="@no_proxy@"
-# NO_PROXY="@no_proxy@"
-# export http_proxy
-# export https_proxy
-# export HTTP_PROXY
-# export HTTPS_PROXY
-# export no_proxy
-# export NO_PROXY
 echo "This script will pre-configure the server to run docker"
 DOCKER_USER_INPUT=$1
 DOCKER_PUBKEY_INPUT=$2
@@ -34,7 +21,7 @@ ifup eno50
 
 # optionally set some persistent proxy server configuration
 if [ "${PROXY_ENABLED}" = "true" ]; then
-cat >> "/root/.bash_profile" << EOF
+cat >> "/etc/environment" << EOF
 ${DOCKER_PROXY}
 EOF
 fi

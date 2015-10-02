@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/docker/machine/log"
@@ -191,6 +192,9 @@ func TestGetServerBySerialNumber(t *testing.T) {
 		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
 		data, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, data)
+
+		data, err = c.GetServerBySerialNumber("2M25090RMW")
+		log.Infof("server -> %+v", strings.ToLower(data.Name))
 
 		// negative test
 		data, err = c.GetServerBySerialNumber("SXXXX33333") // fake serial number

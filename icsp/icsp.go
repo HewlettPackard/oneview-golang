@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/docker/machine/drivers/oneview/rest"
 	"github.com/docker/machine/log"
@@ -138,6 +139,9 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 
 	// save the server attributes to the server
 	for k, v := range cs.ServerProperties.Values {
+		// handle sepecial custom attributes
+		// handle @server_name@ and replace for s.Name
+		v = strings.Replace(v, "@server_name@", s.Name, -1)
 		s.SetCustomAttribute(k, "server", v)
 	}
 
