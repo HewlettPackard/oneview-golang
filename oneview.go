@@ -249,20 +249,20 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 func (d *Driver) PreCreateCheck() (err error) {
 	log.Debug("PreCreateCheck...")
 	// verify you can connect to ov
-	oVersion, err := d.ClientOV.GetAPIVersion()
+	ovVersion, err := d.ClientOV.GetAPIVersion()
 	if err != nil {
 		return err
 	}
-	if oVersion.CurrentVersion <= 0 {
-		return fmt.Errorf("Unable to get a valid version from OneView,  %+v\n", oVersion)
+	if ovVersion.CurrentVersion <= 0 {
+		return fmt.Errorf("Unable to get a valid version from OneView,  %+v\n", ovVersion)
 	}
 	// verify you can connect to icsp
-	oVersion, err = d.ClientICSP.GetAPIVersion()
+	icspVersion, err := d.ClientICSP.GetAPIVersion()
 	if err != nil {
 		return err
 	}
-	if oVersion.CurrentVersion <= 0 {
-		return fmt.Errorf("Unable to get a valid version from ICsp,  %+v\n", oVersion)
+	if icspVersion.CurrentVersion <= 0 {
+		return fmt.Errorf("Unable to get a valid version from ICsp,  %+v\n", icspVersion)
 	}
 	return nil
 }
