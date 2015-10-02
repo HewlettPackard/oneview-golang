@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -113,7 +114,7 @@ func GetCreateFlags() []cli.Flag {
 		cli.StringFlag{
 			Name:   "oneview-ssh-user",
 			Usage:  "OneView build plan ssh user account",
-			Value:  "root",
+			Value:  "docker",
 			EnvVar: "ONEVIEW_SSH_USER",
 		},
 		cli.IntFlag{
@@ -304,10 +305,12 @@ func (d *Driver) Create() error {
 	} else {
 		sp.Set("proxy_enable", "false")
 	}
-	sp.Set("proxyhost", os.Getenv("http_proxy"))
-	sp.Set("http_proxy", os.Getenv("http_proxy"))
-	sp.Set("https_proxy", os.Getenv("https_proxy"))
-	sp.Set("no_proxy", os.Getenv("no_proxy"))
+
+	strProxy := fmt.Sprintf("export http_proxy=\"%s\"\nexport https_proxy=\"%s\"\nexport HTTP_PROXY=\"$http_proxy\"\nexport HTTPS_PROXY=\"$https_proxy\"\nexport no_proxy=\"%s\"\nexport NO_PROXY=\"$no_proxy\"\n",
+		os.Getenv("http_proxy"), os.Getenv("https_proxy"), os.Getenv("no_proxy"))
+	sp.Set("proxy", strProxy)
+
+	sp.Set("docker_hostname", d.MachineName+"-"+strings.ToLower(d.Server.Name))
 
 	cs := icsp.CustomizeServer{
 		HostName:         d.MachineName,                    // machine-rack-enclosure-bay
