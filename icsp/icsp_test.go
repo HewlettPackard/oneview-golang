@@ -8,6 +8,7 @@ import (
 
 	"github.com/docker/machine/drivers/oneview/rest"
 	"github.com/docker/machine/drivers/oneview/testconfig"
+	"github.com/docker/machine/drivers/oneview/utils"
 	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -90,6 +91,36 @@ func getTestDriverU() (*ICSPTest, *ICSPClient) {
 	}
 	// fmt.Println("Setting up test with getTestDriverU")
 	return ot, ot.Client
+}
+
+//TestPostApplyDeploymentJobs test job Task
+func TestPostApplyDeploymentJobs(t *testing.T) {
+	var (
+		d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
+
+		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
+		// create a jt *JobTask object
+		// JobURI
+		var jt *JobTask
+		var testURL utils.Nstring
+		testURL = "blah"
+		jt = &JobTask{
+			JobURI: ODSUri{URI: testURL},
+			Client: c,
+		}
+		err = c.PostApplyDeploymentJobs(jt, s)
+		assert.NoError(t, err, "PostApplyDeploymentJobs threw error -> %s, %+v\n", err, jt)
+	}
 }
 
 // implement create server unt test
@@ -209,12 +240,12 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		_, testValue2 := s.GetValueItem("docker_user", "server")
 		assert.Equal(t, "docker", testValue2.Value, "Should return the saved custom attribute")
 
-		err = c.ApplyDeploymentJobs(osBuildPlan, s)
+		_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
 	} else {
 		var s Server
 		log.Debug("implements unit test for ApplyDeploymentJobs")
-		err := c.ApplyDeploymentJobs("testbuildplan", s)
+		_, err := c.ApplyDeploymentJobs("testbuildplan", s)
 		assert.Error(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, s)
 	}
 }

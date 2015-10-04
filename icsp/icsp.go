@@ -65,6 +65,14 @@ type CustomizeServer struct {
 	PublicSlotID     int                     // the public interface that will be used to get public ipaddress
 }
 
+// PostApplyDeploymentJobs - post deployment task to update custom attributes with
+// results of a job task that was executed on the server
+func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server) error {
+	// look at jobResultLogDetails, parse *=* strings
+	// place those strings into custom attributes
+	return nil
+}
+
 // PreApplyDeploymentJobs - will attempt to identify the public interface for this job
 //  for now we simply look for interfaces on ethx and save those into a custom attribute called
 //  PublicInterface, this can be controlled by providing the slot id.   Example:
@@ -157,8 +165,13 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	}
 
 	// apply the build Plan
-	if err := c.ApplyDeploymentJobs(cs.OSBuildPlan, new_server); err != nil {
+	jt, err := c.ApplyDeploymentJobs(cs.OSBuildPlan, new_server)
+	if err != nil {
 		return err
 	}
-	return nil
+
+	// use jt to get additional customizations we can use on the server custom attributes
+	// TODO: this needs to be evaluated on usefull ness and proper way to pass up additional deployment information back to the server in icsp
+
+	return c.PostApplyDeploymentJobs(jt, new_server)
 }

@@ -311,6 +311,8 @@ func (d *Driver) Create() error {
 	sp.Set("proxy", strProxy)
 
 	sp.Set("docker_hostname", d.MachineName+"-@server_name@")
+	// interface
+	sp.Set("interface", fmt.Sprintf("eno%d", 50)) // TODO: what argument should we call 50 besides slotid ??
 
 	cs := icsp.CustomizeServer{
 		HostName:         d.MachineName,                    // machine-rack-enclosure-bay
