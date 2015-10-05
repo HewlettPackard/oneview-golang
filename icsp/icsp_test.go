@@ -113,12 +113,14 @@ func TestPostApplyDeploymentJobs(t *testing.T) {
 		// JobURI
 		var jt *JobTask
 		var testURL utils.Nstring
-		testURL = "blah"
+		testURL = "/rest/os-deployment-jobs/5350001"
 		jt = &JobTask{
 			JobURI: ODSUri{URI: testURL},
 			Client: c,
 		}
-		err = c.PostApplyDeploymentJobs(jt, s)
+		var findprops []string
+		findprops = append(findprops, "public_ip")
+		err = c.PostApplyDeploymentJobs(jt, s, findprops)
 		assert.NoError(t, err, "PostApplyDeploymentJobs threw error -> %s, %+v\n", err, jt)
 	}
 }

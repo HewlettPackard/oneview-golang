@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -67,10 +68,28 @@ type CustomizeServer struct {
 
 // PostApplyDeploymentJobs - post deployment task to update custom attributes with
 // results of a job task that was executed on the server
-func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server) error {
+func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties []string) error {
 	// look at jobResultLogDetails, parse *=* strings
+	job, err := c.GetJob(jt.JobURI)
+	if err != nil {
+		return err
+	}
+	for _, result := range job.JobResult {
+		for _, line := range strings.Split(result.JobResultLogDetails, "\n") {
+			r := regexp.MustCompile("(.*)=(.*)")
+			if r.FindString(line) != "" {
+				for _, property := range properties {
+					a := r.FindStringSubmatch(line)
+					if len(a) >= 3 && property == a[1] {
+						s.SetCustomAttribute(a[1], "server", a[2])
+					}
+				}
+			}
+		}
+	}
+	_, err = c.SaveServer(s)
 	// place those strings into custom attributes
-	return nil
+	return err
 }
 
 // PreApplyDeploymentJobs - will attempt to identify the public interface for this job
@@ -172,6 +191,7 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 
 	// use jt to get additional customizations we can use on the server custom attributes
 	// TODO: this needs to be evaluated on usefull ness and proper way to pass up additional deployment information back to the server in icsp
-
-	return c.PostApplyDeploymentJobs(jt, new_server)
+	var findprops []string
+	findprops = append(findprops, "public_ip")
+	return c.PostApplyDeploymentJobs(jt, new_server, findprops)
 }

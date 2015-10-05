@@ -251,7 +251,13 @@ func (s Server) GetInterfaces() (interfaces []Interface) {
 // usually called after an os build plan is applied
 func (s Server) GetPublicIPV4() (string, error) {
 	var position int
-	position, inetItem := s.GetValueItem("public_interface", "server")
+	position, inetItem := s.GetValueItem("public_ip", "server")
+	if position >= 0 {
+		log.Debugf("getting ip from public_ip -> %+v", inetItem.Value)
+		return inetItem.Value, nil
+	}
+
+	position, inetItem = s.GetValueItem("public_interface", "server")
 	if position >= 0 {
 		inetJSON := inetItem.Value
 		if len(inetJSON) > 0 {
