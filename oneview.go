@@ -359,6 +359,7 @@ func (d *Driver) Create() error {
 		log.Error(out)
 		return err
 	}
+	log.Infof("%s, Completed all create steps", d.DriverName())
 
 	return nil
 }
