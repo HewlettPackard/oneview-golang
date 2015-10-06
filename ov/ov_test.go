@@ -1,9 +1,11 @@
 package ov
+
 import (
 	"os"
+	"strconv"
 
 	"github.com/docker/machine/drivers/oneview/rest"
-  "github.com/docker/machine/drivers/oneview/testconfig"
+	"github.com/docker/machine/drivers/oneview/testconfig"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats
@@ -29,6 +31,7 @@ type OVTest struct {
 	Client *OVClient
 	Env    string
 }
+
 // get Environment
 func (ot *OVTest) GetEnvironment() {
 	if os.Getenv("ONEVIEW_TEST_ENV") != "" {
@@ -47,20 +50,20 @@ func getTestDriverA() (*OVTest, *OVClient) {
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-  ot.Client = &OVClient{
-    rest.Client{
-      User:       os.Getenv("ONEVIEW_OV_USER"),
-      Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
-			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
-      Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
+	ot.Client = &OVClient{
+		rest.Client{
+			User:     os.Getenv("ONEVIEW_OV_USER"),
+			Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
+			Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
+			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
 			// ConfigDir:
-      SSLVerify:  false,
-      APIVersion: 120,
+			SSLVerify:  false,
+			APIVersion: strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION")),
 			APIKey:     "none",
-    },
-  }
+		},
+	}
 	// fmt.Println("Setting up test with getTestDriverA")
-  return ot, ot.Client
+	return ot, ot.Client
 }
 
 // Unit test
@@ -70,17 +73,17 @@ func getTestDriverU() (*OVTest, *OVClient) {
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-  ot.Client = &OVClient{
-    rest.Client{
-      User:       "foo",
-      Password:   "bar",
+	ot.Client = &OVClient{
+		rest.Client{
+			User:       "foo",
+			Password:   "bar",
 			Domain:     "LOCAL",
-      Endpoint:   "https://ovtestcase",
-      SSLVerify:  false,
-      APIVersion: 120,
+			Endpoint:   "https://ovtestcase",
+			SSLVerify:  false,
+			APIVersion: 120,
 			APIKey:     "none",
-    },
-  }
+		},
+	}
 	// fmt.Println("Setting up test with getTestDriverU")
-  return ot, ot.Client
+	return ot, ot.Client
 }

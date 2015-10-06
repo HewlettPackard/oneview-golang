@@ -190,10 +190,14 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	log.Debug("SetConfigFromFlags...")
 
 	var icsp_version, ov_version int
-	if flags.Int("oneview-apiversion") == 120 {
+	switch flags.Int("oneview-apiversion") {
+	case 120:
 		icsp_version = 108
 		ov_version = 120
-	} else {
+	case 200:
+		icsp_version = 108
+		ov_version = 200
+	default:
 		icsp_version = 108
 		ov_version = 120
 	}
@@ -306,7 +310,7 @@ func (d *Driver) Create() error {
 		sp.Set("proxy_enable", "false")
 	}
 
-	strProxy := fmt.Sprintf("export http_proxy=\"%s\"\nexport https_proxy=\"%s\"\nexport HTTP_PROXY=\"$http_proxy\"\nexport HTTPS_PROXY=\"$https_proxy\"\nexport no_proxy=\"%s\"\nexport NO_PROXY=\"$no_proxy\"\n",
+	strProxy := fmt.Sprintf("export http_proxy=\"%s\"\nexport https_proxy=\"%s\"\nexport HTTP_PROXY=\"\\$http_proxy\"\nexport HTTPS_PROXY=\"\\$https_proxy\"\nexport no_proxy=\"%s\"\nexport NO_PROXY=\"\\$no_proxy\"",
 		os.Getenv("http_proxy"), os.Getenv("https_proxy"), os.Getenv("no_proxy"))
 	sp.Set("proxy", strProxy)
 
@@ -326,7 +330,37 @@ func (d *Driver) Create() error {
 		ServerProperties: sp,
 	}
 	// create d.Server and apply a build plan and configure the custom attributes
-	return d.ClientICSP.CustomizeServer(cs)
+	if err := d.ClientICSP.CustomizeServer(cs); err != nil {
+		return err
+	}
+
+	ip, err := d.GetIP()
+	if err != nil {
+		return err
+	}
+	d.IPAddress = ip
+
+	// use ssh to set keys, and test ssh
+	sshClient, err := d.getLocalSSHClient()
+	if err != nil {
+		return err
+	}
+
+	pubKey, err := ioutil.ReadFile(d.publicSSHKeyPath())
+	if err != nil {
+		return err
+	}
+
+	if out, err := sshClient.Output(fmt.Sprintf(
+		"printf '%%s' '%s' | tee /home/%s/.ssh/authorized_keys",
+		string(pubKey),
+		d.GetSSHUsername(),
+	)); err != nil {
+		log.Error(out)
+		return err
+	}
+
+	return nil
 }
 
 // GetURL - get docker url
@@ -555,4 +589,17 @@ func (d *Driver) deleteKeyPair() error {
 		return err
 	}
 	return nil
+}
+
+func (d *Driver) getLocalSSHClient() (ssh.Client, error) {
+	sshAuth := &ssh.Auth{
+		Passwords: []string{"docker"},
+		Keys:      []string{d.GetSSHKeyPath()},
+	}
+	sshClient, err := ssh.NewNativeClient(d.GetSSHUsername(), d.IPAddress, d.SSHPort, sshAuth)
+	if err != nil {
+		return nil, err
+	}
+
+	return sshClient, nil
 }

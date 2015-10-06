@@ -1,8 +1,10 @@
 package ov
+
 import (
 	"os"
 	"testing"
 
+	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,10 +24,8 @@ func TestConnections(t *testing.T) {
 		}
 		data, err := c.GetProfileBySN(d.Tc.GetTestData(d.Env, "SerialNumber").(string))
 		assert.NoError(t, err, "GetProfileBySN threw error -> %s", err)
-		// fmt.Printf("data.Connections -> %+v\n", data)
-		if len(data.Connections) > 0 {
-			assert.Equal(t, d.Tc.GetExpectsData(d.Env, "MACAddress").(string), data.Connections[0].MAC)
-		}
+		log.Debugf("data.Connections -> %+v\n", data.Connections)
+		assert.Equal(t, d.Tc.GetExpectsData(d.Env, "MACAddress").(string), data.Connections[0].MAC)
 
 	}
 }
