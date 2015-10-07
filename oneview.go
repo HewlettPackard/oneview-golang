@@ -310,9 +310,8 @@ func (d *Driver) Create() error {
 		sp.Set("proxy_enable", "false")
 	}
 
-	strProxy := fmt.Sprintf("export http_proxy=\"%s\"\nexport https_proxy=\"%s\"\nexport HTTP_PROXY=\"\\$http_proxy\"\nexport HTTPS_PROXY=\"\\$https_proxy\"\nexport no_proxy=\"%s\"\nexport NO_PROXY=\"\\$no_proxy\"",
-		os.Getenv("http_proxy"), os.Getenv("https_proxy"), os.Getenv("no_proxy"))
-	sp.Set("proxy", strProxy)
+	strProxy := os.Getenv("proxy_config")
+	sp.Set("proxy_config", strProxy)
 
 	sp.Set("docker_hostname", d.MachineName+"-@server_name@")
 	// interface
