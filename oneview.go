@@ -246,6 +246,11 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	if d.ServerTemplate == "" {
 		return errors.New("Missing option --oneview-server-template or environment ONEVIEW_SERVER_TEMPLATE")
 	}
+
+	if d.OSBuildPlan == "" {
+		return errors.New("Missing option --oneview-os-plan or ONEVIEW_OS_PLAN")
+	}
+
 	return nil
 }
 
