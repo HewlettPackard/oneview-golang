@@ -35,8 +35,6 @@ ONEVIEW_TEST_DATA=TEST_LAB_NAME
 TESTCONFIG_PACKAGE_ROOT_PATH=github.com/docker/machine
 TESTCONFIG_JSON_DATA_DIR=test/integration/data/oneview
 
-ONEVIEW_TEST_ACCEPTANCE=true
-ICSP_TEST_ACCEPTANCE=true
 ONEVIEW
 
 ```
@@ -49,6 +47,7 @@ Setup container
 TEST_CONTAINER_NAME=testov
 docker run -it \
  --env-file "$(git rev-parse --show-toplevel)/drivers/oneview/.oneview.env" \
+ -e ONEVIEW_TEST_ACCEPTANCE=true -e ICSP_TEST_ACCEPTANCE=true \
   -v $(git rev-parse --show-toplevel):/go/src/github.com/docker/machine \
   --name ${TEST_CONTAINER_NAME} docker-machine
 # exit the started container

@@ -5,8 +5,23 @@ import (
 	"os"
 	"testing"
 
+	"github.com/docker/machine/drivers/oneview/liboneview"
+	"github.com/docker/machine/log"
 	"github.com/stretchr/testify/assert"
 )
+
+// UnlessNoProfileTemplate - determine if current test version is supported
+func UnlessNoProfileTemplate(ovversion int) bool {
+	var currentversion liboneview.Version
+	var asc liboneview.APISupport
+	currentversion = currentversion.CalculateVersion(ovversion, 108) // hard coded icsp version for testing
+	asc = asc.NewByName("profile_templates.go")
+	if !asc.IsSupported(currentversion) {
+		log.Infof("skipping testing for GetProfileTemplateByName, client version not supported: %+v", currentversion)
+		return true
+	}
+	return false
+}
 
 // GetProfileTemplateByName get a template profile
 func TestGetProfileTemplateByName(t *testing.T) {
@@ -17,7 +32,12 @@ func TestGetProfileTemplateByName(t *testing.T) {
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
-		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
+		// determine if we should execute
+		if UnlessNoProfileTemplate(c.APIVersion) {
+			return
+		}
+
+		testname = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -31,6 +51,11 @@ func TestGetProfileTemplateByName(t *testing.T) {
 
 	} else {
 		d, c = getTestDriverU()
+		// determine if we should execute
+		if UnlessNoProfileTemplate(c.APIVersion) {
+			return
+		}
+
 		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		data, err := c.GetProfileTemplateByName(testname)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))

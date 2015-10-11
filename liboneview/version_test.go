@@ -10,6 +10,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestCalculateVersion
+func TestCalculateVersion(t *testing.T) {
+	var v Version
+	v = v.CalculateVersion(120, 108)
+	log.Debugf("v => %+v, %d", v, v.Integer())
+	assert.True(t, API_VER1.EqualV(v))  // should be ver1
+	assert.False(t, API_VER2.EqualV(v)) // should not be ver2
+
+	v = v.CalculateVersion(300, 108)
+	log.Debugf("v => %+v, %d", v, v.Integer())
+	assert.False(t, API_VER1.EqualV(v))       // should not be ver1
+	assert.False(t, API_VER2.EqualV(v))       // should not be ver2
+	assert.True(t, API_VER_UNKNOWN.EqualV(v)) // should not be ver2
+
+	v = v.CalculateVersion(200, 108)
+	assert.False(t, API_VER1.EqualV(v)) // should be ver1
+	assert.True(t, API_VER2.EqualV(v))  // should not be ver2
+}
+
 // Test GetAPIVersion
 func TestCheckVersion(t *testing.T) {
 	var (

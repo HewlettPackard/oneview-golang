@@ -50,6 +50,10 @@ func getTestDriverA() (*OVTest, *OVClient) {
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
+	api_version, err := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	if err != nil {
+		api_version = -1
+	}
 	ot.Client = &OVClient{
 		rest.Client{
 			User:     os.Getenv("ONEVIEW_OV_USER"),
@@ -58,7 +62,7 @@ func getTestDriverA() (*OVTest, *OVClient) {
 			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
 			// ConfigDir:
 			SSLVerify:  false,
-			APIVersion: strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION")),
+			APIVersion: api_version,
 			APIKey:     "none",
 		},
 	}
