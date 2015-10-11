@@ -123,6 +123,7 @@ type PowerRequest struct {
 // Submit desired power state
 func (pt *PowerTask) SubmitPowerState(s PowerState) {
 	if err := pt.GetCurrentPowerState(); err != nil {
+		pt.TaskIsDone = true
 		log.Errorf("Error getting current power state: %s", err)
 		return
 	}

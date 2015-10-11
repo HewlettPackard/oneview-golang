@@ -2,13 +2,17 @@ package liboneview
 
 import "strings"
 
-// create a api support functions for each method that has new support
-// check support should be used in test cases or functions to determine
-// if a certain behavior is required for a given context.   For exmple:
-// If we are making a call to profile_templates.go we should
-// 1. ask if profile_templates needs supprt checks (use APISupportCheck.HasCheck)
+// create an API support functions for each method that has new changes.
+// Check if support should be used in test cases or functions to determine
+// if a certain behavior is required for a given functional context.
+//
+// For exmple:
+//
+// If we are making a call to profile_templates.go we should only use this on V2
+// 1. ask if profile_templates needs supprt checks (use APISupport.Get)
 // 2. if profile_templates needs support check, find out if the current lib Version
-//    will support profile_templates or not : Check
+//    will support profile_templates or not : APISupport.IsSupported
+// als see profile_templates.go -> ProfileTemplatesNotSupported
 
 // APISupport
 type APISupport int
