@@ -116,6 +116,7 @@ func TestSaveServer(t *testing.T) {
 	} else {
 		log.Debug("implements unit test for TestCreateServer")
 		var s Server
+		_, c = getTestDriverU()
 		s, err := c.SaveServer(s)
 		assert.Error(t, err, "SaveServer threw error -> %s, %+v\n", err, s)
 	}

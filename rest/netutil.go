@@ -112,6 +112,8 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	}
 	client := &http.Client{Transport: tr}
 
+	log.Debugf("*** url => %s", Url.String())
+	log.Debugf("*** method => %s", string(method))
 	if options != nil {
 		OptionsJSON, err := json.Marshal(options)
 		if err != nil {
@@ -146,9 +148,9 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	// DEBUGGING WHILE WE WORK
 	// DEBUGGING WHILE WE WORK
 	// fmt.Printf("METHOD --> %+v\n",method)
-	// fmt.Printf("REQ    --> %+v\n",req)
-	// fmt.Printf("RESP   --> %+v\n",resp)
-	// fmt.Printf("ERROR  --> %+v\n",err)
+	log.Debugf("REQ    --> %+v\n", req)
+	log.Debugf("RESP   --> %+v\n", resp)
+	log.Debugf("ERROR  --> %+v\n", err)
 	// DEBUGGING WHILE WE WORK
 
 	data, err := ioutil.ReadAll(resp.Body)

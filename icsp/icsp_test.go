@@ -93,39 +93,8 @@ func getTestDriverU() (*ICSPTest, *ICSPClient) {
 	return ot, ot.Client
 }
 
-//TestPostApplyDeploymentJobs test job Task
-func TestPostApplyDeploymentJobs(t *testing.T) {
-	var (
-		d *ICSPTest
-		c *ICSPClient
-	)
-	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
-		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
-
-		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
-		// create a jt *JobTask object
-		// JobURI
-		var jt *JobTask
-		var testURL utils.Nstring
-		testURL = "/rest/os-deployment-jobs/5350001"
-		jt = &JobTask{
-			JobURI: ODSUri{URI: testURL},
-			Client: c,
-		}
-		var findprops []string
-		findprops = append(findprops, "public_ip")
-		err = c.PostApplyDeploymentJobs(jt, s, findprops)
-		assert.NoError(t, err, "PostApplyDeploymentJobs threw error -> %s, %+v\n", err, jt)
-	}
-}
-
 // implement create server unt test
+//TODO: This test requires a server profile to have been created
 func TestCreateServer(t *testing.T) {
 	var (
 		d              *ICSPTest
@@ -155,6 +124,7 @@ func TestCreateServer(t *testing.T) {
 		}
 		// check if the server now exist
 	} else {
+		_, c = getTestDriverU()
 		log.Debug("implements unit test for TestCreateServer")
 		err := c.CreateServer("foo", "bar", "127.0.0.1", 443)
 		assert.Error(t, err, "CreateServer should throw error  -> %s\n", err)
@@ -172,7 +142,7 @@ func TestInterface(t *testing.T) {
 }
 
 // TestPreApplyDeploymentJobs - setup some information from icsp
-//TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
+//TODO: This test requires a server profile to have been created
 func TestPreApplyDeploymentJobs(t *testing.T) {
 	var (
 		d *ICSPTest
@@ -211,6 +181,7 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 
 // integrated acceptance test
 // TestSaveServer implement save server
+//TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
 func TestApplyDeploymentJobs(t *testing.T) {
 	var (
 		d *ICSPTest
@@ -246,9 +217,43 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
 	} else {
 		var s Server
+		_, c = getTestDriverU()
 		log.Debug("implements unit test for ApplyDeploymentJobs")
 		_, err := c.ApplyDeploymentJobs("testbuildplan", s)
 		assert.Error(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, s)
+	}
+}
+
+//TestPostApplyDeploymentJobs test job Task
+//TODO: This test requires a server profile to have been created
+func TestPostApplyDeploymentJobs(t *testing.T) {
+	var (
+		d *ICSPTest
+		c *ICSPClient
+	)
+	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA()
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
+
+		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
+		// create a jt *JobTask object
+		// JobURI
+		var jt *JobTask
+		var testURL utils.Nstring
+		testURL = "/rest/os-deployment-jobs/5350001"
+		jt = &JobTask{
+			JobURI: ODSUri{URI: testURL},
+			Client: c,
+		}
+		var findprops []string
+		findprops = append(findprops, "public_ip")
+		err = c.PostApplyDeploymentJobs(jt, s, findprops)
+		assert.NoError(t, err, "PostApplyDeploymentJobs threw error -> %s, %+v\n", err, jt)
 	}
 }
 

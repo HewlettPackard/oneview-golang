@@ -13,6 +13,15 @@ import (
 const URLEndPointSession = "/rest/login-sessions"
 
 // GetAuthHeaderMap Generate an auth Header map ...
+// some api endpoints are hiddent, remove api version to get to them
+func (c *ICSPClient) GetAuthHeaderMapNoVer() map[string]string {
+	return map[string]string{
+		"Content-Type": "application/json; charset=utf-8",
+		"auth":         c.APIKey,
+	}
+}
+
+// GetAuthHeaderMap Generate an auth Header map ...
 func (c *ICSPClient) GetAuthHeaderMap() map[string]string {
 	return map[string]string{
 		"Content-Type":  "application/json; charset=utf-8",

@@ -310,6 +310,7 @@ type ServerList struct {
 
 // ServerCreate structure for create server
 type ServerCreate struct {
+	Type      string `json:"type,omitempty"`      // OSDIlo
 	IPAddress string `json:"ipAddress,omitempty"` // PXE managed ip address
 	Port      int    `json:"port,omitempty"`      // port number to use
 	UserName  string `json:"username,omitempty"`  // iLo username
@@ -325,10 +326,11 @@ func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port
 		log.Fatal("ilo password missing, please specify with ONEVIEW_ILO_PASSWORD or --oneview-ilo-password arguments.")
 	}
 	return ServerCreate{
-		IPAddress: ip,
-		Port:      port,
+		Type:      "OSDIlo",
 		UserName:  user,
 		Password:  pass,
+		IPAddress: ip,
+		Port:      port,
 	}
 }
 
@@ -336,12 +338,14 @@ func (sc ServerCreate) NewServerCreate(user string, pass string, ip string, port
 func (c *ICSPClient) SubmitNewServer(sc ServerCreate) (jt *JobTask, err error) {
 	log.Infof("Initializing creation of server for ICSP, %s.", sc.IPAddress)
 	var (
-		uri  = "/rest/os-deployment-servers"
+		// uri  = "/rest/os-deployment-servers"  //TODO: this is working in ft.collins lab
+		uri  = "/rest/os-deployment-ilos" //TODO: implement hidden api for server deploy that works in Houston
 		juri ODSUri
 	)
 	// refresh login
 	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	// c.SetAuthHeaderOptions(c.GetAuthHeaderMap())  //TODO: this works in ft.collins
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMapNoVer()) //TODO: implement hidden api for server deploy, we remove the api version from this call
 
 	jt = jt.NewJobTask(c)
 	jt.Reset()
