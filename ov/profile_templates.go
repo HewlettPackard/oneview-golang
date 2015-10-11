@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/docker/machine/drivers/oneview/liboneview"
 	"github.com/docker/machine/drivers/oneview/rest"
 	"github.com/docker/machine/log"
 )
@@ -11,6 +12,19 @@ import (
 // introduced in v200 for oneview, allows for an easier method
 // to build the profiles for servers and associate them.
 // we don't operate on a new struct, we simply use the ServerProfile struct
+
+// ProfileTemplatesNotSupported - determine these functions are supported
+func (c *OVClient) ProfileTemplatesNotSupported() bool {
+	var currentversion liboneview.Version
+	var asc liboneview.APISupport
+	currentversion = currentversion.CalculateVersion(c.APIVersion, 108) // force icsp to 108 version since icsp version doesn't matter
+	asc = asc.NewByName("profile_templates.go")
+	if !asc.IsSupported(currentversion) {
+		log.Debugf("ProfileTemplates client version not supported: %+v", currentversion)
+		return true
+	}
+	return false
+}
 
 // get a server profile template by name
 func (c *OVClient) GetProfileTemplateByName(name string) (ServerProfile, error) {
