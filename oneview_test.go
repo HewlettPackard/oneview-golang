@@ -74,7 +74,8 @@ func (ot *OneViewTest) GetTestDriverA() (*OneViewTest, *ov.OVClient, *icsp.ICSPC
 	return ot, ot.OVClient, ot.ICSPClient
 }
 
-func TestCreateServer(t *testing.T) {
+// TestCreateMachine - simulate first part of create
+func TestCreateMachine(t *testing.T) {
 	var (
 		driver             Driver
 		d                  *OneViewTest
@@ -108,6 +109,7 @@ func TestCreateServer(t *testing.T) {
 	assert.NoError(t, err, "PowerOff threw error -> %s\n", err)
 }
 
+// TestCustomizeServer - simulate second part of create
 func TestCustomizeServer(t *testing.T) {
 	var (
 		err                                                 error

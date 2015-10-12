@@ -57,7 +57,7 @@ func (c *OVClient) CreateMachine(host_name string, server_template string) (err 
 	}
 
 	// check for a server profile template name, if it doesn't exist, exit
-	if template, err = c.GetProfileByName(server_template); err != nil {
+	if template, err = c.GetProfileTemplateByName(server_template); err != nil {
 		log.Errorf("Error unable to get template by name (%s): %s", server_template, err)
 		return err
 	}

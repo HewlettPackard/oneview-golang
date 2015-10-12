@@ -24,7 +24,7 @@ func TestGetPublicIPV4(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		testIP, err := s.GetPublicIPV4()
 		assert.NoError(t, err, "Should GetPublicIPV4 without error -> %s, %+v\n", err, s)

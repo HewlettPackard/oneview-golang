@@ -565,7 +565,13 @@ func (d *Driver) getBlade() (err error) {
 		return err
 	}
 	// get an icsp server
-	d.Server, err = d.ClientICSP.GetServerBySerialNumber(d.Hardware.SerialNumber.String())
+	if d.Hardware.VirtualSerialNumber.IsNil() {
+		// get the server profile with SerialNumber
+		d.Server, err = d.ClientICSP.GetServerBySerialNumber(d.Hardware.SerialNumber.String())
+	} else {
+		// get the server profile with the VirtualSerialNumber
+		d.Server, err = d.ClientICSP.GetServerBySerialNumber(d.Hardware.VirtualSerialNumber.String())
+	}
 	if err != nil {
 		return err
 	}

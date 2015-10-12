@@ -26,17 +26,35 @@ func (c *OVClient) ProfileTemplatesNotSupported() bool {
 	return false
 }
 
+// IsProfileTemplates - returns true when we should use GetProfileTemplate...
+func (c *OVClient) IsProfileTemplates() bool {
+	return !c.ProfileTemplatesNotSupported()
+}
+
 // get a server profile template by name
 func (c *OVClient) GetProfileTemplateByName(name string) (ServerProfile, error) {
 	var (
 		profile ServerProfile
 	)
-	profiles, err := c.GetProfileTemplates(fmt.Sprintf("name matches '%s'", name), "name:asc")
-	if profiles.Total > 0 {
-		return profiles.Members[0], err
+	// v2 way to get ServerProfile
+	if c.IsProfileTemplates() {
+		profiles, err := c.GetProfileTemplates(fmt.Sprintf("name matches '%s'", name), "name:asc")
+		if profiles.Total > 0 {
+			return profiles.Members[0], err
+		} else {
+			return profile, err
+		}
 	} else {
-		return profile, err
+
+		// v1 way to get a ServerProfile
+		profiles, err := c.GetProfiles(fmt.Sprintf("name matches '%s'", name), "name:asc")
+		if profiles.Total > 0 {
+			return profiles.Members[0], err
+		} else {
+			return profile, err
+		}
 	}
+
 }
 
 // get a server profiles

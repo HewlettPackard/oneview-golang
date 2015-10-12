@@ -154,7 +154,7 @@ func (c *OVClient) GetProfileBySN(serialnum string) (ServerProfile, error) {
 	}
 }
 
-// get a server profiles
+// GetProfiles - get a server profiles
 func (c *OVClient) GetProfiles(filter string, sort string) (ServerProfileList, error) {
 	var (
 		uri      = "/rest/server-profiles"
@@ -189,7 +189,28 @@ func (c *OVClient) GetProfiles(filter string, sort string) (ServerProfileList, e
 	return profiles, nil
 }
 
-// submit new profile template
+// GetProfileByURI - get the profile from a uri
+func (c *OVClient) GetProfileByURI(uri utils.Nstring) (ServerProfile, error) {
+	var (
+		profile ServerProfile
+	)
+
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return profile, err
+	}
+
+	log.Debugf("GetProfileByURI %s", data)
+	if err := json.Unmarshal([]byte(data), &profile); err != nil {
+		return profile, err
+	}
+	return profile, nil
+}
+
+// SubmitNewProfile - submit new profile template
 func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 	log.Infof("Initializing creation of server profile for %s.", p.Name)
 	var (
@@ -220,8 +241,22 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 // create profile from template
 func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile, blade ServerHardware) error {
 	log.Debugf("TEMPLATE : %+v\n", template)
+	var (
+		new_template ServerProfile
+		err          error
+	)
 
-	var new_template = template.Clone()
+	//TODO: we should look at implementing GET on /rest/server-profile-templates/{id}new-profile
+	if c.IsProfileTemplates() {
+		log.Debugf("getting profile by URI %+v, v2", template.URI)
+		new_template, err = c.GetProfileByURI(template.URI)
+		if err != nil {
+			return err
+		}
+	} else {
+		log.Debugf("get new_template from clone, v1")
+		new_template = template.Clone()
+	}
 	new_template.ServerHardwareURI = blade.URI
 	new_template.Description += " " + name
 	new_template.Name = name

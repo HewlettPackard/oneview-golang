@@ -18,10 +18,6 @@ func TestGetProfileTemplateByName(t *testing.T) {
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
 		// determine if we should execute
-		if c.ProfileTemplatesNotSupported() {
-			return
-		}
-
 		testname = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
