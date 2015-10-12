@@ -141,6 +141,7 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 		return err
 	}
 	if s.SerialNumber != cs.SerialNumber {
+		log.Infof("ICSP creating server for : %s", cs.IloIPAddress)
 		if err := c.CreateServer(cs.ILoUser, cs.IloPassword, cs.IloIPAddress, cs.IloPort); err != nil {
 			return err
 		}

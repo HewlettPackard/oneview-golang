@@ -301,6 +301,10 @@ func (d *Driver) Create() error {
 	if err := d.Hardware.PowerOn(); err != nil {
 		return err
 	}
+	// power off let customization bring the server online
+	if err := d.Hardware.PowerOff(); err != nil {
+		return err
+	}
 
 	// add the server to icsp, TestCreateServer
 	// apply a build plan, TestApplyDeploymentJobs
@@ -323,8 +327,8 @@ func (d *Driver) Create() error {
 	sp.Set("interface", fmt.Sprintf("eno%d", 50)) // TODO: what argument should we call 50 besides slotid ??
 
 	cs := icsp.CustomizeServer{
-		HostName:         d.MachineName,                    // machine-rack-enclosure-bay
-		SerialNumber:     d.Hardware.SerialNumber.String(), // get it
+		HostName:         d.MachineName,                   // machine-rack-enclosure-bay
+		SerialNumber:     d.Profile.SerialNumber.String(), // get it
 		ILoUser:          d.IloUser,
 		IloPassword:      d.IloPassword,
 		IloIPAddress:     d.Hardware.MpIpAddress,
