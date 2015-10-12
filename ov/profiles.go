@@ -253,6 +253,8 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		if err != nil {
 			return err
 		}
+		new_template.Type = "ServerProfileV5"
+		log.Debugf("new_template -> %+v", new_template)
 	} else {
 		log.Debugf("get new_template from clone, v1")
 		new_template = template.Clone()

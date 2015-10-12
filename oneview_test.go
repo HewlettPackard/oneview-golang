@@ -83,6 +83,9 @@ func TestCreateMachine(t *testing.T) {
 		ic                 *icsp.ICSPClient
 		template, hostname string
 	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") != "true" {
+		return
+	}
 	d, c, ic = d.GetTestDriverA()
 
 	template = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
@@ -119,6 +122,9 @@ func TestCustomizeServer(t *testing.T) {
 		ic                                                  *icsp.ICSPClient
 		serialNumber, osbuildplan, hostname, user, pass, ip string
 	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") != "true" {
+		return
+	}
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		user = os.Getenv("ONEVIEW_ILO_USER")
 		pass = os.Getenv("ONEVIEW_ILO_PASSWORD")
