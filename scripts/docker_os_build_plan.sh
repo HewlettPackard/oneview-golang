@@ -73,6 +73,7 @@ echo "Completed hostname update : $(cat /etc/hostname), $?"
 
 echo "public_ip=$(ifconfig ${INTERFACE}|grep inet |head -1 | awk '{print $2}')"
 
+echo "docker host provisioned by docker-machine oneview driver" >> /etc/motd
 echo "docker customizations complete"
 
 exit 0
