@@ -104,12 +104,6 @@ func GetCreateFlags() []cli.Flag {
 			Usage:  "SSH private key path",
 			EnvVar: "ONEVIEW_SSLVERIFY",
 		},
-		cli.IntFlag{
-			Name:   "oneview-apiversion",
-			Usage:  "OneView API Version",
-			Value:  120,
-			EnvVar: "ONEVIEW_APIVERSION",
-		},
 		cli.StringFlag{
 			Name:   "oneview-ssh-user",
 			Usage:  "OneView build plan ssh user account",
@@ -189,32 +183,22 @@ func (d *Driver) GetSSHUsername() string {
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	log.Debug("SetConfigFromFlags...")
 
-	var icsp_version, ov_version int
-	switch flags.Int("oneview-apiversion") {
-	case 120:
-		icsp_version = 108
-		ov_version = 120
-	case 200:
-		icsp_version = 108
-		ov_version = 200
-	default:
-		icsp_version = 108
-		ov_version = 120
-	}
-
 	d.ClientICSP = d.ClientICSP.NewICSPClient(flags.String("oneview-icsp-user"),
 		flags.String("oneview-icsp-password"),
 		flags.String("oneview-icsp-domain"),
 		flags.String("oneview-icsp-endpoint"),
 		flags.Bool("oneview-sslverify"),
-		icsp_version)
+		1)
 
 	d.ClientOV = d.ClientOV.NewOVClient(flags.String("oneview-ov-user"),
 		flags.String("oneview-ov-password"),
 		flags.String("oneview-ov-domain"),
 		flags.String("oneview-ov-endpoint"),
 		flags.Bool("oneview-sslverify"),
-		ov_version)
+		1)
+
+	d.ClientICSP.RefreshVersion()
+	d.ClientOV.RefreshVersion()
 
 	d.IloUser = flags.String("oneview-ilo-user")
 	d.IloPassword = flags.String("oneview-ilo-password")

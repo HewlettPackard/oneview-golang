@@ -25,6 +25,14 @@ func (c *OVClient) GetAuthHeaderMap() map[string]string {
 	}
 }
 
+// GetAuthHeaderMapNoVer generate header without version
+func (c *OVClient) GetAuthHeaderMapNoVer() map[string]string {
+	return map[string]string{
+		"Content-Type": "application/json; charset=utf-8",
+		"auth":         c.APIKey,
+	}
+}
+
 // Session struct
 type Session struct {
 	ID string `json:"sessionID,omitempty"`

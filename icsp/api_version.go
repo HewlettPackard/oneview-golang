@@ -25,7 +25,7 @@ func (c *ICSPClient) GetAPIVersion() (APIVersion, error) {
 	)
 
 	//c.AuthHeaders := map[string]interface{}{"auth": []interface{}{auth}}
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMapNoVer())
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
 		return apiversion, err
@@ -36,4 +36,15 @@ func (c *ICSPClient) GetAPIVersion() (APIVersion, error) {
 		return apiversion, err
 	}
 	return apiversion, err
+}
+
+// RefreshVersion - refresh the max api Version for the client
+func (c *ICSPClient) RefreshVersion() error {
+	var v APIVersion
+	v, err := c.GetAPIVersion()
+	if err != nil {
+		return err
+	}
+	c.APIVersion = v.CurrentVersion
+	return nil
 }
