@@ -62,11 +62,11 @@ func getTestDriverA() (*ICSPTest, *ICSPClient) {
 			Domain:   os.Getenv("ONEVIEW_ICSP_DOMAIN"),
 			Endpoint: os.Getenv("ONEVIEW_ICSP_ENDPOINT"),
 			// ConfigDir:
-			SSLVerify:  false,
-			APIVersion: 108,
-			APIKey:     "none",
+			SSLVerify: false,
+			APIKey:    "none",
 		},
 	}
+	ot.Client.RefreshVersion()
 	// fmt.Println("Setting up test with getTestDriverA")
 	return ot, ot.Client
 }

@@ -9,14 +9,6 @@ import (
 	"github.com/docker/machine/log"
 )
 
-// firmware additional properties introduced in 200
-// "FirmwareOnly" - Updates the firmware without powering down the server hardware using using HP Smart Update Tools.
-// "FirmwareAndOSDrivers" - Updates the firmware and OS drivers without powering down the server hardware using HP Smart Update Tools.
-// "FirmwareOnlyOfflineMode" - Manages the firmware through HP OneView. Selecting this option requires the server hardware to be powered down.
-type FirmwareOptionv200 struct {
-	FirmwareInstallType string `json:"firmwareInstallType,omitempty"` // Specifies the way a Service Pack for ProLiant (SPP) is installed. This field is used if the 'manageFirmware' field is true. Possible values are
-}
-
 // firmware
 type FirmwareOption struct {
 	FirmwareOptionv200
@@ -44,14 +36,15 @@ type BiosSettings struct {
 	Value string `json:"value,omitempty"` // value
 }
 
-// bios options
+// BiosOption - bios options
 type BiosOption struct {
 	ManageBios         bool           `json:"manageBios,omitempty"`         // "manageBios": false,
 	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"` // "overriddenSettings": []
 }
 
-// ServerProfile , server profile object for ov
+// ServerProfile - server profile object for ov
 type ServerProfile struct {
+	ServerProfilev200
 	Affinity              string              `json:"affinity,omitempty"`         // "affinity": "Bay",
 	AssociatedServer      utils.Nstring       `json:"associatedServer,omitempty"` // "associatedServer": null,
 	Bios                  BiosOption          `json:"bios,omitempty"`             // "bios": {	},
@@ -246,7 +239,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		err          error
 	)
 
-	//TODO: we should look at implementing GET on /rest/server-profile-templates/{id}new-profile
+	//GET on /rest/server-profile-templates/{id}new-profile
 	if c.IsProfileTemplates() {
 		log.Debugf("getting profile by URI %+v, v2", template.URI)
 		new_template, err = c.GetProfileByURI(template.URI)
