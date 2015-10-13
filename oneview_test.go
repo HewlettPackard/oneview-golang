@@ -52,11 +52,11 @@ func (ot *OneViewTest) GetTestDriverA() (*OneViewTest, *ov.OVClient, *icsp.ICSPC
 			Domain:   os.Getenv("ONEVIEW_ICSP_DOMAIN"),
 			Endpoint: os.Getenv("ONEVIEW_ICSP_ENDPOINT"),
 			// ConfigDir:
-			SSLVerify:  false,
-			APIVersion: 108,
-			APIKey:     "none",
+			SSLVerify: false,
+			APIKey:    "none",
 		},
 	}
+	ot.ICSPClient.RefreshVersion()
 
 	ot.OVClient = &ov.OVClient{
 		rest.Client{
@@ -65,11 +65,11 @@ func (ot *OneViewTest) GetTestDriverA() (*OneViewTest, *ov.OVClient, *icsp.ICSPC
 			Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
 			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
 			// ConfigDir:
-			SSLVerify:  false,
-			APIVersion: 120,
-			APIKey:     "none",
+			SSLVerify: false,
+			APIKey:    "none",
 		},
 	}
+	ot.OVClient.RefreshVersion()
 	// fmt.Println("Setting up test with getTestDriverA")
 	return ot, ot.OVClient, ot.ICSPClient
 }
