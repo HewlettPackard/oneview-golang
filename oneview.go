@@ -39,6 +39,13 @@ const (
 	defaultTimeout = 1 * time.Second
 )
 
+var (
+	ErrDriverMissingEndPointOptionOV   = errors.New("Missing option --oneview-ov-endpoint or environment ONEVIEW_OV_ENDPOINT")
+	ErrDriverMissingEndPointOptionICSP = errors.New("Missing option --oneview-icsp-endpoint or environment ONEVIEW_ICSP_ENDPOINT")
+	ErrDriverMissingTemplateOption     = errors.New("Missing option --oneview-server-template or environment ONEVIEW_SERVER_TEMPLATE")
+	ErrDriverMissingBuildPlanOption    = errors.New("Missing option --oneview-os-plan or ONEVIEW_OS_PLAN")
+)
+
 func init() {
 	drivers.Register("oneview", &drivers.RegisteredDriver{
 		New:            NewDriver,
@@ -220,19 +227,19 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 
 	// check for the ov endpoint
 	if d.ClientOV.Endpoint == "" {
-		return errors.New("Missing option --oneview-ov-endpoint or environment ONEVIEW_OV_ENDPOINT")
+		return ErrDriverMissingEndPointOptionOV
 	}
 	// check for the icsp endpoint
 	if d.ClientICSP.Endpoint == "" {
-		return errors.New("Missing option --oneview-icsp-endpoint or environment ONEVIEW_ICSP_ENDPOINT")
+		return ErrDriverMissingEndPointOptionICSP
 	}
 	// check for the template name
 	if d.ServerTemplate == "" {
-		return errors.New("Missing option --oneview-server-template or environment ONEVIEW_SERVER_TEMPLATE")
+		return ErrDriverMissingTemplateOption
 	}
 
 	if d.OSBuildPlan == "" {
-		return errors.New("Missing option --oneview-os-plan or ONEVIEW_OS_PLAN")
+		return ErrDriverMissingBuildPlanOption
 	}
 
 	return nil
@@ -419,9 +426,8 @@ func (d *Driver) GetState() (state.State, error) {
 	case ov.P_UKNOWN:
 		return state.Error, nil
 	default:
-		return state.Error, nil
+		return state.None, nil
 	}
-	return state.None, nil
 
 }
 
