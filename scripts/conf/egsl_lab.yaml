@@ -1,0 +1,40 @@
+testov:
+  container_name: testov
+  command: /bin/bash --login
+  tty: true
+  image: docker-machine
+  volumes:
+    - ../../../..:/go/src/github.com/docker/machine
+  environment:
+    - ONEVIEW_TEST_ACCEPTANCE:true
+    - ICSP_TEST_ACCEPTANCE:true
+  env_file:
+    - ../.proxy.env
+    - ../.oneview.env
+testovu:
+  container_name: testovu
+  command: /bin/bash --login
+  tty: true
+  image: docker-machine
+  volumes:
+    - ../../../..:/go/src/github.com/docker/machine
+  environment:
+    - ONEVIEW_TEST_ACCEPTANCE:false
+    - ICSP_TEST_ACCEPTANCE:false
+  env_file:
+    - ../.proxy.env
+    - ../.oneview.env
+testovd:
+  container_name: testovd
+  command: /bin/bash --login
+  tty: true
+  image: docker-machine
+  volumes:
+    - ../../../..:/go/src/github.com/docker/machine
+  environment:
+    - DEBUG:true
+    - ONEVIEW_TEST_ACCEPTANCE:false
+    - ICSP_TEST_ACCEPTANCE:false
+  env_file:
+    - ../.proxy.env
+    - ../.oneview.env
