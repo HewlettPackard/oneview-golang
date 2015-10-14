@@ -213,7 +213,11 @@ func (t *Task) Wait() error {
 		currenttime int
 	)
 	log.Debugf("task : %+v", t)
-
+	if t.Timeout < t.ExpectedDuration {
+		t.Timeout = t.ExpectedDuration
+		log.Debugf("assign timeout %d", t.Timeout)
+	}
+	log.Debugf("task timeout is : %d", t.Timeout)
 	for !t.TaskIsDone && (currenttime < t.Timeout) {
 		if err := t.GetCurrentTaskStatus(); err != nil {
 			t.TaskIsDone = true
@@ -224,6 +228,7 @@ func (t *Task) Wait() error {
 		}
 		if t.URI != "" {
 			log.Debugf("Waiting for task to complete, for %s ", t.Name)
+			log.Debugf("Waiting on, %s, %d%%, %s, %d, %d", t.Name, t.ComputedPercentComplete, t.GetLastStatusUpdate(), currenttime, t.ExpectedDuration)
 			log.Infof("Waiting on, %s, %d%%, %s", t.Name, t.ComputedPercentComplete, t.GetLastStatusUpdate())
 		} else {
 			log.Info("Waiting on task creation.")
@@ -232,9 +237,12 @@ func (t *Task) Wait() error {
 		// wait time before next check
 		time.Sleep(time.Millisecond * (1000 * t.WaitTime)) // wait 10sec before checking the status again
 		currenttime++
+		if t.Timeout < t.ExpectedDuration {
+			t.Timeout = t.ExpectedDuration
+		}
 	}
-	if !(currenttime < t.Timeout) {
-		log.Warn("Task timed out.")
+	if currenttime > t.Timeout {
+		log.Warnf("Task timed out, %d.", currenttime)
 	}
 
 	if t.Name != "" {
