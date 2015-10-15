@@ -1,8 +1,29 @@
 package ov
 
-import "github.com/docker/machine/drivers/oneview/utils"
+import (
+	"github.com/docker/machine/drivers/oneview/liboneview"
+	"github.com/docker/machine/drivers/oneview/utils"
+	"github.com/docker/machine/log"
+)
+
+// introduced in v200 for oneview, new v2 hardware attributes
+// such as support for different types of ilo connections
+
+// IsHardwareSchemaV2 - true when we are using v2, false for v1
+func (c *OVClient) IsHardwareSchemaV2() bool {
+	var currentversion liboneview.Version
+	var asc liboneview.APISupport
+	currentversion = currentversion.CalculateVersion(c.APIVersion, 108) // force icsp to 108 version since icsp version doesn't matter
+	asc = asc.NewByName("server_hardwarev2.go")
+	if asc.IsSupported(currentversion) {
+		log.Debugf("IsHardwareSchemaV2 is supported: %+v", currentversion)
+		return true
+	}
+	return false
+}
 
 // ServerHardwarev200 get server hardware from ov
+// mphostinfo is private to force calls to GetIloIPAddress
 type ServerHardwarev200 struct {
 	IntelligentProvisioningVersion string              `json:"intelligentProvisioningVersion,omitempty"` // intelligentProvisioningVersion The installed version of the Intelligent Provisioning embedded server provisioning tool. string
 	MpHostInfo                     *MpHostInfov200     `json:"mpHostInfo,omitempty"`                     // The host name and IP address information for the Management Processor that resides on this server.

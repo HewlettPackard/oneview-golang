@@ -76,6 +76,9 @@ func (dj DeploymentJobs) NewDeploymentJobs(bp []OSDBuildPlan, servers []Server) 
 
 	for _, s := range servers {
 		var pd OSDPersonalizeServerDataV2
+		if s.URI.IsNil() {
+			log.Fatalf("Unable to create new server deployment with nil server refrence.")
+		}
 		pd = OSDPersonalizeServerDataV2{
 			ServerURI: s.URI.String(),
 		}

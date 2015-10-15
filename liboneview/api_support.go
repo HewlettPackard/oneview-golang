@@ -20,12 +20,14 @@ type APISupport int
 // Methods that require support
 const (
 	C_PROFILE_TEMPLATES APISupport = 1 + iota
+	C_SERVER_HARDWAREV2
 	C_NONE
 )
 
 // apisupportlist - real names of things
 var apisupportlist = [...]string{
-	"profile_templates.go",
+	"profile_templates.go", // different way to get server templates
+	"server_hardwarev2.go", // different way to get ilo ip
 	"No Support Check Required",
 }
 
@@ -44,6 +46,8 @@ func (o APISupport) New(i int) APISupport {
 // IsSupported - given the current Version is there api support?
 func (o APISupport) IsSupported(v Version) bool {
 	switch o {
+	case C_SERVER_HARDWAREV2:
+		return API_VER2 == v
 	case C_PROFILE_TEMPLATES:
 		return API_VER2 == v
 	default:

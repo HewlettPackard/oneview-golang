@@ -95,9 +95,28 @@ type ServerHardware struct {
 	VirtualUUID           string        `json:"virtualUuid,omitempty"`           // "virtualUuid": "00000000-0000-0000-0000-000000000000"
 	// v1 properties
 	MpDnsName   string `json:"mpDnsName,omitempty"`   // "mpDnsName": "ILO2M25090RMW",
-	MpIpAddress string `json:"mpIpAddress,omitempty"` // "mpIpAddress": "172.28.3.136",
+	MpIpAddress string `json:"mpIpAddress,omitempty"` // make this private to force calls to GetIloIPAddress() "mpIpAddress": "172.28.3.136",
 	// extra client struct
 	Client *OVClient
+}
+
+// GetIloIPAddress - Use MpIpAddress for v1 and
+// For v2 check MpHostInfo is not nil , loop through MpHostInfo.MpIPAddress[],
+// and return the first nonzero address
+func (h ServerHardware) GetIloIPAddress() string {
+	if h.Client.IsHardwareSchemaV2() {
+		if h.MpHostInfo != nil {
+			log.Debug("working on getting IloIPAddress from MpHostInfo")
+			for _, MpIpObj := range h.MpHostInfo.MpIPAddress {
+				if len(MpIpObj.Address) > 0 {
+					return MpIpObj.Address
+				}
+			}
+		}
+	} else {
+		return h.MpIpAddress
+	}
+	return ""
 }
 
 // server hardware list, simillar to ServerProfileList with a TODO

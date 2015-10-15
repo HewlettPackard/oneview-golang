@@ -13,7 +13,7 @@ import (
 // URLEndPoint export this constant
 const URLEndPointServer = "/rest/os-deployment-servers"
 
-// storage device type
+// StorageDevice storage device type
 type StorageDevice struct {
 	Capacity   int    `json:"capacity,omitempty"`   // capacity Capacity of the storage in megabytes integer
 	DeviceName string `json:"deviceName,omitempty"` // deviceName Device name, such as "C:" for Windows or "sda" for Linux string
@@ -496,11 +496,11 @@ func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 	if err != nil {
 		return server, err
 	}
-	log.Debugf("GetServerBySerialNumber: server count: %d", servers.Count)
+	log.Debugf("GetServerBySerialNumber: server count: %d, serialnumber: %s", servers.Count, serial)
 	// grab the target
 	var srv Server
 	for _, server := range servers.Members {
-		log.Debugf("server: %v", server.HostName)
+		log.Debugf("server: %v, serial : %v", server.HostName, server.SerialNumber)
 		if strings.EqualFold(server.SerialNumber, serial) {
 			log.Debugf("found server host: %v", server.HostName)
 			srv = server

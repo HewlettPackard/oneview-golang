@@ -37,8 +37,8 @@ testov120d:
     - ../../../..:/go/src/github.com/docker/machine
   environment:
     - DEBUG=true
-    - ONEVIEW_TEST_ACCEPTANCE=false
-    - ICSP_TEST_ACCEPTANCE=false
+    - ONEVIEW_TEST_ACCEPTANCE=true
+    - ICSP_TEST_ACCEPTANCE=true
     - TESTCONFIG_PACKAGE_ROOT_PATH=github.com/docker/machine
     - TESTCONFIG_JSON_DATA_DIR=test/integration/data/oneview
   env_file:

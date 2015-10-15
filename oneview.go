@@ -322,7 +322,7 @@ func (d *Driver) Create() error {
 		SerialNumber:     d.Profile.SerialNumber.String(), // get it
 		ILoUser:          d.IloUser,
 		IloPassword:      d.IloPassword,
-		IloIPAddress:     d.Hardware.MpIpAddress,
+		IloIPAddress:     d.Hardware.GetIloIPAddress(), // MpIpAddress for v1
 		IloPort:          d.IloPort,
 		OSBuildPlan:      d.OSBuildPlan,  // name of the OS build plan
 		PublicSlotID:     d.PublicSlotID, // this is the slot id of the public interface

@@ -1,24 +1,25 @@
 package ov
+
 import (
 	"os"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/docker/machine/log"
 	"github.com/docker/machine/drivers/oneview/utils"
+	"github.com/docker/machine/log"
+	"github.com/stretchr/testify/assert"
 )
 
 // get server hardware test
 func TestServerHardware(t *testing.T) {
 	var (
-		d *OVTest
-		c *OVClient
-		testData utils.Nstring
+		d           *OVTest
+		c           *OVClient
+		testData    utils.Nstring
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
-		testData    = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
+		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -35,14 +36,14 @@ func TestServerHardware(t *testing.T) {
 // get server hardware test
 func TestGetAvailableHardware(t *testing.T) {
 	var (
-		d *OVTest
-		c *OVClient
+		d               *OVTest
+		c               *OVClient
 		testHwType_URI  utils.Nstring
 		testHWGroup_URI utils.Nstring
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
-		testHwType_URI  = utils.Nstring(d.Tc.GetTestData(d.Env, "HardwareTypeURI").(string))
+		testHwType_URI = utils.Nstring(d.Tc.GetTestData(d.Env, "HardwareTypeURI").(string))
 		testHWGroup_URI = utils.Nstring(d.Tc.GetTestData(d.Env, "GroupURI").(string))
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -54,4 +55,31 @@ func TestGetAvailableHardware(t *testing.T) {
 		assert.NotEqual(t, "", data.Name)
 
 	}
+}
+
+// TestGetIloIPAddress verify get ip address for hardware
+func TestGetIloIPAddress(t *testing.T) {
+
+	var (
+		d           *OVTest
+		c           *OVClient
+		testData    utils.Nstring
+		expectsData string
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA()
+		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
+		expectsData = d.Tc.GetExpectsData(d.Env, "IloIPAddress").(string)
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		s, err := c.GetServerHardware(testData)
+		ip := s.GetIloIPAddress()
+		log.Debugf("server -> %+v", s)
+		log.Debugf("ip -> %+v", ip)
+		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
+		assert.Equal(t, expectsData, ip)
+
+	}
+
 }
