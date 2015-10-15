@@ -358,7 +358,7 @@ func (d *Driver) Create() error {
 		log.Error(out)
 		return err
 	}
-	log.Infof("%s, Completed all create steps", d.DriverName())
+	log.Infof("%s, Completed all create steps, docker provisioning will continue.", d.DriverName())
 
 	return nil
 }
