@@ -1,5 +1,5 @@
-testov200:
-  container_name: testov200
+tbird200:
+  container_name: tbird200
   command: /bin/bash --login
   tty: true
   image: docker-machine
@@ -13,8 +13,8 @@ testov200:
   env_file:
     - ../.proxy.env
     - ../.oneview.env
-testov200u:
-  container_name: testov200u
+tbird200u:
+  container_name: tbird200u
   command: /bin/bash --login
   tty: true
   image: docker-machine
@@ -28,8 +28,8 @@ testov200u:
   env_file:
     - ../.proxy.env
     - ../.oneview.env
-testov200d:
-  container_name: testov200d
+tbird200d:
+  container_name: tbird200d
   command: /bin/bash --login
   tty: true
   image: docker-machine

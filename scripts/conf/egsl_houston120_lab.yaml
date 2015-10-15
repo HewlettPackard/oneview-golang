@@ -6,8 +6,10 @@ testov120:
   volumes:
     - ../../../..:/go/src/github.com/docker/machine
   environment:
-    - ONEVIEW_TEST_ACCEPTANCE:true
-    - ICSP_TEST_ACCEPTANCE:true
+    - ONEVIEW_TEST_ACCEPTANCE=true
+    - ICSP_TEST_ACCEPTANCE=true
+    - TESTCONFIG_PACKAGE_ROOT_PATH=github.com/docker/machine
+    - TESTCONFIG_JSON_DATA_DIR=test/integration/data/oneview
   env_file:
     - ../.proxy.env
     - ../.oneview.env
@@ -19,8 +21,10 @@ testov120u:
   volumes:
     - ../../../..:/go/src/github.com/docker/machine
   environment:
-    - ONEVIEW_TEST_ACCEPTANCE:false
-    - ICSP_TEST_ACCEPTANCE:false
+    - ONEVIEW_TEST_ACCEPTANCE=false
+    - ICSP_TEST_ACCEPTANCE=false
+    - TESTCONFIG_PACKAGE_ROOT_PATH=github.com/docker/machine
+    - TESTCONFIG_JSON_DATA_DIR=test/integration/data/oneview
   env_file:
     - ../.proxy.env
     - ../.oneview.env
@@ -32,9 +36,11 @@ testov120d:
   volumes:
     - ../../../..:/go/src/github.com/docker/machine
   environment:
-    - DEBUG:true
-    - ONEVIEW_TEST_ACCEPTANCE:false
-    - ICSP_TEST_ACCEPTANCE:false
+    - DEBUG=true
+    - ONEVIEW_TEST_ACCEPTANCE=false
+    - ICSP_TEST_ACCEPTANCE=false
+    - TESTCONFIG_PACKAGE_ROOT_PATH=github.com/docker/machine
+    - TESTCONFIG_JSON_DATA_DIR=test/integration/data/oneview
   env_file:
     - ../.proxy.env
     - ../.oneview.env
