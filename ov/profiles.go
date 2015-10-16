@@ -247,6 +247,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 			return err
 		}
 		new_template.Type = "ServerProfileV5"
+		new_template.ServerProfileTemplateURI = template.URI // create relationship
 		log.Debugf("new_template -> %+v", new_template)
 	} else {
 		log.Debugf("get new_template from clone, v1")

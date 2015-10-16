@@ -1,5 +1,7 @@
 package ov
 
+import "github.com/docker/machine/drivers/oneview/utils"
+
 // firmware additional properties introduced in 200
 // "FirmwareOnly" - Updates the firmware without powering down the server hardware using using HP Smart Update Tools.
 // "FirmwareAndOSDrivers" - Updates the firmware and OS drivers without powering down the server hardware using HP Smart Update Tools.
@@ -10,5 +12,6 @@ type FirmwareOptionv200 struct {
 
 // ServerProfilev200 - v200 changes to ServerProfile
 type ServerProfilev200 struct {
-	TemplateCompliance string `json:"templateCompliance,omitempty"` // v2 Compliant, NonCompliant, Unknown
+	TemplateCompliance       string        `json:"templateCompliance,omitempty"`       // v2 Compliant, NonCompliant, Unknown
+	ServerProfileTemplateURI utils.Nstring `json:"serverProfileTemplateUri,omitempty"` // undocmented option
 }
