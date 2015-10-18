@@ -110,23 +110,43 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
+
+	// get a client
 	client := &http.Client{Transport: tr}
 
 	log.Debugf("*** url => %s", Url.String())
 	log.Debugf("*** method => %s", string(method))
+
+	// parse url
+	reqUrl, err := url.Parse(Url.String())
+	if err != nil {
+		return nil, fmt.Errorf("Error with request: %v - %q", Url, err)
+	}
+
+	// handle options
 	if options != nil {
 		OptionsJSON, err := json.Marshal(options)
 		if err != nil {
 			return nil, err
 		}
 		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
-		req, err = http.NewRequest(string(method), Url.String(), bytes.NewBuffer(OptionsJSON))
+		req, err = http.NewRequest(string(method), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
-		req, err = http.NewRequest(string(method), Url.String(), nil)
+		req, err = http.NewRequest(string(method), reqUrl.String(), nil)
 	}
 
 	if err != nil {
 		return nil, fmt.Errorf("Error with request: %v - %q", Url, err)
+	}
+
+	// setup proxy
+	proxyUrl, err := http.ProxyFromEnvironment(req)
+	if err != nil {
+		return nil, fmt.Errorf("Error with proxy: %v - %q", proxyUrl, err)
+	}
+	if proxyUrl != nil {
+		tr.Proxy = http.ProxyURL(proxyUrl)
+		log.Debugf("*** proxy => %+v", tr.Proxy)
 	}
 
 	// build the auth headerU
