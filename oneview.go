@@ -360,7 +360,14 @@ func (d *Driver) Create() error {
 	}
 	log.Infof("%s, Completed all create steps, docker provisioning will continue.", d.DriverName())
 
+	defer closeAll(d)
 	return nil
+}
+
+// closeAll - cleanup sessions on the OV and ICSP appliances
+func closeAll(d *Driver) {
+	d.ClientOV.SessionLogout()
+	d.ClientICSP.SessionLogout()
 }
 
 // GetURL - get docker url
@@ -474,6 +481,8 @@ func (d *Driver) Stop() error {
 	if err := d.Hardware.PowerOff(); err != nil {
 		return err
 	}
+	// cleanup
+	defer closeAll(d)
 	return nil
 }
 
@@ -505,6 +514,8 @@ func (d *Driver) Remove() error {
 	if err != nil {
 		return err
 	}
+	// cleanup
+	defer closeAll(d)
 	return nil
 }
 
