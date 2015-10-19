@@ -76,6 +76,30 @@ func (c *ICSPClient) SessionLogin() (Session, error) {
 	if err := json.Unmarshal([]byte(data), &session); err != nil {
 		return session, err
 	}
+	// copy the new session key to the client
+	c.APIKey = session.ID
 	// Update APIKey
 	return session, err
+}
+
+// SessionLogout Logout to OneView and get a session ID
+// returns Session structure
+func (c *ICSPClient) SessionLogout() (Session, error) {
+	var (
+		uri     = "/rest/login-sessions"
+		session Session
+	)
+
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	_, err := c.RestAPICall(rest.DELETE, uri, nil)
+	if err != nil {
+		return session, err
+	}
+	c.APIKey = ""
+	// successful logout HTTP status 204 (no content)
+	return session, nil
+	/*if err := json.Unmarshal([]byte(data), &session); err != nil {
+		return session, err
+	}
+	*/
 }
