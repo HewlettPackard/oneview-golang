@@ -47,6 +47,7 @@ func TestSessionLogout(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		//data, err := c.SessionLogin()
+		// this is needed so we can "copy" the session id to the ov client
 		err := c.RefreshLogin()
 		//log.Debugf(" login key -> %s, session data -> %+v", c.APIKey, data)
 		log.Debugf(" login key -> %s", c.APIKey)

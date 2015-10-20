@@ -76,8 +76,6 @@ func (c *ICSPClient) SessionLogin() (Session, error) {
 	if err := json.Unmarshal([]byte(data), &session); err != nil {
 		return session, err
 	}
-	// copy the new session key to the client
-	c.APIKey = session.ID
 	// Update APIKey
 	return session, err
 }
