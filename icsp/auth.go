@@ -82,20 +82,19 @@ func (c *ICSPClient) SessionLogin() (Session, error) {
 
 // SessionLogout Logout to OneView and get a session ID
 // returns Session structure
-func (c *ICSPClient) SessionLogout() (Session, error) {
+func (c *ICSPClient) SessionLogout() error {
 	var (
-		uri     = "/rest/login-sessions"
-		session Session
+		uri = "/rest/login-sessions"
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	_, err := c.RestAPICall(rest.DELETE, uri, nil)
 	if err != nil {
-		return session, err
+		return err
 	}
 	c.APIKey = ""
 	// successful logout HTTP status 204 (no content)
-	return session, nil
+	return nil
 	/*if err := json.Unmarshal([]byte(data), &session); err != nil {
 		return session, err
 	}

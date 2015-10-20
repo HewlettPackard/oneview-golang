@@ -366,8 +366,14 @@ func (d *Driver) Create() error {
 
 // closeAll - cleanup sessions on the OV and ICSP appliances
 func closeAll(d *Driver) {
-	d.ClientOV.SessionLogout()
-	d.ClientICSP.SessionLogout()
+	err := d.ClientOV.SessionLogout()
+	if err != nil {
+		log.Warnf("OV Session Logout : %s", err)
+	}
+	err = d.ClientICSP.SessionLogout()
+	if err != nil {
+		log.Warnf("ICSP Session Logout : %s", err)
+	}
 }
 
 // GetURL - get docker url
