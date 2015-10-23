@@ -241,7 +241,7 @@ func TestIsServerManaged(t *testing.T) {
 	}
 }
 
-func TestGetServerById(t *testing.T) {
+func TestGetServerByID(t *testing.T) {
 	var (
 		//d *ICSPTest
 		c *ICSPClient
@@ -251,7 +251,7 @@ func TestGetServerById(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetServerById("490001")
+		data, err := c.GetServerByID("490001")
 		assert.NoError(t, err, "GetServerByName threw error -> %s, %+v\n", err, data)
 	}
 }
