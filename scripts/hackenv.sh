@@ -1,4 +1,12 @@
 #!/bin/bash
+USAGEERR=2
+[[ $_ != $0 ]] && USAGEERR=1 || USAGEERR=0
+if [ $USAGEERR -eq 1 ]; then
+  echo "USAGE: source $0"
+  echo ""
+  echo "This script must be sourced"
+  exit 1
+fi
 
 TEMP_DIR=$(dirname $(mktemp -u))
 SCRIPT_HOME="$(dirname $0)"
