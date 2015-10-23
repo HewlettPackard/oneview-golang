@@ -52,6 +52,7 @@ func TestGetAvailableHardware(t *testing.T) {
 		assert.NoError(t, err, "GetAvailableHardware threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
 		log.Debugf("Abailable server -> %+v", data)
+		log.Infof("Server Name -> %+v", data.Name)
 		assert.NotEqual(t, "", data.Name)
 
 	}
