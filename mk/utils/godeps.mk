@@ -14,15 +14,7 @@ endef
 define godeps-save
 	godep save $(1);
 endef
-#
-# define godeps-clean
-# 	set -x -v;
-# 	_CWD=`pwd`;
-# 	echo $$_CWD;
-# 	[ -d $(GOPATH)/src/$(1) ] && cd $(GOPATH)/src/$(1) && _REPO_ROOT=`git rev-parse --show-toplevel`;
-# 	[ -d $$_REPO_ROOT ] && echo rm -rf $$_REPO_ROOT;
-# 	cd $$_CWD;
-# endef
+
 define godeps-clean
 	echo 'Clean Package $(1)';
 	[ -d $(GOPATH)/src/$(1) ] && \
