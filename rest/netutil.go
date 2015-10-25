@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/docker/machine/drivers/oneview/utils"
-	"github.com/docker/machine/log"
+	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 // Options for REST call

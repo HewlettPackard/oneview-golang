@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/docker/machine/log"
+	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
 

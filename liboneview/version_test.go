@@ -5,7 +5,7 @@ import (
 
 	// "github.com/docker/machine/drivers/oneview/icsp"
 	// "github.com/docker/machine/drivers/oneview/ov"
-	"github.com/docker/machine/log"
+	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -31,13 +31,13 @@ func TestCalculateVersion(t *testing.T) {
 // Test GetAPIVersion
 func TestCheckVersion(t *testing.T) {
 	// TODO: removing refrences to icsp/ov libs because we get this error:
-	// 	# github.com/docker/machine/drivers/oneview/liboneview
+	// 	# github.com/HewlettPackard/oneview-golang/liboneview
 	// import cycle not allowed in test
-	// package github.com/docker/machine/drivers/oneview/liboneview (test)
+	// package github.com/HewlettPackard/oneview-golang/liboneview (test)
 	// 	imports github.com/docker/machine/drivers/oneview/ov
-	// 	imports github.com/docker/machine/drivers/oneview/liboneview
+	// 	imports github.com/HewlettPackard/oneview-golang/liboneview
 	//
-	// FAIL	github.com/docker/machine/drivers/oneview/liboneview [setup failed]
+	// FAIL	github.com/HewlettPackard/oneview-golang/liboneview [setup failed]
 
 	// var (
 	// 	ClientICSP *icsp.ICSPClient

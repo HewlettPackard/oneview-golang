@@ -13,7 +13,7 @@ func (n *Nstring) UnmarshalJSON(b []byte) (err error) {
 	return json.Unmarshal(b, (*string)(n))
 }
 
-func (n *Nstring) String()(string) {
+func (n *Nstring) String() string {
 	if n.IsNil() {
 		return "null"
 	} else {
@@ -25,8 +25,8 @@ func (n *Nstring) Nil() {
 	n = nil
 }
 
-func (n *Nstring) IsNil() (bool){
-  if len(*n) > 0 {
+func (n *Nstring) IsNil() bool {
+	if len(*n) > 0 {
 		return false
 	} else {
 		return true

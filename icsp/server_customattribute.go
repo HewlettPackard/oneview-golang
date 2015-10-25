@@ -1,6 +1,6 @@
 package icsp
 
-import "github.com/docker/machine/log"
+import "github.com/docker/machine/libmachine/log"
 
 // ValueItem struct
 type ValueItem struct {

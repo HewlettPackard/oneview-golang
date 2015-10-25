@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/docker/machine/drivers/oneview/rest"
-	"github.com/docker/machine/drivers/oneview/testconfig"
-	"github.com/docker/machine/drivers/oneview/utils"
-	"github.com/docker/machine/log"
+	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/testconfig"
+	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -159,10 +159,10 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 
 		log.Infof("server opslf -> %+v", s.OpswLifecycle)
-		assert.True(t, PRE_UNPROVISIONED.Equal(s.OpswLifecycle), "should be unprovisioned")
+		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle), "should be unprovisioned")
 
 		log.Infof("server state -> %+v", s.State)
-		assert.True(t, S_MAINTENANCE.Equal(s.State), "server should be in maintenance mode")
+		assert.True(t, OsdSateMaintenance.Equal(s.State), "server should be in maintenance mode")
 
 		err = c.PreApplyDeploymentJobs(s, 1) // responsible for configuring the Pulbic IP CustomAttributes
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)

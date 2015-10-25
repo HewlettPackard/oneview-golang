@@ -1,0 +1,75 @@
+{
+  "name": "EGSL_LAB",
+  "cases": [
+    {
+      "name": "default",
+      "enabled": false,
+      "test_data": {
+        "ServerJSONString" : "{ \"architecture\": \"UNKNOWN\", \"category\": \"os-deployment-servers\", \"cpus\": [ { \"cacheSize\": \"10240\", \"family\": \"X64\", \"model\": \"Genuine Intel(R) CPU @ 1.80GHz\", \"slot\": \"0\", \"speed\": \"1795\", \"status\": \"ON-LINE\", \"stepping\": \"2\" } ], \"created\": \"2014-09-29T16:12:51.000Z\", \"customAttributes\": [ { \"key\": \"__OPSW_next_device_group_recalc_time\", \"values\": [ { \"scope\": \"facility\", \"value\": \"1412012497.24\" } ] }, { \"key\": \"__OPSW_initial_discovery_name\", \"values\": [ { \"scope\": \"server\", \"value\": \"CN12345678\" } ] }, { \"key\": \"__OPSW_slice_ips\", \"values\": [ { \"scope\": \"facility\", \"value\": \" 1:192.0.2.0 \" } ] }, { \"key\": \"__OPSW-Media-WinPassword\", \"values\": [ { \"scope\": \"facility\", \"value\": \"server\" } ] }, { \"key\": \"__OPSW-Media-LinURI\", \"values\": [ { \"scope\": \"facility\", \"value\": \"http://192.0.2.0/deploy\" } ] }, { \"key\": \"__OPSW_apx_gc_next_run_time\", \"values\": [ { \"scope\": \"facility\", \"value\": \"1412034913690\" } ] }, { \"key\": \"__OPSW-Media-WinUser\", \"values\": [ { \"scope\": \"facility\", \"value\": \"smb://media:\" } ] }, { \"key\": \"ProductKey_Win2008R2-Std-x64\", \"values\": [ { \"scope\": \"facility\", \"value\": \"ABCDE-FGHIJ-KLMNO-PQRST-UVWXY\" } ] }, { \"key\": \"__OPSW-Media-WinPath\", \"values\": [ { \"scope\": \"facility\", \"value\": \"@192.0.2.0/deploy\" } ] }, { \"key\": \"device_discovery_naming_rules\", \"values\": [ { \"scope\": \"facility\", \"value\": \".*ProLiant BL.*::={server_location[rack]}-{server_location[enclosure]}-{server_location[bay]}.*::={serial_num}\" } ] }, { \"key\": \"__OPSWpxeboot_default\", \"values\": [ { \"scope\": \"facility\", \"value\": \"linux6-64-ogfs\" } ] }, { \"key\": \"skip_reboot\", \"values\": [ { \"scope\": \"server\", \"value\": \"yes\" } ] } ], \"defaultGateway\": \"192.0.2.0\", \"description\": null, \"deviceGroups\": null, \"discoveredDate\": \"2014-09-29T16:12:51.000Z\", \"eTag\": \"2014-09-29T16:21:44.541Z\", \"facility\": \"Appliance\", \"hardwareModel\": \"PROLIANT DL360E GEN8\", \"hostName\": \"ezsetupsystem441ea159b27c\", \"ilo\": { \"category\": null, \"created\": \"2014-09-29T16:12:53.000Z\", \"description\": \"\", \"eTag\": \"2014-09-29T16:12:54.000Z\", \"healthStatus\": \"\", \"ipAddress\": \"192.0.2.0\", \"modified\": \"2014-09-29T16:12:54.000Z\", \"name\": \"ILO Service 192.0.2.0\", \"password\": \"\", \"port\": 443, \"resourceStatus\": \"\", \"server\": \"CN12345618\", \"state\": null, \"status\": null, \"type\": \"OSDIlo\", \"uri\": \"20001\", \"username\": \"Administrator\" }, \"interfaces\": [ { \"dhcpEnabled\": false, \"duplex\": \"FULL\", \"ipv4Addr\": \"10.1.1.197\", \"ipv6Addr\": \"\", \"macAddr\": \"00:53:00:59:B2:7D\", \"netmask\": \"255.255.0.0\", \"slot\": \"eth1\", \"speed\": \"1000\", \"type\": \"ETHERNET\" }, { \"dhcpEnabled\": false, \"duplex\": null, \"ipv4Addr\": null, \"ipv6Addr\": \"\", \"macAddr\": \"00:53:00:59:B2:7E\", \"netmask\": null, \"slot\": \"eth2\", \"speed\": null, \"type\": \"ETHERNET\" }, { \"dhcpEnabled\": false, \"duplex\": null, \"ipv4Addr\": null, \"ipv6Addr\": \"\", \"macAddr\": \"00:53:00:59:B2:7C\", \"netmask\": null, \"slot\": \"eth0\", \"speed\": null, \"type\": \"ETHERNET\" }, { \"dhcpEnabled\": false, \"duplex\": null, \"ipv4Addr\": null, \"ipv6Addr\": \"\", \"macAddr\": \"00:53:00:59:B2:7F\", \"netmask\": null, \"slot\": \"eth3\", \"speed\": null, \"type\": \"ETHERNET\" } ], \"jobsHistory\": [ { \"description\": null, \"endDate\": \"2014-09-29T16:21:42.000Z\", \"initiator\": \"april\", \"name\": \"ProLiant HW - Boot Linux Service OS\", \"nameOfJobType\": \"ProLiant HW - Boot Linux Service OS\", \"startDate\": \"2014-09-29T16:13:01.000Z\", \"uri\": \"/rest/os-deployment-jobs/{jobId}\", \"uriOfJobType\": \"/rest/os-deployment-build-plans/{buildPlanId}\" } ], \"lastScannedDate\": null, \"locale\": null, \"loopbackIP\": null, \"managementIP\": \"10.1.1.197\", \"manufacturer\": \"HP\", \"mid\": \"40001\", \"modified\": \"2014-09-29T16:21:44.541Z\", \"name\": \"CN12345678\", \"netBios\": null, \"operatingSystem\": \"Unknown\", \"operatingSystemVersion\": null, \"opswLifecycle\": \"PRE_UNPROVISIONED\", \"osFlavor\": null, \"osSPVersion\": null, \"peerIP\": \"192.0.2.0\", \"ram\": \"8021696\", \"reporting\": true, \"running\": \"false\", \"serialNumber\": \"CN12345678\", \"serverLocation\": { \"bay\": null, \"enclosure\": null, \"rack\": null }, \"stage\": \"UNKNOWN\", \"state\": \"MAINTENANCE\", \"status\": \"Disabled\", \"storageDevices\": [ { \"capacity\": 1073741824, \"deviceName\": \"sda\", \"mediaType\": \"SCSI DISK\", \"model\": \"UNKNOWN\", \"vendor\": null }, { \"capacity\": 268435456, \"deviceName\": \"sdb\", \"mediaType\": \"SCSI DISK\", \"model\": \"UNKNOWN\", \"vendor\": null }, { \"capacity\": 1073741824, \"deviceName\": \"sdc\", \"mediaType\": \"SCSI DISK\", \"model\": \"UNKNOWN\", \"vendor\": null }, { \"capacity\": 146778619904, \"deviceName\": \"sdd\", \"mediaType\": \"SCSI DISK\", \"model\": \"HP B320i\", \"vendor\": null } ], \"swap\": \"0\", \"type\": \"OSDServer\", \"uri\": \"/rest/os-deployment-servers/{serverId}\", \"uuid\": \"12345678-1234-123a-1234-0123456789000\"}",
+        "KeyTest1" : "__OPSW_initial_discovery_name",
+        "ScopeTest1" : "server",
+        "KeyTest2Existing" : "__OPSW_next_device_group_recalc_time",
+        "ScopeTest2Existing" : "facility",
+        "ValueTest2ExistingNew" : "999999",
+        "KeyTest3New" : "docker_user",
+        "ScopeTest3New" : "server",
+        "ValueTest3New" : "docker",
+        "JobURIJSONString" : "{ \"uri\" : \"/rest/os-deployment-jobs/99999\"}",
+        "DeploymentJobsJSON" : "{ \"osbpUris\": [ \"/rest/os-deployment-build-plans/{buildplanId}\" ], \"failMode\": null, \"serverData\": [ { \"serverUri\": \"/rest/os-deployment-servers/{serverId}\", \"skipReboot\": true, \"personalityData\": { \"hostname\": \"hstnmpre1\", \"domain\": \"test.domain.com\", \"workgroup\": \"workgroupname\", \"interfaces\": [ { \"macAddress\": \"C8:CB:B8:D0:B6:C6\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": true, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\": [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" }, { \"macAddress\": \"C8:CB:B8:D0:B6:C7\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": null, \"provisioning\": false, \"dnsServers\": null, \"winsServers\": null, \"dnsSearch\": null, \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": null, \"ipv6gateway\": null } ], \"virtualInterfaces\": [] } }, { \"serverUri\": \"/rest/os-deployment-servers/{serverId}\", \"skipReboot\": true, \"personalityData\": { \"hostname\": \"hstnmpre1\", \"domain\": \"test.domain.com\", \"workgroup\": \"workgroupname\", \"interfaces\": [ { \"macAddress\": \"C8:CB:B8:D0:B6:C8\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": true, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\": [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" }, { \"macAddress\": \"C8:CB:B8:D0:B6:C9\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": false, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\":  [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" } ], \"virtualInterfaces\": [] } } ] }",
+        "OSDPersonalizeServerDataV2JSON":"{ \"serverUri\": \"/rest/os-deployment-servers/serverId\", \"skipReboot\": true, \"personalityData\": { \"hostname\": \"hstnmpre1\", \"domain\": \"test.domain.com\", \"workgroup\": \"workgroupname\", \"interfaces\": [ { \"macAddress\": \"C8:CB:B8:D0:B6:C6\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": true, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\": [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" }, { \"macAddress\": \"C8:CB:B8:D0:B6:C7\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": null, \"provisioning\": false, \"dnsServers\": null, \"winsServers\": null, \"dnsSearch\": null, \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": null, \"ipv6gateway\": null } ], \"virtualInterfaces\": [] } }",
+        "OSDPersonalizeServerDataV2JSON2":"{ \"serverUri\": \"/rest/os-deployment-servers/serverId\", \"skipReboot\": true  }",
+        "OSDPersonalityDataV2JSON":"{ \"personalityData\": { \"hostname\": \"hstnmpre1\", \"domain\": \"test.domain.com\", \"workgroup\": \"workgroupname\", \"interfaces\": [ { \"macAddress\": \"C8:CB:B8:D0:B6:C6\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": true, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\": [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" }, { \"macAddress\": \"C8:CB:B8:D0:B6:C7\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": null, \"provisioning\": false, \"dnsServers\": null, \"winsServers\": null, \"dnsSearch\": null, \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": null, \"ipv6gateway\": null } ], \"virtualInterfaces\": [] } }",
+        "InterfaceJSON": "{ \"macAddress\": \"C8:CB:B8:D0:B6:C6\", \"enabled\": true, \"dhcpv4\": true, \"ipv6Autoconfig\": true, \"provisioning\": true, \"dnsServers\": [ \"192.168.0.30\", \"192.168.0.31\", \"FC00:2::30\", \"FC00:2::31\" ], \"winsServers\": [ \"192.168.0.34\" ], \"dnsSearch\": [ \"test.domain.com\", \"domain.com\" ], \"staticNetworks\": [], \"vlanid\": 2, \"ipv4gateway\": \"192.168.0.1\", \"ipv6gateway\": \"FC00:2::1\" }"
+      },
+      "expects_data": {
+        "ValueTest1" : "CN12345678",
+        "ValueTestOld2" : "1412012497.24",
+        "ValueTestNew2" : "999999",
+        "ValueTest3" : "docker"
+      }
+    },
+    {
+      "name": "dev",
+      "enabled": true,
+      "test_data": {
+        "HostName": "docker_machine_test01",
+        "FreeICSPSerialNumber" : "2M25090RMR",
+        "FreeBladeSerialNumber" : "2M25090RMR",
+        "FreeBladeName" : "se05, bay 14",
+        "FreeHostName": "ezsetupsystem3464a9b​be688",
+        "IcspName" : "sRack03-se05-14",
+        "IcspName2" : "sRack03-se05-16",
+        "IloIPAddress":  "172.28.3.134",
+        "TemplateProfile": "docker_server_template",
+        "SerialNumber": "2M25090RMW",
+        "UsedBladeName": "se05, bay 16",
+        "ServerHardwareURI": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+        "ServerProfileName": "Server_Profile_scs79",
+        "HardwareTypeURI": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+        "GroupURI": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
+        "OSBuildPlan":"RHEL71_DOCKER_1.8_Wenlock"
+      },
+      "expects_data": {
+        "MACAddress": "34:64:A9:BB:E6:98",
+        "CurrentVersion": 120,
+        "MinimumVersion": 1,
+        "FakeData": "foo",
+        "IcspName2" : "sRack03-se05-16",
+        "SerialNumber": "2M25090RMW"
+      }
+    },
+    {
+      "name": "dev_icsp",
+      "enabled": true,
+      "test_data": {
+        "HostName": "docker_machine_test01"
+      },
+      "expects_data": {
+        "CurrentVersion": 108,
+        "MinimumVersion": 1,
+        "FakeData": "foo"
+      }
+
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 package ov
 
-import "github.com/docker/machine/drivers/oneview/utils"
+import "github.com/HewlettPackard/oneview-golang/utils"
 
 // firmware additional properties introduced in 200
 // "FirmwareOnly" - Updates the firmware without powering down the server hardware using using HP Smart Update Tools.

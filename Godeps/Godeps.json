@@ -1,0 +1,14 @@
+{
+	"ImportPath": "_/Users/eraigosa/git/HewlettPackard/oneview-golang",
+	"GoVersion": "go1.5",
+	"Packages": [
+		"github.com/stretchr/testify/assert"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Comment": "v1.0-51-gf3960ab",
+			"Rev": "f3960ab1f9664ecc4e27c78af27cc9063d745a43"
+		}
+	]
+}

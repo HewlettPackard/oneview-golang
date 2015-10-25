@@ -3,7 +3,7 @@ package ov
 import (
 	"strings"
 
-	"github.com/docker/machine/drivers/oneview/utils"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 // LocalStorageSettingsV3 -
