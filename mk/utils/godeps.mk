@@ -6,10 +6,13 @@ GO_PACKAGES := github.com/docker/machine github.com/stretchr/testify/assert
 GO15VENDOREXPERIMENT := 1
 
 # Cross builder helper
-define godeps-getandsave
+define godeps-get
 	GOPCKG=$(1);
 	godep get $(GOPCKG);
-	godep save $(GOPCKG);
+endef
+
+define godeps-save
+	godep save $(1);
 endef
 
 vendor-clean:
@@ -28,6 +31,8 @@ godeps-init: godeps-clean
 		mkdir -p $(GOPATH)/src/github.com/$(GH_USER)
 		ln -s $(PREFIX) $(GOPATH)/src/github.com/$(GH_USER)/$(GH_REPO)
 		@echo "Get dependent packages"
-		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-getandsave,$(GOPCKG)))
+		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-get,$(GOPCKG)))
+		$(call godeps-save,$(GO_PACKAGES))
 
 godeps: godeps-init
+godep: godeps
