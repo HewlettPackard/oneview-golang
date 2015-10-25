@@ -14,6 +14,23 @@ endef
 define godeps-save
 	godep save $(1);
 endef
+#
+# define godeps-clean
+# 	set -x -v;
+# 	_CWD=`pwd`;
+# 	echo $$_CWD;
+# 	[ -d $(GOPATH)/src/$(1) ] && cd $(GOPATH)/src/$(1) && _REPO_ROOT=`git rev-parse --show-toplevel`;
+# 	[ -d $$_REPO_ROOT ] && echo rm -rf $$_REPO_ROOT;
+# 	cd $$_CWD;
+# endef
+define godeps-clean
+	echo 'Clean Package $(1)';
+	[ -d $(GOPATH)/src/$(1) ] && \
+		( cd $(GOPATH)/src/$(1); \
+			_PKG_CLEAN=`git rev-parse --show-toplevel`; \
+			[ -d $$_PKG_CLEAN ] && rm -rf $$_PKG_CLEAN; ) || \
+		echo "Skipting clean for $(1)";
+endef
 
 vendor-clean:
 		@rm -rf $(PREFIX)/vendor
@@ -22,7 +39,7 @@ vendor-clean:
 # for fresh setup so we can do godep save -r
 godeps-clean:
 		@echo "Removing all dependent packages from $(GOPATH)"
-		rm -rf $(GOPATH)/src/github.com/docker/machine
+		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-clean,$(GOPCKG)))
 		rm -rf $(GOPATH)/src/github.com/$(GH_USER)/$(GH_REPO)
 
 # setup a fresh GOPATH directory with what would be needed to build
