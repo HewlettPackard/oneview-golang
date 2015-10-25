@@ -50,7 +50,7 @@ type OSDBuildPlan struct {
 	BuildPlanItems     []BuildPlanItem      `json:"buildPlanItems,omitempty"`
 	ModifiedBy         string               `json:"modifiedBy,omitempty"`
 	CreatedBy          string               `json:"createdBy,omitempty"`
-	LifeCycle          string               `json:lifeCycle,omitstring`
+	LifeCycle          string               `json:"lifeCycle,omitstring"`
 	Description        string               `json:"description,omitempty"`
 	Status             string               `json:"status,omitempty"`
 	Name               string               `json:"name,omitempty"`

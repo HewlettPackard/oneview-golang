@@ -5,10 +5,10 @@ const URLEndPointValidator = "/rest/authz/validator"
 
 // Authz struct ...
 type Authz struct {
-	authorized string `json:"authorized,omitempty"`
+	Authorized string `json:"authorized,omitempty"`
 }
 
 type CategoryAction struct {
-	actionDto   string `json:"actionDto,omitempty"`   // actionDto - the action name
-	categoryDto string `json:"categoryDto,omitempty"` // categoryDto - the category name
+	ActionDto   string `json:"actionDto,omitempty"`   // actionDto - the action name
+	CategoryDto string `json:"categoryDto,omitempty"` // categoryDto - the category name
 }
