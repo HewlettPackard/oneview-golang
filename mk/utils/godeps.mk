@@ -7,8 +7,7 @@ GO15VENDOREXPERIMENT := 1
 
 # Cross builder helper
 define godeps-get
-	GOPCKG=$(1);
-	godep get $(GOPCKG);
+	godep get $(1);
 endef
 
 define godeps-save
