@@ -60,17 +60,17 @@ var statelist = [...]string{
 }
 
 // String helper for state
-func (o OSDState) String() string { return statelist[o] }
+func (o osdState) String() string { return statelist[o] }
 
 // Equal helper for state
-func (o OSDState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+func (o osdState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
 // stage const
-type stage int
+type Stage int
 
 const (
 	// StageInDeployment -
-	StageInDeployment stage = iota // 0
+	StageInDeployment Stage = iota // 0
 	// StageLive -
 	StageLive // 1
 	// StageOffline -
@@ -544,7 +544,7 @@ func (c *ICSPClient) IsServerManaged(serial string) (bool, error) {
 		return false, err
 	}
 	log.Debugf("found server host: %v, serial: %v cycle: %v", data.HostName, data.SerialNumber, data.OpswLifecycle)
-	return strings.EqualFold(data.OpswLifecycle, MANAGED.String()), err
+	return strings.EqualFold(data.OpswLifecycle, Managed.String()), err
 }
 
 // DeleteServer - deletes a server in icsp appliance instance

@@ -1,8 +1,7 @@
 # # Plain make targets if not requested inside a container
-include mk/utils/dockerfile.mk
-include mk/utils/godeps.mk
 
 include Makefile.inc
+
 ifneq (,$(findstring test-integration,$(MAKECMDGOALS)))
 	include mk/main.mk
 else ifeq ($(USE_CONTAINER),)
@@ -36,3 +35,6 @@ test: build
 		    make $@
 
 endif
+
+include mk/utils/dockerfile.mk
+include mk/utils/godeps.mk

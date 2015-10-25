@@ -24,8 +24,8 @@ func TestHasCheck(t *testing.T) {
 // TestGet
 func TestGet(t *testing.T) {
 	var asc APISupport
-	assert.Equal(t, C_NONE, asc.Get("foo"))
-	assert.Equal(t, C_PROFILE_TEMPLATES, asc.Get("profile_templates.go"))
+	assert.Equal(t, int(C_NONE), asc.Get("foo"))
+	assert.Equal(t, int(C_PROFILE_TEMPLATES), asc.Get("profile_templates.go"))
 }
 
 // TestCheck
