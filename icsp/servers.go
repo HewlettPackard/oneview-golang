@@ -22,9 +22,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/docker/machine/drivers/oneview/rest"
-	"github.com/docker/machine/drivers/oneview/utils"
-	"github.com/docker/machine/log"
+	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 // URLEndPoint export this constant

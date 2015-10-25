@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/docker/machine/drivers/oneview/liboneview"
-	"github.com/docker/machine/drivers/oneview/rest"
-	"github.com/docker/machine/log"
+	"github.com/HewlettPackard/oneview-golang/liboneview"
+	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/docker/machine/libmachine/log"
 )
 
 // introduced in v200 for oneview, allows for an easier method

@@ -1,7 +1,7 @@
 package ov
 
 import (
-	"github.com/docker/machine/drivers/oneview/utils"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 // BootTarget -

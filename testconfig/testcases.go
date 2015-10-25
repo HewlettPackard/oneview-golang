@@ -1,7 +1,7 @@
 package testconfig
 
 import (
-	"github.com/docker/machine/log"
+	"github.com/docker/machine/libmachine/log"
 	"os"
 )
 

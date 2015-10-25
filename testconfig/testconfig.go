@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/docker/machine/log"
+	"github.com/docker/machine/libmachine/log"
 )
 
 //

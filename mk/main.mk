@@ -3,7 +3,8 @@ GO_LDFLAGS := -X `go list ./version`.GitCommit=`git rev-parse --short HEAD`
 GO_GCFLAGS :=
 
 # Full package list
-PKGS := $(shell go list -tags "$(BUILDTAGS)" ./testconfig/... ./ov/... ./icsp/... ./liboneview/... ./rest/... ./utils/... | grep -v "/vendor/" | grep -v "/Godeps/")
+# PKGS := $(shell go list -tags "$(BUILDTAGS)" ./testconfig/... ./ov/... ./icsp/... ./liboneview/... ./rest/... ./utils/... | grep -v "/vendor/" | grep -v "/Godeps/")
+PKGS := ./testconfig ./ov ./icsp ./liboneview ./rest ./utils
 
 # Support go1.5 vendoring (let us avoid messing with GOPATH or using godep)
 export GO15VENDOREXPERIMENT = 1
@@ -65,7 +66,8 @@ default: test
 
 # clean: coverage-clean build-clean
 clean: coverage-clean
-check: dco fmt vet lint
+# check: dco fmt vet lint
+check: dco fmt
 validate: check
 test: check test-short
 # validate: check test-short test-long

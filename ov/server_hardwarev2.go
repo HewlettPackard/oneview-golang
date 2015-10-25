@@ -1,9 +1,9 @@
 package ov
 
 import (
-	"github.com/docker/machine/drivers/oneview/liboneview"
-	"github.com/docker/machine/drivers/oneview/utils"
-	"github.com/docker/machine/log"
+	"github.com/HewlettPackard/oneview-golang/liboneview"
+	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 // introduced in v200 for oneview, new v2 hardware attributes
