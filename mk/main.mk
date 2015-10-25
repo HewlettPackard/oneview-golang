@@ -67,7 +67,7 @@ default: test
 # clean: coverage-clean build-clean
 clean: coverage-clean
 # check: dco fmt vet lint
-check: dco fmt
+check: dco fmt vet
 validate: check
 test: check test-short
 # validate: check test-short test-long
