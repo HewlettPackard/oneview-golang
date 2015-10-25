@@ -11,8 +11,8 @@ dco:
 
 # Fmt
 fmt:
-	@echo 'Performing FMT checks'
-	test -z "$$(gofmt -s -l . 2>&1 | grep -v vendor/ | grep -v Godeps/ | tee /dev/stderr)"
+	@echo 'Performing FMT checks, if any files appear they run gofmt -s -w on each file'
+	@test -z "$$(gofmt -s -l . 2>&1 | grep -v vendor/ | grep -v Godeps/ | tee /dev/stderr)"
 
 # Vet
 vet: build
