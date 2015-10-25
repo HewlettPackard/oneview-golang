@@ -1,3 +1,20 @@
+/*
+(c) Copyright [2015] Hewlett Packard Enterprise Development LP
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// Package icsp -
 package icsp
 
 import (
@@ -22,17 +39,18 @@ type StorageDevice struct {
 	Vendor     string `json:"vendor,omitempty"`     // vendor Manufacturer of the device string
 }
 
-// OSDState status
-type OSDState int
+// osdState status
+type osdState int
 
-// OK - The target server is running a production OS with a production version of the agent and is reachable;
-// UNREACHABLE - The managed Server is unreachable by the appliance;
 // MAINTENANCE - The Server has been booted to maintenance, and a maintenance version of the agent has been registered with the appliance.;
 
 const (
-	S_OK          OSDState = iota // 0
-	S_UNREACHABLE                 // 1
-	S_MAINTENANCE                 // 2
+	// OsdSateOK - The target server is running a production OS with a production version of the agent and is reachable;
+	OsdSateOK osdState = iota // 0
+	// OsdSateUnReachable - The managed Server is unreachable by the appliance;
+	OsdSateUnReachable // 1
+	// OsdSateMaintenance - The Server has been booted to maintenance, and a maintenance version of the agent has been registered with the appliance.;
+	OsdSateMaintenance // 2
 )
 
 var statelist = [...]string{
@@ -47,15 +65,20 @@ func (o OSDState) String() string { return statelist[o] }
 // Equal helper for state
 func (o OSDState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
-// Stage stage const
-type Stage int
+// stage const
+type stage int
 
 const (
-	S_IN_DEPLOYMENT Stage = iota // 0
-	S_LIVE                       // 1
-	S_OFFLINE                    // 2
-	S_OPS_READY                  // 3
-	S_UNKNOWN                    // 4
+	// StageInDeployment -
+	StageInDeployment stage = iota // 0
+	// StageLive -
+	StageLive // 1
+	// StageOffline -
+	StageOffline // 2
+	// StageOpsReady -
+	StageOpsReady // 3
+	// StageUnknown -
+	StageUnknown // 4
 )
 
 var stagelist = [...]string{
@@ -79,17 +102,17 @@ type ServerLocationItem struct {
 	Rack      string `json:"rack,omitempty"`      // rack Name of a rack where the Server is physically located string
 }
 
-// OpswLifecycle opsw lifecycle
-type OpswLifecycle int
+// opswLifecycle opsw lifecycle
+type opswLifecycle int
 
 // Life-cycle value for the managed Server. The following are the valid values for the life-cycle of the Server:
 const (
-	DEACTIVATED       OpswLifecycle = iota // 0
-	MANAGED                                // 1
-	PROVISION_FAILED                       // 2
-	PROVISIONING                           // 3
-	UNPROVISIONED                          // 4
-	PRE_UNPROVISIONED                      // 5
+	Deactivated       opswLifecycle = iota // 0
+	Managed                                // 1
+	ProvisionedFailed                      // 2
+	Provisioning                           // 3
+	Unprovisioned                          // 4
+	PreUnProvisioned                       // 5
 )
 
 var opswlifecycle = [...]string{
@@ -102,10 +125,10 @@ var opswlifecycle = [...]string{
 }
 
 // String helper for OpswLifecycle
-func (o OpswLifecycle) String() string { return opswlifecycle[o] }
+func (o opswLifecycle) String() string { return opswlifecycle[o] }
 
 // Equal helper for OpswLifecycle
-func (o OpswLifecycle) Equal(s string) bool {
+func (o opswLifecycle) Equal(s string) bool {
 	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
 }
 
@@ -247,7 +270,7 @@ func (s Server) GetInterfaces() (interfaces []Interface) {
 	return interfaces
 }
 
-// GetPublicIP returns the public ip interface
+// GetPublicIPV4 returns the public ip interface
 // usually called after an os build plan is applied
 func (s Server) GetPublicIPV4() (string, error) {
 	var position int
@@ -407,9 +430,9 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
-// GetServerById - get a server from icsp - faster then getting all servers
+// GetServerByID - get a server from icsp - faster then getting all servers
 // and ranging over them
-func (c *ICSPClient) GetServerById(mid string) (Server, error) {
+func (c *ICSPClient) GetServerByID(mid string) (Server, error) {
 	var (
 		uri    = fmt.Sprintf("/rest/os-deployment-servers/%v", mid)
 		server Server

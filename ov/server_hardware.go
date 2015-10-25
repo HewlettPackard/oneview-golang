@@ -230,7 +230,7 @@ func (c *OVClient) GetAvailableHardware(hardwaretype_uri utils.Nstring, servergr
 		f      = []string{"serverHardwareTypeUri='" + hardwaretype_uri.String() + "'",
 			"serverGroupUri='" + servergroup_uri.String() + "'"}
 	)
-	if hwlist, err = c.GetServerHardwareList(f, "name:asc"); err != nil {
+	if hwlist, err = c.GetServerHardwareList(f, "name:desc"); err != nil {
 		return hw, err
 	}
 	if !(len(hwlist.Members) > 0) {
@@ -239,7 +239,7 @@ func (c *OVClient) GetAvailableHardware(hardwaretype_uri utils.Nstring, servergr
 
 	// pick an available blade
 	for _, blade := range hwlist.Members {
-		if !H_PROFILE_APPLIED.Equal(blade.State) && !H_APPLYING_PROFILE.Equal(blade.State) {
+		if H_NOPROFILE_APPLIED.Equal(blade.State) {
 			hw = blade
 			break
 		}
