@@ -1,2 +1,2 @@
 .oneview*.env
-vendor/*
+.proxy*.env
