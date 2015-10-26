@@ -1,21 +1,14 @@
 # setup any dependencies for Build
-
-# GOPATH := $(HOME)/go
-# PATH := $(PATH):$(GOPATH)/bin:/usr/local/go/bin
 GO_PACKAGES := github.com/docker/machine github.com/stretchr/testify/assert
 GO15VENDOREXPERIMENT := 1
 
-# GOPATH := $(HOME)/go
-# PATH := $(PATH):$(GOPATH)/bin:/usr/local/go/bin
-# GO15VENDOREXPERIMENT := 1
-
 # Cross builder helper
 define godeps-get
-	godep get $(1);
+	GOPATH=$(GOVENDORPATH) godep get $(1);
 endef
 
 define godeps-save
-	godep save $(1);
+	GOPATH=$(GOVENDORPATH) godep save $(1);
 endef
 
 define GOVENDORPATH
@@ -24,11 +17,19 @@ endef
 
 define godeps-clean
 	echo 'Clean Package $(1)';
-	[ -d $(GOPATH)/src/$(1) ] && \
-		( cd $(GOPATH)/src/$(1); \
+	[ -d $(GOVENDORPATH)/src/$(1) ] && \
+		( cd $(GOVENDORPATH)/src/$(1); \
 			_PKG_CLEAN=`git rev-parse --show-toplevel`; \
 			[ -d $$_PKG_CLEAN ] && rm -rf $$_PKG_CLEAN; ) || \
 		echo "Skipting clean for $(1)";
+endef
+
+define godeps-vendor-gitclean
+	echo 'Clean up git repos in $(1)'; \
+	cd $(GOVENDORPATH)/src/$(1); \
+	_GIT_ROOT=`git rev-parse --show-toplevel`; \
+	[ -d $$_GIT_ROOT/.git ] && rm -rf $$_GIT_ROOT/.git || \
+		echo "Skipting .git clean for $(1)";
 endef
 
 vendor-clean:
@@ -37,7 +38,7 @@ vendor-clean:
 
 # for fresh setup so we can do godep save -r
 godeps-clean: vendor-clean
-		@echo "Removing all dependent packages from $(GOPATH)"
+		@echo "Removing all dependent packages from $(GOVENDORPATH)"
 		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-clean,$(GOPCKG)))
 		rm -rf $(GOPATH)/src/github.com/$(GH_USER)/$(GH_REPO)
 
@@ -57,9 +58,10 @@ godeps-vendor:
 		echo "Placing packages into $(GOVENDORPATH)"
 		[ ! -h $(PREFIX)/vendor ] && ln -s Godeps/_workspace/src vendor; \
 		[ ! -d $(PREFIX)/Godeps/_workspace/src ] && mkdir -p $(PREFIX)/Godeps/_workspace/src; \
-		GOPATH=$(GOVENDORPATH) godep restore;
+		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-vendor-gitclean,$(GOPCKG)))
+		# GOPATH=$(GOVENDORPATH) godep restore; TODO: this makes Godep path submodules
 
-godeps: godeps-init godeps-save
-		echo "All done! If all looks good vendor it with : make godeps-vendor"
+godeps: godeps-init godeps-save godeps-vendor
+		echo "All done! run git status and commit to save any changes."
 
-godep: godeps
+godep: godeps godeps-vendor

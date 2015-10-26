@@ -1,5 +1,9 @@
 # # Plain make targets if not requested inside a container
 
+define noop_targets
+	@make -pn | sed -rn '/^[^# \t\.%].*:[^=]?/p'|grep -v '='| grep -v '(%)'| grep -v '/'| awk -F':' '{print $$1}'|sort -u;
+endef
+
 include Makefile.inc
 
 ifneq (,$(findstring test-integration,$(MAKECMDGOALS)))
@@ -14,6 +18,13 @@ DOCKER_CONTAINER_NAME := oneview-golang-build-container
 DOCKER_FILE_URL := file://$(PREFIX)/Dockerfile
 DOCKER_FILE := .dockerfile.oneview
 
+
+noop:
+	@echo When using 'USE_CONTAINER' use a "make <target>"
+	@echo
+	@echo Possible targets
+	@echo
+	$(call noop_targets)
 
 clean: gen-dockerfile
 test: gen-dockerfile
