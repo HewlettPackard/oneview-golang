@@ -11,9 +11,11 @@ else
 DOCKER_IMAGE_NAME := "oneview-golang-build"
 DOCKER_CONTAINER_NAME := oneview-golang-build-container
 # get the dockerfile from docker/machine project so we stay in sync with the versions they use for go
-DOCKER_FILE := Dockerfile
+DOCKER_FILE_URL := file://$(PREFIX)/Dockerfile
+DOCKER_FILE := .dockerfile.oneview
 
 
+clean: gen-dockerfile
 test: gen-dockerfile
 %:
 		docker build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE_NAME) .

@@ -49,7 +49,7 @@ endif
 proxy-clean:
 		rm -f $(PROXY_DOCKER_ENV_FILE)
 
-ifeq ($(PROXY_CONFIG),)
+ifneq ($(PROXY_CONFIG),)
 proxy-config: proxy-clean
 		# generate a
 		printf '$(DOCKER_PROXY_CONFIG)' $(PROXY_CONFIG) > $(PROXY_DOCKER_ENV_FILE)

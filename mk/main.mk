@@ -52,20 +52,12 @@ include mk/validate.mk
 .all_validate: dco fmt vet lint
 
 default: test
-# Build native machine and all drivers
-# TODO: cleanup build: build-machine build-plugins
-# build: build-x
-
-#TODO: cleanup
-# Just build native machine itself
-# machine: build-machine
-# Just build the native plugins
-# plugins: build-plugins
-# Build all, cross platform
-# cross: build-x
 
 # clean: coverage-clean build-clean
-clean: coverage-clean
+# clean: coverage-clean dockerfile-clean
+clean: dockerfile-clean
+		echo "working on clean"
+
 # check: dco fmt vet lint
 check: dco fmt vet
 validate: check
