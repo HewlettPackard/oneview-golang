@@ -14,8 +14,7 @@ DOCKER_CONTAINER_NAME := oneview-golang-build-container
 DOCKER_FILE := Dockerfile
 
 
-build: gen-dockerfile
-test: build
+test: gen-dockerfile
 %:
 		docker build -f $(DOCKER_FILE) -t $(DOCKER_IMAGE_NAME) .
 
