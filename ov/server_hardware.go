@@ -125,7 +125,8 @@ func (h ServerHardware) GetIloIPAddress() string {
 		if h.MpHostInfo != nil {
 			log.Debug("working on getting IloIPAddress from MpHostInfo")
 			for _, MpIpObj := range h.MpHostInfo.MpIPAddress {
-				if len(MpIpObj.Address) > 0 {
+				if len(MpIpObj.Address) > 0 &&
+					(MpDHCP.Equal(MpIpObj.Type) || MpStatic.Equal(MpIpObj.Type)) {
 					return MpIpObj.Address
 				}
 			}
