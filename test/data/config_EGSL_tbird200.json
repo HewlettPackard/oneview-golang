@@ -43,7 +43,7 @@
         "TemplateProfile": "docker1.8_server_template",
         "SerialNumber": "VCGHJL900C",
         "UsedBladeName": "HOUEGSL-C7000-04, bay 4",
-        "ServerHardwareURI": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D53",
+        "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303534",
         "ServerProfileName": "houegsl-c7000-04-04",
         "HardwareTypeURI": "/rest/server-hardware-types/1A1EBD9A-6ABE-4D96-BB9C-E9F39876BD3E",
         "GroupURI": "/rest/enclosure-groups/9bf6f6b2-abf5-4875-b72c-4cb6e744691b",
@@ -55,7 +55,8 @@
         "MinimumVersion": 1,
         "FakeData": "foo",
         "IcspName2" : "IC04-HOUEGSL-C7000-04-4",
-        "SerialNumber": "2M25090RMS"
+        "SerialNumber": "2M25090RMS",
+        "IloIPAddress":  "16.85.0.107"
       }
     },
     {
