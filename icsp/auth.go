@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package icsp -
+// Package icsp
+
 package icsp
 
 import (
@@ -29,7 +30,7 @@ import (
 // URLEndPoint export this constant
 const URLEndPointSession = "/rest/login-sessions"
 
-// GetAuthHeaderMap Generate an auth Header map ...
+// GetAuthHeaderMapNoVer Generate an auth Header map ...
 // some api endpoints are hiddent, remove api version to get to them
 func (c *ICSPClient) GetAuthHeaderMapNoVer() map[string]string {
 	return map[string]string{
@@ -103,17 +104,16 @@ func (c *ICSPClient) SessionLogout() error {
 	var (
 		uri = "/rest/login-sessions"
 	)
-
+	log.Debugf("Calling logout for header -> %+v", c.GetAuthHeaderMap())
+	if c.APIKey == "none" {
+		log.Debugf("already logged out")
+		return nil
+	}
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	_, err := c.RestAPICall(rest.DELETE, uri, nil)
 	if err != nil {
 		return err
 	}
-	c.APIKey = ""
-	// successful logout HTTP status 204 (no content)
+	c.APIKey = "none"
 	return nil
-	/*if err := json.Unmarshal([]byte(data), &session); err != nil {
-		return session, err
-	}
-	*/
 }

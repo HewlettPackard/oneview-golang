@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package ov -
+// Package ov for working with HP OneView
 package ov
 
 import (
@@ -106,17 +106,17 @@ func (c *OVClient) SessionLogout() error {
 	var (
 		uri = "/rest/login-sessions"
 	)
-
+	log.Debugf("Calling logout for header -> %+v", c.GetAuthHeaderMap())
+	if c.APIKey == "none" {
+		log.Debugf("already logged out")
+		return nil
+	}
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	_, err := c.RestAPICall(rest.DELETE, uri, nil)
 	if err != nil {
+		log.Debugf("Error from %s :-> %+v", uri, err)
 		return err
 	}
-	c.APIKey = ""
-	// successful logout HTTP status 204 (no content)
+	c.APIKey = "none"
 	return nil
-	/*if err := json.Unmarshal([]byte(data), &session); err != nil {
-		return session, err
-	}
-	*/
 }
