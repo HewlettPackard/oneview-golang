@@ -14,11 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Package icsp -
+// Package icsp
 package icsp
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -42,6 +43,8 @@ type StorageDevice struct {
 // osdState status
 type osdState int
 
+// OK - The target server is running a production OS with a production version of the agent and is reachable;
+// UNREACHABLE - The managed Server is unreachable by the appliance;
 // MAINTENANCE - The Server has been booted to maintenance, and a maintenance version of the agent has been registered with the appliance.;
 
 const (
@@ -65,7 +68,7 @@ func (o osdState) String() string { return statelist[o] }
 // Equal helper for state
 func (o osdState) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
 
-// stage const
+// Stage stage const
 type Stage int
 
 const (
@@ -270,8 +273,32 @@ func (s Server) GetInterfaces() (interfaces []Interface) {
 	return interfaces
 }
 
+// GetInterface get the interface from slot location
+func (s Server) GetInterface(slotid int) (Interface, error) {
+	var interfac Interface
+	inets := s.GetInterfaces()
+	for i, inet := range inets {
+		if i == slotid {
+			return inet, nil
+		}
+	}
+	return interfac, errors.New("Error interface slotid not found please try another interface id.")
+}
+
+// GetInterfaceFromMac get the server interface for mac address
+func (s Server) GetInterfaceFromMac(mac string) (Interface, error) {
+	var intface Interface
+	for _, ife := range s.Interfaces {
+		if strings.ToLower(ife.MACAddr) == strings.ToLower(mac) {
+			intface = ife
+			return intface, nil
+		}
+	}
+	return intface, errors.New("Error interface not found, please try a different mac address.")
+}
+
 // GetPublicIPV4 returns the public ip interface
-// usually called after an os build plan is applied
+//                 usually called after an os build plan is applied
 func (s Server) GetPublicIPV4() (string, error) {
 	var position int
 	position, inetItem := s.GetValueItem("public_ip", "server")
