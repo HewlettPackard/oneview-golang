@@ -1,6 +1,6 @@
 {
-	"ImportPath": "_/home/eraigosa/git/HewlettPackard/v2/oneview-golang",
-	"GoVersion": "go1.5",
+	"ImportPath": "_/home/wenlock/git/HewlettPackard/oneview-golang",
+	"GoVersion": "go1.5.1",
 	"Packages": [
 		"github.com/docker/machine",
 		"github.com/stretchr/testify/assert"
