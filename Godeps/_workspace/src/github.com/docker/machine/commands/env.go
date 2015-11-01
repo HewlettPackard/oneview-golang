@@ -18,7 +18,7 @@ const (
 )
 
 var (
-	improperEnvArgsError = errors.New("Error: Expected either one machine name, or -u flag to unset the variables in the arguments.")
+	errImproperEnvArgs = errors.New("Error: Expected either one machine name, or -u flag to unset the variables in the arguments")
 )
 
 type ShellConfig struct {
@@ -34,51 +34,50 @@ type ShellConfig struct {
 	NoProxyValue    string
 }
 
-type CmdEnvFlags interface {
-	Bool(name string) bool
-}
-
-func cmdEnv(c *cli.Context) {
+func cmdEnv(c *cli.Context) error {
 	// Ensure that log messages always go to stderr when this command is
 	// being run (it is intended to be run in a subshell)
 	log.SetOutWriter(os.Stderr)
 
 	if len(c.Args()) != 1 && !c.Bool("unset") {
-		fatal(improperEnvArgsError)
+		return errImproperEnvArgs
 	}
 
-	h := getFirstArgHost(c)
-
-	dockerHost, _, err := runConnectionBoilerplate(h, c)
+	host, err := getFirstArgHost(c)
 	if err != nil {
-		fatalf("Error running connection boilerplate: %s", err)
+		return err
+	}
+
+	dockerHost, _, err := runConnectionBoilerplate(host, c)
+	if err != nil {
+		return fmt.Errorf("Error running connection boilerplate: %s", err)
 	}
 
 	userShell := c.String("shell")
 	if userShell == "" {
 		shell, err := detectShell()
 		if err != nil {
-			fatal(err)
+			return err
 		}
 		userShell = shell
 	}
 
 	t := template.New("envConfig")
 
-	usageHint := generateUsageHint(c.App.Name, c.Args().First(), userShell, c)
+	usageHint := generateUsageHint(userShell, os.Args)
 
 	shellCfg := &ShellConfig{
-		DockerCertPath:  filepath.Join(mcndirs.GetMachineDir(), h.Name),
+		DockerCertPath:  filepath.Join(mcndirs.GetMachineDir(), host.Name),
 		DockerHost:      dockerHost,
 		DockerTLSVerify: "1",
 		UsageHint:       usageHint,
-		MachineName:     h.Name,
+		MachineName:     host.Name,
 	}
 
 	if c.Bool("no-proxy") {
-		ip, err := h.Driver.GetIP()
+		ip, err := host.Driver.GetIP()
 		if err != nil {
-			fatalf("Error getting host IP: %s", err)
+			return fmt.Errorf("Error getting host IP: %s", err)
 		}
 
 		// first check for an existing lower case no_proxy var
@@ -132,13 +131,10 @@ func cmdEnv(c *cli.Context) {
 
 		tmpl, err := t.Parse(envTmpl)
 		if err != nil {
-			fatal(err)
+			return err
 		}
 
-		if err := tmpl.Execute(os.Stdout, shellCfg); err != nil {
-			fatal(err)
-		}
-		return
+		return tmpl.Execute(os.Stdout, shellCfg)
 	}
 
 	switch userShell {
@@ -162,36 +158,28 @@ func cmdEnv(c *cli.Context) {
 
 	tmpl, err := t.Parse(envTmpl)
 	if err != nil {
-		fatal(err)
+		return err
 	}
 
-	if err := tmpl.Execute(os.Stdout, shellCfg); err != nil {
-		fatal(err)
-	}
+	return tmpl.Execute(os.Stdout, shellCfg)
 }
 
-func generateUsageHint(appName, machineName, userShell string, flags CmdEnvFlags) string {
-	args := machineName
-	if flags.Bool("swarm") {
-		args = "--swarm " + args
-	}
-	if flags.Bool("no-proxy") {
-		args = "--no-proxy " + args
-	}
-
+func generateUsageHint(userShell string, args []string) string {
 	cmd := ""
 	comment := "#"
 
+	commandLine := strings.Join(args, " ")
+
 	switch userShell {
 	case "fish":
-		cmd = fmt.Sprintf("eval (%s env --shell=fish %s)", appName, args)
+		cmd = fmt.Sprintf("eval (%s)", commandLine)
 	case "powershell":
-		cmd = fmt.Sprintf("%s env --shell=powershell %s | Invoke-Expression", appName, args)
+		cmd = fmt.Sprintf("%s | Invoke-Expression", commandLine)
 	case "cmd":
-		cmd = fmt.Sprintf("\tFOR /f \"tokens=*\" %%i IN ('%s env --shell=cmd %s') DO %%i", appName, args)
+		cmd = fmt.Sprintf("\tFOR /f \"tokens=*\" %%i IN ('%s') DO %%i", commandLine)
 		comment = "REM"
 	default:
-		cmd = fmt.Sprintf("eval \"$(%s env %s)\"", appName, args)
+		cmd = fmt.Sprintf("eval \"$(%s)\"", commandLine)
 	}
 
 	return fmt.Sprintf("%s Run this command to configure your shell: \n%s %s\n", comment, comment, cmd)
