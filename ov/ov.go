@@ -66,7 +66,7 @@ func (c *OVClient) CreateMachine(host_name string, server_template string) (err 
 			return err
 		}
 		pt = pt.NewPowerTask(blade)
-		if err = pt.PowerExecutor(P_ON); err != nil {
+		if err = pt.PowerExecutor(P_OFF); err != nil {
 			log.Errorf("Unable to power off blade, %s, Error: %s", blade.Name, err)
 			return err
 		}
