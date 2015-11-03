@@ -151,14 +151,13 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 		if err := c.CreateServer(cs.ILoUser, cs.IloPassword, cs.IloIPAddress, cs.IloPort); err != nil {
 			return err
 		}
+		// reload that server
+		s, err = c.GetServerBySerialNumber(cs.SerialNumber)
+		if err != nil {
+			return err
+		}
 	} else {
 		log.Infof("ICSP server was already created, %s, skipping", cs.HostName)
-	}
-
-	// reload that server
-	s, err = c.GetServerBySerialNumber(cs.SerialNumber)
-	if err != nil {
-		return err
 	}
 
 	// verify that the server actually has a URI
