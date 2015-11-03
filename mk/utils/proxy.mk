@@ -21,27 +21,27 @@ define DOCKER_no_proxy
 ENV no_proxy %s\n
 endef
 
-ifdef $(HTTPS_PROXY)
+ifdef HTTPS_PROXY
 DOCKER_PROXY_CONFIG := $(DOCKER_HTTPS_PROXY)
 PROXY_CONFIG := '$(HTTPS_PROXY)'
 endif
-ifdef $(HTTP_PROXY)
+ifdef HTTP_PROXY
 DOCKER_PROXY_CONFIG := $(DOCKER_PROXY_CONFIG)$(DOCKER_HTTP_PROXY)
 PROXY_CONFIG := $(PROXY_CONFIG) '$(HTTP_PROXY)'
 endif
-ifdef $(https_proxy)
+ifdef https_proxy
 DOCKER_PROXY_CONFIG := $(DOCKER_PROXY_CONFIG)$(DOCKER_https_proxy)
 PROXY_CONFIG := $(PROXY_CONFIG) '$(https_proxy)'
 endif
-ifdef $(http_proxy)
+ifdef http_proxy
 DOCKER_PROXY_CONFIG := $(DOCKER_PROXY_CONFIG)$(DOCKER_http_proxy)
 PROXY_CONFIG := $(PROXY_CONFIG) '$(http_proxy)'
 endif
-ifdef $(NO_PROXY)
+ifdef NO_PROXY
 DOCKER_PROXY_CONFIG := $(DOCKER_PROXY_CONFIG)$(DOCKER_NO_PROXY)
 PROXY_CONFIG := $(PROXY_CONFIG) '$(NO_PROXY)'
 endif
-ifdef $(no_proxy)
+ifdef no_proxy
 DOCKER_PROXY_CONFIG := $(DOCKER_PROXY_CONFIG)$(DOCKER_no_proxy)
 PROXY_CONFIG := $(PROXY_CONFIG) '$(no_proxy)'
 endif
