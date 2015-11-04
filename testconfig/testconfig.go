@@ -55,6 +55,9 @@ func (tc *TestConfig) GetTestingConfiguration(config_name string) {
 		Pkg           PackageInfo
 		test_data_dir string
 	)
+	if os.Getenv("ONEVIEW_DEBUG") == "true" {
+		log.IsDebug = true
+	}
 	package_root = os.Getenv("TESTCONFIG_PACKAGE_ROOT_PATH")
 	if found, package_full_dir := Pkg.GetPackageRootDir(package_root); found == true {
 		test_data_dir = Pkg.JoinPath([]string{package_full_dir,

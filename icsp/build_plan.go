@@ -93,7 +93,8 @@ func (c *ICSPClient) GetAllBuildPlans() (OSBuildPlan, error) {
 		return plans, err
 	}
 
-	log.Debugf("GetAllBuildPlans %s", data)
+	// log.Debugf("GetAllBuildPlans %s", data)
+	log.Debugf("GetAllBuildPlans completed")
 	if err := json.Unmarshal([]byte(data), &plans); err != nil {
 		return plans, err
 	}
