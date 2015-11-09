@@ -1,5 +1,8 @@
 # setup any dependencies for Build
-GO_PACKAGES := github.com/docker/machine github.com/stretchr/testify/assert
+GO_PACKAGES := github.com/docker/machine
+GO_PACKAGES := $(GO_PACKAGES) github.com/stretchr/testify/assert
+GO_PACKAGES := $(GO_PACKAGES) github.com/davecgh/go-spew/spew
+GO_PACKAGES := $(GO_PACKAGES) github.com/pmezard/go-difflib/difflib
 GO15VENDOREXPERIMENT := 1
 
 # Cross builder helper
@@ -44,9 +47,6 @@ godeps-clean: vendor-clean
 
 # setup a fresh GOPATH directory with what would be needed to build
 godeps-init: godeps-clean
-		@echo "Pulling required packages into $(GOPATH)"
-		mkdir -p $(GOPATH)/src/github.com/$(GH_USER)
-		ln -s $(PREFIX) $(GOPATH)/src/github.com/$(GH_USER)/$(GH_REPO)
 		@echo "Get dependent packages"
 		$(foreach GOPCKG,$(GO_PACKAGES),$(call godeps-get,$(GOPCKG)))
 
