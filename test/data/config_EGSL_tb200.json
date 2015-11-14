@@ -34,29 +34,29 @@
       "test_data": {
         "HostName": "docker_machine_test01",
         "FreeICSPSerialNumber" : "VCGHJL900C",
-        "FreeBladeSerialNumber" : "2M25090RMS",
-        "FreeBladeName" : "HOUEGSL-C7000-04, bay 5",
-        "FreeHostName": "houegsl-c7000-04-ilo05",
+        "FreeBladeSerialNumber" : "CN7518005M",
+        "FreeBladeName" : "02-CN751500Z9, bay 3",
+        "FreeHostName": "ILOCN7518005M",
         "IcspName" : "IC04-HOUEGSL-C7000-04-5",
         "IcspName2" : "IC04-HOUEGSL-C7000-04-4",
-        "IloIPAddress":  "16.85.0.34",
-        "TemplateProfile": "docker1.8_server_template",
-        "SerialNumber": "VCGHJL900C",
-        "UsedBladeName": "HOUEGSL-C7000-04, bay 4",
-        "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303534",
-        "ServerProfileName": "houegsl-c7000-04-04",
-        "HardwareTypeURI": "/rest/server-hardware-types/1A1EBD9A-6ABE-4D96-BB9C-E9F39876BD3E",
-        "GroupURI": "/rest/enclosure-groups/9bf6f6b2-abf5-4875-b72c-4cb6e744691b",
+        "IloIPAddress":  "16.85.0.102",
+        "TemplateProfile": "Dev Docker Host",
+        "SerialNumber": "VCG61SU01Q",
+        "UsedBladeName": "02-CN751500Z9, bay 4",
+        "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303548",
+        "ServerProfileName": "Frame2, Bay 4",
+        "HardwareTypeURI": "/rest/server-hardware-types/01B10F88-4BF6-4A02-9065-DC9468008573",
+        "GroupURI": "/rest/enclosure-groups/e0ee00e0-38bc-47e3-a4fe-bf6d13ce4cd2",
         "OSBuildPlan":"RHEL71_DOCKER_1.8"
       },
       "expects_data": {
-        "MACAddress": "D6:6D:EC:10:00:22",
+        "MACAddress": "AA:43:83:10:00:BA",
         "CurrentVersion": 200,
         "MinimumVersion": 1,
         "FakeData": "foo",
         "IcspName2" : "IC04-HOUEGSL-C7000-04-4",
         "SerialNumber": "2M25090RMS",
-        "IloIPAddress":  "16.85.0.107"
+        "IloIPAddress":  " 16.85.0.102"
       }
     },
     {

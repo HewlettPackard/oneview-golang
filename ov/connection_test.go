@@ -25,7 +25,7 @@ func TestConnections(t *testing.T) {
 		data, err := c.GetProfileBySN(d.Tc.GetTestData(d.Env, "SerialNumber").(string))
 		assert.NoError(t, err, "GetProfileBySN threw error -> %s", err)
 		log.Debugf("data.Connections -> %+v\n", data.Connections)
-		assert.Equal(t, d.Tc.GetExpectsData(d.Env, "MACAddress").(string), data.Connections[0].MAC)
+		assert.Equal(t, d.Tc.GetExpectsData(d.Env, "MACAddress").(string), data.Connections[0].MAC.String())
 
 	}
 }
