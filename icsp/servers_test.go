@@ -239,14 +239,10 @@ func TestGetServerByName(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		IcspName := d.Tc.GetTestData(d.Env, "IcspName").(string)
+		expectsIcspName := d.Tc.GetExpectsData(d.Env, "IcspName").(string)
 		data, err := c.GetServerByName(IcspName)
 		assert.NoError(t, err, "GetServerByName threw error -> %s, %+v\n", err, data)
-
-		IcspName2 := d.Tc.GetTestData(d.Env, "IcspName2").(string)
-		expectsIcspName2 := d.Tc.GetExpectsData(d.Env, "IcspName2").(string)
-		data, err = c.GetServerByName(IcspName2)
-		assert.NoError(t, err, "GetServerByName IcspName2 threw error -> %s, %+v\n", err, data)
-		assert.Equal(t, expectsIcspName2, data.Name, "GetServerByName IcspName2 on fake should be nil")
+		assert.Equal(t, expectsIcspName, data.Name, "GetServerByName should return a valid icsp server")
 	}
 }
 
@@ -331,15 +327,16 @@ func TestIsServerManaged(t *testing.T) {
 // TestGetServerByID test getting a server from id
 func TestGetServerByID(t *testing.T) {
 	var (
-		//d *ICSPTest
+		d *ICSPTest
 		c *ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		d, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetServerByID("490001")
+		saObjectID := d.Tc.GetTestData(d.Env, "SAObjectID").(string)
+		data, err := c.GetServerByID(saObjectID)
 		assert.NoError(t, err, "GetServerByName threw error -> %s, %+v\n", err, data)
 	}
 }

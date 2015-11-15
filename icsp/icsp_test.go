@@ -2,6 +2,7 @@ package icsp
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -113,6 +114,11 @@ func TestCreateServer(t *testing.T) {
 		log.Debug("implements acceptance test for TestCreateServer")
 		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
 		assert.NoError(t, err, "GetServerBySerialNumber fake threw error -> %s, %+v\n", err, s)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != true for TestCreateServer")
+			log.Infof("Skipping test create for : %s, %s", serialNumber, ip)
+			return
+		}
 		if s.URI.IsNil() {
 			// create the server
 			err := c.CreateServer(user, pass, ip, 443)
@@ -159,10 +165,12 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 
 		log.Infof("server opslf -> %+v", s.OpswLifecycle)
-		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle), "should be unprovisioned")
+		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle),
+			fmt.Sprintf("%s should be unprovisioned", serialNumber))
 
 		log.Infof("server state -> %+v", s.State)
-		assert.True(t, OsdSateMaintenance.Equal(s.State), "server should be in maintenance mode")
+		assert.True(t, OsdSateMaintenance.Equal(s.State),
+			fmt.Sprintf("%s should be in maintenance mode", serialNumber))
 
 		pubinet, err := s.GetInterface(1)
 		err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
@@ -172,11 +180,18 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		_, testValue2 := s.GetValueItem("public_interface", "server")
 		// unmarshal the custom attribute
 		var inet *Interface
-		err = json.Unmarshal([]byte(testValue2.Value), &inet)
-		assert.NoError(t, err, "Unmarshal Interface threw error -> %s, %+v\n", err, testValue2.Value)
+		log.Debugf("public_interface value -> %+v", testValue2.Value)
+		assert.NotEqual(t, "", testValue2.Value,
+			fmt.Sprintf("public_interface for %s Should have a value", serialNumber))
 
-		log.Infof("We got public ip addr -> %s", inet.IPV4Addr)
-		assert.True(t, len(inet.IPV4Addr) > 0, "Should return the saved custom attribute for ipaddress")
+		if testValue2.Value != "" {
+			err = json.Unmarshal([]byte(testValue2.Value), &inet)
+			assert.NoError(t, err, "Unmarshal Interface threw error -> %s, %+v\n", err, testValue2.Value)
+
+			log.Infof("We got public ip addr -> %s", inet.IPV4Addr)
+			assert.True(t, len(inet.IPV4Addr) > 0, "Should return the saved custom attribute for ipaddress")
+		}
+
 	}
 }
 
@@ -214,8 +229,13 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		_, testValue2 := s.GetValueItem("docker_user", "server")
 		assert.Equal(t, "docker", testValue2.Value, "Should return the saved custom attribute")
 
-		_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
-		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != ture for ApplyDeploymentJobs")
+			log.Infof("Skipping OS build for : %s, %s", osBuildPlan, serialNumber)
+		} else {
+			_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
+			assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
+		}
 	} else {
 		var s Server
 		_, c = getTestDriverU()

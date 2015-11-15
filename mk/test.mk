@@ -3,7 +3,7 @@ TESTCONFIG_PACKAGE_ROOT_PATH := github.com/$(GH_USER)/$(GH_REPO)
 TESTCONFIG_JSON_DATA_DIR := test/data
 ONEVIEW_TEST_DATA=EGSL_HOUS200_LAB
 # list of test case data can be included here
-TEST_CASES ?= EGSL_HOUSTB200_LAB:$(HOME)/.oneview.houston.tbird.200.env
+TEST_CASES ?= EGSL_HOUSTB200_LAB:$(HOME)/.oneview.houston.tb.200.env
 TEST_RUN ?=
 
 testcase = $(firstword $(subst :, ,$1))

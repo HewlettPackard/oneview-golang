@@ -38,8 +38,8 @@
         "FreeBladeName" : "02-CN751500Z9, bay 3",
         "FreeHostName": "ILOCN7518005M",
         "IcspName" : "IC04-HOUEGSL-C7000-04-5",
-        "IcspName2" : "IC04-HOUEGSL-C7000-04-4",
         "IloIPAddress":  "16.85.0.102",
+        "SAObjectID": "1340001",
         "TemplateProfile": "Dev Docker Host",
         "SerialNumber": "VCG61SU01Q",
         "UsedBladeName": "02-CN751500Z9, bay 4",
@@ -54,9 +54,9 @@
         "CurrentVersion": 200,
         "MinimumVersion": 1,
         "FakeData": "foo",
-        "IcspName2" : "IC04-HOUEGSL-C7000-04-4",
-        "SerialNumber": "2M25090RMS",
-        "IloIPAddress":  " 16.85.0.102"
+        "IcspName" : "IC04-HOUEGSL-C7000-04-4",
+        "SerialNumber": "CN7518005H",
+        "IloIPAddress":  "16.85.0.90"
       }
     },
     {
