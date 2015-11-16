@@ -39,6 +39,7 @@
         "FreeMacAddr": "AA:43:83:10:00:BB",
         "FreeBladeName" : "02-CN751500Z9, bay 3",
         "FreeHostName": "ILOCN7518005M",
+        "FreePublicConnection": "Prod_172",
         "IcspName" : "IC04-HOUEGSL-C7000-04-5",
         "IloIPAddress":  "16.85.0.102",
         "SAObjectID": "1340001",
@@ -47,13 +48,13 @@
         "MacAddr": "AA:43:83:10:00:BB",
         "UsedBladeName": "02-CN751500Z9, bay 4",
         "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303548",
-        "ServerProfileName": "Frame2, Bay 4",
+        "ServerProfileName": "Frame2, Bay 4 Gold",
         "HardwareTypeURI": "/rest/server-hardware-types/01B10F88-4BF6-4A02-9065-DC9468008573",
         "GroupURI": "/rest/enclosure-groups/e0ee00e0-38bc-47e3-a4fe-bf6d13ce4cd2",
         "OSBuildPlan":"RHEL71_DOCKER_1.8"
       },
       "expects_data": {
-        "MACAddress": "AA:43:83:10:00:BA",
+        "MACAddress": "AA:43:83:10:00:BB",
         "CurrentVersion": 200,
         "MinimumVersion": 1,
         "FakeData": "foo",
