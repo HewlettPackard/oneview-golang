@@ -266,9 +266,7 @@ func (s Server) Clone() Server {
 // usually called durring provisioning, and before we apply an os build plan
 func (s Server) GetInterfaces() (interfaces []Interface) {
 	for _, inrface := range s.Interfaces {
-		//TODO: need to work with ipv4 if len(inrface.IPV4Addr) > 0 {
 		interfaces = append(interfaces, inrface)
-		// }
 	}
 	return interfaces
 }
@@ -319,7 +317,9 @@ func (s Server) GetPublicIPV4() (string, error) {
 				return "", err
 			}
 			log.Debugf("inet -> %+v", inet)
-			return inet.IPV4Addr, nil
+			if len(inet.IPV4Addr) > 0 {
+				return inet.IPV4Addr, nil
+			}
 		}
 	}
 	return "", nil
