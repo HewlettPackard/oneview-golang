@@ -26,14 +26,14 @@ test-short:
 	TESTCONFIG_PACKAGE_ROOT_PATH=$(TESTCONFIG_PACKAGE_ROOT_PATH) \
 	TESTCONFIG_JSON_DATA_DIR=$(TESTCONFIG_JSON_DATA_DIR) \
 	ONEVIEW_TEST_DATA=$(ONEVIEW_TEST_DATA) \
-	$(GO) test $(VERBOSE_GO) -test.short -tags "$(BUILDTAGS)" $(PKGS)
+	$(GO) test $(VERBOSE_GO) -test.short -tags "$(BUILDTAGS)" $(PKGS) $(TEST_RUN)
 
 # Runs long tests also, plus race detection
 test-long:
 	TESTCONFIG_PACKAGE_ROOT_PATH=$(TESTCONFIG_PACKAGE_ROOT_PATH) \
 	TESTCONFIG_JSON_DATA_DIR=$(TESTCONFIG_JSON_DATA_DIR) \
 	ONEVIEW_TEST_DATA=$(ONEVIEW_TEST_DATA) \
-	$(GO) test $(VERBOSE_GO) -race -tags "$(BUILDTAGS)" $(PKGS)
+	$(GO) test $(VERBOSE_GO) -race -tags "$(BUILDTAGS)" $(PKGS) $(TEST_RUN)
 
 # Runs acceptance test, requires a connection to real system
 test-acceptance:

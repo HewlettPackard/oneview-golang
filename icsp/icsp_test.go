@@ -160,7 +160,8 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		// serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		serialNumber := d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 

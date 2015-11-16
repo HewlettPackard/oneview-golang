@@ -41,9 +41,13 @@ func TestGetPublicIPV4(t *testing.T) {
 // TestGetInterfaceFromMac verify that getting an inerface with mac address works
 func TestGetInterfaceFromMac(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
-		s Server
+		d            *ICSPTest
+		c            *ICSPClient
+		s            Server
+		serialNumber string
+		macAddr      string
+		err          error
+		data         Interface
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetInterfaceFromMac")
@@ -51,13 +55,21 @@ func TestGetInterfaceFromMac(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
-		macAddr := d.Tc.GetTestData(d.Env, "FreeMacAddr").(string)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") == "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			macAddr = d.Tc.GetTestData(d.Env, "FreeMacAddr").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		} else {
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+			macAddr = d.Tc.GetTestData(d.Env, "MacAddr").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		}
 
-		s, err := c.GetServerBySerialNumber(serialNumber)
+		s, err = c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, serialNumber)
 
-		data, err := s.GetInterfaceFromMac(macAddr)
+		log.Debugf("server -> %v", s)
+		data, err = s.GetInterfaceFromMac(macAddr)
 		assert.NoError(t, err, "GetInterfaceFromMac threw error -> %s, %+v\n", err, data)
 		assert.Equal(t, macAddr, data.MACAddr, "Failed to get interface -> %+v", data)
 		log.Infof("Found interface -> %+v", data)
@@ -68,28 +80,21 @@ func TestGetInterfaceFromMac(t *testing.T) {
 		log.Debugf("jsonServerData => %s", jsonServerData)
 		err := json.Unmarshal([]byte(jsonServerData), &s)
 		assert.NoError(t, err, "Unmarshal Server threw error -> %s, %+v\n", err, jsonServerData)
-
-		log.Debugf("server -> %v", s)
-
-		data := s.GetInterfaces()
-		log.Debugf("Interfaces -> %+v", data)
-		assert.True(t, len(data) > 0, "Failed to get a valid list of interfaces -> %+v", data)
-		for _, inet := range data {
-			log.Debugf("inet -> %+v", inet)
-			log.Debugf("inet ip -> %+v", inet.IPV4Addr)
-			log.Debugf("inet ip -> %+v", inet.Slot)
-			log.Infof("inet ip -> %+v", inet.MACAddr)
-		}
+		// macAddr = d.Tc.GetTestData(d.Env, "ServerMacAddr").(string)
+		// TODO: find a way to unit test this
 	}
+
 }
 
 // TestGetInterfaces  verify that interfaces works
 func TestGetInterfaces(t *testing.T) {
 
 	var (
-		d *ICSPTest
-		c *ICSPClient
-		s Server
+		d            *ICSPTest
+		c            *ICSPClient
+		s            Server
+		serialNumber string
+		err          error
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetInterfaces")
@@ -97,8 +102,13 @@ func TestGetInterfaces(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
-		s, err := c.GetServerBySerialNumber(serialNumber)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") == "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		} else {
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		}
 		data := s.GetInterfaces()
 		assert.NoError(t, err, "GetInterfaces threw error -> %s, %+v\n", err, data)
 		assert.True(t, len(data) > 0, "Failed to get a valid list of interfaces -> %+v", data)
@@ -133,9 +143,12 @@ func TestGetInterfaces(t *testing.T) {
 // TestGetInterface implements getting the name of an interface
 func TestGetInterface(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
-		s Server
+		d            *ICSPTest
+		c            *ICSPClient
+		s            Server
+		serialNumber string
+		err          error
+		data         Interface
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetInterfaceName")
@@ -143,10 +156,15 @@ func TestGetInterface(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
-		s, err := c.GetServerBySerialNumber(serialNumber)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") == "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		} else {
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+			s, err = c.GetServerBySerialNumber(serialNumber)
+		}
 
-		data, err := s.GetInterface(0)
+		data, err = s.GetInterface(0)
 		assert.NoError(t, err, "GetInterface threw error -> %s, %+v\n", err, data)
 		assert.True(t, len(data.Slot) > 0, "Failed to get a an interface name -> %+v", data)
 		log.Infof("Interface name -> %+v", data.Slot)
@@ -160,12 +178,12 @@ func TestGetInterface(t *testing.T) {
 		d, c = getTestDriverU()
 		jsonServerData := d.Tc.GetTestData(d.Env, "ServerJSONString").(string)
 		log.Debugf("jsonServerData => %s", jsonServerData)
-		err := json.Unmarshal([]byte(jsonServerData), &s)
+		err = json.Unmarshal([]byte(jsonServerData), &s)
 		assert.NoError(t, err, "Unmarshal Server threw error -> %s, %+v\n", err, jsonServerData)
 
 		log.Debugf("server -> %v", s)
 
-		data, err := s.GetInterface(0)
+		data, err = s.GetInterface(0)
 		log.Infof("Interface Name -> %+v", data)
 		assert.True(t, len(data.Slot) > 0, "Failed to get a valid list of interfaces -> %+v", data)
 	}
@@ -308,19 +326,27 @@ func TestDeleteServer(t *testing.T) {
 // TestIsServerManaged test if server is managed
 func TestIsServerManaged(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
+		d            *ICSPTest
+		c            *ICSPClient
+		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		data, err := c.IsServerManaged(serialNumber)
-		log.Debugf("test : %v", data)
+		log.Debugf("server managed : %v", data)
 		assert.NoError(t, err, "IsServerManaged -> %s, %+v\n", err, data)
 		assert.True(t, data)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") == "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			data, err := c.IsServerManaged(serialNumber)
+			log.Debugf("test : %v", data)
+			assert.NoError(t, err, "IsServerManaged -> %s, %+v\n", err, data)
+			assert.True(t, data)
+		}
 	}
 }
 
