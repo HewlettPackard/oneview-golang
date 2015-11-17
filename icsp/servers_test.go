@@ -15,8 +15,9 @@ import (
 // TestGetPublicIPV4 try to test for getting interface from custom attribute
 func TestGetPublicIPV4(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
+		d            *ICSPTest
+		c            *ICSPClient
+		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetPublicIPV4")
@@ -24,7 +25,11 @@ func TestGetPublicIPV4(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") == "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
+		} else {
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+		}
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		testIP, err := s.GetPublicIPV4()
 		assert.NoError(t, err, "Should GetPublicIPV4 without error -> %s, %+v\n", err, s)

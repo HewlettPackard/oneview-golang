@@ -54,7 +54,7 @@
         "OSBuildPlan":"RHEL71_DOCKER_1.8"
       },
       "expects_data": {
-        "MACAddress": "AA:43:83:10:00:BB",
+        "MACAddress": "AA:43:83:10:00:BA",
         "CurrentVersion": 200,
         "MinimumVersion": 1,
         "FakeData": "foo",
