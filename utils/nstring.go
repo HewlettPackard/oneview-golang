@@ -6,6 +6,12 @@ import (
 
 type Nstring string
 
+// NewNstring - create a new Nstring type
+func NewNstring(s string) Nstring {
+	return Nstring(s)
+}
+
+// UnmarshalJSON - convert byte stream to string
 func (n *Nstring) UnmarshalJSON(b []byte) (err error) {
 	if string(b) == "null" {
 		return nil
