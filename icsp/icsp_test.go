@@ -229,7 +229,7 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
 			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		} else {
-			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
 		}
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
