@@ -118,16 +118,13 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 		emptyconfig, // winslist utils.Nstring,
 		emptyconfig, // dnsnamelist utils.Nstring,
 		emptyconfig) // dnssearchlist utils.Nstring)
-	netconfig.AddAllDHCP(s.Interfaces, false) // TODO: could use a option for ipv6
-	netconfig.Save(s)
-	// place those strings into custom attributes
-	_, err = c.SaveServer(s)
+	netconfig.AddAllDHCP(s.Interfaces, false, emptyconfig) // TODO: could use a option for ipv6
+	s, err = netconfig.Save(s)
 	if err != nil {
 		return err
 	}
-
-	// apply os build plan customizations for netconfig
-	_, err = c.ApplyDeploymentJobs("ProLiant SW - Post Install Network Personalization", s)
+	// place those strings into custom attributes
+	_, err = c.SaveServer(s)
 	if err != nil {
 		return err
 	}
@@ -137,6 +134,19 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 	if err != nil {
 		return err
 	}
+
+	// apply os build plan customizations for netconfig
+	_, err = c.ApplyDeploymentJobs("ProLiant SW - Post Install Network Personalization", netconfig.GetPersonalityData(), s)
+	if err != nil {
+		return err
+	}
+
+	// update public_interface
+	s, err = s.ReloadFull(c)
+	if err != nil {
+		return err
+	}
+
 	// get the existing mac address for public interface
 	inet, err := s.GetPublicInterface()
 	if err != nil {
@@ -172,16 +182,17 @@ func (c *ICSPClient) UpdatePublicInterfaceAttributes(s Server, publicinterface I
 //   simply fall out
 //TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
 func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) error {
+	var err error
 	if (PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle)) && OsdSateMaintenance.Equal(s.State) {
 		log.Debugf("Applying pre deployment job settings")
-		c.UpdatePublicInterfaceAttributes(s, publicinterface)
+		err = c.UpdatePublicInterfaceAttributes(s, publicinterface)
 	} else {
 		log.Debugf("Skippling the pre-apply deployment jobs settings")
 	}
-	return nil
+	return err
 }
 
-// Customize Server
+// CustomizeServer - Customize Server
 func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	s, err := c.GetServerBySerialNumber(cs.SerialNumber)
 	if err != nil {
@@ -246,7 +257,7 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	}
 
 	// apply the build Plan
-	jt, err := c.ApplyDeploymentJobs(cs.OSBuildPlan, newserver)
+	jt, err := c.ApplyDeploymentJobs(cs.OSBuildPlan, nil, newserver)
 	if err != nil {
 		return err
 	}

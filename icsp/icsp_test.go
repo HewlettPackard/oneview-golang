@@ -188,6 +188,8 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 
 		err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)
+		s, err = s.ReloadFull(c)
+		assert.NoError(t, err, "ReloadFull threw error -> %+v, %+v", err, s)
 
 		// verify that the server attribute was saved by getting the server again and checking the value
 		_, testValue2 := s.GetValueItem("public_interface", "server")
@@ -252,16 +254,15 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
 			log.Info("env ONEVIEW_TEST_PROVISION != ture for ApplyDeploymentJobs")
 			log.Infof("Skipping OS build for : %s, %s", osBuildPlan, serialNumber)
-			_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
-		} else {
-			_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
-			assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
+			return
 		}
+		_, err = c.ApplyDeploymentJobs(osBuildPlan, nil, s)
+		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
 	} else {
 		var s Server
 		_, c = getTestDriverU()
 		log.Debug("implements unit test for ApplyDeploymentJobs")
-		_, err := c.ApplyDeploymentJobs("testbuildplan", s)
+		_, err := c.ApplyDeploymentJobs("testbuildplan", nil, s)
 		assert.Error(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, s)
 	}
 }
