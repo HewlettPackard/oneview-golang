@@ -66,7 +66,7 @@ type DeploymentJobs struct {
 	StepNo     int                          `json:"stepNo,omitempty"`     // stepNo The step number in the OS build plan from which to start execution. integer
 }
 
-func (dj DeploymentJobs) NewDeploymentJobs(bp []OSDBuildPlan, servers []Server) DeploymentJobs {
+func (dj DeploymentJobs) NewDeploymentJobs(bp []OSDBuildPlan, bpdata *OSDPersonalityDataV2, servers []Server) DeploymentJobs {
 	var bpURI []string
 	var sd []OSDPersonalizeServerDataV2
 
@@ -81,6 +81,9 @@ func (dj DeploymentJobs) NewDeploymentJobs(bp []OSDBuildPlan, servers []Server) 
 		}
 		pd = OSDPersonalizeServerDataV2{
 			ServerURI: s.URI.String(),
+		}
+		if bpdata != nil {
+			pd.PersonalityData = bpdata
 		}
 		sd = append(sd, pd)
 	}
@@ -124,7 +127,7 @@ func (c *ICSPClient) SubmitDeploymentJobs(dj DeploymentJobs) (jt *JobTask, err e
 }
 
 // ApplyDeployment plan to server
-func (c *ICSPClient) ApplyDeploymentJobs(buildplan string, s Server) (jt *JobTask, err error) {
+func (c *ICSPClient) ApplyDeploymentJobs(buildplan string, bpdata *OSDPersonalityDataV2, s Server) (jt *JobTask, err error) {
 
 	var dj DeploymentJobs
 	var bplans []OSDBuildPlan
@@ -136,7 +139,7 @@ func (c *ICSPClient) ApplyDeploymentJobs(buildplan string, s Server) (jt *JobTas
 	}
 	bplans = append(bplans, bp)
 	servers = append(servers, s)
-	dj = dj.NewDeploymentJobs(bplans, servers)
+	dj = dj.NewDeploymentJobs(bplans, bpdata, servers)
 	jt, err = c.SubmitDeploymentJobs(dj)
 	err = jt.Wait()
 	if err != nil {

@@ -28,14 +28,16 @@ import (
 
 // NetConfigInterface - part of NetCustomization type , describes interface configuration
 type NetConfigInterface struct {
-	Name           string   `json:"name,omitempty"`           // optional name of the nic for the interface, also known as slot or interface name
+	Name           string   `json:"-"`                        // ignore marshal/unmarshal, optional name of the nic for the interface, also known as slot or interface name
+	VlanID         int      `json:"vlanid"`                   // 0> vland id, automatically generated
 	WINSServers    []string `json:"winsServers,omitempty"`    // optional [8.8.8.8, 8.8.4.4] optional list of wins servers to configure
 	DNSServers     []string `json:"dnsServers,omitempty"`     // optional [8.8.8.8, 8.8.4.4] optional list of dns servers to configure
 	DNSSearch      []string `json:"dnsSearch,omitempty"`      // optional [corp.net, my.corp.net] A list of period (.) separated character strings separated by spaces or commas.
 	MACAddr        string   `json:"macAddress,omitempty"`     // mac address to configure for the interface
-	Enabled        bool     `json:"enabled,omitempty"`        // boolean flag to enable network configuration or leave as is.
-	DHCPv4         bool     `json:"dhcpv4,omitempty"`         // boolean flag when set to true no other options are needed, will use dhcp to configure
-	IPv6Autoconfig bool     `json:"ipv6Autoconfig,omitempty"` // boolean to automatically configure ipv6
+	Enabled        bool     `json:"enabled"`                  // boolean flag to enable network configuration or leave as is.
+	DHCPv4         bool     `json:"dhcpv4"`                   // boolean flag when set to true no other options are needed, will use dhcp to configure
+	IPv6Autoconfig bool     `json:"ipv6Autoconfig"`           // boolean to automatically configure ipv6
+	IPv6Gateway    string   `json:"ipv6gateway,omitempty"`    // when ipv6Autoconfig is true, gateway for ipv6
 	IPv4Gateway    string   `json:"ipv4gateway,omitempty"`    // when dhcpv4 is false , assume ipv4 config, specify the gateway
 	StaticNetworks []string `json:"staticNetworks,omitempty"` // static ips to assign for the server, ie; 172.0.0.2/255.255.255.0
 }
@@ -44,12 +46,12 @@ type NetConfigInterface struct {
 // for configuration to run when executing to be saved on the server as hpsa_netconfig:
 // Proliant SW - Post Install Network Personalization build plans
 type NetConfig struct {
-	Hostname      string               `json:"hostname,omitempty"`  // host1, optional hostname option
-	Workgroup     string               `json:"workgroup,omitempty"` // ams, optional WINS workgroup for windows only
-	Domain        string               `json:"domain,omitempty"`    // corp.net, optional This is a period (.) separated string and is usually the right side part of a fully qualified host name.
-	WINSList      utils.Nstring        // comma seperated list of wins servers
-	DNSNameList   utils.Nstring        // comma seperated list of dns servers
-	DNSSearchList utils.Nstring        // comma seperated list of dns search servers
+	Hostname      string               `json:"hostname,omitempty"`   // host1, optional hostname option
+	Workgroup     string               `json:"workgroup,omitempty"`  // ams, optional WINS workgroup for windows only
+	Domain        string               `json:"domain,omitempty"`     // corp.net, optional This is a period (.) separated string and is usually the right side part of a fully qualified host name.
+	WINSList      utils.Nstring        `json:"-"`                    // ignore marshal/unmarshal calls on this field, comma seperated list of wins servers
+	DNSNameList   utils.Nstring        `json:"-"`                    // ignore marshal/unmarshal calls on this field, comma seperated list of dns servers
+	DNSSearchList utils.Nstring        `json:"-"`                    // ignore marshal/unmarshal calls on this field, comma seperated list of dns search servers
 	Interfaces    []NetConfigInterface `json:"interfaces,omitempty"` // list of network interfaces to customize
 }
 
@@ -57,8 +59,14 @@ type NetConfig struct {
 const SplitSep = ","
 
 // NewNetConfig - create a new netconfig object without interfaces
-func NewNetConfig(hostname utils.Nstring, workgroup utils.Nstring, domain utils.Nstring,
-	winslist utils.Nstring, dnsnamelist utils.Nstring, dnssearchlist utils.Nstring) NetConfig {
+func NewNetConfig(
+	hostname utils.Nstring,
+	workgroup utils.Nstring,
+	domain utils.Nstring,
+	winslist utils.Nstring,
+	dnsnamelist utils.Nstring,
+	dnssearchlist utils.Nstring) NetConfig {
+
 	var netconfig NetConfig
 	netconfig = NetConfig{
 		WINSList:      winslist,
@@ -78,17 +86,19 @@ func NewNetConfig(hostname utils.Nstring, workgroup utils.Nstring, domain utils.
 }
 
 // NewNetConfigInterface - creates an interface object for NetConfig
-func (n NetConfig) NewNetConfigInterface(
+func (n *NetConfig) NewNetConfigInterface(
 	enable bool,
 	macaddr string,
 	isdhcp bool,
 	isipv6 bool,
+	ipv6gateway utils.Nstring, // ipv6 gateway, required with isipv6 is true
 	ipv4gateway utils.Nstring, // ipv4 gateway, required when isdhcp is false
 	staticnets utils.Nstring, // comma seperated list of ip's, required when isdhcp is false
 	name utils.Nstring, // optional name
 	wins utils.Nstring, // comma seperated list of wins servers
 	dnsservers utils.Nstring, // comma seperated list of dns servers
-	dnssearch utils.Nstring) NetConfigInterface { // comma seperated list of dns search
+	dnssearch utils.Nstring,
+	vlandid int) NetConfigInterface { // comma seperated list of dns search
 
 	var inetconfig NetConfigInterface
 
@@ -100,6 +110,13 @@ func (n NetConfig) NewNetConfigInterface(
 		MACAddr:        macaddr,
 		DHCPv4:         isdhcp,
 		IPv6Autoconfig: isipv6,
+		VlanID:         vlandid,
+	}
+	if isipv6 {
+		if ipv6gateway.IsNil() {
+			log.Fatal("Gateway for ipv6 is required, configure IPv6Gateway")
+		}
+		inetconfig.IPv6Gateway = ipv6gateway.String()
 	}
 	if !isdhcp {
 		if ipv4gateway.IsNil() {
@@ -127,50 +144,123 @@ func (n NetConfig) NewNetConfigInterface(
 }
 
 // AddAllDHCP - make all the netconfig interfaces setup for dhcp
-func (n NetConfig) AddAllDHCP(interfaces []Interface, isipv6 bool) {
+func (n *NetConfig) AddAllDHCP(interfaces []Interface, isipv6 bool, ipv6gateway utils.Nstring) {
 	var emptystring utils.Nstring
-	var emptyinterfaces []NetConfigInterface
-	emptystring.Nil()
-	n.Interfaces = emptyinterfaces
-	for _, iface := range interfaces {
-		n.Interfaces = append(n.Interfaces, n.NewNetConfigInterface(true, iface.MACAddr, true, isipv6,
-			emptystring, emptystring, utils.Nstring(iface.Slot),
-			n.WINSList, n.DNSNameList, n.DNSSearchList))
+	var netinterfaces []NetConfigInterface
+	for i, iface := range interfaces {
+		var niface NetConfigInterface
+		niface = n.NewNetConfigInterface(
+			true,                      // enabled
+			iface.MACAddr,             // mac address
+			true,                      // dhcp
+			isipv6,                    // ipv6
+			ipv6gateway,               // ipv6 gateway
+			emptystring,               // ipv4 gateway
+			emptystring,               // static nets
+			utils.Nstring(iface.Slot), // name
+			n.WINSList,                //wins
+			n.DNSNameList,             //dns
+			n.DNSSearchList,           // dns search
+			i)                         // vlanid
+		netinterfaces = append(netinterfaces, niface)
 	}
+	n.Interfaces = netinterfaces
 }
 
 // SetStaticInterface - converts an interface from NetConfig.Interface from dhcp to static
-func (n NetConfig) SetStaticInterface(iface Interface, ipv4gateway utils.Nstring, staticiplist utils.Nstring, isipv6 bool) {
+func (n *NetConfig) SetStaticInterface(
+	iface Interface,
+	ipv4gateway utils.Nstring,
+	ipv6gateway utils.Nstring,
+	staticiplist utils.Nstring,
+	isipv6 bool) {
 	var inet NetConfigInterface
 	var bupdated bool
 	bupdated = false
-	inet = n.NewNetConfigInterface(true, iface.MACAddr, false, isipv6,
-		ipv4gateway, staticiplist, utils.Nstring(iface.Slot),
-		n.WINSList, n.DNSNameList, n.DNSSearchList)
 	// update the existing interfaces in the list
 	for i, neti := range n.Interfaces {
 		if neti.MACAddr == iface.MACAddr {
+			inet = n.NewNetConfigInterface(
+				true,                      // enabled
+				iface.MACAddr,             // mac address
+				false,                     // disable dhcp
+				isipv6,                    // ipv6
+				ipv6gateway,               // ipv6 gateway
+				ipv4gateway,               // ipv4 gateway
+				staticiplist,              // static ip list
+				utils.Nstring(iface.Slot), // interface name
+				n.WINSList,                // wins list
+				n.DNSNameList,             // dns list
+				n.DNSSearchList,           // dns search
+				i)                         // vlan id
 			n.Interfaces[i] = inet
 			bupdated = true
 		}
 	}
 	// append to the interfaces if we didn't update it
 	if !bupdated {
+		inet = n.NewNetConfigInterface(
+			true,                      // enabled
+			iface.MACAddr,             // mac address
+			false,                     // disable dhcp
+			isipv6,                    // ipv6
+			ipv6gateway,               // ipv6 gateway
+			ipv4gateway,               // ipv4 gateway
+			staticiplist,              // static ip list
+			utils.Nstring(iface.Slot), // interface name
+			n.WINSList,                // wins list
+			n.DNSNameList,             // dns list
+			n.DNSSearchList,           // dns search list
+			len(n.Interfaces))         // vlan id
 		n.Interfaces = append(n.Interfaces, inet)
 	}
 }
 
 // toJSON - convert object to JSON string
-func (n NetConfig) toJSON() (string, error) {
+func (n *NetConfig) toJSON() (string, error) {
 	data, err := json.Marshal(n)
 	return fmt.Sprintf("%s", bytes.NewBuffer(data)), err
 }
 
 // Save - save the netconfig to hpsa_netconfig
-func (n NetConfig) Save(s Server) {
+func (n *NetConfig) Save(s Server) (Server, error) {
 	data, err := n.toJSON()
 	if err != nil {
-		log.Fatalf("Unable to save hpsa_netconfig for server, %s", err)
+		log.Errorf("Unable to save hpsa_netconfig for server, %s", err)
+		return s, err
 	}
 	s.SetCustomAttribute("hpsa_netconfig", "server", data)
+	return s, nil
+}
+
+// GetPersonalityData - generate a PersonalityData *OSDPersonalityDataV2 from NetConfig
+func (n *NetConfig) GetPersonalityData() *OSDPersonalityDataV2 {
+
+	var pinterfaces []OSDNicDataV2
+
+	for _, neti := range n.Interfaces {
+		var iface OSDNicDataV2
+		iface = OSDNicDataV2{
+			DHCPv4:         neti.DHCPv4,
+			DNSSearch:      neti.DNSSearch,
+			DNSServers:     neti.DNSServers,
+			Enabled:        neti.Enabled,
+			IPv4Gateway:    neti.IPv4Gateway,
+			IPv6Autoconfig: neti.IPv6Autoconfig,
+			IPv6Gateway:    neti.IPv6Gateway,
+			MACAddress:     neti.MACAddr,
+			StaticNetworks: neti.StaticNetworks,
+			VLanID:         neti.VlanID,
+			WinsServers:    neti.WINSServers,
+		}
+		pinterfaces = append(pinterfaces, iface)
+	}
+
+	return &OSDPersonalityDataV2{
+		Domain:     n.Domain,
+		HostName:   n.Hostname,
+		Interfaces: pinterfaces,
+		Workgroup:  n.Workgroup,
+	}
+
 }
