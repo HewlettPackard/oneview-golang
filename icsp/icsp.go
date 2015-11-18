@@ -166,30 +166,16 @@ func (c *ICSPClient) UpdatePublicInterfaceAttributes(s Server, publicinterface I
 	}
 	// save the publicinterface into a custom attribute called public_interface
 	s.SetCustomAttribute("public_interface", "server", fmt.Sprintf("%s", bytes.NewBuffer(publicinterfacejson)))
+	s.SetCustomAttribute("interface", "server", publicinterface.Slot)
 
 	// save it
 	_, err = c.SaveServer(s)
 	return err
 }
 
-// PreApplyDeploymentJobs - will attempt to identify the public interface for this job
-//  for now we simply look for interfaces on ethx and save those into a custom attribute called
-//  PublicInterface, this can be controlled by providing the slot id.   Example:
-//  slotid = x , will map to ethx
-//  slotid = 1 , will map to eth1
-//  slotid = 2 , will map to eth2
-//  public_interface can only be called when the server is in maintenance mode, all others
-//   simply fall out
-//TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
+// PreApplyDeploymentJobs - update public interface information with what is actively the public interface
 func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) error {
-	var err error
-	if (PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle)) && OsdSateMaintenance.Equal(s.State) {
-		log.Debugf("Applying pre deployment job settings")
-		err = c.UpdatePublicInterfaceAttributes(s, publicinterface)
-	} else {
-		log.Debugf("Skippling the pre-apply deployment jobs settings")
-	}
-	return err
+	return c.UpdatePublicInterfaceAttributes(s, publicinterface)
 }
 
 // CustomizeServer - Customize Server

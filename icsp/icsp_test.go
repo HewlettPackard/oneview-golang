@@ -174,14 +174,6 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 
-		log.Infof("server opslf -> %+v", s.OpswLifecycle)
-		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle),
-			fmt.Sprintf("%s should be unprovisioned -> %v", serialNumber, s.OpswLifecycle))
-
-		log.Infof("server state -> %+v", s.State)
-		assert.True(t, OsdSateMaintenance.Equal(s.State),
-			fmt.Sprintf("%s should be in maintenance mode -> %v", serialNumber, s.State))
-
 		pubinet, err := s.GetInterface(1)
 		assert.NoError(t, err, "GetInterface(1) threw error -> %s, %+v\n", err, s)
 		assert.Equal(t, macAddr, pubinet.MACAddr, fmt.Sprintf("should get a valid interface -> %+v", pubinet))
