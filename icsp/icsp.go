@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 )
 
@@ -91,6 +92,7 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 	if err != nil {
 		return err
 	}
+	// parses the provisioning log to set any attributes from output of the log
 	for _, result := range job.JobResult {
 		for _, line := range strings.Split(result.JobResultLogDetails, "\n") {
 			r := regexp.MustCompile("(.*)=(.*)")
@@ -104,8 +106,63 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 			}
 		}
 	}
-	_, err = c.SaveServer(s)
+
+	// do netconfiguration for all interfaces on server s
+	var netconfig NetConfig
+	var emptyconfig utils.Nstring
+	emptyconfig.Nil()
+	// TODO: determine configuration options for network customization
+	netconfig = NewNetConfig(emptyconfig, //s.HostName,
+		emptyconfig, // workgroup utils.Nstring,
+		emptyconfig, // domain utils.Nstring,
+		emptyconfig, // winslist utils.Nstring,
+		emptyconfig, // dnsnamelist utils.Nstring,
+		emptyconfig) // dnssearchlist utils.Nstring)
+	netconfig.AddAllDHCP(s.Interfaces, false) // TODO: could use a option for ipv6
+	err = netconfig.Save(s)
+	if err != nil {
+		return err
+	}
 	// place those strings into custom attributes
+	_, err = c.SaveServer(s)
+	if err != nil {
+		return err
+	}
+
+	// update public_interface
+	s, err = s.ReloadFull(c)
+	if err != nil {
+		return err
+	}
+
+	// apply os build plan customizations for netconfig
+	_, err = c.ApplyDeploymentJobs("ProLiant SW - Post Install Network Personalization", s)
+	if err != nil {
+		return err
+	}
+
+	// get the existing mac address for public interface
+	inet, err := s.GetPublicInterface()
+	if err != nil {
+		return err
+	}
+	pubinet, err := s.GetInterfaceFromMac(inet.MACAddr)
+	// re-save interface to public_interface
+	err = c.UpdatePublicInterfaceAttributes(s, pubinet)
+	return err
+}
+
+// UpdatePublicInterfaceAttributes - updates the server attributes with public interface
+func (c *ICSPClient) UpdatePublicInterfaceAttributes(s Server, publicinterface Interface) error {
+	publicinterfacejson, err := json.Marshal(publicinterface)
+	if err != nil {
+		return err
+	}
+	// save the publicinterface into a custom attribute called public_interface
+	s.SetCustomAttribute("public_interface", "server", fmt.Sprintf("%s", bytes.NewBuffer(publicinterfacejson)))
+
+	// save it
+	_, err = c.SaveServer(s)
 	return err
 }
 
@@ -119,28 +176,17 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 //   simply fall out
 //TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
 func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) error {
+	var err error
 	if (PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle)) && OsdSateMaintenance.Equal(s.State) {
 		log.Debugf("Applying pre deployment job settings")
-		// json version of the publicinterface
-		publicinterfacejson, err := json.Marshal(publicinterface)
-		if err != nil {
-			return err
-		}
-		// save the publicinterface into a custom attribute called public_interface
-		s.SetCustomAttribute("public_interface", "server", fmt.Sprintf("%s", bytes.NewBuffer(publicinterfacejson)))
-
-		// save it
-		_, err = c.SaveServer(s)
-		if err != nil {
-			return err
-		}
+		err = c.UpdatePublicInterfaceAttributes(s, publicinterface)
 	} else {
 		log.Debugf("Skippling the pre-apply deployment jobs settings")
 	}
-	return nil
+	return err
 }
 
-// Customize Server
+// CustomizeServer - Customize Server
 func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	s, err := c.GetServerBySerialNumber(cs.SerialNumber)
 	if err != nil {

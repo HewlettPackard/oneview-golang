@@ -78,7 +78,7 @@ func NewNetConfig(hostname utils.Nstring, workgroup utils.Nstring, domain utils.
 }
 
 // NewNetConfigInterface - creates an interface object for NetConfig
-func (n NetConfig) NewNetConfigInterface(
+func (n *NetConfig) NewNetConfigInterface(
 	enable bool,
 	macaddr string,
 	isdhcp bool,
@@ -127,20 +127,23 @@ func (n NetConfig) NewNetConfigInterface(
 }
 
 // AddAllDHCP - make all the netconfig interfaces setup for dhcp
-func (n NetConfig) AddAllDHCP(interfaces []Interface, isipv6 bool) {
+func (n *NetConfig) AddAllDHCP(interfaces []Interface, isipv6 bool) {
 	var emptystring utils.Nstring
-	var emptyinterfaces []NetConfigInterface
-	emptystring.Nil()
-	n.Interfaces = emptyinterfaces
+	var netinterfaces []NetConfigInterface
 	for _, iface := range interfaces {
-		n.Interfaces = append(n.Interfaces, n.NewNetConfigInterface(true, iface.MACAddr, true, isipv6,
-			emptystring, emptystring, utils.Nstring(iface.Slot),
-			n.WINSList, n.DNSNameList, n.DNSSearchList))
+		netinterfaces = append(netinterfaces, n.NewNetConfigInterface(true, iface.MACAddr, true, isipv6,
+			emptystring,
+			emptystring,
+			utils.Nstring(iface.Slot),
+			n.WINSList,
+			n.DNSNameList,
+			n.DNSSearchList))
 	}
+	n.Interfaces = netinterfaces
 }
 
 // SetStaticInterface - converts an interface from NetConfig.Interface from dhcp to static
-func (n NetConfig) SetStaticInterface(iface Interface, ipv4gateway utils.Nstring, staticiplist utils.Nstring, isipv6 bool) {
+func (n *NetConfig) SetStaticInterface(iface Interface, ipv4gateway utils.Nstring, staticiplist utils.Nstring, isipv6 bool) {
 	var inet NetConfigInterface
 	var bupdated bool
 	bupdated = false
@@ -161,16 +164,18 @@ func (n NetConfig) SetStaticInterface(iface Interface, ipv4gateway utils.Nstring
 }
 
 // toJSON - convert object to JSON string
-func (n NetConfig) toJSON() (string, error) {
+func (n *NetConfig) toJSON() (string, error) {
 	data, err := json.Marshal(n)
 	return fmt.Sprintf("%s", bytes.NewBuffer(data)), err
 }
 
 // Save - save the netconfig to hpsa_netconfig
-func (n NetConfig) Save(s Server) {
+func (n *NetConfig) Save(s Server) error {
 	data, err := n.toJSON()
 	if err != nil {
-		log.Fatalf("Unable to save hpsa_netconfig for server, %s", err)
+		log.Errorf("Unable to save hpsa_netconfig for server, %s", err)
+		return err
 	}
 	s.SetCustomAttribute("hpsa_netconfig", "server", data)
+	return nil
 }

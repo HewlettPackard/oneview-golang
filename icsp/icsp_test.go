@@ -188,6 +188,8 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 
 		err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)
+		s, err = s.ReloadFull(c)
+		assert.NoError(t, err, "ReloadFull threw error -> %+v, %+v", err, s)
 
 		// verify that the server attribute was saved by getting the server again and checking the value
 		_, testValue2 := s.GetValueItem("public_interface", "server")
@@ -279,7 +281,7 @@ func TestPostApplyDeploymentJobs(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
 		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
 
 		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
