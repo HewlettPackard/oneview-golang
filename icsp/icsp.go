@@ -119,7 +119,7 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 //   simply fall out
 //TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
 func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) error {
-	if PreUnProvisioned.Equal(s.OpswLifecycle) && OsdSateMaintenance.Equal(s.State) {
+	if (PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle)) && OsdSateMaintenance.Equal(s.State) {
 		log.Debugf("Applying pre deployment job settings")
 		// json version of the publicinterface
 		publicinterfacejson, err := json.Marshal(publicinterface)

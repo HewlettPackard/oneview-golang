@@ -29,6 +29,11 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 		testHostName = d.Tc.GetTestData(d.Env, "HostName").(string)
 		testBladeSerial = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
 		testTemplateName = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != true for TestCreateProfileFromTemplate")
+			log.Infof("Skipping, create profile for : %s, %s, %s", testHostName, testBladeSerial, testTemplateName)
+			return
+		}
 
 		testBlades, _ = c.GetServerHardwareList([]string{fmt.Sprintf("serialNumber matches '%s'", testBladeSerial)}, "name:asc")
 		assert.True(t, (len(testBlades.Members) > 0), "Did not get any blades from server hardware list")
@@ -148,11 +153,11 @@ func TestGetProfileBySN(t *testing.T) {
 		}
 		data, err := c.GetProfileBySN(testSerial)
 		assert.NoError(t, err, "GetProfileBySN threw error -> %s", err)
-		assert.Equal(t, testSerial, data.SerialNumber)
+		assert.Equal(t, testSerial, data.SerialNumber.String())
 
 		data, err = c.GetProfileBySN("foo")
 		assert.NoError(t, err, "GetProfileBySN with fake serial number -> %+v", err)
-		assert.Equal(t, "", data.SerialNumber)
+		assert.Equal(t, "null", data.SerialNumber.String())
 
 	} else {
 		d, c = getTestDriverU()

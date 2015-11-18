@@ -27,12 +27,12 @@ func TestPowerState(t *testing.T) {
 		// get a blade object
 		blade, err := c.GetServerHardware(testData)
 		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
-		assert.Equal(t, expectsData, blade.SerialNumber)
+		assert.Equal(t, expectsData, blade.SerialNumber.String())
 		// get a power state object
 		var pt *PowerTask
 		pt = pt.NewPowerTask(blade)
 		pt.Timeout = 46 // timeout is 20 sec
-		assert.Equal(t, expectsData, pt.Blade.SerialNumber)
+		assert.Equal(t, expectsData, pt.Blade.SerialNumber.String())
 
 		// Test the power state executor to off
 		log.Info("------- Setting Power to Off")

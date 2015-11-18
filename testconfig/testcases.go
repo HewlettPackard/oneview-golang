@@ -1,8 +1,9 @@
 package testconfig
 
 import (
-	"github.com/docker/machine/libmachine/log"
 	"os"
+
+	"github.com/docker/machine/libmachine/log"
 )
 
 // test case objects
@@ -67,9 +68,11 @@ func (tc *TestConfig) IsTestEnabled(tc_name string) bool {
 // or assert the type
 func (tc *TestConfig) GetExpectsData(tc_name string, k string) interface{} {
 	if t := tc.GetTestCases(tc_name); t.ExpectsData[k] != nil {
+		log.Debugf("GetExpectsData(%s, %s) found -> %s", tc_name, k, t.ExpectsData[k])
 		return t.ExpectsData[k]
 	}
 	if d := tc.GetTestCases("default"); d.ExpectsData[k] != nil {
+		log.Debugf("GetExpectsData(%s, %s) found -> %s = %s", tc_name, k, "default", d.ExpectsData[k])
 		return d.ExpectsData[k]
 	}
 	log.Errorf("Test config expects data not found %s for test case %s\n", k, tc_name)
@@ -80,12 +83,15 @@ func (tc *TestConfig) GetExpectsData(tc_name string, k string) interface{} {
 // get test data
 func (tc *TestConfig) GetTestData(tc_name string, k string) interface{} {
 	if t := tc.GetTestCases(tc_name); t.TestData[k] != nil {
+		log.Debugf("GetTestData(%s, %s) found -> %s", tc_name, k, t.TestData[k])
 		return t.TestData[k]
 	}
 	if d := tc.GetTestCases("default"); d.TestData[k] != nil {
+		log.Debugf("GetTestData(%s, %s) found -> %s = %s", tc_name, k, "default", d.TestData[k])
 		return d.TestData[k]
 	}
 	log.Errorf("Test config test data not found %s for test case %s\n", k, tc_name)
+	log.Debugf("GetTestData(%s, %s) failed", tc_name, k)
 	os.Exit(1)
 	return nil
 }

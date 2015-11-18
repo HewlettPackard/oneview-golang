@@ -2,6 +2,7 @@ package icsp
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strconv"
 	"testing"
@@ -113,6 +114,11 @@ func TestCreateServer(t *testing.T) {
 		log.Debug("implements acceptance test for TestCreateServer")
 		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
 		assert.NoError(t, err, "GetServerBySerialNumber fake threw error -> %s, %+v\n", err, s)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != true for TestCreateServer")
+			log.Infof("Skipping test create for : %s, %s", serialNumber, ip)
+			return
+		}
 		if s.URI.IsNil() {
 			// create the server
 			err := c.CreateServer(user, pass, ip, 443)
@@ -145,8 +151,9 @@ func TestInterface(t *testing.T) {
 //TODO: This test requires a server profile to have been created
 func TestPreApplyDeploymentJobs(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
+		d                     *ICSPTest
+		c                     *ICSPClient
+		serialNumber, macAddr string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for ApplyDeploymentJobs")
@@ -154,17 +161,31 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != true")
+			log.Info("Skipping FreeBlade testing")
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+			macAddr = d.Tc.GetTestData(d.Env, "MacAddr").(string)
+		} else {
+			// serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
+			macAddr = d.Tc.GetTestData(d.Env, "FreeMacAddr").(string)
+		}
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 
 		log.Infof("server opslf -> %+v", s.OpswLifecycle)
-		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle), "should be unprovisioned")
+		assert.True(t, PreUnProvisioned.Equal(s.OpswLifecycle) || Unprovisioned.Equal(s.OpswLifecycle),
+			fmt.Sprintf("%s should be unprovisioned -> %v", serialNumber, s.OpswLifecycle))
 
 		log.Infof("server state -> %+v", s.State)
-		assert.True(t, OsdSateMaintenance.Equal(s.State), "server should be in maintenance mode")
+		assert.True(t, OsdSateMaintenance.Equal(s.State),
+			fmt.Sprintf("%s should be in maintenance mode -> %v", serialNumber, s.State))
 
 		pubinet, err := s.GetInterface(1)
+		assert.NoError(t, err, "GetInterface(1) threw error -> %s, %+v\n", err, s)
+		assert.Equal(t, macAddr, pubinet.MACAddr, fmt.Sprintf("should get a valid interface -> %+v", pubinet))
+
 		err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)
 
@@ -172,21 +193,30 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		_, testValue2 := s.GetValueItem("public_interface", "server")
 		// unmarshal the custom attribute
 		var inet *Interface
-		err = json.Unmarshal([]byte(testValue2.Value), &inet)
-		assert.NoError(t, err, "Unmarshal Interface threw error -> %s, %+v\n", err, testValue2.Value)
+		log.Debugf("public_interface value -> %+v", testValue2.Value)
+		assert.NotEqual(t, "", testValue2.Value,
+			fmt.Sprintf("public_interface for %s Should have a value", serialNumber))
 
-		log.Infof("We got public ip addr -> %s", inet.IPV4Addr)
-		assert.True(t, len(inet.IPV4Addr) > 0, "Should return the saved custom attribute for ipaddress")
+		if testValue2.Value != "" {
+			err = json.Unmarshal([]byte(testValue2.Value), &inet)
+			assert.NoError(t, err, "Unmarshal Interface threw error -> %s, %+v\n", err, testValue2.Value)
+
+			log.Infof("We got public ip addr -> %s", inet.MACAddr)
+			assert.Equal(t, macAddr, inet.MACAddr, "Should return the saved custom attribute for mac address")
+		}
+
 	}
 }
 
 // integrated acceptance test
 // TestSaveServer implement save server
 //TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
+// @docker_user@ "@public_key@" @docker_hostname@ "@proxy_config@" "@proxy_enable@" "@interface@"
 func TestApplyDeploymentJobs(t *testing.T) {
 	var (
-		d *ICSPTest
-		c *ICSPClient
+		d            *ICSPTest
+		c            *ICSPClient
+		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for ApplyDeploymentJobs")
@@ -196,11 +226,16 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		}
 		// get a Server
 		osBuildPlan := d.Tc.GetTestData(d.Env, "OSBuildPlan").(string)
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
+		} else {
+			serialNumber = d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		}
 		s, err := c.GetServerBySerialNumber(serialNumber)
 		assert.NoError(t, err, "GetServerBySerialNumber threw error -> %s, %+v\n", err, s)
 		// set a custom attribute
 		s.SetCustomAttribute("docker_user", "server", "docker")
+		s.SetCustomAttribute("docker_hostname", "server", d.Tc.GetTestData(d.Env, "HostName").(string))
 		// use test keys like from https://github.com/mitchellh/vagrant/tree/master/keys
 		// private key from https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant
 		s.SetCustomAttribute("public_key", "server", "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==")
@@ -214,8 +249,14 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		_, testValue2 := s.GetValueItem("docker_user", "server")
 		assert.Equal(t, "docker", testValue2.Value, "Should return the saved custom attribute")
 
-		_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
-		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
+		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
+			log.Info("env ONEVIEW_TEST_PROVISION != ture for ApplyDeploymentJobs")
+			log.Infof("Skipping OS build for : %s, %s", osBuildPlan, serialNumber)
+			_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
+		} else {
+			_, err = c.ApplyDeploymentJobs(osBuildPlan, s)
+			assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
+		}
 	} else {
 		var s Server
 		_, c = getTestDriverU()

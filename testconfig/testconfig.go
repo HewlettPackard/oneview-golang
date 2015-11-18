@@ -34,6 +34,7 @@ func (tc *TestConfig) NewTestConfig() *TestConfig {
 
 // UnMarshall json to data
 func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
+	tc.Cases = []TestCases{}
 	if err := json.Unmarshal(json_data, &tc); err != nil {
 		log.Errorf("Error with un-marshalling test config data: %s", err)
 		os.Exit(1)

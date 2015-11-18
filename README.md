@@ -23,5 +23,10 @@ Want to hack on oneview-golang? Please start with the [Contributing Guide](https
 
 This code base is primarily consumed and used by the docker-machine-oneview project.  We will follow contribution standards set by this project.
 
+## Hacking Guide
+
+Use the [hacking guide](HACKING.md) to run local acceptance testing and debugging local contributions.
+Currently test cases are not supported portion of our CI/CD approval process but might be made available from this test suite in the future.   Contributions to the test suite is appreciated.
+
 ## License
 This project is licensed under the Apache License, Version 2.0.  See LICENSE for full license text.

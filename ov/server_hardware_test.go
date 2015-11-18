@@ -28,7 +28,7 @@ func TestServerHardware(t *testing.T) {
 		log.Debugf("%+v", data)
 		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
-		assert.Equal(t, expectsData, data.SerialNumber)
+		assert.Equal(t, expectsData, data.SerialNumber.String())
 
 	}
 }
