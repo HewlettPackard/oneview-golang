@@ -306,23 +306,29 @@ func (s Server) GetPublicIPV4() (string, error) {
 		return inetItem.Value, nil
 	}
 
-	position, inetItem = s.GetValueItem("public_interface", "server")
+	inet, err := s.GetPublicInterface()
+	if err != nil {
+		return "", err
+	}
+	log.Debugf("inet -> %+v", inet)
+	if len(inet.IPV4Addr) > 0 {
+		return inet.IPV4Addr, nil
+	}
+	return "", nil
+}
+
+// GetPublicInterface - get public interface from public_interface for server
+func (s Server) GetPublicInterface() (*Interface, error) {
+	var inet *Interface
+	var err error
+	position, inetItem := s.GetValueItem("public_interface", "server")
 	if position >= 0 {
 		inetJSON := inetItem.Value
 		if len(inetJSON) > 0 {
-			var inet *Interface
-			err := json.Unmarshal([]byte(inetJSON), &inet)
-			if err != nil {
-				log.Debugf("inetJSON -> %+v", inetJSON)
-				return "", err
-			}
-			log.Debugf("inet -> %+v", inet)
-			if len(inet.IPV4Addr) > 0 {
-				return inet.IPV4Addr, nil
-			}
+			err = json.Unmarshal([]byte(inetJSON), &inet)
 		}
 	}
-	return "", nil
+	return inet, err
 }
 
 // ReloadFull GetServers() only returns a partial object, reload it to get everything

@@ -279,7 +279,7 @@ func TestPostApplyDeploymentJobs(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 
-		serialNumber := d.Tc.GetTestData(d.Env, "FreeBladeSerialNumber").(string)
+		serialNumber := d.Tc.GetTestData(d.Env, "FreeICSPSerialNumber").(string)
 		s, err := c.GetServerBySerialNumber(serialNumber) // fake serial number
 
 		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
