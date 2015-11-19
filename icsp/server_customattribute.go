@@ -59,11 +59,11 @@ func (s *Server) GetValueItems(key string) (int, []ValueItem) {
 // SetValueItems object
 func (s *Server) SetValueItems(key string, newv ValueItem) {
 	_, oldv := s.GetValueItem(key, newv.Scope)
-	log.Debugf("ValueItem => %+v", oldv)
+	log.Debugf("GetValueItem(%s, %s)=> %+v", key, newv.Scope, oldv)
 
 	if i, oldv := s.GetValueItem(key, newv.Scope); i < 0 {
 		// creat a new ValueItem
-		log.Debugf("Adding new ValueItem => %v+", newv)
+		log.Debugf("Adding new GetValueItem(%s, %s) => %+v", key, newv.Scope, newv)
 		vi, _ := s.GetValueItems(key)
 		if vi < 0 {
 			// a new key is needed
@@ -73,7 +73,7 @@ func (s *Server) SetValueItems(key string, newv ValueItem) {
 		}
 	} else {
 		// set an existing one
-		log.Debugf("Change %v+ to >>  %v+", oldv, newv)
+		log.Debugf("Change(%s) %+v to >>  %+v", key, oldv, newv)
 		vi, _ := s.GetValueItems(key)
 		s.CustomAttributes[vi].Values[i] = ValueItem{Scope: newv.Scope, Value: newv.Value}
 	}

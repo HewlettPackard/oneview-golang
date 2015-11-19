@@ -303,9 +303,12 @@ func (s Server) GetPublicIPV4() (string, error) {
 	position, inetItem := s.GetValueItem("public_ip", "server")
 	if position >= 0 {
 		log.Debugf("getting ip from public_ip -> %+v", inetItem.Value)
-		return inetItem.Value, nil
+		if inetItem.Value != "" {
+			return inetItem.Value, nil
+		}
 	}
 
+	log.Debugf("GetPublicIPV4 from GetPublicInterface()")
 	inet, err := s.GetPublicInterface()
 	if err != nil {
 		return "", err
@@ -324,11 +327,13 @@ func (s Server) GetPublicInterface() (*Interface, error) {
 	position, inetItem := s.GetValueItem("public_interface", "server")
 	if position >= 0 {
 		inetJSON := inetItem.Value
+		log.Debugf("GetPublicInterface -> %s", inetJSON)
 		if len(inetJSON) > 0 {
 			err = json.Unmarshal([]byte(inetJSON), &inet)
+			return inet, err
 		}
 	}
-	return inet, err
+	return inet, errors.New("Error public_interface custom attribute is not found.")
 }
 
 // ReloadFull GetServers() only returns a partial object, reload it to get everything

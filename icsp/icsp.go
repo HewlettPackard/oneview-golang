@@ -124,13 +124,7 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 		return err
 	}
 	// place those strings into custom attributes
-	_, err = c.SaveServer(s)
-	if err != nil {
-		return err
-	}
-
-	// update public_interface
-	s, err = s.ReloadFull(c)
+	s, err = c.SaveServer(s)
 	if err != nil {
 		return err
 	}
@@ -154,27 +148,28 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 	}
 	pubinet, err := s.GetInterfaceFromMac(inet.MACAddr)
 	// re-save interface to public_interface
-	err = c.UpdatePublicInterfaceAttributes(s, pubinet)
+	s, err = c.UpdatePublicInterfaceAttributes(s, pubinet)
+	log.Debugf("Server settings s after post deploy -> %+v", s)
 	return err
 }
 
 // UpdatePublicInterfaceAttributes - updates the server attributes with public interface
-func (c *ICSPClient) UpdatePublicInterfaceAttributes(s Server, publicinterface Interface) error {
+func (c *ICSPClient) UpdatePublicInterfaceAttributes(s Server, publicinterface Interface) (Server, error) {
 	publicinterfacejson, err := json.Marshal(publicinterface)
 	if err != nil {
-		return err
+		return s, err
 	}
 	// save the publicinterface into a custom attribute called public_interface
 	s.SetCustomAttribute("public_interface", "server", fmt.Sprintf("%s", bytes.NewBuffer(publicinterfacejson)))
 	s.SetCustomAttribute("interface", "server", publicinterface.Slot)
 
 	// save it
-	_, err = c.SaveServer(s)
-	return err
+	s, err = c.SaveServer(s)
+	return s, err
 }
 
 // PreApplyDeploymentJobs - update public interface information with what is actively the public interface
-func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) error {
+func (c *ICSPClient) PreApplyDeploymentJobs(s Server, publicinterface Interface) (Server, error) {
 	return c.UpdatePublicInterfaceAttributes(s, publicinterface)
 }
 
@@ -238,7 +233,8 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	}
 
 	// call to capture the public_interface attribute
-	if err := c.PreApplyDeploymentJobs(newserver, publicinterface); err != nil {
+	newserver, err = c.PreApplyDeploymentJobs(newserver, publicinterface)
+	if err != nil {
 		return err
 	}
 

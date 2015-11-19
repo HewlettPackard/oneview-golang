@@ -178,7 +178,7 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		assert.NoError(t, err, "GetInterface(1) threw error -> %s, %+v\n", err, s)
 		assert.Equal(t, macAddr, pubinet.MACAddr, fmt.Sprintf("should get a valid interface -> %+v", pubinet))
 
-		err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
+		s, err = c.PreApplyDeploymentJobs(s, pubinet) // responsible for configuring the Pulbic IP CustomAttributes
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %+v, %+v", err, s)
 		s, err = s.ReloadFull(c)
 		assert.NoError(t, err, "ReloadFull threw error -> %+v, %+v", err, s)
