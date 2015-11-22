@@ -1,5 +1,7 @@
 # HPE OneView golang bindings
 
+[![Build Status](https://travis-ci.org/HewlettPackard/oneview-golang.svg?branch=master)](https://travis-ci.org/HewlettPackard/oneview-golang)
+
 HPE OneView allows you to treat your physical infrastructure as code, and now
 you can integrate your favorite tools based in golang with HPE OneView.
 
