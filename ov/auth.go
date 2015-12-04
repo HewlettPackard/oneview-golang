@@ -62,6 +62,11 @@ type Auth struct {
 	Domain   string `json:"authLoginDomain,omitempty"`
 }
 
+// TimeOut structure
+type TimeOut struct {
+	IdleTimeout int64 `json:"idleTimeout"`
+}
+
 // RefreshLogin Refresh login authkey
 // Should make sure we have a valid APIKey
 func (c *OVClient) RefreshLogin() error {
@@ -73,7 +78,15 @@ func (c *OVClient) RefreshLogin() error {
 		}
 		c.APIKey = s.ID
 	}
-	// TODO: validate that session id is valid, if not refresh it
+	// check it we are getting 404 Not Found from GetIdleTimeout, this means the Session-ID is no good
+	_, err := c.GetIdleTimeout()
+	if err != nil && strings.Contains(err.Error(), "404 Not Found") {
+		s, err := c.SessionLogin()
+		if err != nil {
+			return err
+		}
+		c.APIKey = s.ID
+	}
 	return nil
 }
 
@@ -118,5 +131,47 @@ func (c *OVClient) SessionLogout() error {
 		return err
 	}
 	c.APIKey = "none"
+	return nil
+}
+
+// GetIdleTimeout gets the current timeout for the logged on session
+// returns timeout in milliseconds, or error when it fails
+func (c *OVClient) GetIdleTimeout() (int64, error) {
+	var (
+		uri     = "/rest/sessions/idle-timeout"
+		timeout TimeOut
+		header  map[string]string
+	)
+	log.Debugf("Calling idel-timeout get for header -> %+v", c.GetAuthHeaderMap())
+	header = c.GetAuthHeaderMap()
+	header["Session-ID"] = header["auth"]
+	c.SetAuthHeaderOptions(header)
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return -1, err
+	}
+	log.Debugf("Timeout data %s", data)
+	if err := json.Unmarshal([]byte(data), &timeout); err != nil {
+		return -1, err
+	}
+	return timeout.IdleTimeout, nil
+}
+
+// SetIdleTimeout sets the current timeout
+func (c *OVClient) SetIdleTimeout(thetime int64) error {
+	var (
+		uri     = "/rest/sessions/idle-timeout"
+		timeout TimeOut
+		header  map[string]string
+	)
+	timeout.IdleTimeout = thetime
+	log.Debugf("Calling idel-timeout POST for header -> %+v", c.GetAuthHeaderMap())
+	header = c.GetAuthHeaderMap()
+	header["Session-ID"] = header["auth"]
+	c.SetAuthHeaderOptions(header)
+	_, err := c.RestAPICall(rest.POST, uri, timeout)
+	if err != nil {
+		return err
+	}
 	return nil
 }
