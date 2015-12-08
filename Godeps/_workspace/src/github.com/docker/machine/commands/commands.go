@@ -5,30 +5,31 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 
-	"github.com/docker/machine/cli"
+	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands/mcndirs"
-	"github.com/docker/machine/drivers/errdriver"
+	"github.com/docker/machine/libmachine"
 	"github.com/docker/machine/libmachine/cert"
-	"github.com/docker/machine/libmachine/drivers"
-	"github.com/docker/machine/libmachine/drivers/plugin/localbinary"
-	"github.com/docker/machine/libmachine/drivers/rpc"
 	"github.com/docker/machine/libmachine/host"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/docker/machine/libmachine/mcnutils"
 	"github.com/docker/machine/libmachine/persist"
+	"github.com/docker/machine/libmachine/ssh"
 )
 
 var (
 	ErrUnknownShell       = errors.New("Error: Unknown shell")
 	ErrNoMachineSpecified = errors.New("Error: Expected to get one or more machine names as arguments")
 	ErrExpectedOneMachine = errors.New("Error: Expected one machine name as an argument")
+	ErrTooManyArguments   = errors.New("Error: Too many arguments given")
 )
 
 // CommandLine contains all the information passed to the commands on the command line.
 type CommandLine interface {
 	ShowHelp()
+
+	ShowVersion()
 
 	Application() *cli.App
 
@@ -55,30 +56,62 @@ func (c *contextCommandLine) ShowHelp() {
 	cli.ShowCommandHelp(c.Context, c.Command.Name)
 }
 
+func (c *contextCommandLine) ShowVersion() {
+	cli.ShowVersion(c.Context)
+}
+
 func (c *contextCommandLine) Application() *cli.App {
 	return c.App
 }
 
-func newPluginDriver(driverName string, rawContent []byte) (drivers.Driver, error) {
-	d, err := rpcdriver.NewRpcClientDriver(rawContent, driverName)
-	if err != nil {
-		// Not being able to find a driver binary is a "known error"
-		if _, ok := err.(localbinary.ErrPluginBinaryNotFound); ok {
-			return errdriver.NewDriver(driverName), nil
+func runAction(actionName string, c CommandLine, api libmachine.API) error {
+	hosts, hostsInError := persist.LoadHosts(api, c.Args())
+
+	if len(hostsInError) > 0 {
+		errs := []error{}
+		for _, err := range hostsInError {
+			errs = append(errs, err)
 		}
-		return nil, err
+		return consolidateErrs(errs)
 	}
 
-	if driverName == "virtualbox" {
-		return drivers.NewSerialDriver(d), nil
+	if len(hosts) == 0 {
+		return ErrNoMachineSpecified
 	}
 
-	return d, nil
+	if errs := runActionForeachMachine(actionName, hosts); len(errs) > 0 {
+		return consolidateErrs(errs)
+	}
+
+	for _, h := range hosts {
+		if err := api.Save(h); err != nil {
+			return fmt.Errorf("Error saving host to store: %s", err)
+		}
+	}
+
+	return nil
 }
 
-func fatalOnError(command func(commandLine CommandLine) error) func(context *cli.Context) {
+func fatalOnError(command func(commandLine CommandLine, api libmachine.API) error) func(context *cli.Context) {
 	return func(context *cli.Context) {
-		if err := command(&contextCommandLine{context}); err != nil {
+		api := libmachine.NewClient(mcndirs.GetBaseDir())
+
+		if context.GlobalBool("native-ssh") {
+			api.SSHClientType = ssh.Native
+		}
+		api.GithubAPIToken = context.GlobalString("github-api-token")
+		api.Filestore.Path = context.GlobalString("storage-path")
+
+		// TODO (nathanleclaire): These should ultimately be accessed
+		// through the libmachine client by the rest of the code and
+		// not through their respective modules.  For now, however,
+		// they are also being set the way that they originally were
+		// set to preserve backwards compatibility.
+		mcndirs.BaseDir = api.Filestore.Path
+		mcnutils.GithubAPIToken = api.GithubAPIToken
+		ssh.SetDefaultClient(api.SSHClientType)
+
+		if err := command(&contextCommandLine{context}, api); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -95,100 +128,6 @@ func confirmInput(msg string) (bool, error) {
 
 	confirmed := strings.Index(strings.ToLower(resp), "y") == 0
 	return confirmed, nil
-}
-
-func getStore(c CommandLine) persist.Store {
-	certInfo := getCertPathInfoFromContext(c)
-	return &persist.Filestore{
-		Path:             c.GlobalString("storage-path"),
-		CaCertPath:       certInfo.CaCertPath,
-		CaPrivateKeyPath: certInfo.CaPrivateKeyPath,
-	}
-}
-
-func listHosts(store persist.Store) ([]*host.Host, error) {
-	cliHosts := []*host.Host{}
-
-	hosts, err := store.List()
-	if err != nil {
-		return nil, fmt.Errorf("Error attempting to list hosts from store: %s", err)
-	}
-
-	for _, h := range hosts {
-		d, err := newPluginDriver(h.DriverName, h.RawDriver)
-		if err != nil {
-			return nil, fmt.Errorf("Error attempting to invoke binary for plugin '%s': %s", h.DriverName, err)
-		}
-
-		h.Driver = d
-
-		cliHosts = append(cliHosts, h)
-	}
-
-	return cliHosts, nil
-}
-
-func loadHost(store persist.Store, hostName string) (*host.Host, error) {
-	h, err := store.Load(hostName)
-	if err != nil {
-		return nil, fmt.Errorf("Loading host from store failed: %s", err)
-	}
-
-	d, err := newPluginDriver(h.DriverName, h.RawDriver)
-	if err != nil {
-		return nil, fmt.Errorf("Error attempting to invoke binary for plugin: %s", err)
-	}
-
-	h.Driver = d
-
-	return h, nil
-}
-
-func saveHost(store persist.Store, h *host.Host) error {
-	if err := store.Save(h); err != nil {
-		return fmt.Errorf("Error attempting to save host to store: %s", err)
-	}
-
-	return nil
-}
-
-func getFirstArgHost(c CommandLine) (*host.Host, error) {
-	store := getStore(c)
-	hostName := c.Args().First()
-
-	exists, err := store.Exists(hostName)
-	if err != nil {
-		return nil, fmt.Errorf("Error checking if host %q exists: %s", hostName, err)
-	}
-	if !exists {
-		return nil, fmt.Errorf("Host %q does not exist", hostName)
-	}
-
-	h, err := loadHost(store, hostName)
-	if err != nil {
-		// I guess I feel OK with bailing here since if we can't get
-		// the host reliably we're definitely not going to be able to
-		// do anything else interesting, but also this premature exit
-		// feels wrong to me.  Let's revisit it later.
-		return nil, fmt.Errorf("Error trying to get host %q: %s", hostName, err)
-	}
-
-	return h, nil
-}
-
-func getHostsFromContext(c CommandLine) ([]*host.Host, error) {
-	store := getStore(c)
-	hosts := []*host.Host{}
-
-	for _, hostName := range c.Args() {
-		h, err := loadHost(store, hostName)
-		if err != nil {
-			return nil, fmt.Errorf("Could not load host %q: %s", hostName, err)
-		}
-		hosts = append(hosts, h)
-	}
-
-	return hosts, nil
 }
 
 var Commands = []cli.Command{
@@ -212,7 +151,8 @@ var Commands = []cli.Command{
 	{
 		Flags:           sharedCreateFlags,
 		Name:            "create",
-		Usage:           fmt.Sprintf("Create a machine.\n\nRun '%s create --driver name' to include the create flags for that driver in the help text.", os.Args[0]),
+		Usage:           "Create a machine",
+		Description:     fmt.Sprintf("Run '%s create --driver name' to include the create flags for that driver in the help text.", os.Args[0]),
 		Action:          fatalOnError(cmdCreateOuter),
 		SkipFlagParsing: true,
 	},
@@ -303,7 +243,11 @@ var Commands = []cli.Command{
 		Flags: []cli.Flag{
 			cli.BoolFlag{
 				Name:  "force, f",
-				Usage: "Remove local configuration even if machine cannot be removed",
+				Usage: "Remove local configuration even if machine cannot be removed, also implies an automatic yes (`-y`)",
+			},
+			cli.BoolFlag{
+				Name:  "y",
+				Usage: "Assumes automatic yes to proceed with remove, without prompting further user confirmation",
 			},
 		},
 		Name:        "rm",
@@ -360,6 +304,11 @@ var Commands = []cli.Command{
 		Description: "Argument is a machine name.",
 		Action:      fatalOnError(cmdURL),
 	},
+	{
+		Name:   "version",
+		Usage:  "Show the Docker Machine version or a machine docker version",
+		Action: fatalOnError(cmdVersion),
+	},
 }
 
 func printIP(h *host.Host) func() error {
@@ -368,7 +317,9 @@ func printIP(h *host.Host) func() error {
 		if err != nil {
 			return fmt.Errorf("Error getting IP address: %s", err)
 		}
+
 		fmt.Println(ip)
+
 		return nil
 	}
 }
@@ -428,36 +379,10 @@ func consolidateErrs(errs []error) error {
 	return errors.New(strings.TrimSpace(finalErr))
 }
 
-func runActionWithContext(actionName string, c CommandLine) error {
-	store := getStore(c)
-
-	hosts, err := getHostsFromContext(c)
-	if err != nil {
-		return err
-	}
-
-	if len(hosts) == 0 {
-		return ErrNoMachineSpecified
-	}
-
-	if errs := runActionForeachMachine(actionName, hosts); len(errs) > 0 {
-		return consolidateErrs(errs)
-	}
-
-	for _, h := range hosts {
-		if err := saveHost(store, h); err != nil {
-			return fmt.Errorf("Error saving host to store: %s", err)
-		}
-	}
-
-	return nil
-}
-
-// Returns the cert paths.
-// codegangsta/cli will not set the cert paths if the storage-path is set to
-// something different so we cannot use the paths in the global options. le
-// sigh.
-func getCertPathInfoFromContext(c CommandLine) cert.PathInfo {
+// Returns the cert paths.  codegangsta/cli will not set the cert paths if the
+// storage-path is set to something different so we cannot use the paths in the
+// global options. le sigh.
+func getCertPathInfoFromCommandLine(c CommandLine) cert.PathInfo {
 	caCertPath := c.GlobalString("tls-ca-cert")
 	caKeyPath := c.GlobalString("tls-ca-key")
 	clientCertPath := c.GlobalString("tls-client-cert")
@@ -485,21 +410,4 @@ func getCertPathInfoFromContext(c CommandLine) cert.PathInfo {
 		ClientCertPath:   clientCertPath,
 		ClientKeyPath:    clientKeyPath,
 	}
-}
-
-func detectShell() (string, error) {
-	// attempt to get the SHELL env var
-	shell := filepath.Base(os.Getenv("SHELL"))
-
-	log.Debugf("shell: %s", shell)
-	if shell == "" {
-		// check for windows env and not bash (i.e. msysgit, etc)
-		if runtime.GOOS == "windows" {
-			log.Printf("On Windows, please specify either 'cmd' or 'powershell' with the --shell flag.\n\n")
-		}
-
-		return "", ErrUnknownShell
-	}
-
-	return shell, nil
 }

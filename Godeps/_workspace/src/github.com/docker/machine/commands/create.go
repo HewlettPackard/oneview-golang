@@ -12,7 +12,7 @@ import (
 
 	"errors"
 
-	"github.com/docker/machine/cli"
+	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands/mcndirs"
 	"github.com/docker/machine/drivers/errdriver"
 	"github.com/docker/machine/libmachine"
@@ -24,7 +24,6 @@ import (
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnerror"
 	"github.com/docker/machine/libmachine/mcnflag"
-	"github.com/docker/machine/libmachine/persist"
 	"github.com/docker/machine/libmachine/swarm"
 )
 
@@ -115,26 +114,20 @@ var (
 			Usage: "addr to advertise for Swarm (default: detect and use the machine IP)",
 			Value: "",
 		},
+		cli.StringSliceFlag{
+			Name:  "tls-san",
+			Usage: "Support extra SANs for TLS certs",
+			Value: &cli.StringSlice{},
+		},
 	}
 )
 
-func cmdCreateInner(c CommandLine) error {
+func cmdCreateInner(c CommandLine, api libmachine.API) error {
 	if len(c.Args()) > 1 {
 		return fmt.Errorf("Invalid command line. Found extra arguments %v", c.Args()[1:])
 	}
 
 	name := c.Args().First()
-	driverName := c.String("driver")
-	certInfo := getCertPathInfoFromContext(c)
-
-	storePath := c.GlobalString("storage-path")
-
-	store := &persist.Filestore{
-		Path:             storePath,
-		CaCertPath:       certInfo.CaCertPath,
-		CaPrivateKeyPath: certInfo.CaPrivateKeyPath,
-	}
-
 	if name == "" {
 		c.ShowHelp()
 		return errNoMachineName
@@ -150,7 +143,7 @@ func cmdCreateInner(c CommandLine) error {
 	}
 
 	// TODO: Fix hacky JSON solution
-	bareDriverData, err := json.Marshal(&drivers.BaseDriver{
+	rawDriver, err := json.Marshal(&drivers.BaseDriver{
 		MachineName: name,
 		StorePath:   c.GlobalString("storage-path"),
 	})
@@ -158,15 +151,18 @@ func cmdCreateInner(c CommandLine) error {
 		return fmt.Errorf("Error attempting to marshal bare driver data: %s", err)
 	}
 
-	driver, err := newPluginDriver(driverName, bareDriverData)
+	driverName := c.String("driver")
+	driver, err := api.NewPluginDriver(driverName, rawDriver)
 	if err != nil {
 		return fmt.Errorf("Error loading driver %q: %s", driverName, err)
 	}
 
-	h, err := store.NewHost(driver)
+	h, err := api.NewHost(driver)
 	if err != nil {
 		return fmt.Errorf("Error getting new host: %s", err)
 	}
+
+	certInfo := getCertPathInfoFromCommandLine(c)
 
 	h.HostOptions = &host.Options{
 		AuthOptions: &auth.Options{
@@ -178,6 +174,7 @@ func cmdCreateInner(c CommandLine) error {
 			ServerCertPath:   filepath.Join(mcndirs.GetMachineDir(), name, "server.pem"),
 			ServerKeyPath:    filepath.Join(mcndirs.GetMachineDir(), name, "server-key.pem"),
 			StorePath:        filepath.Join(mcndirs.GetMachineDir(), name),
+			ServerCertSANs:   c.StringSlice("tls-san"),
 		},
 		EngineOptions: &engine.Options{
 			ArbitraryFlags:   c.StringSlice("engine-opt"),
@@ -201,7 +198,7 @@ func cmdCreateInner(c CommandLine) error {
 		},
 	}
 
-	exists, err := store.Exists(h.Name)
+	exists, err := api.Exists(h.Name)
 	if err != nil {
 		return fmt.Errorf("Error checking if host exists: %s", err)
 	}
@@ -221,11 +218,11 @@ func cmdCreateInner(c CommandLine) error {
 		return fmt.Errorf("Error setting machine configuration from flags provided: %s", err)
 	}
 
-	if err := libmachine.Create(store, h); err != nil {
+	if err := api.Create(h); err != nil {
 		return fmt.Errorf("Error creating machine: %s", err)
 	}
 
-	if err := saveHost(store, h); err != nil {
+	if err := api.Save(h); err != nil {
 		return fmt.Errorf("Error attempting to save store: %s", err)
 	}
 
@@ -270,33 +267,33 @@ func flagHackLookup(flagName string) string {
 	return ""
 }
 
-func cmdCreateOuter(c CommandLine) error {
+func cmdCreateOuter(c CommandLine, api libmachine.API) error {
 	const (
 		flagLookupMachineName = "flag-lookup"
 	)
-	driverName := flagHackLookup("--driver")
 
 	// We didn't recognize the driver name.
+	driverName := flagHackLookup("--driver")
 	if driverName == "" {
 		c.ShowHelp()
 		return nil // ?
 	}
 
 	// TODO: Fix hacky JSON solution
-	bareDriverData, err := json.Marshal(&drivers.BaseDriver{
+	rawDriver, err := json.Marshal(&drivers.BaseDriver{
 		MachineName: flagLookupMachineName,
 	})
 	if err != nil {
 		return fmt.Errorf("Error attempting to marshal bare driver data: %s", err)
 	}
 
-	driver, err := newPluginDriver(driverName, bareDriverData)
+	driver, err := api.NewPluginDriver(driverName, rawDriver)
 	if err != nil {
 		return fmt.Errorf("Error loading driver %q: %s", driverName, err)
 	}
 
 	if _, ok := driver.(*errdriver.Driver); ok {
-		return errdriver.ErrDriverNotLoadable{driverName}
+		return errdriver.NotLoadable{Name: driverName}
 	}
 
 	// TODO: So much flag manipulation and voodoo here, it seems to be
@@ -324,7 +321,7 @@ func cmdCreateOuter(c CommandLine) error {
 		driver = serialDriver.Driver
 	}
 
-	if rpcd, ok := driver.(*rpcdriver.RpcClientDriver); ok {
+	if rpcd, ok := driver.(*rpcdriver.RPCClientDriver); ok {
 		if err := rpcd.Close(); err != nil {
 			return err
 		}
@@ -340,7 +337,7 @@ func getDriverOpts(c CommandLine, mcnflags []mcnflag.Flag) drivers.DriverOptions
 	// But, we need it so that we can actually send the flags for creating
 	// a machine over the wire (cli.Context is a no go since there is so
 	// much stuff in it).
-	driverOpts := rpcdriver.RpcFlags{
+	driverOpts := rpcdriver.RPCFlags{
 		Values: make(map[string]interface{}),
 	}
 
@@ -355,14 +352,14 @@ func getDriverOpts(c CommandLine, mcnflags []mcnflag.Flag) drivers.DriverOptions
 
 	for _, name := range c.FlagNames() {
 		getter, ok := c.Generic(name).(flag.Getter)
-		if !ok {
+		if ok {
+			driverOpts.Values[name] = getter.Get()
+		} else {
 			// TODO: This is pretty hacky.  StringSlice is the only
 			// type so far we have to worry about which is not a
 			// Getter, though.
 			driverOpts.Values[name] = c.StringSlice(name)
-			continue
 		}
-		driverOpts.Values[name] = getter.Get()
 	}
 
 	return driverOpts

@@ -1,14 +1,12 @@
 package virtualbox
 
 import (
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
-	"os"
 	"os/exec"
-	"path/filepath"
 	"regexp"
-	"runtime"
 	"strings"
 
 	"github.com/docker/machine/libmachine/log"
@@ -79,30 +77,34 @@ func (v *VBoxCmdManager) vbmOutErr(args ...string) (string, string, error) {
 	return stdout.String(), stderrStr, err
 }
 
-// detectVBoxManageCmd detects the VBoxManage cmd's path if needed
-func detectVBoxManageCmd() string {
-	cmd := "VBoxManage"
-	if path, err := exec.LookPath(cmd); err == nil {
-		return path
+func checkVBoxManageVersion(version string) error {
+	if !strings.HasPrefix(version, "5.") && !strings.HasPrefix(version, "4.") {
+		return fmt.Errorf("We support Virtualbox starting with version 4. Your VirtualBox install is %q. Please upgrade at https://www.virtualbox.org", version)
 	}
 
-	if runtime.GOOS == "windows" {
-		if p := os.Getenv("VBOX_INSTALL_PATH"); p != "" {
-			if path, err := exec.LookPath(filepath.Join(p, cmd)); err == nil {
-				return path
-			}
+	return nil
+}
+
+func parseKeyValues(stdOut string, regexp *regexp.Regexp, callback func(key, val string) error) error {
+	r := strings.NewReader(stdOut)
+	s := bufio.NewScanner(r)
+
+	for s.Scan() {
+		line := s.Text()
+		if line == "" {
+			continue
 		}
-		if p := os.Getenv("VBOX_MSI_INSTALL_PATH"); p != "" {
-			if path, err := exec.LookPath(filepath.Join(p, cmd)); err == nil {
-				return path
-			}
+
+		res := regexp.FindStringSubmatch(line)
+		if res == nil {
+			continue
 		}
-		// look at HKEY_LOCAL_MACHINE\SOFTWARE\Oracle\VirtualBox\InstallDir
-		p := "C:\\Program Files\\Oracle\\VirtualBox"
-		if path, err := exec.LookPath(filepath.Join(p, cmd)); err == nil {
-			return path
+
+		key, val := res[1], res[2]
+		if err := callback(key, val); err != nil {
+			return err
 		}
 	}
 
-	return cmd
+	return s.Err()
 }

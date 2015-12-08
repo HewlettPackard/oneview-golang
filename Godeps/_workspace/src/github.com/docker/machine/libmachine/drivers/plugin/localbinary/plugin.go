@@ -16,13 +16,18 @@ var (
 	// Timeout where we will bail if we're not able to properly contact the
 	// plugin server.
 	defaultTimeout = 10 * time.Second
+	CoreDrivers    = [...]string{"amazonec2", "azure", "digitalocean",
+		"exoscale", "generic", "google", "hyperv", "none", "openstack",
+		"rackspace", "softlayer", "virtualbox", "vmwarefusion",
+		"vmwarevcloudair", "vmwarevsphere"}
 )
 
 const (
-	pluginOutPrefix = "(%s) OUT | "
-	pluginErrPrefix = "(%s) DBG | "
-	PluginEnvKey    = "MACHINE_PLUGIN_TOKEN"
-	PluginEnvVal    = "42"
+	pluginOutPrefix     = "(%s) "
+	pluginErrPrefix     = "(%s) DBG | "
+	PluginEnvKey        = "MACHINE_PLUGIN_TOKEN"
+	PluginEnvVal        = "42"
+	PluginEnvDriverName = "MACHINE_PLUGIN_DRIVER_NAME"
 )
 
 type PluginStreamer interface {
@@ -62,7 +67,7 @@ type DriverPlugin interface {
 	PluginStreamer
 }
 
-type LocalBinaryPlugin struct {
+type Plugin struct {
 	Executor    McnBinaryExecutor
 	Addr        string
 	MachineName string
@@ -70,7 +75,7 @@ type LocalBinaryPlugin struct {
 	stopCh      chan bool
 }
 
-type LocalBinaryExecutor struct {
+type Executor struct {
 	pluginStdout, pluginStderr io.ReadCloser
 	DriverName                 string
 	binaryPath                 string
@@ -84,25 +89,36 @@ func (e ErrPluginBinaryNotFound) Error() string {
 	return fmt.Sprintf("Driver %q not found. Do you have the plugin binary accessible in your PATH?", e.driverName)
 }
 
-func NewLocalBinaryPlugin(driverName string) (*LocalBinaryPlugin, error) {
-	binaryPath, err := exec.LookPath(fmt.Sprintf("docker-machine-driver-%s", driverName))
+func driverPath(driverName string) string {
+	for _, coreDriver := range CoreDrivers {
+		if coreDriver == driverName {
+			return os.Args[0] // "docker-machine"
+		}
+	}
+
+	return fmt.Sprintf("docker-machine-driver-%s", driverName)
+}
+
+func NewPlugin(driverName string) (*Plugin, error) {
+	driverPath := driverPath(driverName)
+	binaryPath, err := exec.LookPath(driverPath)
 	if err != nil {
 		return nil, ErrPluginBinaryNotFound{driverName}
 	}
 
 	log.Debugf("Found binary path at %s", binaryPath)
 
-	return &LocalBinaryPlugin{
+	return &Plugin{
 		stopCh: make(chan bool),
 		addrCh: make(chan string, 1),
-		Executor: &LocalBinaryExecutor{
+		Executor: &Executor{
 			DriverName: driverName,
 			binaryPath: binaryPath,
 		},
 	}, nil
 }
 
-func (lbe *LocalBinaryExecutor) Start() (*bufio.Scanner, *bufio.Scanner, error) {
+func (lbe *Executor) Start() (*bufio.Scanner, *bufio.Scanner, error) {
 	var err error
 
 	log.Debugf("Launching plugin server for driver %s", lbe.DriverName)
@@ -123,6 +139,7 @@ func (lbe *LocalBinaryExecutor) Start() (*bufio.Scanner, *bufio.Scanner, error) 
 	errScanner := bufio.NewScanner(lbe.pluginStderr)
 
 	os.Setenv(PluginEnvKey, PluginEnvVal)
+	os.Setenv(PluginEnvDriverName, lbe.DriverName)
 
 	if err := cmd.Start(); err != nil {
 		return nil, nil, fmt.Errorf("Error starting plugin binary: %s", err)
@@ -131,7 +148,7 @@ func (lbe *LocalBinaryExecutor) Start() (*bufio.Scanner, *bufio.Scanner, error) 
 	return outScanner, errScanner, nil
 }
 
-func (lbe *LocalBinaryExecutor) Close() error {
+func (lbe *Executor) Close() error {
 	if err := lbe.pluginStdout.Close(); err != nil {
 		return err
 	}
@@ -164,14 +181,14 @@ func stream(scanner *bufio.Scanner, streamOutCh chan<- string, stopCh <-chan boo
 	}
 }
 
-func (lbp *LocalBinaryPlugin) AttachStream(scanner *bufio.Scanner) (<-chan string, chan<- bool) {
+func (lbp *Plugin) AttachStream(scanner *bufio.Scanner) (<-chan string, chan<- bool) {
 	streamOutCh := make(chan string)
 	stopCh := make(chan bool)
 	go stream(scanner, streamOutCh, stopCh)
 	return streamOutCh, stopCh
 }
 
-func (lbp *LocalBinaryPlugin) execServer() error {
+func (lbp *Plugin) execServer() error {
 	outScanner, errScanner, err := lbp.Executor.Start()
 	if err != nil {
 		return err
@@ -207,11 +224,11 @@ func (lbp *LocalBinaryPlugin) execServer() error {
 	}
 }
 
-func (lbp *LocalBinaryPlugin) Serve() error {
+func (lbp *Plugin) Serve() error {
 	return lbp.execServer()
 }
 
-func (lbp *LocalBinaryPlugin) Address() (string, error) {
+func (lbp *Plugin) Address() (string, error) {
 	if lbp.Addr == "" {
 		select {
 		case lbp.Addr = <-lbp.addrCh:
@@ -225,7 +242,7 @@ func (lbp *LocalBinaryPlugin) Address() (string, error) {
 	return lbp.Addr, nil
 }
 
-func (lbp *LocalBinaryPlugin) Close() error {
+func (lbp *Plugin) Close() error {
 	lbp.stopCh <- true
 	return nil
 }

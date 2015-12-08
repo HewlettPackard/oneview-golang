@@ -3,6 +3,7 @@ GO_PACKAGES := github.com/docker/machine
 GO_PACKAGES := $(GO_PACKAGES) github.com/stretchr/testify/assert
 GO_PACKAGES := $(GO_PACKAGES) github.com/davecgh/go-spew/spew
 GO_PACKAGES := $(GO_PACKAGES) github.com/pmezard/go-difflib/difflib
+GO_PACKAGES := $(GO_PACKAGES) github.com/Sirupsen/logrus
 GO15VENDOREXPERIMENT := 1
 
 # Cross builder helper

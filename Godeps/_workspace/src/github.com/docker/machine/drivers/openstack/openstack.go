@@ -3,6 +3,7 @@ package openstack
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
 	"strings"
 	"time"
 
@@ -222,6 +223,7 @@ func (d *Driver) SetClient(client Client) {
 	d.client = client
 }
 
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "openstack"
 }
@@ -268,7 +270,7 @@ func (d *Driver) GetURL() (string, error) {
 	if ip == "" {
 		return "", nil
 	}
-	return fmt.Sprintf("tcp://%s:2376", ip), nil
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 func (d *Driver) GetIP() (string, error) {
@@ -276,7 +278,7 @@ func (d *Driver) GetIP() (string, error) {
 		return d.IPAddress, nil
 	}
 
-	log.WithField("MachineId", d.MachineId).Debug("Looking for the IP address...")
+	log.Debug("Looking for the IP address...", map[string]string{"MachineId": d.MachineId})
 
 	if err := d.initCompute(); err != nil {
 		return "", err
@@ -289,7 +291,7 @@ func (d *Driver) GetIP() (string, error) {
 
 	// Looking for the IP address in a retry loop to deal with OpenStack latency
 	for retryCount := 0; retryCount < 200; retryCount++ {
-		addresses, err := d.client.GetInstanceIpAddresses(d)
+		addresses, err := d.client.GetInstanceIPAddresses(d)
 		if err != nil {
 			return "", err
 		}
@@ -304,7 +306,7 @@ func (d *Driver) GetIP() (string, error) {
 }
 
 func (d *Driver) GetState() (state.State, error) {
-	log.WithField("MachineId", d.MachineId).Debug("Get status for OpenStack instance...")
+	log.Debug("Get status for OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return state.None, err
 	}
@@ -314,10 +316,10 @@ func (d *Driver) GetState() (state.State, error) {
 		return state.None, err
 	}
 
-	log.WithFields(log.Fields{
+	log.Debug("State for OpenStack instance", map[string]string{
 		"MachineId": d.MachineId,
 		"State":     s,
-	}).Debug("State for OpenStack instance")
+	})
 
 	switch s {
 	case "ACTIVE":
@@ -352,18 +354,18 @@ func (d *Driver) Create() error {
 		return err
 	}
 	if d.FloatingIpPool != "" {
-		if err := d.assignFloatingIp(); err != nil {
+		if err := d.assignFloatingIP(); err != nil {
 			return err
 		}
 	}
-	if err := d.lookForIpAddress(); err != nil {
+	if err := d.lookForIPAddress(); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (d *Driver) Start() error {
-	log.WithField("MachineId", d.MachineId).Info("Starting OpenStack instance...")
+	log.Debug("Starting OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return err
 	}
@@ -374,7 +376,7 @@ func (d *Driver) Start() error {
 }
 
 func (d *Driver) Stop() error {
-	log.WithField("MachineId", d.MachineId).Info("Stopping OpenStack instance...")
+	log.Debug("Stopping OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return err
 	}
@@ -386,7 +388,7 @@ func (d *Driver) Stop() error {
 }
 
 func (d *Driver) Remove() error {
-	log.WithField("MachineId", d.MachineId).Debug("deleting instance...")
+	log.Debug("deleting instance...", map[string]string{"MachineId": d.MachineId})
 	log.Info("Deleting OpenStack instance...")
 	if err := d.initCompute(); err != nil {
 		return err
@@ -394,7 +396,7 @@ func (d *Driver) Remove() error {
 	if err := d.client.DeleteInstance(d); err != nil {
 		return err
 	}
-	log.WithField("Name", d.KeyPairName).Debug("deleting key pair...")
+	log.Debug("deleting key pair...", map[string]string{"Name": d.KeyPairName})
 	if err := d.client.DeleteKeyPair(d, d.KeyPairName); err != nil {
 		return err
 	}
@@ -402,7 +404,7 @@ func (d *Driver) Remove() error {
 }
 
 func (d *Driver) Restart() error {
-	log.WithField("MachineId", d.MachineId).Info("Restarting OpenStack instance...")
+	log.Info("Restarting OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return err
 	}
@@ -420,7 +422,7 @@ const (
 	errorMandatoryEnvOrOption    string = "%s must be specified either using the environment variable %s or the CLI option %s"
 	errorMandatoryOption         string = "%s must be specified using the CLI option %s"
 	errorExclusiveOptions        string = "Either %s or %s must be specified, not both"
-	errorMandatoryTenantNameOrId string = "Tenant id or name must be provided either using one of the environment variables OS_TENANT_ID and OS_TENANT_NAME or one of the CLI options --openstack-tenant-id and --openstack-tenant-name"
+	errorMandatoryTenantNameOrID string = "Tenant id or name must be provided either using one of the environment variables OS_TENANT_ID and OS_TENANT_NAME or one of the CLI options --openstack-tenant-id and --openstack-tenant-name"
 	errorWrongEndpointType       string = "Endpoint type must be 'publicURL', 'adminURL' or 'internalURL'"
 	errorUnknownFlavorName       string = "Unable to find flavor named %s"
 	errorUnknownImageName        string = "Unable to find image named %s"
@@ -438,7 +440,7 @@ func (d *Driver) checkConfig() error {
 		return fmt.Errorf(errorMandatoryEnvOrOption, "Password", "OS_PASSWORD", "--openstack-password")
 	}
 	if d.TenantName == "" && d.TenantId == "" {
-		return fmt.Errorf(errorMandatoryTenantNameOrId)
+		return fmt.Errorf(errorMandatoryTenantNameOrID)
 	}
 
 	if d.FlavorName == "" && d.FlavorId == "" {
@@ -470,70 +472,70 @@ func (d *Driver) resolveIds() error {
 			return err
 		}
 
-		networkId, err := d.client.GetNetworkId(d)
+		networkID, err := d.client.GetNetworkID(d)
 
 		if err != nil {
 			return err
 		}
 
-		if networkId == "" {
+		if networkID == "" {
 			return fmt.Errorf(errorUnknownNetworkName, d.NetworkName)
 		}
 
-		d.NetworkId = networkId
-		log.WithFields(log.Fields{
+		d.NetworkId = networkID
+		log.Debug("Found network id using its name", map[string]string{
 			"Name": d.NetworkName,
 			"ID":   d.NetworkId,
-		}).Debug("Found network id using its name")
+		})
 	}
 
 	if d.FlavorName != "" {
 		if err := d.initCompute(); err != nil {
 			return err
 		}
-		flavorId, err := d.client.GetFlavorId(d)
+		flavorID, err := d.client.GetFlavorID(d)
 
 		if err != nil {
 			return err
 		}
 
-		if flavorId == "" {
+		if flavorID == "" {
 			return fmt.Errorf(errorUnknownFlavorName, d.FlavorName)
 		}
 
-		d.FlavorId = flavorId
-		log.WithFields(log.Fields{
+		d.FlavorId = flavorID
+		log.Debug("Found flavor id using its name", map[string]string{
 			"Name": d.FlavorName,
 			"ID":   d.FlavorId,
-		}).Debug("Found flavor id using its name")
+		})
 	}
 
 	if d.ImageName != "" {
 		if err := d.initCompute(); err != nil {
 			return err
 		}
-		imageId, err := d.client.GetImageId(d)
+		imageID, err := d.client.GetImageID(d)
 
 		if err != nil {
 			return err
 		}
 
-		if imageId == "" {
+		if imageID == "" {
 			return fmt.Errorf(errorUnknownImageName, d.ImageName)
 		}
 
-		d.ImageId = imageId
-		log.WithFields(log.Fields{
+		d.ImageId = imageID
+		log.Debug("Found image id using its name", map[string]string{
 			"Name": d.ImageName,
 			"ID":   d.ImageId,
-		}).Debug("Found image id using its name")
+		})
 	}
 
 	if d.FloatingIpPool != "" && !d.ComputeNetwork {
 		if err := d.initNetwork(); err != nil {
 			return err
 		}
-		f, err := d.client.GetFloatingIpPoolId(d)
+		f, err := d.client.GetFloatingIPPoolID(d)
 
 		if err != nil {
 			return err
@@ -544,10 +546,10 @@ func (d *Driver) resolveIds() error {
 		}
 
 		d.FloatingIpPoolId = f
-		log.WithFields(log.Fields{
+		log.Debug("Found floating IP pool id using its name", map[string]string{
 			"Name": d.FloatingIpPool,
 			"ID":   d.FloatingIpPoolId,
-		}).Debug("Found floating IP pool id using its name")
+		})
 	}
 
 	return nil
@@ -574,7 +576,8 @@ func (d *Driver) initNetwork() error {
 }
 
 func (d *Driver) createSSHKey() error {
-	log.WithField("Name", d.KeyPairName).Debug("Creating Key Pair...")
+	sanitizeKeyPairName(&d.KeyPairName)
+	log.Debug("Creating Key Pair...", map[string]string{"Name": d.KeyPairName})
 	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
 		return err
 	}
@@ -593,23 +596,23 @@ func (d *Driver) createSSHKey() error {
 }
 
 func (d *Driver) createMachine() error {
-	log.WithFields(log.Fields{
+	log.Debug("Creating OpenStack instance...", map[string]string{
 		"FlavorId": d.FlavorId,
 		"ImageId":  d.ImageId,
-	}).Debug("Creating OpenStack instance...")
+	})
 
 	if err := d.initCompute(); err != nil {
 		return err
 	}
-	instanceId, err := d.client.CreateInstance(d)
+	instanceID, err := d.client.CreateInstance(d)
 	if err != nil {
 		return err
 	}
-	d.MachineId = instanceId
+	d.MachineId = instanceID
 	return nil
 }
 
-func (d *Driver) assignFloatingIp() error {
+func (d *Driver) assignFloatingIP() error {
 	var err error
 
 	if d.ComputeNetwork {
@@ -627,59 +630,63 @@ func (d *Driver) assignFloatingIp() error {
 		return err
 	}
 
-	var floatingIp *FloatingIp
+	var floatingIP *FloatingIP
 
-	log.WithFields(log.Fields{
+	log.Debugf("Looking for an available floating IP", map[string]string{
 		"MachineId": d.MachineId,
 		"Pool":      d.FloatingIpPool,
-	}).Debugf("Looking for an available floating IP")
+	})
 
 	for _, ip := range ips {
 		if ip.PortId == "" {
-			log.WithFields(log.Fields{
+			log.Debug("Available floating IP found", map[string]string{
 				"MachineId": d.MachineId,
 				"IP":        ip.Ip,
-			}).Debugf("Available floating IP found")
-			floatingIp = &ip
+			})
+			floatingIP = &ip
 			break
 		}
 	}
 
-	if floatingIp == nil {
-		floatingIp = &FloatingIp{}
-		log.WithField("MachineId", d.MachineId).Debugf("No available floating IP found. Allocating a new one...")
+	if floatingIP == nil {
+		floatingIP = &FloatingIP{}
+		log.Debug("No available floating IP found. Allocating a new one...", map[string]string{"MachineId": d.MachineId})
 	} else {
-		log.WithField("MachineId", d.MachineId).Debugf("Assigning floating IP to the instance")
+		log.Debug("Assigning floating IP to the instance", map[string]string{"MachineId": d.MachineId})
 	}
 
-	if err := d.client.AssignFloatingIP(d, floatingIp); err != nil {
+	if err := d.client.AssignFloatingIP(d, floatingIP); err != nil {
 		return err
 	}
-	d.IPAddress = floatingIp.Ip
+	d.IPAddress = floatingIP.Ip
 	return nil
 }
 
 func (d *Driver) waitForInstanceActive() error {
-	log.WithField("MachineId", d.MachineId).Debug("Waiting for the OpenStack instance to be ACTIVE...")
+	log.Debug("Waiting for the OpenStack instance to be ACTIVE...", map[string]string{"MachineId": d.MachineId})
 	if err := d.client.WaitForInstanceStatus(d, "ACTIVE"); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *Driver) lookForIpAddress() error {
+func (d *Driver) lookForIPAddress() error {
 	ip, err := d.GetIP()
 	if err != nil {
 		return err
 	}
 	d.IPAddress = ip
-	log.WithFields(log.Fields{
+	log.Debug("IP address found", map[string]string{
 		"IP":        ip,
 		"MachineId": d.MachineId,
-	}).Debug("IP address found")
+	})
 	return nil
 }
 
 func (d *Driver) publicSSHKeyPath() string {
 	return d.GetSSHKeyPath() + ".pub"
+}
+
+func sanitizeKeyPairName(s *string) {
+	*s = strings.Replace(*s, ".", "_", -1)
 }

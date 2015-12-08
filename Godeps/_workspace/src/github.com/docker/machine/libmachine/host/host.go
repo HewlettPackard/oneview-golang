@@ -9,6 +9,8 @@ import (
 	"github.com/docker/machine/libmachine/auth"
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/engine"
+	"github.com/docker/machine/libmachine/log"
+	"github.com/docker/machine/libmachine/mcndockerclient"
 	"github.com/docker/machine/libmachine/mcnutils"
 	"github.com/docker/machine/libmachine/provision"
 	"github.com/docker/machine/libmachine/provision/pkgaction"
@@ -30,7 +32,7 @@ type Host struct {
 	DriverName    string
 	HostOptions   *Options
 	Name          string
-	RawDriver     []byte
+	RawDriver     []byte `json:"-"`
 }
 
 type Options struct {
@@ -135,18 +137,25 @@ func (h *Host) Upgrade() error {
 		return err
 	}
 
+	log.Info("Upgrading docker...")
 	if err := provisioner.Package("docker", pkgaction.Upgrade); err != nil {
 		return err
 	}
 
-	if err := provisioner.Service("docker", serviceaction.Restart); err != nil {
-		return err
-	}
-	return nil
+	log.Info("Restarting docker...")
+	return provisioner.Service("docker", serviceaction.Restart)
 }
 
-func (h *Host) GetURL() (string, error) {
+func (h *Host) URL() (string, error) {
 	return h.Driver.GetURL()
+}
+
+func (h *Host) AuthOptions() *auth.Options {
+	return h.HostOptions.AuthOptions
+}
+
+func (h *Host) DockerVersion() (string, error) {
+	return mcndockerclient.DockerVersion(h)
 }
 
 func (h *Host) ConfigureAuth() error {

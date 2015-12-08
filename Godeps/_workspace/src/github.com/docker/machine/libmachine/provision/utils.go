@@ -85,17 +85,20 @@ func ConfigureAuth(p Provisioner) error {
 		return fmt.Errorf("Copying key.pem to machine dir failed: %s", err)
 	}
 
-	log.Debugf("generating server cert: %s ca-key=%s private-key=%s org=%s",
+	// The Host IP is always added to the certificate's SANs list
+	hosts := append(authOptions.ServerCertSANs, ip, "localhost")
+	log.Debugf("generating server cert: %s ca-key=%s private-key=%s org=%s san=%s",
 		authOptions.ServerCertPath,
 		authOptions.CaCertPath,
 		authOptions.CaPrivateKeyPath,
 		org,
+		hosts,
 	)
 
 	// TODO: Switch to passing just authOptions to this func
 	// instead of all these individual fields
 	err = cert.GenerateCert(
-		[]string{ip, "localhost"},
+		hosts,
 		authOptions.ServerCertPath,
 		authOptions.ServerKeyPath,
 		authOptions.CaCertPath,
@@ -109,6 +112,10 @@ func ConfigureAuth(p Provisioner) error {
 	}
 
 	if err := p.Service("docker", serviceaction.Stop); err != nil {
+		return err
+	}
+
+	if _, err := p.SSHCommand("sudo ip link delete docker0"); err != nil {
 		return err
 	}
 
@@ -205,7 +212,7 @@ func checkDaemonUp(p Provisioner, dockerPort int) func() bool {
 	reDaemonListening := fmt.Sprintf(":%d.*LISTEN", dockerPort)
 	return func() bool {
 		// HACK: Check netstat's output to see if anyone's listening on the Docker API port.
-		netstatOut, err := p.SSHCommand("netstat -a")
+		netstatOut, err := p.SSHCommand("netstat -an")
 		if err != nil {
 			log.Warnf("Error running SSH command: %s", err)
 			return false

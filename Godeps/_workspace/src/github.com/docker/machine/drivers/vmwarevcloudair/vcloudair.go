@@ -7,6 +7,8 @@ package vmwarevcloudair
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
+	"strconv"
 	"strings"
 
 	"github.com/vmware/govcloudair"
@@ -142,7 +144,7 @@ func (d *Driver) GetSSHHostname() (string, error) {
 	return d.GetIP()
 }
 
-// Driver interface implementation
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "vmwarevcloudair"
 }
@@ -196,7 +198,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 }
 
 func (d *Driver) GetURL() (string, error) {
-	return fmt.Sprintf("tcp://%s:%d", d.PublicIP, d.DockerPort), nil
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(d.PublicIP, strconv.Itoa(d.DockerPort))), nil
 }
 
 func (d *Driver) GetIP() (string, error) {

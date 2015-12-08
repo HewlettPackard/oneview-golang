@@ -3,17 +3,19 @@ package drivers
 import (
 	"sync"
 
+	"encoding/json"
+
 	"github.com/docker/machine/libmachine/mcnflag"
 	"github.com/docker/machine/libmachine/state"
 )
 
 var stdLock = &sync.Mutex{}
 
+// SerialDriver is a wrapper struct which is used to ensure that RPC calls
+// to a driver only occur one at a time.
 // Some providers, e.g. virtualbox, should not run driver operations at the
-// same time as other driver instances of the same type.  Otherwise, we scrape
-// up against VirtualBox's own locking mechanisms.  Therefore this is a wrapper
-// struct which is used to ensure that RPC calls to these drivers only occur
-// one at a time.
+// same time as other driver instances of the same type. Otherwise, we scrape
+// up against VirtualBox's own locking mechanisms.
 //
 // It would be preferable to simply have a lock around, say, the VBoxManage
 // command, but with our current one-server-process-per-machine model it is
@@ -163,4 +165,8 @@ func (d *SerialDriver) Stop() error {
 	d.Lock()
 	defer d.Unlock()
 	return d.Driver.Stop()
+}
+
+func (d *SerialDriver) MarshalJSON() ([]byte, error) {
+	return json.Marshal(d.Driver)
 }

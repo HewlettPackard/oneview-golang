@@ -2,13 +2,12 @@ package commands
 
 import (
 	"errors"
-	"strings"
 	"testing"
 
+	"github.com/docker/machine/commands/commandstest"
 	"github.com/docker/machine/drivers/fakedriver"
 	"github.com/docker/machine/libmachine/host"
 	"github.com/docker/machine/libmachine/hosttest"
-	"github.com/docker/machine/libmachine/persisttest"
 	"github.com/docker/machine/libmachine/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -67,66 +66,45 @@ func TestRunActionForeachMachine(t *testing.T) {
 
 	runActionForeachMachine("start", machines)
 
-	expected := map[string]state.State{
-		"foo":  state.Running,
-		"bar":  state.Running,
-		"baz":  state.Running,
-		"spam": state.Running,
-		"eggs": state.Running,
-		"ham":  state.Running,
-	}
-
 	for _, machine := range machines {
-		state, _ := machine.Driver.GetState()
-		if expected[machine.Name] != state {
-			t.Fatalf("Expected machine %s to have state %s, got state %s", machine.Name, state, expected[machine.Name])
-		}
-	}
+		machineState, _ := machine.Driver.GetState()
 
-	// OK, now let's stop them all!
-	expected = map[string]state.State{
-		"foo":  state.Stopped,
-		"bar":  state.Stopped,
-		"baz":  state.Stopped,
-		"spam": state.Stopped,
-		"eggs": state.Stopped,
-		"ham":  state.Stopped,
+		assert.Equal(t, state.Running, machineState)
 	}
 
 	runActionForeachMachine("stop", machines)
 
 	for _, machine := range machines {
-		state, _ := machine.Driver.GetState()
-		if expected[machine.Name] != state {
-			t.Fatalf("Expected machine %s to have state %s, got state %s", machine.Name, state, expected[machine.Name])
-		}
+		machineState, _ := machine.Driver.GetState()
+
+		assert.Equal(t, state.Stopped, machineState)
 	}
 }
 
 func TestPrintIPEmptyGivenLocalEngine(t *testing.T) {
-	defer persisttest.Cleanup()
+	stdoutGetter := commandstest.NewStdoutGetter()
+	defer stdoutGetter.Stop()
+
 	host, _ := hosttest.GetDefaultTestHost()
+	err := printIP(host)()
 
-	out, w := captureStdout()
-
-	assert.Nil(t, printIP(host)())
-	w.Close()
-
-	assert.Equal(t, "", strings.TrimSpace(<-out))
+	assert.NoError(t, err)
+	assert.Equal(t, "\n", stdoutGetter.Output())
 }
 
 func TestPrintIPPrintsGivenRemoteEngine(t *testing.T) {
-	defer cleanup()
+	stdoutGetter := commandstest.NewStdoutGetter()
+	defer stdoutGetter.Stop()
+
 	host, _ := hosttest.GetDefaultTestHost()
-	host.Driver = &fakedriver.Driver{}
+	host.Driver = &fakedriver.Driver{
+		MockState: state.Running,
+		MockIP:    "1.2.3.4",
+	}
+	err := printIP(host)()
 
-	out, w := captureStdout()
-
-	assert.Nil(t, printIP(host)())
-
-	w.Close()
-
-	assert.Equal(t, "1.2.3.4", strings.TrimSpace(<-out))
+	assert.NoError(t, err)
+	assert.Equal(t, "1.2.3.4\n", stdoutGetter.Output())
 }
 
 func TestConsolidateError(t *testing.T) {

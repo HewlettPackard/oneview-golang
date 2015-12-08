@@ -2,6 +2,7 @@ package google
 
 import (
 	"fmt"
+	"net"
 	"strings"
 
 	"github.com/docker/machine/libmachine/drivers"
@@ -31,7 +32,7 @@ const (
 	defaultZone        = "us-central1-a"
 	defaultUser        = "docker-user"
 	defaultMachineType = "n1-standard-1"
-	defaultImageName   = "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1404-trusty-v20150909a"
+	defaultImageName   = "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-1510-wily-v20151114"
 	defaultScopes      = "https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write"
 	defaultDiskType    = "pd-standard"
 	defaultDiskSize    = 10
@@ -142,7 +143,7 @@ func (d *Driver) GetSSHUsername() string {
 	return d.SSHUser
 }
 
-// DriverName returns the name of the driver.
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "google"
 }
@@ -180,7 +181,7 @@ func (d *Driver) PreCreateCheck() error {
 		return err
 	}
 
-	// Check that the project exists. It will also check that credentials
+	// Check that the project exists. It will also check the credentials
 	// at the same time.
 	log.Infof("Check that the project exists")
 
@@ -223,8 +224,8 @@ func (d *Driver) GetURL() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	url := fmt.Sprintf("tcp://%s:2376", ip)
-	return url, nil
+
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 // GetIP returns the IP address of the GCE instance.
@@ -233,7 +234,16 @@ func (d *Driver) GetIP() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return c.ip()
+
+	ip, err := c.ip()
+	if err != nil {
+		return "", err
+	}
+	if ip == "" {
+		return "", drivers.ErrHostIsNotRunning
+	}
+
+	return ip, nil
 }
 
 // GetState returns a docker.hosts.state.State value representing the current state of the host.
@@ -245,12 +255,12 @@ func (d *Driver) GetState() (state.State, error) {
 
 	// All we care about is whether the disk exists, so we just check disk for a nil value.
 	// There will be no error if disk is not nil.
-	disk, _ := c.disk()
 	instance, _ := c.instance()
-	if instance == nil && disk == nil {
-		return state.None, nil
-	}
-	if instance == nil && disk != nil {
+	if instance == nil {
+		disk, _ := c.disk()
+		if disk == nil {
+			return state.None, nil
+		}
 		return state.Stopped, nil
 	}
 
@@ -319,6 +329,7 @@ func (d *Driver) Remove() error {
 	if err != nil {
 		return err
 	}
+
 	s, err := d.GetState()
 	if err != nil {
 		return err
