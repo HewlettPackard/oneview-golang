@@ -18,9 +18,9 @@ guidelines](https://github.com/docker/docker/blob/master/CONTRIBUTING.md).
 
 The requirements to build Machine are:
 
-1. A running instance of Docker or a Golang 1.5 development environment
-2. The `bash` shell
-3. [Make](https://www.gnu.org/software/make/)
+1.  A running instance of Docker or a Golang 1.5 development environment
+2.  The `bash` shell
+3.  [Make](https://www.gnu.org/software/make/)
 
 ## Build using Docker containers
 
@@ -33,13 +33,12 @@ To build the `docker-machine` binary using containers, simply run:
 
 Make sure the source code directory is under a correct directory structure to use Go 1.5 vendoring;
 example of cloning and preparing the correct environment `GOPATH`:
-```
-    mkdir docker-machine
-    cd docker-machine
-    export GOPATH="$PWD"
-    go get github.com/docker/machine
-    cd src/github.com/docker/machine
-```
+
+        mkdir docker-machine
+        cd docker-machine
+        export GOPATH="$PWD"
+        go get github.com/docker/machine
+        cd src/github.com/docker/machine
 
 At this point, simply run:
 
@@ -56,6 +55,9 @@ You may call:
 to clean-up build results.
 
 ## Tests and validation
+
+We use the usual `go` tools for this, to run those commands you need at least the linter which you can
+install with `go get -u github.com/golang/lint/golint`
 
 To run basic validation (dco, fmt), and the project unit tests, call:
 
@@ -74,7 +76,7 @@ To generate an html code coverage report of the Machine codebase, run:
 
     make coverage-serve
 
-And navigate to http://localhost:8000 (hit `CTRL+C` to stop the server).
+And navigate to <http://localhost:8000> (hit `CTRL+C` to stop the server).
 
 ### Native build
 
@@ -97,21 +99,13 @@ This will generate and open the report file:
 
 ### Advanced build targets
 
-Just build the machine binary itself (native):
+Build for all supported OSes and architectures (binaries will be in the `bin` project subfolder):
 
-    make machine
+    make build-x
 
-Just build the plugins (native):
+Build for a specific list of OSes and architectures:
 
-    make plugins
-
-Build for all supported oses and architectures (binaries will be in the `bin` project subfolder):
-
-    make cross
-
-Build for a specific list of oses and architectures:
-
-    TARGET_OS=linux TARGET_ARCH="amd64 arm" make cross
+    TARGET_OS=linux TARGET_ARCH="amd64 arm" make build-x
 
 You can further control build options through the following environment variables:
 
@@ -208,15 +202,13 @@ Keep in mind that Machine supports environment variables for many of these
 flags.  So, for instance, you could run the command (substituting, of course,
 the proper secrets):
 
-```
-$ DRIVER=amazonec2 \
-  AWS_VPC_ID=vpc-xxxxxxx \
-  AWS_SECRET_ACCESS_KEY=yyyyyyyyyyyyy \
-  AWS_ACCESS_KEY_ID=zzzzzzzzzzzzzzzz \
-  AWS_AMI=ami-12663b7a \
-  AWS_SSH_USER=ec2-user \
-  make test-integration test/integration/core
-```
+    $ DRIVER=amazonec2 \
+      AWS_VPC_ID=vpc-xxxxxxx \
+      AWS_SECRET_ACCESS_KEY=yyyyyyyyyyyyy \
+      AWS_ACCESS_KEY_ID=zzzzzzzzzzzzzzzz \
+      AWS_AMI=ami-12663b7a \
+      AWS_SSH_USER=ec2-user \
+      make test-integration test/integration/core
 
 in order to run the core tests on Red Hat Enterprise Linux on Amazon.
 
@@ -228,11 +220,11 @@ guide you.
 
 At the time of writing, there is:
 
-1. A `core` directory which contains tests that are applicable to all drivers.
-2. A `drivers` directory which contains tests that are applicable only to
-specific drivers with sub-directories for each provider.
-3. A `cli` directory which is meant for testing functionality of the command
-line interface, without much regard for driver-specific details.
+1.  A `core` directory which contains tests that are applicable to all drivers.
+2.  A `drivers` directory which contains tests that are applicable only to
+    specific drivers with sub-directories for each provider.
+3.  A `cli` directory which is meant for testing functionality of the command
+    line interface, without much regard for driver-specific details.
 
 ### Guidelines
 
@@ -241,15 +233,15 @@ work in progress, but here are some general guidelines from the maintainers:
 
 1.  Ideally, each test file should have only one concern.
 2.  Tests generally should not spin up more than one machine unless the test is
-deliberately testing something which involves multiple machines, such as an `ls`
-test which involves several machines, or a test intended to create and check
-some property of a Swarm cluster.
+    deliberately testing something which involves multiple machines, such as an `ls`
+    test which involves several machines, or a test intended to create and check
+    some property of a Swarm cluster.
 3.  BATS will print the output of commands executed during a test if the test
-fails.  This can be useful, for instance to dump the magic `$output` variable
-that BATS provides and/or to get debugging information.
+    fails.  This can be useful, for instance to dump the magic `$output` variable
+    that BATS provides and/or to get debugging information.
 4.  It is not strictly needed to clean up the machines as part of the test.  The
-BATS wrapper script has a hook to take care of cleaning up all created machines
-after each test.
+    BATS wrapper script has a hook to take care of cleaning up all created machines
+    after each test.
 
 # Drivers
 
@@ -257,11 +249,11 @@ Docker Machine has several included drivers that supports provisioning hosts
 in various providers.  If you wish to contribute a driver, we ask the following
 to ensure we keep the driver in a consistent and stable state:
 
-- Address issues filed against this driver in a timely manner
-- Review PRs for the driver
-- Be responsible for maintaining the infrastructure to run unit tests
-and integration tests on the new supported environment
-- Participate in a weekly driver maintainer meeting
+-   Address issues filed against this driver in a timely manner
+-   Review PRs for the driver
+-   Be responsible for maintaining the infrastructure to run unit tests
+    and integration tests on the new supported environment
+-   Participate in a weekly driver maintainer meeting
 
 If you can commit to those, the next step is to make sure the driver adheres
 to the [spec](https://github.com/docker/machine/blob/master/docs/DRIVER_SPEC.md).

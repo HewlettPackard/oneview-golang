@@ -46,6 +46,7 @@ type Driver struct {
 	SSHPassword    string
 	ConfigDriveISO string
 	ConfigDriveURL string
+	NoShare        bool
 }
 
 const (
@@ -102,6 +103,11 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Usage:  "SSH password",
 			Value:  defaultSSHPass,
 		},
+		mcnflag.BoolFlag{
+			EnvVar: "FUSION_NO_SHARE",
+			Name:   "vmwarefusion-no-share",
+			Usage:  "Disable the mount of your home directory",
+		},
 	}
 }
 
@@ -131,6 +137,7 @@ func (d *Driver) GetSSHUsername() string {
 	return d.SSHUser
 }
 
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "vmwarefusion"
 }
@@ -149,6 +156,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.SSHUser = flags.String("vmwarefusion-ssh-user")
 	d.SSHPassword = flags.String("vmwarefusion-ssh-password")
 	d.SSHPort = 22
+	d.NoShare = flags.Bool("vmwarefusion-no-share")
 
 	// We support a maximum of 16 cpu to be consistent with Virtual Hardware 10
 	// specs.
@@ -170,7 +178,7 @@ func (d *Driver) GetURL() (string, error) {
 	if ip == "" {
 		return "", nil
 	}
-	return fmt.Sprintf("tcp://%s:2376", ip), nil
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 func (d *Driver) GetIP() (string, error) {
@@ -343,13 +351,13 @@ func (d *Driver) Create() error {
 		// TODO "linux" and "windows"
 	}
 
-	if shareDir != "" {
+	if shareDir != "" && !d.NoShare {
 		if _, err := os.Stat(shareDir); err != nil && !os.IsNotExist(err) {
 			return err
 		} else if !os.IsNotExist(err) {
 			// add shared folder, create mountpoint and mount it.
 			vmrun("-gu", B2DUser, "-gp", B2DPass, "addSharedFolder", d.vmxPath(), shareName, shareDir)
-			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs .host:/" + shareName + " " + shareDir
+			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
 			vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", command)
 		}
 	}
@@ -380,7 +388,7 @@ func (d *Driver) Start() error {
 			return err
 		} else if !os.IsNotExist(err) {
 			// create mountpoint and mount shared folder
-			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs .host:/" + shareName + " " + shareDir
+			command := "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
 			vmrun("-gu", B2DUser, "-gp", B2DPass, "runScriptInGuest", d.vmxPath(), "/bin/sh", command)
 		}
 	}

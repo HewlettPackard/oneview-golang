@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/docker/machine/commands/commandstest"
 	"github.com/docker/machine/commands/mcndirs"
 	"github.com/docker/machine/drivers/amazonec2/amz"
 	"github.com/docker/machine/libmachine/drivers"
@@ -12,7 +13,7 @@ import (
 )
 
 const (
-	testSshPort           = 22
+	testSSHPort           = 22
 	testDockerPort        = 2376
 	testStoreDir          = ".store-test"
 	machineTestName       = "test-host"
@@ -30,26 +31,6 @@ var (
 	}
 )
 
-type DriverOptionsMock struct {
-	Data map[string]interface{}
-}
-
-func (d DriverOptionsMock) String(key string) string {
-	return d.Data[key].(string)
-}
-
-func (d DriverOptionsMock) StringSlice(key string) []string {
-	return d.Data[key].([]string)
-}
-
-func (d DriverOptionsMock) Int(key string) int {
-	return d.Data[key].(int)
-}
-
-func (d DriverOptionsMock) Bool(key string) bool {
-	return d.Data[key].(bool)
-}
-
 func cleanup() error {
 	return os.RemoveAll(testStoreDir)
 }
@@ -63,8 +44,8 @@ func getTestStorePath() (string, error) {
 	return tmpDir, nil
 }
 
-func getDefaultTestDriverFlags() *DriverOptionsMock {
-	return &DriverOptionsMock{
+func getDefaultTestDriverFlags() *commandstest.FakeFlagger {
+	return &commandstest.FakeFlagger{
 		Data: map[string]interface{}{
 			"name":                            "test",
 			"url":                             "unix:///var/run/docker.sock",
@@ -133,8 +114,8 @@ func TestConfigureSecurityGroupPermissionsSshOnly(t *testing.T) {
 	group.IpPermissions = []amz.IpPermission{
 		{
 			IpProtocol: "tcp",
-			FromPort:   testSshPort,
-			ToPort:     testSshPort,
+			FromPort:   testSSHPort,
+			ToPort:     testSSHPort,
 		},
 	}
 
@@ -172,8 +153,8 @@ func TestConfigureSecurityGroupPermissionsDockerOnly(t *testing.T) {
 	}
 
 	receivedPort := perms[0].FromPort
-	if receivedPort != testSshPort {
-		t.Fatalf("expected permission on port %d; received port %d", testSshPort, receivedPort)
+	if receivedPort != testSSHPort {
+		t.Fatalf("expected permission on port %d; received port %d", testSSHPort, receivedPort)
 	}
 }
 
@@ -189,8 +170,8 @@ func TestConfigureSecurityGroupPermissionsDockerAndSsh(t *testing.T) {
 	group.IpPermissions = []amz.IpPermission{
 		{
 			IpProtocol: "tcp",
-			FromPort:   testSshPort,
-			ToPort:     testSshPort,
+			FromPort:   testSSHPort,
+			ToPort:     testSSHPort,
 		},
 		{
 			IpProtocol: "tcp",

@@ -3,6 +3,8 @@ package digitalocean
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
+	"os"
 	"time"
 
 	"github.com/digitalocean/godo"
@@ -26,10 +28,11 @@ type Driver struct {
 	IPv6              bool
 	Backups           bool
 	PrivateNetworking bool
+	UserDataFile      string
 }
 
 const (
-	defaultImage  = "ubuntu-14-04-x64"
+	defaultImage  = "ubuntu-15-10-x64"
 	defaultRegion = "nyc3"
 	defaultSize   = "512mb"
 )
@@ -82,6 +85,11 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Name:   "digitalocean-backups",
 			Usage:  "enable backups for droplet",
 		},
+		mcnflag.StringFlag{
+			EnvVar: "DIGITALOCEAN_USERDATA",
+			Name:   "digitalocean-userdata",
+			Usage:  "path to file with cloud-init user-data",
+		},
 	}
 }
 
@@ -101,6 +109,7 @@ func (d *Driver) GetSSHHostname() (string, error) {
 	return d.GetIP()
 }
 
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "digitalocean"
 }
@@ -113,6 +122,7 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.IPv6 = flags.Bool("digitalocean-ipv6")
 	d.PrivateNetworking = flags.Bool("digitalocean-private-networking")
 	d.Backups = flags.Bool("digitalocean-backups")
+	d.UserDataFile = flags.String("digitalocean-userdata")
 	d.SwarmMaster = flags.Bool("swarm-master")
 	d.SwarmHost = flags.String("swarm-host")
 	d.SwarmDiscovery = flags.String("swarm-discovery")
@@ -127,6 +137,12 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 }
 
 func (d *Driver) PreCreateCheck() error {
+	if d.UserDataFile != "" {
+		if _, err := os.Stat(d.UserDataFile); os.IsNotExist(err) {
+			return fmt.Errorf("user-data file %s could not be found", d.UserDataFile)
+		}
+	}
+
 	client := d.getClient()
 	regions, _, err := client.Regions.List(nil)
 	if err != nil {
@@ -142,6 +158,15 @@ func (d *Driver) PreCreateCheck() error {
 }
 
 func (d *Driver) Create() error {
+	var userdata string
+	if d.UserDataFile != "" {
+		buf, err := ioutil.ReadFile(d.UserDataFile)
+		if err != nil {
+			return err
+		}
+		userdata = string(buf)
+	}
+
 	log.Infof("Creating SSH key...")
 
 	key, err := d.createSSHKey()
@@ -156,14 +181,15 @@ func (d *Driver) Create() error {
 	client := d.getClient()
 
 	createRequest := &godo.DropletCreateRequest{
-		Image:             d.Image,
+		Image:             godo.DropletCreateImage{Slug: d.Image},
 		Name:              d.MachineName,
 		Region:            d.Region,
 		Size:              d.Size,
 		IPv6:              d.IPv6,
 		PrivateNetworking: d.PrivateNetworking,
 		Backups:           d.Backups,
-		SSHKeys:           []interface{}{d.SSHKeyID},
+		UserData:          userdata,
+		SSHKeys:           []godo.DropletCreateSSHKey{{ID: d.SSHKeyID}},
 	}
 
 	newDroplet, _, err := client.Droplets.Create(createRequest)
@@ -171,7 +197,7 @@ func (d *Driver) Create() error {
 		return err
 	}
 
-	d.DropletID = newDroplet.Droplet.ID
+	d.DropletID = newDroplet.ID
 
 	log.Info("Waiting for IP address to be assigned to the Droplet...")
 	for {
@@ -179,7 +205,7 @@ func (d *Driver) Create() error {
 		if err != nil {
 			return err
 		}
-		for _, network := range newDroplet.Droplet.Networks.V4 {
+		for _, network := range newDroplet.Networks.V4 {
 			if network.Type == "public" {
 				d.IPAddress = network.IPAddress
 			}
@@ -193,7 +219,7 @@ func (d *Driver) Create() error {
 	}
 
 	log.Debugf("Created droplet ID %d, IP address %s",
-		newDroplet.Droplet.ID,
+		newDroplet.ID,
 		d.IPAddress)
 
 	return nil
@@ -227,7 +253,7 @@ func (d *Driver) GetURL() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return fmt.Sprintf("tcp://%s:2376", ip), nil
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
 }
 
 func (d *Driver) GetState() (state.State, error) {
@@ -235,7 +261,7 @@ func (d *Driver) GetState() (state.State, error) {
 	if err != nil {
 		return state.Error, err
 	}
-	switch droplet.Droplet.Status {
+	switch droplet.Status {
 	case "new":
 		return state.Starting, nil
 	case "active":

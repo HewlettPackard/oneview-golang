@@ -1,13 +1,11 @@
 package virtualbox
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"net"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 const (
@@ -15,7 +13,8 @@ const (
 )
 
 var (
-	reHostonlyInterfaceCreated = regexp.MustCompile(`Interface '(.+)' was successfully created`)
+	reHostonlyInterfaceCreated            = regexp.MustCompile(`Interface '(.+)' was successfully created`)
+	errDuplicateHostOnlyInterfaceNetworks = errors.New("VirtualBox is configured with multiple host-only interfaces with the same IP. Please remove all of them but one.")
 )
 
 // Host-only network.
@@ -31,76 +30,55 @@ type hostOnlyNetwork struct {
 	NetworkName string // referenced in DHCP.NetworkName
 }
 
-// TODO: use VBoxManager.vbm() instead
-func vbm(args ...string) error {
-	vBoxManager := &VBoxCmdManager{}
-	_, _, err := vBoxManager.vbmOutErr(args...)
-	return err
-}
-
-// TODO: use VBoxManager.vbmOut() instead
-func vbmOut(args ...string) (string, error) {
-	vBoxManager := &VBoxCmdManager{}
-	stdout, _, err := vBoxManager.vbmOutErr(args...)
-	return stdout, err
-}
-
 // Save changes the configuration of the host-only network.
-func (n *hostOnlyNetwork) Save() error {
+func (n *hostOnlyNetwork) Save(vbox VBoxManager) error {
 	if n.IPv4.IP != nil && n.IPv4.Mask != nil {
-		if err := vbm("hostonlyif", "ipconfig", n.Name, "--ip", n.IPv4.IP.String(), "--netmask", net.IP(n.IPv4.Mask).String()); err != nil {
+		if err := vbox.vbm("hostonlyif", "ipconfig", n.Name, "--ip", n.IPv4.IP.String(), "--netmask", net.IP(n.IPv4.Mask).String()); err != nil {
 			return err
 		}
 	}
 
 	if n.IPv6.IP != nil && n.IPv6.Mask != nil {
 		prefixLen, _ := n.IPv6.Mask.Size()
-		if err := vbm("hostonlyif", "ipconfig", n.Name, "--ipv6", n.IPv6.IP.String(), "--netmasklengthv6", fmt.Sprintf("%d", prefixLen)); err != nil {
+		if err := vbox.vbm("hostonlyif", "ipconfig", n.Name, "--ipv6", n.IPv6.IP.String(), "--netmasklengthv6", fmt.Sprintf("%d", prefixLen)); err != nil {
 			return err
 		}
 	}
 
 	if n.DHCP {
-		vbm("hostonlyif", "ipconfig", n.Name, "--dhcp") // not implemented as of VirtualBox 4.3
+		vbox.vbm("hostonlyif", "ipconfig", n.Name, "--dhcp") // not implemented as of VirtualBox 4.3
 	}
 
 	return nil
 }
 
 // createHostonlyNet creates a new host-only network.
-func createHostonlyNet() (*hostOnlyNetwork, error) {
-	out, err := vbmOut("hostonlyif", "create")
+func createHostonlyNet(vbox VBoxManager) (*hostOnlyNetwork, error) {
+	out, err := vbox.vbmOut("hostonlyif", "create")
 	if err != nil {
 		return nil, err
 	}
+
 	res := reHostonlyInterfaceCreated.FindStringSubmatch(string(out))
 	if res == nil {
 		return nil, errors.New("failed to create hostonly interface")
 	}
+
 	return &hostOnlyNetwork{Name: res[1]}, nil
 }
 
 // listHostOnlyNetworks gets all host-only networks in a  map keyed by HostonlyNet.NetworkName.
-func listHostOnlyNetworks() (map[string]*hostOnlyNetwork, error) {
-	out, err := vbmOut("list", "hostonlyifs")
+func listHostOnlyNetworks(vbox VBoxManager) (map[string]*hostOnlyNetwork, error) {
+	out, err := vbox.vbmOut("list", "hostonlyifs")
 	if err != nil {
 		return nil, err
 	}
-	s := bufio.NewScanner(strings.NewReader(out))
+
 	m := map[string]*hostOnlyNetwork{}
 	n := &hostOnlyNetwork{}
-	for s.Scan() {
-		line := s.Text()
-		if line == "" {
-			m[n.NetworkName] = n
-			n = &hostOnlyNetwork{}
-			continue
-		}
-		res := reColonLine.FindStringSubmatch(line)
-		if res == nil {
-			continue
-		}
-		switch key, val := res[1], res[2]; key {
+
+	err = parseKeyValues(out, reColonLine, func(key, val string) error {
+		switch key {
 		case "Name":
 			n.Name = val
 		case "GUID":
@@ -116,13 +94,13 @@ func listHostOnlyNetworks() (map[string]*hostOnlyNetwork, error) {
 		case "IPV6NetworkMaskPrefixLength":
 			l, err := strconv.ParseUint(val, 10, 8)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			n.IPv6.Mask = net.CIDRMask(int(l), net.IPv6len*8)
 		case "HardwareAddress":
 			mac, err := net.ParseMAC(val)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			n.HwAddr = mac
 		case "MediumType":
@@ -131,11 +109,16 @@ func listHostOnlyNetworks() (map[string]*hostOnlyNetwork, error) {
 			n.Status = val
 		case "VBoxNetworkName":
 			n.NetworkName = val
+			m[val] = n
+			n = &hostOnlyNetwork{}
 		}
-	}
-	if err := s.Err(); err != nil {
+
+		return nil
+	})
+	if err != nil {
 		return nil, err
 	}
+
 	return m, nil
 }
 
@@ -153,38 +136,54 @@ func getHostOnlyNetwork(nets map[string]*hostOnlyNetwork, hostIP net.IP, netmask
 	return nil
 }
 
-func getOrCreateHostOnlyNetwork(hostIP net.IP, netmask net.IPMask, dhcpIP net.IP, dhcpUpperIP net.IP, dhcpLowerIP net.IP) (*hostOnlyNetwork, error) {
-	nets, err := listHostOnlyNetworks()
+func getOrCreateHostOnlyNetwork(hostIP net.IP, netmask net.IPMask, dhcpIP net.IP, dhcpLowerIP net.IP, dhcpUpperIP net.IP, vbox VBoxManager) (*hostOnlyNetwork, error) {
+	nets, err := listHostOnlyNetworks(vbox)
 	if err != nil {
 		return nil, err
 	}
 
+	if len(nets) != countUniqueIps(nets) {
+		return nil, errDuplicateHostOnlyInterfaceNetworks
+	}
+
 	hostOnlyNet := getHostOnlyNetwork(nets, hostIP, netmask)
+	if hostOnlyNet != nil {
+		return hostOnlyNet, nil
+	}
 
-	if hostOnlyNet == nil {
-		// No existing host-only interface found. Create a new one.
-		hostOnlyNet, err = createHostonlyNet()
-		if err != nil {
-			return nil, err
-		}
-		hostOnlyNet.IPv4.IP = hostIP
-		hostOnlyNet.IPv4.Mask = netmask
-		if err := hostOnlyNet.Save(); err != nil {
-			return nil, err
-		}
+	// No existing host-only interface found. Create a new one.
+	hostOnlyNet, err = createHostonlyNet(vbox)
+	if err != nil {
+		return nil, err
+	}
 
-		dhcp := dhcpServer{}
-		dhcp.IPv4.IP = dhcpIP
-		dhcp.IPv4.Mask = netmask
-		dhcp.LowerIP = dhcpUpperIP
-		dhcp.UpperIP = dhcpLowerIP
-		dhcp.Enabled = true
-		if err := addHostonlyDHCP(hostOnlyNet.Name, dhcp); err != nil {
-			return nil, err
-		}
+	hostOnlyNet.IPv4.IP = hostIP
+	hostOnlyNet.IPv4.Mask = netmask
+	if err := hostOnlyNet.Save(vbox); err != nil {
+		return nil, err
+	}
+
+	dhcp := dhcpServer{}
+	dhcp.IPv4.IP = dhcpIP
+	dhcp.IPv4.Mask = netmask
+	dhcp.LowerIP = dhcpLowerIP
+	dhcp.UpperIP = dhcpUpperIP
+	dhcp.Enabled = true
+	if err := addHostonlyDHCP(hostOnlyNet.Name, dhcp, vbox); err != nil {
+		return nil, err
 	}
 
 	return hostOnlyNet, nil
+}
+
+func countUniqueIps(nets map[string]*hostOnlyNetwork) int {
+	ips := map[string]bool{}
+
+	for _, n := range nets {
+		ips[n.IPv4.IP.String()] = true
+	}
+
+	return len(ips)
 }
 
 // DHCP server info.
@@ -196,12 +195,12 @@ type dhcpServer struct {
 	Enabled     bool
 }
 
-func addDHCPServer(kind, name string, d dhcpServer) error {
+func addDHCPServer(kind, name string, d dhcpServer, vbox VBoxManager) error {
 	command := "modify"
 
 	// On some platforms (OSX), creating a hostonlyinterface adds a default dhcpserver
 	// While on others (Windows?) it does not.
-	dhcps, err := getDHCPServers()
+	dhcps, err := getDHCPServers(vbox)
 	if err != nil {
 		return err
 	}
@@ -222,41 +221,30 @@ func addDHCPServer(kind, name string, d dhcpServer) error {
 	} else {
 		args = append(args, "--disable")
 	}
-	return vbm(args...)
-}
 
-// addInternalDHCP adds a DHCP server to an internal network.
-func addInternalDHCP(netname string, d dhcpServer) error {
-	return addDHCPServer("--netname", netname, d)
+	return vbox.vbm(args...)
 }
 
 // addHostonlyDHCP adds a DHCP server to a host-only network.
-func addHostonlyDHCP(ifname string, d dhcpServer) error {
-	return addDHCPServer("--netname", "HostInterfaceNetworking-"+ifname, d)
+func addHostonlyDHCP(ifname string, d dhcpServer, vbox VBoxManager) error {
+	return addDHCPServer("--netname", "HostInterfaceNetworking-"+ifname, d, vbox)
 }
 
 // getDHCPServers gets all DHCP server settings in a map keyed by DHCP.NetworkName.
-func getDHCPServers() (map[string]*dhcpServer, error) {
-	out, err := vbmOut("list", "dhcpservers")
+func getDHCPServers(vbox VBoxManager) (map[string]*dhcpServer, error) {
+	out, err := vbox.vbmOut("list", "dhcpservers")
 	if err != nil {
 		return nil, err
 	}
-	s := bufio.NewScanner(strings.NewReader(out))
+
 	m := map[string]*dhcpServer{}
 	dhcp := &dhcpServer{}
-	for s.Scan() {
-		line := s.Text()
-		if line == "" {
-			m[dhcp.NetworkName] = dhcp
-			dhcp = &dhcpServer{}
-			continue
-		}
-		res := reColonLine.FindStringSubmatch(line)
-		if res == nil {
-			continue
-		}
-		switch key, val := res[1], res[2]; key {
+
+	err = parseKeyValues(out, reColonLine, func(key, val string) error {
+		switch key {
 		case "NetworkName":
+			dhcp = &dhcpServer{}
+			m[val] = dhcp
 			dhcp.NetworkName = val
 		case "IP":
 			dhcp.IPv4.IP = net.ParseIP(val)
@@ -269,10 +257,13 @@ func getDHCPServers() (map[string]*dhcpServer, error) {
 		case "Enabled":
 			dhcp.Enabled = (val == "Yes")
 		}
-	}
-	if err := s.Err(); err != nil {
+
+		return nil
+	})
+	if err != nil {
 		return nil, err
 	}
+
 	return m, nil
 }
 

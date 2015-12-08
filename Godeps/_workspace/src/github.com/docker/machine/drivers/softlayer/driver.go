@@ -3,6 +3,7 @@ package softlayer
 import (
 	"fmt"
 	"io/ioutil"
+	"net"
 	"os"
 	"regexp"
 	"time"
@@ -15,7 +16,7 @@ import (
 )
 
 const (
-	ApiEndpoint = "https://api.softlayer.com/rest/v3"
+	APIEndpoint = "https://api.softlayer.com/rest/v3"
 )
 
 type Driver struct {
@@ -54,7 +55,7 @@ const (
 func NewDriver(hostName, storePath string) drivers.Driver {
 	return &Driver{
 		Client: &Client{
-			Endpoint: ApiEndpoint,
+			Endpoint: APIEndpoint,
 		},
 		deviceConfig: &deviceConfig{
 			HourlyBilling: true,
@@ -131,7 +132,7 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			EnvVar: "SOFTLAYER_API_ENDPOINT",
 			Name:   "softlayer-api-endpoint",
 			Usage:  "softlayer api endpoint to use",
-			Value:  ApiEndpoint,
+			Value:  APIEndpoint,
 		},
 		mcnflag.BoolFlag{
 			EnvVar: "SOFTLAYER_HOURLY_BILLING",
@@ -252,6 +253,7 @@ func (d *Driver) getClient() *Client {
 	return d.Client
 }
 
+// DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "softlayer"
 }
@@ -264,7 +266,7 @@ func (d *Driver) GetURL() (string, error) {
 	if ip == "" {
 		return "", nil
 	}
-	return "tcp://" + ip + ":2376", nil
+	return "tcp://" + net.JoinHostPort(ip, "2376"), nil
 }
 
 func (d *Driver) GetIP() (string, error) {
@@ -272,10 +274,9 @@ func (d *Driver) GetIP() (string, error) {
 		return d.IPAddress, nil
 	}
 	if d.deviceConfig != nil && d.deviceConfig.PrivateNet == true {
-		return d.getClient().VirtualGuest().GetPrivateIp(d.Id)
-	} else {
-		return d.getClient().VirtualGuest().GetPublicIp(d.Id)
+		return d.getClient().VirtualGuest().GetPrivateIP(d.Id)
 	}
+	return d.getClient().VirtualGuest().GetPublicIP(d.Id)
 }
 
 func (d *Driver) GetState() (state.State, error) {
@@ -321,7 +322,7 @@ func (d *Driver) waitForStart() {
 	}
 }
 
-func (d *Driver) getIp() (string, error) {
+func (d *Driver) getIP() (string, error) {
 	log.Infof("Getting Host IP")
 	for {
 		var (
@@ -329,9 +330,9 @@ func (d *Driver) getIp() (string, error) {
 			err error
 		)
 		if d.deviceConfig.PrivateNet {
-			ip, err = d.getClient().VirtualGuest().GetPrivateIp(d.Id)
+			ip, err = d.getClient().VirtualGuest().GetPrivateIP(d.Id)
 		} else {
-			ip, err = d.getClient().VirtualGuest().GetPublicIp(d.Id)
+			ip, err = d.getClient().VirtualGuest().GetPublicIP(d.Id)
 		}
 		if err != nil {
 			time.Sleep(2 * time.Second)
@@ -386,14 +387,14 @@ func (d *Driver) Create() error {
 	log.Infof("SSH key %s (%d) created in SoftLayer", key.Label, key.Id)
 	d.SSHKeyID = key.Id
 
-	spec.SshKeys = []*SshKey{key}
+	spec.SshKeys = []*SSHKey{key}
 
 	id, err := d.getClient().VirtualGuest().Create(spec)
 	if err != nil {
 		return fmt.Errorf("Error creating host: %q", err)
 	}
 	d.Id = id
-	d.getIp()
+	d.getIP()
 	d.waitForStart()
 	d.waitForSetupTransactions()
 
@@ -433,7 +434,7 @@ func (d *Driver) buildHostSpec() *HostSpec {
 	return spec
 }
 
-func (d *Driver) createSSHKey() (*SshKey, error) {
+func (d *Driver) createSSHKey() (*SSHKey, error) {
 	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
 		return nil, err
 	}
@@ -443,7 +444,7 @@ func (d *Driver) createSSHKey() (*SshKey, error) {
 		return nil, err
 	}
 
-	key, err := d.getClient().SshKey().Create(d.deviceConfig.Hostname, string(publicKey))
+	key, err := d.getClient().SSHKey().Create(d.deviceConfig.Hostname, string(publicKey))
 	if err != nil {
 		return nil, err
 	}
@@ -474,7 +475,7 @@ func (d *Driver) Remove() error {
 	}
 
 	log.Infof("Removing SSH Key %d...", d.SSHKeyID)
-	if err = d.getClient().SshKey().Delete(d.SSHKeyID); err != nil {
+	if err = d.getClient().SSHKey().Delete(d.SSHKeyID); err != nil {
 		return err
 	}
 

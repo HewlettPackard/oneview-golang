@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"os"
 	"testing"
 	"time"
+
+	"os"
 
 	"github.com/docker/machine/libmachine/log"
 )
@@ -26,7 +27,7 @@ func (fe *FakeExecutor) Close() error {
 }
 
 func TestLocalBinaryPluginAddress(t *testing.T) {
-	lbp := &LocalBinaryPlugin{}
+	lbp := &Plugin{}
 	expectedAddr := "127.0.0.1:12345"
 
 	lbp.addrCh = make(chan string, 1)
@@ -55,7 +56,7 @@ func TestLocalBinaryPluginAddressTimeout(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping timeout test")
 	}
-	lbp := &LocalBinaryPlugin{}
+	lbp := &Plugin{}
 	lbp.addrCh = make(chan string, 1)
 	go func() {
 		_, err := lbp.Address()
@@ -67,7 +68,7 @@ func TestLocalBinaryPluginAddressTimeout(t *testing.T) {
 }
 
 func TestLocalBinaryPluginClose(t *testing.T) {
-	lbp := &LocalBinaryPlugin{}
+	lbp := &Plugin{}
 	lbp.stopCh = make(chan bool, 1)
 	go lbp.Close()
 	stopped := <-lbp.stopCh
@@ -77,18 +78,16 @@ func TestLocalBinaryPluginClose(t *testing.T) {
 }
 
 func TestExecServer(t *testing.T) {
-	log.IsDebug = true
+	log.SetDebug(true)
 	machineName := "test"
 
 	logReader, logWriter := io.Pipe()
 
-	log.SetOutWriter(logWriter)
-	log.SetErrWriter(logWriter)
+	log.SetOutput(logWriter)
 
 	defer func() {
-		log.IsDebug = false
-		log.SetOutWriter(os.Stdout)
-		log.SetErrWriter(os.Stderr)
+		log.SetDebug(false)
+		log.SetOutput(os.Stderr)
 	}()
 
 	stdoutReader, stdoutWriter := io.Pipe()
@@ -99,7 +98,7 @@ func TestExecServer(t *testing.T) {
 		stderr: stderrReader,
 	}
 
-	lbp := &LocalBinaryPlugin{
+	lbp := &Plugin{
 		MachineName: machineName,
 		Executor:    fe,
 		addrCh:      make(chan string, 1),

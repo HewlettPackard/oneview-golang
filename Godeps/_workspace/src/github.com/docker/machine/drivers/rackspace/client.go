@@ -26,9 +26,9 @@ func (c *Client) Authenticate(d *openstack.Driver) error {
 		return nil
 	}
 
-	log.WithFields(log.Fields{
+	log.Debug("Authenticating to Rackspace.", map[string]string{
 		"Username": d.Username,
-	}).Debug("Authenticating to Rackspace.")
+	})
 
 	apiKey := c.driver.APIKey
 	opts := gophercloud.AuthOptions{
@@ -63,13 +63,13 @@ func (c *Client) StopInstance(d *openstack.Driver) error {
 	return unsupportedOpErr("stop")
 }
 
-// GetInstanceIpAddresses can be short-circuited with the server's AccessIPv4Addr on Rackspace.
-func (c *Client) GetInstanceIpAddresses(d *openstack.Driver) ([]openstack.IpAddress, error) {
+// GetInstanceIPAddresses can be short-circuited with the server's AccessIPv4Addr on Rackspace.
+func (c *Client) GetInstanceIPAddresses(d *openstack.Driver) ([]openstack.IPAddress, error) {
 	server, err := c.GetServerDetail(d)
 	if err != nil {
 		return nil, err
 	}
-	return []openstack.IpAddress{
+	return []openstack.IPAddress{
 		{
 			Network:     "public",
 			Address:     server.AccessIPv4,

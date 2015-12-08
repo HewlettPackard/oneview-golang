@@ -6,12 +6,27 @@ import (
 	"path"
 	"strconv"
 
-	"github.com/docker/machine/cli"
+	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands"
 	"github.com/docker/machine/commands/mcndirs"
+	"github.com/docker/machine/drivers/amazonec2"
+	"github.com/docker/machine/drivers/azure"
+	"github.com/docker/machine/drivers/digitalocean"
+	"github.com/docker/machine/drivers/exoscale"
+	"github.com/docker/machine/drivers/generic"
+	"github.com/docker/machine/drivers/google"
+	"github.com/docker/machine/drivers/hyperv"
+	"github.com/docker/machine/drivers/none"
+	"github.com/docker/machine/drivers/openstack"
+	"github.com/docker/machine/drivers/rackspace"
+	"github.com/docker/machine/drivers/softlayer"
+	"github.com/docker/machine/drivers/virtualbox"
+	"github.com/docker/machine/drivers/vmwarefusion"
+	"github.com/docker/machine/drivers/vmwarevcloudair"
+	"github.com/docker/machine/drivers/vmwarevsphere"
+	"github.com/docker/machine/libmachine/drivers/plugin"
+	"github.com/docker/machine/libmachine/drivers/plugin/localbinary"
 	"github.com/docker/machine/libmachine/log"
-	"github.com/docker/machine/libmachine/mcnutils"
-	"github.com/docker/machine/libmachine/ssh"
 	"github.com/docker/machine/version"
 )
 
@@ -51,7 +66,7 @@ func setDebugOutputLevel() {
 	// use -v / --verbose TBQH
 	for _, f := range os.Args {
 		if f == "-D" || f == "--debug" || f == "-debug" {
-			log.IsDebug = true
+			log.SetDebug(true)
 		}
 	}
 
@@ -62,11 +77,17 @@ func setDebugOutputLevel() {
 			fmt.Fprintf(os.Stderr, "Error parsing boolean value from MACHINE_DEBUG: %s\n", err)
 			os.Exit(1)
 		}
-		log.IsDebug = showDebug
+		log.SetDebug(showDebug)
 	}
 }
 
 func main() {
+	if os.Getenv(localbinary.PluginEnvKey) == localbinary.PluginEnvVal {
+		driverName := os.Getenv(localbinary.PluginEnvDriverName)
+		runDriver(driverName)
+		return
+	}
+
 	setDebugOutputLevel()
 	cli.AppHelpTemplate = AppHelpTemplate
 	cli.CommandHelpTemplate = CommandHelpTemplate
@@ -74,21 +95,11 @@ func main() {
 	app.Name = path.Base(os.Args[0])
 	app.Author = "Docker Machine Contributors"
 	app.Email = "https://github.com/docker/machine"
-	app.Before = func(c *cli.Context) error {
-		// TODO: Need better handling of config, everything is too
-		// complected together right now.
-		if c.GlobalBool("native-ssh") {
-			ssh.SetDefaultClient(ssh.Native)
-		}
-		mcnutils.GithubAPIToken = c.GlobalString("github-api-token")
-		mcndirs.BaseDir = c.GlobalString("storage-path")
-		return nil
-	}
 
 	app.Commands = commands.Commands
 	app.CommandNotFound = cmdNotFound
 	app.Usage = "Create and manage machines running Docker."
-	app.Version = version.Version + " (" + version.GitCommit + ")"
+	app.Version = version.FullVersion()
 
 	log.Debug("Docker Machine Version: ", app.Version)
 
@@ -140,9 +151,46 @@ func main() {
 		},
 	}
 
-	// TODO: Close plugin servers in case of client panic.
 	if err := app.Run(os.Args); err != nil {
 		log.Error(err)
+	}
+}
+
+func runDriver(driverName string) {
+	switch driverName {
+	case "amazonec2":
+		plugin.RegisterDriver(amazonec2.NewDriver("", ""))
+	case "azure":
+		plugin.RegisterDriver(azure.NewDriver("", ""))
+	case "digitalocean":
+		plugin.RegisterDriver(digitalocean.NewDriver("", ""))
+	case "exoscale":
+		plugin.RegisterDriver(exoscale.NewDriver("", ""))
+	case "generic":
+		plugin.RegisterDriver(generic.NewDriver("", ""))
+	case "google":
+		plugin.RegisterDriver(google.NewDriver("", ""))
+	case "hyperv":
+		plugin.RegisterDriver(hyperv.NewDriver("", ""))
+	case "none":
+		plugin.RegisterDriver(none.NewDriver("", ""))
+	case "openstack":
+		plugin.RegisterDriver(openstack.NewDriver("", ""))
+	case "rackspace":
+		plugin.RegisterDriver(rackspace.NewDriver("", ""))
+	case "softlayer":
+		plugin.RegisterDriver(softlayer.NewDriver("", ""))
+	case "virtualbox":
+		plugin.RegisterDriver(virtualbox.NewDriver("", ""))
+	case "vmwarefusion":
+		plugin.RegisterDriver(vmwarefusion.NewDriver("", ""))
+	case "vmwarevcloudair":
+		plugin.RegisterDriver(vmwarevcloudair.NewDriver("", ""))
+	case "vmwarevsphere":
+		plugin.RegisterDriver(vmwarevsphere.NewDriver("", ""))
+	default:
+		fmt.Fprintf(os.Stderr, "Unsupported driver: %s\n", driverName)
+		os.Exit(1)
 	}
 }
 
