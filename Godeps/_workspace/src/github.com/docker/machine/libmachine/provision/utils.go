@@ -115,7 +115,7 @@ func ConfigureAuth(p Provisioner) error {
 		return err
 	}
 
-	if _, err := p.SSHCommand("sudo ip link delete docker0"); err != nil {
+	if _, err := p.SSHCommand(`if [ ! -z "$(ip link show docker0)" ]; then sudo ip link delete docker0; fi`); err != nil {
 		return err
 	}
 
@@ -223,7 +223,7 @@ func checkDaemonUp(p Provisioner, dockerPort int) func() bool {
 }
 
 func waitForDocker(p Provisioner, dockerPort int) error {
-	if err := mcnutils.WaitForSpecific(checkDaemonUp(p, dockerPort), 5, 3*time.Second); err != nil {
+	if err := mcnutils.WaitForSpecific(checkDaemonUp(p, dockerPort), 10, 3*time.Second); err != nil {
 		return NewErrDaemonAvailable(err)
 	}
 

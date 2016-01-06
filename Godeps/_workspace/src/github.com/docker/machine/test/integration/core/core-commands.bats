@@ -2,17 +2,13 @@
 
 load ${BASE_TEST_DIR}/helpers.bash
 
+use_shared_machine
+
 @test "$DRIVER: machine should not exist" {
-  run machine inspect $NAME
+  run machine inspect UNKNOWN
   echo ${output}
   [ "$status" -eq 1 ]
-  [[ ${lines[0]} =~ "Host does not exist: \"$NAME\"" ]]
-}
-
-@test "$DRIVER: create" {
-  run machine create -d $DRIVER $NAME
-  echo ${output}
-  [ "$status" -eq 0  ]
+  [[ ${lines[0]} =~ "Host does not exist: \"UNKNOWN\"" ]]
 }
 
 @test "$DRIVER: appears with ls" {
@@ -120,7 +116,7 @@ load ${BASE_TEST_DIR}/helpers.bash
 }
 
 @test "$DRIVER: machine should show running after start" {
-  run machine ls
+  run machine ls --timeout 20
   echo ${output}
   [ "$status" -eq 0  ]
   [[ ${lines[1]} == *"Running"*  ]]
@@ -146,7 +142,7 @@ load ${BASE_TEST_DIR}/helpers.bash
 }
 
 @test "$DRIVER: machine should show running after restart" {
-  run machine ls
+  run machine ls --timeout 20
   echo ${output}
   [ "$status" -eq 0  ]
   [[ ${lines[1]} == *"Running"*  ]]

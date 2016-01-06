@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"text/template"
 
@@ -13,6 +12,7 @@ import (
 	"github.com/docker/machine/libmachine"
 	"github.com/docker/machine/libmachine/check"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/docker/machine/libmachine/shell"
 )
 
 const (
@@ -50,7 +50,7 @@ func cmdEnv(c CommandLine, api libmachine.API) error {
 
 	// Ensure that log messages always go to stderr when this command is
 	// being run (it is intended to be run in a subshell)
-	log.RedirectStdOutToStdErr()
+	log.SetOutWriter(os.Stderr)
 
 	if c.Bool("unset") {
 		shellCfg, err = shellCfgUnset(c, api)
@@ -130,6 +130,10 @@ func shellCfgSet(c CommandLine, api libmachine.API) (*ShellConfig, error) {
 		shellCfg.Prefix = "SET "
 		shellCfg.Suffix = "\n"
 		shellCfg.Delimiter = "="
+	case "emacs":
+		shellCfg.Prefix = "(setenv \""
+		shellCfg.Suffix = "\")\n"
+		shellCfg.Delimiter = "\" \""
 	default:
 		shellCfg.Prefix = "export "
 		shellCfg.Suffix = "\"\n"
@@ -170,6 +174,10 @@ func shellCfgUnset(c CommandLine, api libmachine.API) (*ShellConfig, error) {
 		shellCfg.Prefix = "SET "
 		shellCfg.Suffix = "\n"
 		shellCfg.Delimiter = "="
+	case "emacs":
+		shellCfg.Prefix = "(setenv \""
+		shellCfg.Suffix = ")\n"
+		shellCfg.Delimiter = "\" nil"
 	default:
 		shellCfg.Prefix = "unset "
 		shellCfg.Suffix = "\n"
@@ -193,7 +201,7 @@ func getShell(userShell string) (string, error) {
 	if userShell != "" {
 		return userShell, nil
 	}
-	return detectShell()
+	return shell.Detect()
 }
 
 func findNoProxyFromEnv() (string, string) {
@@ -219,36 +227,27 @@ func (g *EnvUsageHintGenerator) GenerateUsageHint(userShell string, args []strin
 	cmd := ""
 	comment := "#"
 
+	dockerMachinePath := args[0]
+	if strings.Contains(dockerMachinePath, " ") || strings.Contains(dockerMachinePath, `\`) {
+		args[0] = fmt.Sprintf("\"%s\"", dockerMachinePath)
+	}
+
 	commandLine := strings.Join(args, " ")
 
 	switch userShell {
 	case "fish":
 		cmd = fmt.Sprintf("eval (%s)", commandLine)
 	case "powershell":
-		cmd = fmt.Sprintf("%s | Invoke-Expression", commandLine)
+		cmd = fmt.Sprintf("& %s | Invoke-Expression", commandLine)
 	case "cmd":
 		cmd = fmt.Sprintf("\tFOR /f \"tokens=*\" %%i IN ('%s') DO %%i", commandLine)
 		comment = "REM"
+	case "emacs":
+		cmd = fmt.Sprintf("(with-temp-buffer (shell-command \"%s\" (current-buffer)) (eval-buffer))", commandLine)
+		comment = ";;"
 	default:
-		cmd = fmt.Sprintf("eval \"$(%s)\"", commandLine)
+		cmd = fmt.Sprintf("eval $(%s)", commandLine)
 	}
 
 	return fmt.Sprintf("%s Run this command to configure your shell: \n%s %s\n", comment, comment, cmd)
-}
-
-func detectShell() (string, error) {
-	// attempt to get the SHELL env var
-	shell := filepath.Base(os.Getenv("SHELL"))
-
-	log.Debugf("shell: %s", shell)
-	if shell == "" {
-		// check for windows env and not bash (i.e. msysgit, etc)
-		if runtime.GOOS == "windows" {
-			log.Info("On Windows, please specify either 'cmd' or 'powershell' with the --shell flag.\n\n")
-		}
-
-		return "", ErrUnknownShell
-	}
-
-	return shell, nil
 }

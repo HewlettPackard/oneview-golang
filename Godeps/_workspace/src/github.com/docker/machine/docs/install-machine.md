@@ -28,34 +28,28 @@ instructions in the next section.
 1.  Install <a href="https://docs.docker.com/installation/"
     target="_blank">the Docker binary</a>.
 
-2.  Download the archive containing the Docker Machine binary and extract it
-    to your PATH.
+2.  Download the Docker Machine binary and extract it to your PATH.
 
         Linux:
 
-            $ curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_linux-amd64.zip >machine.zip && \
-            unzip machine.zip && \
-            rm machine.zip && \
-            mv docker-machine /usr/local/bin
+            $ curl -L https://github.com/docker/machine/releases/download/v0.5.5/docker-machine_linux-amd64 >/usr/local/bin/docker-machine && \
+            chmod +x /usr/local/bin/docker-machine
 
         OSX:
 
-            $ curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_darwin-amd64.zip >machine.zip && \
-            unzip machine.zip && \
-            rm machine.zip && \
-            mv docker-machine /usr/local/bin
+            $ curl -L https://github.com/docker/machine/releases/download/v0.5.5/docker-machine_darwin-amd64 >/usr/local/bin/docker-machine && \
+            chmod +x /usr/local/bin/docker-machine
 
         Windows (using Git Bash):
 
-            $ curl -L https://github.com/docker/machine/releases/download/v0.5.3/docker-machine_windows-amd64.zip >machine.zip && \
-            unzip machine.zip && \
-            rm machine.zip && \
-            mv docker-machine /usr/local/bin
+            $ if [[ ! -d "$HOME/bin" ]]; then mkdir -p "$HOME/bin"; fi && \
+            curl -L https://github.com/docker/machine/releases/download/v0.5.5/docker-machine_windows-amd64.exe > "$HOME/bin/docker-machine.exe" && \
+            chmod +x "$HOME/bin/docker-machine.exe"
 
 3.  Check the installation by displaying the Machine version:
 
         $ docker-machine version
-        docker-machine version 0.5.3
+        docker-machine version 0.5.5, build 02c4254
 
 ## Installing bash completion scripts
 
@@ -68,10 +62,10 @@ as:
     active machine
 
 To install the scripts, copy or link them into your `/etc/bash_completion.d` or
-`/usr/local/etc/bash_completion.d` file. To enable the `docker-machine` shell
-prompt, add `$(__docker-machine-ps1)` to your `PS1` setting in `~/.bashrc`.
+`/usr/local/etc/bash_completion.d` directory. To enable the `docker-machine` shell
+prompt, add `$(__docker_machine_ps1)` to your `PS1` setting in `~/.bashrc`.
 
-    PS1='[\u@\h \W$(__docker-machine-ps1)]\$ '
+    PS1='[\u@\h \W$(__docker_machine_ps1)]\$ '
 
 You can find additional documentation in the comments at the
 [top of each script](https://github.com/docker/machine/tree/master/contrib/completion/bash).

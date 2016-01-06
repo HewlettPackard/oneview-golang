@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/docker/machine",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.5.2",
 	"Packages": [
 		"github.com/docker/machine",
 		"github.com/docker/machine/cmd",
@@ -8,7 +8,6 @@
 		"github.com/docker/machine/commands/commandstest",
 		"github.com/docker/machine/commands/mcndirs",
 		"github.com/docker/machine/drivers/amazonec2",
-		"github.com/docker/machine/drivers/amazonec2/amz",
 		"github.com/docker/machine/drivers/azure",
 		"github.com/docker/machine/drivers/digitalocean",
 		"github.com/docker/machine/drivers/errdriver",
@@ -28,7 +27,9 @@
 		"github.com/docker/machine/drivers/vmwarevsphere/errors",
 		"github.com/docker/machine/libmachine",
 		"github.com/docker/machine/libmachine/auth",
+		"github.com/docker/machine/libmachine/bugsnag",
 		"github.com/docker/machine/libmachine/cert",
+		"github.com/docker/machine/libmachine/check",
 		"github.com/docker/machine/libmachine/drivers",
 		"github.com/docker/machine/libmachine/drivers/plugin",
 		"github.com/docker/machine/libmachine/drivers/plugin/localbinary",
@@ -39,6 +40,7 @@
 		"github.com/docker/machine/libmachine/hosttest",
 		"github.com/docker/machine/libmachine/libmachinetest",
 		"github.com/docker/machine/libmachine/log",
+		"github.com/docker/machine/libmachine/mcndockerclient",
 		"github.com/docker/machine/libmachine/mcnerror",
 		"github.com/docker/machine/libmachine/mcnflag",
 		"github.com/docker/machine/libmachine/mcnutils",
@@ -56,14 +58,67 @@
 	],
 	"Deps": [
 		{
-		  "ImportPath": "github.com/Sirupsen/logrus",
-		  "Comment": "v0.8.7-49-gcdaedc6",
-		  "Rev": "cdaedc68f2894175ac2b3221869685602c759e71"
+			"ImportPath": "github.com/bugsnag/bugsnag-go",
+			"Comment": "v1.0.5-19-g02e9528",
+			"Rev": "02e952891c52fbcb15f113d90633897355783b6e"
+		},
+		{
+			"ImportPath": "github.com/bugsnag/osext",
+			"Rev": "0dd3f918b21bec95ace9dc86c7e70266cfc5c702"
+		},
+		{
+			"ImportPath": "github.com/bugsnag/panicwrap",
+			"Rev": "e5f9854865b9778a45169fc249e99e338d4d6f27"
 		},
 		{
 			"ImportPath": "github.com/MSOpenTech/azure-sdk-for-go",
 			"Comment": "v1.1-17-g515f3ec",
 			"Rev": "515f3ec74ce6a5b31e934cefae997c97bd0a1b1e"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/aws",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/endpoints",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/protocol/ec2query",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/protocol/query/queryutil",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/protocol/rest",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/signer/v4",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/private/waiter",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
+		},
+		{
+			"ImportPath": "github.com/aws/aws-sdk-go/service/ec2",
+			"Comment": "v1.0.2",
+			"Rev": "9d7bc2d6ca2ada0468f705f0e9725ca97f8550c8"
 		},
 		{
 			"ImportPath": "github.com/cenkalti/backoff",
@@ -90,8 +145,18 @@
 			"Rev": "a8a31eff10544860d2188dddabdee4d727545796"
 		},
 		{
+			"ImportPath": "github.com/go-ini/ini",
+			"Comment": "v0-56-g03e0e7d",
+			"Rev": "03e0e7d51a13a91c765d8d0161246bc14a38001a"
+		},
+		{
 			"ImportPath": "github.com/google/go-querystring/query",
 			"Rev": "30f7a39f4a218feb5325f3aebc60c32a572a8274"
+		},
+		{
+			"ImportPath": "github.com/jmespath/go-jmespath",
+			"Comment": "0.2.2",
+			"Rev": "3433f3ea46d9f8019119e7dd41274e112a2359a9"
 		},
 		{
 			"ImportPath": "github.com/mitchellh/mapstructure",
@@ -108,15 +173,11 @@
 		},
 		{
 			"ImportPath": "github.com/samalba/dockerclient",
-			"Rev": "82381805d3533c97cec74e1cc79b00ef45774571"
+			"Rev": "f661dd4754aa5c52da85d04b5871ee0e11f4b59c"
 		},
 		{
 			"ImportPath": "github.com/skarademir/naturalsort",
 			"Rev": "69a5d87bef620f77ee8508db30c846b3b84b111e"
-		},
-		{
-			"ImportPath": "github.com/smartystreets/go-aws-auth",
-			"Rev": "1f0db8c0ee6362470abe06a94e3385927ed72a4b"
 		},
 		{
 			"ImportPath": "github.com/stretchr/testify/assert",
@@ -170,6 +231,16 @@
 		{
 			"ImportPath": "google.golang.org/cloud/internal",
 			"Rev": "975617b05ea8a58727e6c1a06b6161ff4185a9f2"
+		},
+		{
+			"ImportPath": "github.com/vmware/govmomi",
+			"Comment": "prerelease-v0.1.0-73-gfc131d4-65-g482cd82",
+			"Rev": "482cd823716e0fa9bc4e186d262a6ea23d940fbf"
+		},
+		{
+			"ImportPath": "github.com/docker/go-units",
+			"Comment": "v0.1.0-21-g0bbddae",
+			"Rev": "0bbddae09c5a5419a8c6dcdd7ff90da3d450393b"
 		}
 	]
 }

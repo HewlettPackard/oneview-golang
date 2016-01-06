@@ -32,9 +32,11 @@ type Driver struct {
 }
 
 const (
-	defaultImage  = "ubuntu-15-10-x64"
-	defaultRegion = "nyc3"
-	defaultSize   = "512mb"
+	defaultSSHPort = 22
+	defaultSSHUSer = "root"
+	defaultImage   = "ubuntu-15-10-x64"
+	defaultRegion  = "nyc3"
+	defaultSize    = "512mb"
 )
 
 // GetCreateFlags registers the flags this driver adds to
@@ -49,8 +51,14 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 		mcnflag.StringFlag{
 			EnvVar: "DIGITALOCEAN_SSH_USER",
 			Name:   "digitalocean-ssh-user",
-			Usage:  "Digital Ocean SSH username",
-			Value:  "root",
+			Usage:  "SSH username",
+			Value:  defaultSSHUSer,
+		},
+		mcnflag.IntFlag{
+			EnvVar: "DIGITALOCEAN_SSH_PORT",
+			Name:   "digitalocean-ssh-port",
+			Usage:  "SSH port",
+			Value:  defaultSSHPort,
 		},
 		mcnflag.StringFlag{
 			EnvVar: "DIGITALOCEAN_IMAGE",
@@ -123,11 +131,9 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.PrivateNetworking = flags.Bool("digitalocean-private-networking")
 	d.Backups = flags.Bool("digitalocean-backups")
 	d.UserDataFile = flags.String("digitalocean-userdata")
-	d.SwarmMaster = flags.Bool("swarm-master")
-	d.SwarmHost = flags.String("swarm-host")
-	d.SwarmDiscovery = flags.String("swarm-discovery")
 	d.SSHUser = flags.String("digitalocean-ssh-user")
-	d.SSHPort = 22
+	d.SSHPort = flags.Int("digitalocean-ssh-port")
+	d.SetSwarmConfigFromFlags(flags)
 
 	if d.AccessToken == "" {
 		return fmt.Errorf("digitalocean driver requires the --digitalocean-access-token option")
@@ -282,6 +288,16 @@ func (d *Driver) Stop() error {
 	return err
 }
 
+func (d *Driver) Restart() error {
+	_, _, err := d.getClient().DropletActions.Reboot(d.DropletID)
+	return err
+}
+
+func (d *Driver) Kill() error {
+	_, _, err := d.getClient().DropletActions.PowerOff(d.DropletID)
+	return err
+}
+
 func (d *Driver) Remove() error {
 	client := d.getClient()
 	if resp, err := client.Keys.DeleteByID(d.SSHKeyID); err != nil {
@@ -299,16 +315,6 @@ func (d *Driver) Remove() error {
 		}
 	}
 	return nil
-}
-
-func (d *Driver) Restart() error {
-	_, _, err := d.getClient().DropletActions.Reboot(d.DropletID)
-	return err
-}
-
-func (d *Driver) Kill() error {
-	_, _, err := d.getClient().DropletActions.PowerOff(d.DropletID)
-	return err
 }
 
 func (d *Driver) getClient() *godo.Client {

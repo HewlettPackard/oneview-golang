@@ -4,13 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands/mcndirs"
 	"github.com/docker/machine/libmachine"
-	"github.com/docker/machine/libmachine/cert"
+	"github.com/docker/machine/libmachine/crashreport"
 	"github.com/docker/machine/libmachine/host"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnutils"
@@ -19,7 +18,6 @@ import (
 )
 
 var (
-	ErrUnknownShell       = errors.New("Error: Unknown shell")
 	ErrNoMachineSpecified = errors.New("Error: Expected to get one or more machine names as arguments")
 	ErrExpectedOneMachine = errors.New("Error: Expected one machine name as an argument")
 	ErrTooManyArguments   = errors.New("Error: Too many arguments given")
@@ -36,6 +34,8 @@ type CommandLine interface {
 	Args() cli.Args
 
 	Bool(name string) bool
+
+	Int(name string) int
 
 	String(name string) string
 
@@ -94,7 +94,8 @@ func runAction(actionName string, c CommandLine, api libmachine.API) error {
 
 func fatalOnError(command func(commandLine CommandLine, api libmachine.API) error) func(context *cli.Context) {
 	return func(context *cli.Context) {
-		api := libmachine.NewClient(mcndirs.GetBaseDir())
+		api := libmachine.NewClient(mcndirs.GetBaseDir(), mcndirs.GetMachineCertDir())
+		defer api.Close()
 
 		if context.GlobalBool("native-ssh") {
 			api.SSHClientType = ssh.Native
@@ -113,6 +114,11 @@ func fatalOnError(command func(commandLine CommandLine, api libmachine.API) erro
 
 		if err := command(&contextCommandLine{context}, api); err != nil {
 			log.Fatal(err)
+
+			if crashErr, ok := err.(crashreport.CrashError); ok {
+				crashReporter := crashreport.NewCrashReporter(mcndirs.GetBaseDir(), context.GlobalString("bugsnag-api-token"))
+				crashReporter.Send(crashErr)
+			}
 		}
 	}
 }
@@ -168,7 +174,7 @@ var Commands = []cli.Command{
 			},
 			cli.StringFlag{
 				Name:  "shell",
-				Usage: "Force environment to be configured for specified shell",
+				Usage: "Force environment to be configured for a specified shell: [fish, cmd, powershell], default is sh/bash",
 			},
 			cli.BoolFlag{
 				Name:  "unset, u",
@@ -206,6 +212,9 @@ var Commands = []cli.Command{
 		Action:      fatalOnError(cmdKill),
 	},
 	{
+		Name:   "ls",
+		Usage:  "List machines",
+		Action: fatalOnError(cmdLs),
 		Flags: []cli.Flag{
 			cli.BoolFlag{
 				Name:  "quiet, q",
@@ -216,10 +225,16 @@ var Commands = []cli.Command{
 				Usage: "Filter output based on conditions provided",
 				Value: &cli.StringSlice{},
 			},
+			cli.IntFlag{
+				Name:  "timeout, t",
+				Usage: fmt.Sprintf("Timeout in seconds, default to %s", stateTimeoutDuration),
+				Value: lsDefaultTimeout,
+			},
+			cli.StringFlag{
+				Name:  "format, f",
+				Usage: "Pretty-print machines using a Go template",
+			},
 		},
-		Name:   "ls",
-		Usage:  "List machines",
-		Action: fatalOnError(cmdLs),
 	},
 	{
 		Name:        "regenerate-certs",
@@ -377,37 +392,4 @@ func consolidateErrs(errs []error) error {
 	}
 
 	return errors.New(strings.TrimSpace(finalErr))
-}
-
-// Returns the cert paths.  codegangsta/cli will not set the cert paths if the
-// storage-path is set to something different so we cannot use the paths in the
-// global options. le sigh.
-func getCertPathInfoFromCommandLine(c CommandLine) cert.PathInfo {
-	caCertPath := c.GlobalString("tls-ca-cert")
-	caKeyPath := c.GlobalString("tls-ca-key")
-	clientCertPath := c.GlobalString("tls-client-cert")
-	clientKeyPath := c.GlobalString("tls-client-key")
-
-	if caCertPath == "" {
-		caCertPath = filepath.Join(mcndirs.GetMachineCertDir(), "ca.pem")
-	}
-
-	if caKeyPath == "" {
-		caKeyPath = filepath.Join(mcndirs.GetMachineCertDir(), "ca-key.pem")
-	}
-
-	if clientCertPath == "" {
-		clientCertPath = filepath.Join(mcndirs.GetMachineCertDir(), "cert.pem")
-	}
-
-	if clientKeyPath == "" {
-		clientKeyPath = filepath.Join(mcndirs.GetMachineCertDir(), "key.pem")
-	}
-
-	return cert.PathInfo{
-		CaCertPath:       caCertPath,
-		CaPrivateKeyPath: caKeyPath,
-		ClientCertPath:   clientCertPath,
-		ClientKeyPath:    clientKeyPath,
-	}
 }
