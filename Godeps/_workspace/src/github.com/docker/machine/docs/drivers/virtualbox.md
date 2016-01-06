@@ -11,7 +11,9 @@ parent="smn_machine_drivers"
 # Oracle VirtualBox
 
 Create machines locally using [VirtualBox](https://www.virtualbox.org/).
-This driver requires VirtualBox 4+ to be installed on your host.
+This driver requires VirtualBox 5+ to be installed on your host.
+Using VirtualBox 4.3+ should work but will give you a warning. Older versions
+will refuse to work.
 
     $ docker-machine create --driver=virtualbox vbox-test
 
@@ -34,6 +36,7 @@ Options:
 -   `--virtualbox-hostonly-nicpromisc`: Host Only Network Adapter Promiscuous Mode. Possible options are deny , allow-vms, allow-all
 -   `--virtualbox-no-share`: Disable the mount of your home directory
 -   `--virtualbox-dns-proxy`: Proxy all DNS requests to the host (Boolean value, default to false)
+-   `--virtualbox-no-vtx-check`: Disable checking for the availability of hardware virtualization before the vm is started
 
 The `--virtualbox-boot2docker-url` flag takes a few different forms. By
 default, if no value is specified for this flag, Machine will check locally for
@@ -76,3 +79,14 @@ Environment variables and default values:
 | `--virtualbox-hostonly-nicpromisc`   | `VIRTUALBOX_HOSTONLY_NIC_PROMISC`  | `deny`                   |
 | `--virtualbox-no-share`              | `VIRTUALBOX_NO_SHARE`              | `false`                  |
 | `--virtualbox-dns-proxy`             | `VIRTUALBOX_DNS_PROXY`             | `false`                  |
+| `--virtualbox-no-vtx-check`          | `VIRTUALBOX_NO_VTX_CHECK`          | `false`                  |
+
+## Known Issues
+
+Vboxfs suffers from a [longstanding bug](https://www.virtualbox.org/ticket/9069)
+causing [sendfile(2)](http://linux.die.net/man/2/sendfile) to serve cached file
+contents.
+
+This will often cause problems when using a web server such as nginx to serve
+static files from a shared volume. For development environments, a good
+workaround is to disable sendfile in your server configuration.

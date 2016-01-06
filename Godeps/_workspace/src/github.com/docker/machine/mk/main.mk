@@ -40,7 +40,6 @@ endif
 include mk/build.mk
 include mk/coverage.mk
 include mk/dev.mk
-include mk/release.mk
 include mk/test.mk
 include mk/validate.mk
 
@@ -57,6 +56,6 @@ install:
 
 clean: coverage-clean build-clean
 test: dco fmt test-short lint vet
-validate: dco fmt vet lint test-short test-long
+validate: dco fmt lint vet test-long
 
 .PHONY: .all_build .all_coverage .all_release .all_test .all_validate test build validate clean

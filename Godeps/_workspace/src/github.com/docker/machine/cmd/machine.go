@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"path"
 	"strconv"
+
+	"path/filepath"
 
 	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands"
@@ -88,11 +89,13 @@ func main() {
 		return
 	}
 
+	localbinary.CurrentBinaryIsDockerMachine = true
+
 	setDebugOutputLevel()
 	cli.AppHelpTemplate = AppHelpTemplate
 	cli.CommandHelpTemplate = CommandHelpTemplate
 	app := cli.NewApp()
-	app.Name = path.Base(os.Args[0])
+	app.Name = filepath.Base(os.Args[0])
 	app.Author = "Docker Machine Contributors"
 	app.Email = "https://github.com/docker/machine"
 
@@ -148,6 +151,12 @@ func main() {
 			EnvVar: "MACHINE_NATIVE_SSH",
 			Name:   "native-ssh",
 			Usage:  "Use the native (Go-based) SSH implementation.",
+		},
+		cli.StringFlag{
+			EnvVar: "MACHINE_BUGSNAG_API_TOKEN",
+			Name:   "bugsnag-api-token",
+			Usage:  "BugSnag API token for crash reporting",
+			Value:  "",
 		},
 	}
 

@@ -37,6 +37,7 @@ type Driver struct {
 	KeyPairName      string
 	NetworkName      string
 	NetworkId        string
+	PrivateKeyFile   string
 	SecurityGroups   []string
 	FloatingIpPool   string
 	ComputeNetwork   bool
@@ -143,9 +144,21 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Value:  "",
 		},
 		mcnflag.StringFlag{
+			EnvVar: "OS_KEYPAIR_NAME",
+			Name:   "openstack-keypair-name",
+			Usage:  "OpenStack keypair to use to SSH to the instance",
+			Value:  "",
+		},
+		mcnflag.StringFlag{
 			EnvVar: "OS_NETWORK_ID",
 			Name:   "openstack-net-id",
 			Usage:  "OpenStack network id the machine will be connected on",
+			Value:  "",
+		},
+		mcnflag.StringFlag{
+			EnvVar: "OS_PRIVATE_KEY_FILE",
+			Name:   "openstack-private-key-file",
+			Usage:  "Private keyfile to use for SSH (absolute path)",
 			Value:  "",
 		},
 		mcnflag.StringFlag{
@@ -255,9 +268,9 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.ComputeNetwork = flags.Bool("openstack-nova-network")
 	d.SSHUser = flags.String("openstack-ssh-user")
 	d.SSHPort = flags.Int("openstack-ssh-port")
-	d.SwarmMaster = flags.Bool("swarm-master")
-	d.SwarmHost = flags.String("swarm-host")
-	d.SwarmDiscovery = flags.String("swarm-discovery")
+	d.KeyPairName = flags.String("openstack-keypair-name")
+	d.PrivateKeyFile = flags.String("openstack-private-key-file")
+	d.SetSwarmConfigFromFlags(flags)
 
 	return d.checkConfig()
 }
@@ -339,13 +352,18 @@ func (d *Driver) GetState() (state.State, error) {
 }
 
 func (d *Driver) Create() error {
-	d.KeyPairName = fmt.Sprintf("%s-%s", d.MachineName, mcnutils.GenerateRandomID())
-
 	if err := d.resolveIds(); err != nil {
 		return err
 	}
-	if err := d.createSSHKey(); err != nil {
-		return err
+	if d.KeyPairName != "" {
+		if err := d.loadSSHKey(); err != nil {
+			return err
+		}
+	} else {
+		d.KeyPairName = fmt.Sprintf("%s-%s", d.MachineName, mcnutils.GenerateRandomID())
+		if err := d.createSSHKey(); err != nil {
+			return err
+		}
 	}
 	if err := d.createMachine(); err != nil {
 		return err
@@ -365,26 +383,31 @@ func (d *Driver) Create() error {
 }
 
 func (d *Driver) Start() error {
-	log.Debug("Starting OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return err
 	}
-	if err := d.client.StartInstance(d); err != nil {
-		return err
-	}
-	return nil
+
+	return d.client.StartInstance(d)
 }
 
 func (d *Driver) Stop() error {
-	log.Debug("Stopping OpenStack instance...", map[string]string{"MachineId": d.MachineId})
 	if err := d.initCompute(); err != nil {
 		return err
 	}
-	if err := d.client.StopInstance(d); err != nil {
+
+	return d.client.StopInstance(d)
+}
+
+func (d *Driver) Restart() error {
+	if err := d.initCompute(); err != nil {
 		return err
 	}
 
-	return nil
+	return d.client.RestartInstance(d)
+}
+
+func (d *Driver) Kill() error {
+	return d.Stop()
 }
 
 func (d *Driver) Remove() error {
@@ -397,36 +420,24 @@ func (d *Driver) Remove() error {
 		return err
 	}
 	log.Debug("deleting key pair...", map[string]string{"Name": d.KeyPairName})
+	// TODO (fsoppelsa) maybe we want to check this, in case of shared keypairs, before removal
 	if err := d.client.DeleteKeyPair(d, d.KeyPairName); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (d *Driver) Restart() error {
-	log.Info("Restarting OpenStack instance...", map[string]string{"MachineId": d.MachineId})
-	if err := d.initCompute(); err != nil {
-		return err
-	}
-	if err := d.client.RestartInstance(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (d *Driver) Kill() error {
-	return d.Stop()
-}
-
 const (
 	errorMandatoryEnvOrOption    string = "%s must be specified either using the environment variable %s or the CLI option %s"
 	errorMandatoryOption         string = "%s must be specified using the CLI option %s"
 	errorExclusiveOptions        string = "Either %s or %s must be specified, not both"
+	errorBothOptions             string = "Both %s and %s must be specified"
 	errorMandatoryTenantNameOrID string = "Tenant id or name must be provided either using one of the environment variables OS_TENANT_ID and OS_TENANT_NAME or one of the CLI options --openstack-tenant-id and --openstack-tenant-name"
 	errorWrongEndpointType       string = "Endpoint type must be 'publicURL', 'adminURL' or 'internalURL'"
 	errorUnknownFlavorName       string = "Unable to find flavor named %s"
 	errorUnknownImageName        string = "Unable to find image named %s"
 	errorUnknownNetworkName      string = "Unable to find network named %s"
+	errorUnknownTenantName       string = "Unable to find tenant named %s"
 )
 
 func (d *Driver) checkConfig() error {
@@ -462,6 +473,9 @@ func (d *Driver) checkConfig() error {
 	}
 	if d.EndpointType != "" && (d.EndpointType != "publicURL" && d.EndpointType != "adminURL" && d.EndpointType != "internalURL") {
 		return fmt.Errorf(errorWrongEndpointType)
+	}
+	if (d.KeyPairName != "" && d.PrivateKeyFile == "") || (d.KeyPairName == "" && d.PrivateKeyFile != "") {
+		return fmt.Errorf(errorBothOptions, "KeyPairName", "PrivateKeyFile")
 	}
 	return nil
 }
@@ -552,6 +566,27 @@ func (d *Driver) resolveIds() error {
 		})
 	}
 
+	if d.TenantId == "" {
+		if err := d.initIdentity(); err != nil {
+			return err
+		}
+		tenantId, err := d.client.GetTenantID(d)
+
+		if err != nil {
+			return err
+		}
+
+		if tenantId == "" {
+			return fmt.Errorf(errorUnknownTenantName, d.TenantName)
+		}
+
+		d.TenantId = tenantId
+		log.Debug("Found tenant id using its name", map[string]string{
+			"Name": d.TenantName,
+			"ID":   d.TenantId,
+		})
+	}
+
 	return nil
 }
 
@@ -565,6 +600,16 @@ func (d *Driver) initCompute() error {
 	return nil
 }
 
+func (d *Driver) initIdentity() error {
+	if err := d.client.Authenticate(d); err != nil {
+		return err
+	}
+	if err := d.client.InitIdentityClient(d); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (d *Driver) initNetwork() error {
 	if err := d.client.Authenticate(d); err != nil {
 		return err
@@ -572,6 +617,30 @@ func (d *Driver) initNetwork() error {
 	if err := d.client.InitNetworkClient(d); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (d *Driver) loadSSHKey() error {
+	log.Debug("Loading Key Pair", d.KeyPairName)
+	if err := d.initCompute(); err != nil {
+		return err
+	}
+	log.Debug("Loading Private Key from", d.PrivateKeyFile)
+	privateKey, err := ioutil.ReadFile(d.PrivateKeyFile)
+	if err != nil {
+		return err
+	}
+	publicKey, err := d.client.GetPublicKey(d.KeyPairName)
+	if err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(d.privateSSHKeyPath(), privateKey, 0600); err != nil {
+		return err
+	}
+	if err := ioutil.WriteFile(d.publicSSHKeyPath(), publicKey, 0600); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -681,6 +750,10 @@ func (d *Driver) lookForIPAddress() error {
 		"MachineId": d.MachineId,
 	})
 	return nil
+}
+
+func (d *Driver) privateSSHKeyPath() string {
+	return d.GetSSHKeyPath()
 }
 
 func (d *Driver) publicSSHKeyPath() string {

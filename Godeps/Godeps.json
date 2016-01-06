@@ -3,17 +3,9 @@
 	"GoVersion": "go1.5",
 	"Packages": [
 		"github.com/docker/machine",
-		"github.com/stretchr/testify/assert",
-		"github.com/davecgh/go-spew/spew",
-		"github.com/pmezard/go-difflib/difflib",
-		"github.com/Sirupsen/logrus"
+		"github.com/stretchr/testify/assert"
 	],
 	"Deps": [
-		{
-			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.8.7-53-g446d1c1",
-			"Rev": "446d1c146faa8ed3f4218f056fcd165f6bcfda81"
-		},
 		{
 			"ImportPath": "github.com/davecgh/go-spew/spew",
 			"Rev": "5215b55f46b2b919f50a1df0eaa5886afe4e3b3d"

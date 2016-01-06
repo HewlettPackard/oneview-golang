@@ -1,5 +1,157 @@
 # Changelog
 
+# 0.5.5 (2015-12-28)
+
+General
+
+- `env`
+  - Better error message if swarm is down
+  - Add quotes to command if there are spaces in the path
+  - Fix Powershell env hints
+  - Default to cmd shell on windows
+  - Detect fish shell
+- `scp`
+  - Ignore empty ssh key
+- `stop`, `start`, `kill`
+  - Add feedback to the user
+- `rm`
+  - Now works when `config.json` is not found
+- `ssh`
+  - Disable ControlPath
+  - Log which SSH client is used
+- `ls`
+  - Listing is now faster by reducing calls to the driver
+  - Shows if the active machine is a swarm cluster
+
+Build
+
+- Automate 90% of the release process
+- Upgrade to Go 1.5.2
+- Don't build 32bits binaries for Linux and OSX
+- Prevent makefile from defaulting to using containers
+
+Misc
+
+- Update docker-machine version
+- Updated the bash completion with new options added
+- Bugsnag: Retrieve windows version on non-english OS
+
+Drivers
+
+- Amazon EC2
+  - Convert API calls to official SDK
+  - Make DeviceName configurable
+- Digital Ocean
+  - Custom SSH port support
+- Generic
+  - Don't support `kill` since `stop` is not supported
+- Google
+  - Coreos provisionning
+- Hyper-V
+  - Lot's of code simplifications
+  - Pre-Check that the user is an Administrator
+  - Pre-Check that the virtual switch exists
+  - Add Environment variables for each flag
+  - Fix how Powershell is detected
+  - VSwitch name should be saved to config.json
+  - Add a flag to set the CPU count
+  - Close handle after copying boot2docker.iso into vm folder - will otherwise keep hyper-v from starting vm
+  - Update Boot2Docker cache in PreCreateCheck phase
+- OpenStack
+ - Filter floating IPs by tenant ID
+- Virtualbox
+  - Reject duplicate hostonlyifs Name/IP with clear message
+  - Detect when hostonlyif can't be created. Point to known working version of VirtualBox
+  - Don't create the VM if no hardware virtualization is available and add a flag to force create
+  - Add `VBox.log` to bugsnag crashreport
+  - Update Boot2Docker cache in PreCreateCheck phase
+  - Detect Incompatibility with Hyper-v
+- VSphere
+ - Rewrite driver to work with govmomi instead of wrapping govc
+- All
+  - Change host restart to use the driver implementation
+  - Fix truncated logs
+  - Increase heartbeat interval and timeout
+
+Provisioners
+
+- Download latest Boot2Docker if it is out-of-date
+- Add swarm config to coreos
+- All provisioners now honor `engine-install-url`
+
+# 0.5.4 (2015-12-28)
+
+This is a patch release to fix a regression with STDOUT/STDERR behavior (#2587).
+
+# 0.5.3 (2015-12-14)
+
+**Please note**: With this release Machine will be reverting back to distribution in a single binary, which is more efficient on bandwidth and hard disk space. All the core driver plugins are now included in the main binary. You will want to delete the old driver binaries that you might have in your path.
+
+e.g.:
+
+```console
+$ rm /usr/local/bin/docker-machine-driver-{amazonec2,azure,digitalocean,exoscale,generic,google,hyperv,none,openstack,rackspace,softlayer,virtualbox,vmwarefusion,vmwarevcloudair,vmwarevsphere}
+```
+
+Non-core driver plugins should still work as intended (in externally distributed binaries of the form `docker-machine-driver-name`.  Please report any issues you encounter them with externally loaded plugins.
+
+General
+
+- Optionally report crashes to Bugsnag to help us improve docker-machine
+- Fix multiple nil dereferences in `docker-machine ls` command
+- Improve the build and CI
+- `docker-machine env` now supports emacs
+- Run Swarm containers in provisioning step using Docker API instead of SSH/shell
+- Show docker daemon version in `docker-machine ls`
+- `docker-machine ls` can filter by engine label
+- `docker-machine ls` filters are case insensitive
+- `--timeout` flag for `docker-machine ls`
+- Logs use `logrus` library
+- Swarm container network is now `host`
+- Added advertise flag to Swarm manager template
+- Fix `help` flag for `docker-machine ssh`
+- Add confirmation `-y` flag to `docker-machine rm`
+- Fix `docker-machine config` for fish
+- Embed all core drivers in `docker-machine` binary to reduce the bundle from 120M to 15M
+
+Drivers
+
+- Generic
+	- Support password protected ssh keys though ssh-agent
+	- Support DNS names
+- Virtualbox
+	- Show a warning if virtualbox is too old
+	- Recognize yet another Hardware Virtualization issue pattern
+	- Fix Hardware Virtualization on Linux/AMD
+	- Add the `--virtualbox-host-dns-resolver` flag
+	- Allow virtualbox DNSProxy override
+- Google
+	- Open firewall port for Swarm when needed
+- VMware Fusion
+	- Explicitly set umask before invoking vmrun in vmwarefusion
+	- Activate the plugin only on OSX
+	- Add id/gid option to mount when using vmhgfs
+	- Fix for vSphere driver boot2docker ISO issues
+- Digital Ocean
+	- Support for creating Droplets with Cloud-init User Data
+- Openstack
+	- Sanitize keynames by replacing dots with underscores 
+- All
+	- Most base images are now set to `Ubuntu 15.10`
+	- Fix compatibility with drivers developed with docker-machine 0.5.0
+	- Better error report for broken/incompatible drivers
+	- Don't break `config.json` configuration when the disk is full
+
+Provisioners
+
+- Increase timeout for installing boot2docker
+- Support `Ubuntu 15.10`
+
+Misc
+
+- Improve the documentation
+- Update known drivers list
+
 # 0.5.2 (2015-11-30)
 
 General

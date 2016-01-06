@@ -58,3 +58,40 @@ Sometimes it's usefull to run just a single test case.
 ```bash
 ONEVIEW_DEBUG=true make test-acceptance TEST_RUN='-test.run=TestGetAPIVersion'
 ```
+
+Updating external dependencies
+------------------------------
+This project relies on external libraries that are committed into Godeps folder.
+The libraries are used throughout the project to maintain compatibility with
+projects such as docker-machine-oneview and docker/machine project.
+
+1. Start by cleaning all libraries from Godeps folder
+
+   ```
+   make godeps-clean
+   ```
+   You can verify the execution by checking that there are no files left in the folder `Godeps/_workspace/src`.
+
+2. Get the latest packages with godeps target
+
+   ```
+   make godeps
+   ```
+
+3. Run a build in a docker container.
+
+   ```
+   USE_CONTAINER=true make test
+   ```
+
+4. Evaluate changes.
+   At this point you might have changes to the dependent libraries that have to be incorporated into the build process.   Update any additional or no longer libraries by editing the file : [mk/utils/godeps.mk](mk/utils/godeps.mk).  This file contains arguments GO_PACKAGES that should have a space separated list of all needed packages.
+   Whenever adjusting libraries, make sure to re-do steps 1-3 iteratively.
+
+5. Ok, it all test and passes, so it's time to commit your changes.
+
+  ```
+  git add --all
+  ```
+  Use `git status` to review additions, removals, and changes.
+  Use `git commit -s -m "library update version X.X"` to commit your changes.
