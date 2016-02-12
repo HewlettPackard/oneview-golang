@@ -1,11 +1,11 @@
 <!--[metadata]>
 +++
-title = "Migrate from Boot2Docker to Docker Machine"
+title = "Migrate from Boot2Docker to Machine"
 description = "Migrate from Boot2Docker to Docker Machine"
 keywords = ["machine, commands, boot2docker, migrate, docker"]
 [menu.main]
-parent="smn_workw_machine"
-weight=4
+parent="workw_machine"
+weight=-30
 +++
 <![end-metadata]-->
 

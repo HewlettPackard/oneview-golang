@@ -4,8 +4,14 @@ import (
 	"errors"
 	"fmt"
 
+	"time"
+
 	"github.com/docker/machine/libmachine"
 	"github.com/docker/machine/libmachine/persist"
+)
+
+const (
+	activeDefaultTimeout = 10
 )
 
 var (
@@ -22,14 +28,24 @@ func cmdActive(c CommandLine, api libmachine.API) error {
 		return fmt.Errorf("Error getting active host: %s", err)
 	}
 
-	items := getHostListItems(hosts, hostsInError)
+	timeout := time.Duration(c.Int("timeout")) * time.Second
+	items := getHostListItems(hosts, hostsInError, timeout)
 
-	for _, item := range items {
-		if item.ActiveHost {
-			fmt.Println(item.Name)
-			return nil
-		}
+	active, err := activeHost(items)
+
+	if err != nil {
+		return err
 	}
 
-	return errNoActiveHost
+	fmt.Println(active.Name)
+	return nil
+}
+
+func activeHost(items []HostListItem) (HostListItem, error) {
+	for _, item := range items {
+		if item.ActiveHost || item.ActiveSwarm {
+			return item, nil
+		}
+	}
+	return HostListItem{}, errNoActiveHost
 }

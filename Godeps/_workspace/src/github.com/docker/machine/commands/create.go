@@ -12,10 +12,13 @@ import (
 
 	"errors"
 
+	"time"
+
 	"github.com/codegangsta/cli"
 	"github.com/docker/machine/commands/mcndirs"
 	"github.com/docker/machine/libmachine"
 	"github.com/docker/machine/libmachine/auth"
+	"github.com/docker/machine/libmachine/crashreport"
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/drivers/rpc"
 	"github.com/docker/machine/libmachine/engine"
@@ -42,7 +45,7 @@ var (
 		cli.StringFlag{
 			Name:   "engine-install-url",
 			Usage:  "Custom URL to use for engine installation",
-			Value:  "https://get.docker.com",
+			Value:  drivers.DefaultEngineInstallURL,
 			EnvVar: "MACHINE_DOCKER_INSTALL_URL",
 		},
 		cli.StringSliceFlag{
@@ -56,9 +59,10 @@ var (
 			Value: &cli.StringSlice{},
 		},
 		cli.StringSliceFlag{
-			Name:  "engine-registry-mirror",
-			Usage: "Specify registry mirrors to use",
-			Value: &cli.StringSlice{},
+			Name:   "engine-registry-mirror",
+			Usage:  "Specify registry mirrors to use",
+			Value:  &cli.StringSlice{},
+			EnvVar: "ENGINE_REGISTRY_MIRROR",
 		},
 		cli.StringSliceFlag{
 			Name:  "engine-label",
@@ -211,14 +215,28 @@ func cmdCreateInner(c CommandLine, api libmachine.API) error {
 	}
 
 	if err := api.Create(h); err != nil {
-		return fmt.Errorf("Error creating machine: %s", err)
+		// Wait for all the logs to reach the client
+		time.Sleep(2 * time.Second)
+
+		vBoxLog := ""
+		if h.DriverName == "virtualbox" {
+			vBoxLog = filepath.Join(api.GetMachinesDir(), h.Name, h.Name, "Logs", "VBox.log")
+		}
+
+		return crashreport.CrashError{
+			Cause:       err,
+			Command:     "Create",
+			Context:     "api.performCreate",
+			DriverName:  h.DriverName,
+			LogFilePath: vBoxLog,
+		}
 	}
 
 	if err := api.Save(h); err != nil {
 		return fmt.Errorf("Error attempting to save store: %s", err)
 	}
 
-	log.Infof("To see how to connect Docker to this machine, run: %s", fmt.Sprintf("%s env %s", os.Args[0], name))
+	log.Infof("To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: %s env %s", os.Args[0], name)
 
 	return nil
 }
@@ -395,7 +413,7 @@ func convertMcnFlagsToCliFlags(mcnFlags []mcnflag.Flag) ([]cli.Flag, error) {
 func addDriverFlagsToCommand(cliFlags []cli.Flag, cmd *cli.Command) *cli.Command {
 	cmd.Flags = append(sharedCreateFlags, cliFlags...)
 	cmd.SkipFlagParsing = false
-	cmd.Action = fatalOnError(cmdCreateInner)
+	cmd.Action = runCommand(cmdCreateInner)
 	sort.Sort(ByFlagName(cmd.Flags))
 
 	return cmd

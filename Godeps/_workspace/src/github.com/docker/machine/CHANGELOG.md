@@ -1,5 +1,135 @@
 # Changelog
 
+# 0.6.0 (2016-02-04)
+
++ Fix SSH wait before provisioning issue
+
+# 0.6.0-rc4 (2016-02-03)
+
+General
+
++ `env`
+    + Fix shell auto detection
+
+Drivers
+
++ `exoscale`
+    + Fix configuration of exoscale endpoint
+
+# 0.6.0-rc3 (2016-02-01)
+
+- Exit with code 3 if error is during pre-create check
+
+# 0.6.0-rc2 (2016-01-28)
+
+- Fix issue creating Swarms
+- Fix `ls` header issue
+- Add code to wait for Docker daemon before returning from `start` / `restart`
+- Start porting integration tests to Go from BATS
+- Add Appveyor for Windows tests
+- Update CoreOS provisioner to use `docker daemon`
+- Various documentation and error message fixes
+- Add ability to create GCE machine using existing VM
+
+# 0.6.0-rc1 (2016-01-18)
+
+General
+
+- Update to Go 1.5.3
+- Short form of command invocations is now supported
+    - `docker-machine start`, `docker-machine stop` and others will now use
+      `default` as the machine name argument if one is not specified
+- Fix issue with panics in drivers
+- Machine now returns exit code 3 if the pre-create check fails.
+    - This is potentially useful for scripting `docker-machine`.
+- `docker-machine provision` command added to allow re-running of provisioning
+  on instances.
+    - This allows users to re-run provisioning if it fails during `create`
+      instead of needing to completely start over.
+
+Provisioning
+
+- Most provisioners now use `docker daemon` instead of `docker -d`
+- Swarm masters now run with replication enabled
+- If `/var/lib` is a BTRFS partition, `btrfs` will now be used as the storage
+  driver for the instance
+
+Drivers
+
+- Amazon EC2
+    - Default VPC will be used automatically if none is specified
+    - Credentials are now be read from the conventional `~/.aws/credentials`
+      file automatically
+    - Fix a few issues such as nil pointer dereferences
+- VMware Fusion
+    - Try to get IP from multiple DHCP lease files
+- OpenStack
+    - Only derive tenant ID if tenant name is supplied
+
+# 0.5.6 (2016-01-11)
+
+General
+
+- `create`
+  - Set swarm master to advertise on port 3376
+  - Fix swarm restart policy
+  - Stop asking for ssh key passwords interactively
+- `env`
+  - Improve documentation
+  - Fix bash on windows
+  - Automatic shell detection on Windows
+- `help`
+  - Don't show the full path to `docker-machine.exe` on windows
+- `ls`
+  - Allow custom format
+  - Improve documentation
+- `restart`
+  - Improve documentation
+- `rm`
+  - Improve documentation
+  - Better user experience when removing multiple hosts
+- `version`
+  - Don't show the full path to `docker-machine.exe` on windows
+- `start`, `stop`, `restart`, `kill`
+  - Better logs and homogeneous behaviour across all drivers
+
+Build
+
+- Introduce CI tests for external binary compatibility
+- Add amazon EC2 integration test
+
+Misc
+
+- Improve BugSnags reports: better shell detection, better windows version detection
+- Update DockerClient dependency
+- Improve bash-completion script
+- Improve documentation for bash-completion
+
+Drivers
+
+- Amazon EC2
+  - Improve documentation
+  - Support optional tags
+  - Option to create EbsOptimized instances
+- Google
+  - Fix remove when instance is stopped
+- Openstack
+  - Flags to import and reuse existing nova keypairs
+- VirtualBox
+  - Fix multiple bugs related to host-only adapters
+  - Retry commands when `VBoxManage` is not ready
+  - Reject VirtualBox versions older that 4.3
+  - Fail with a clear message when Hyper-v installation prevents VirtualBox from working
+  - Print a warning for Boot2Docker v1.9.1, which is known to have an issue with AUFS
+- Vmware Fusion
+  - Support soft links in VM paths
+
+Libmachine
+
+- Fix code sample that uses libmachine
+- libmachine can be used in external applications
+
+
 # 0.5.5 (2015-12-28)
 
 General
@@ -135,7 +265,7 @@ Drivers
 - Digital Ocean
 	- Support for creating Droplets with Cloud-init User Data
 - Openstack
-	- Sanitize keynames by replacing dots with underscores 
+	- Sanitize keynames by replacing dots with underscores
 - All
 	- Most base images are now set to `Ubuntu 15.10`
 	- Fix compatibility with drivers developed with docker-machine 0.5.0
@@ -201,7 +331,7 @@ Provisioners
 -   General
     -   Add pluggable driver model
     -   Clean up code to be more modular and reusable in `libmachine`
-    -   Add `--github-api-token` for situations where users are getting rate limited 
+    -   Add `--github-api-token` for situations where users are getting rate limited
         by GitHub attempting to get the current `boot2docker.iso` version
     -   Various enhancements around the Makefile and build toolchain (still an active WIP)
     -   Disable SSH multiplex explicitly in commands run with the "External" client
@@ -277,7 +407,7 @@ Provisioners
 -   Ability to import Boot2Docker instances
 -   Boot2Docker CLI migration guide (experimental)
 -   Format option for `inspect` command
--   New logging output format to improve readability and display across platforms 
+-   New logging output format to improve readability and display across platforms
 -   Updated "active" machine concept - now is implicit according to `DOCKER_HOST` environment variable.  Note: this removes the implicit "active" machine and can no longer be specified with the `active` command.  You change the "active" host by using the `env` command instead.
 -   Specify Swarm version (`--swarm-image` flag)
 

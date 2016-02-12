@@ -1,183 +1,87 @@
 <!--[metadata]>
 +++
-title = "Using Docker Machine with a cloud provider"
-description = "Using Docker Machine with a cloud provider"
+title = "Provision hosts in the cloud"
+description = "Using Docker Machine to provision hosts on cloud providers"
 keywords = ["docker, machine, amazonec2, azure, digitalocean, google, openstack, rackspace, softlayer, virtualbox, vmwarefusion, vmwarevcloudair, vmwarevsphere, exoscale"]
 [menu.main]
-parent="smn_workw_machine"
-weight=2
+parent="workw_machine"
+weight=-60
 +++
 <![end-metadata]-->
 
-## Using Docker Machine with a cloud provider
+# Use Docker Machine to provision hosts on cloud providers
 
-Creating a local virtual machine running Docker is useful and fun, but it isn't the only thing Docker Machine can do. Docker Machine supports several
-“drivers” which let you use the same interface to create hosts on many different
-cloud or local virtualization platforms.
+Docker Machine driver plugins are available for many cloud platforms, so you can use Machine to provision cloud hosts. When you use Docker Machine for provisioning, you create cloud hosts with Docker Engine installed on them.
 
-To provision hosts, you use the
-`docker-machine create` command with the `--driver` flag. Here is example of using the [Digital Ocean](https://digitalocean.com) driver (`digitalocean`) to provision a host on that platform, but there are drivers included for several providers including
-Amazon Web Services, Google Compute Engine, and Microsoft Azure.
+You'll need to install and run Docker Machine, and create an account with the cloud provider.
 
-Typically, you provide account verification and security credentials for these providers as flags to `docker-machine create`. These flags are unique for each
-driver.  For instance, to pass a Digital Ocean access token you use the
-`--digitalocean-access-token` flag.
+Then you provide account verification, security credentials, and configuration options for the providers as flags to `docker-machine create`. The flags are unique for each cloud-specific driver.  For instance, to pass a Digital Ocean access token you use the `--digitalocean-access-token` flag. Take a look at the examples below for Digital Ocean and AWS.
 
-Let's take a look at how to do this on Digital Ocean.
+## Examples
 
-## Digital Ocean example
+### Digital Ocean
 
-To generate your access token:
+For Digital Ocean, this command creates a Droplet (cloud host) called "docker-sandbox".
 
-1.  Go to the Digital Ocean administrator console and click on "API" in the header.
-2.  Click on "Generate New Token".
-3.  Give the token a clever name (e.g. "machine"), make sure the "Write" checkbox
-    is checked, and click on "Generate Token".
-4.  Grab the big long hex string that is generated (this is your token) and store
-    it somewhere safe.
+      $ docker-machine create --driver digitalocean --digitalocean-access-token xxxxx docker-sandbox
 
-Now, run `docker-machine create` with the `digitalocean` driver and pass your key to
-the `--digitalocean-access-token` flag.
+For a step-by-step guide on using Machine to create Docker hosts on Digital Ocean, see the [Digital Ocean Example](examples/ocean.md).
 
-Example:
+### Amazon Web Services (AWS)
 
-    $ docker-machine create \
-        --driver digitalocean \
-        --digitalocean-access-token 0ab77166d407f479c6701652cee3a46830fef88b8199722b87821621736ab2d4 \
-        staging
-    Creating SSH key...
-    Creating Digital Ocean droplet...
-    To see how to connect Docker to this machine, run: docker-machine env staging
+For AWS EC2, this command creates an instance called "aws-sandbox":
 
-For convenience, `docker-machine` will use sensible defaults for choosing
-settings such as the image that the VPS is based on, but they can also be
-overridden using their respective flags (e.g. `--digitalocean-image`). This is
-useful if, for instance, you want to create a nice large instance with a lot of
-memory and CPUs (by default `docker-machine` creates a small VPS). For a full
-list of the flags/settings available and their defaults, see the output of
-`docker-machine create -h`.
+      $ docker-machine create --driver amazonec2 --amazonec2-access-key AKI******* --amazonec2-secret-key 8T93C*******  aws-sandbox
 
-When the creation of a host is initiated, a unique SSH key for accessing the
-host (initially for provisioning, then directly later if the user runs the
-`docker-machine ssh` command) will be created automatically and stored in the
-client's directory in `~/.docker/machines`. After the creation of the SSH key,
-Docker will be installed on the remote machine and the daemon will be configured
-to accept remote connections over TCP using TLS for authentication. Once this
-is finished, the host is ready for connection.
+For a step-by-step guide on using Machine to create Dockerized AWS instances, see the [Amazon Web Services (AWS) example](examples/aws.md).
 
-To prepare the Docker client to send commands to the remote server we have
-created, we can use the subshell method again:
+## The docker-machine create command
 
-    $ eval "$(docker-machine env staging)"
+The `docker-machine create` command typically requires that you specify, at a minimum:
 
-From this point, the remote host behaves much like the local host we created in the last section. If we look at `docker-machine ls`, we'll see it is now the
-"active" host, indicated by an asterisk (`*`) in that column:
+* `--driver` - to indicate the provider on which to create the machine  (VirtualBox, DigitalOcean, AWS, and so on)
 
-    $ docker-machine ls
-    NAME      ACTIVE   DRIVER         STATE     URL
-    dev       -        virtualbox     Running   tcp://192.168.99.103:2376
-    staging   *        digitalocean   Running   tcp://104.236.50.118:2376
+* Account verification and security credentials (for cloud providers), specific to the cloud service you are using
 
-To remove a host and all of its containers and images, use `docker-machine rm`:
+* `<machine>` - name of the host you want to create
 
-    $ docker-machine rm dev staging
-    Do you really want to remove "dev"? (y/n): y
-    Successfully removed dev
-    Do you really want to remove "staging"? (y/n): y
-    Successfully removed staging
+For convenience, `docker-machine` will use sensible defaults for choosing settings such as the image that the server is based on, but you override the defaults using the respective flags (e.g. `--digitalocean-image`). This is useful if, for example, you want to create a cloud server with a lot of memory and CPUs (by default `docker-machine` creates a small server).
 
-    $ docker-machine ls
-    NAME      ACTIVE   DRIVER       STATE     URL
+For a full list of the flags/settings available and their defaults, see the output of `docker-machine create -h` at the command line, the <a href="../reference/create/" target="_blank">create</a> command in the Machine <a href="../reference/" target="_blank">command line reference</a>, and <a href="https://docs.docker.com/machine/drivers/os-base/" target="_blank">driver options and operating system defaults</a> in the Machine driver reference.
 
-### Docker supported drivers
+## Drivers for cloud providers
 
-Docker Machine drivers are available for several other cloud providers. For a full list, see [Supported Drivers](https://docs.docker.com/machine/drivers/).
+When you install Docker Machine, you get a set of drivers for various cloud providers (like Amazon Web Services, Digital Ocean, or Microsoft Azure) and local providers (like Oracle VirtualBox, VMWare Fusion, or Microsoft Hyper-V).
 
-### Docker Machine command and driver reference
+See <a href="../drivers/" target="_blank">Docker Machine driver reference</a> for details on the drivers, including required flags and configuration options (which vary by provider).
 
-  * `docker-machine` [create](https://docs.docker.com/machine/reference/create/) command
-  * [Driver options and operating system defaults](https://docs.docker.com/machine/drivers/os-base/)
+## 3rd-party driver plugins
 
-### 3rd-party driver plugins
   Several Docker Machine driver plugins for use with other cloud platforms are available from 3rd party contributors. These are use-at-your-own-risk plugins, not maintained by or formally associated with Docker.
 
-  See [Available driver plugins](https://github.com/docker/machine/blob/master/docs/AVAILABLE_DRIVER_PLUGINS.md) in the docker/machine repo on GitHub.
+  See <a href="https://github.com/docker/machine/blob/master/docs/AVAILABLE_DRIVER_PLUGINS.md" target="_blank">Available driver plugins</a> in the docker/machine repo on GitHub.
 
 ## Adding a host without a driver
 
-You can add a host to Docker which only has a URL and no driver. Therefore it can be used an alias for an existing host so you don’t have to type out the URL every time you run a Docker command.
+You can add a host to Docker which only has a URL and no driver. Then you can use the machine name you provide here for an existing host so you don’t have to type out the URL every time you run a Docker command.
 
     $ docker-machine create --url=tcp://50.134.234.20:2376 custombox
     $ docker-machine ls
     NAME        ACTIVE   DRIVER    STATE     URL
     custombox   *        none      Running   tcp://50.134.234.20:2376
 
-## Using Docker Machine with Docker Swarm
+## Using Machine to provision Docker Swarm clusters
 
-Docker Machine can also provision [Swarm](https://github.com/docker/swarm)
-clusters. This can be used with any driver and will be secured with TLS.
+Docker Machine can also provision <a href="https://docs.docker.com/swarm/overview/" target="_blank">Docker Swarm</a> clusters. This can be used with any driver and will be secured with TLS.
 
-First, create a Swarm token. Optionally, you can use another discovery service.
-See the Swarm docs for details.
+* To get started with Swarm, see <a href="https://docs.docker.com/swarm/get-swarm/" target="_blank">How to get Docker Swarm</a>.
 
-To create the token, first create a Machine. This example will use VirtualBox.
+* To learn how to use Machine to provision a Swarm cluster, see <a href="https://docs.docker.com/swarm/provision-with-machine/" target="_blank">Provision a Swarm cluster with Docker Machine</a>.
 
-    $ docker-machine create -d virtualbox local
-
-Load the Machine configuration into your shell:
-
-    $ eval "$(docker-machine env local)"
-
-Then run generate the token using the Swarm Docker image:
-
-    $ docker run swarm create
-    1257e0f0bbb499b5cd04b4c9bdb2dab3
-
-Once you have the token, you can create the cluster.
-
-### Swarm master
-
-Create the Swarm master:
-
-    docker-machine create \
-        -d virtualbox \
-        --swarm \
-        --swarm-master \
-        --swarm-discovery token://<TOKEN-FROM-ABOVE> \
-        swarm-master
-
-Replace `<TOKEN-FROM-ABOVE>` with your random token.
-This will create the Swarm master and add itself as a Swarm node.
-
-### Swarm nodes
-
-Now, create more Swarm nodes:
-
-    docker-machine create \
-        -d virtualbox \
-        --swarm \
-        --swarm-discovery token://<TOKEN-FROM-ABOVE> \
-        swarm-node-00
-
-You now have a Swarm cluster across two nodes.
-To connect to the Swarm master, use `eval $(docker-machine env --swarm swarm-master)`
-
-For example:
-
-    $ docker-machine env --swarm swarm-master
-    export DOCKER_TLS_VERIFY=1
-    export DOCKER_CERT_PATH="/home/ehazlett/.docker/machines/.client"
-    export DOCKER_HOST=tcp://192.168.99.100:3376
-
-You can load this into your environment using
-`eval "$(docker-machine env --swarm swarm-master)"`.
-
-Now you can use the Docker CLI to query:
-
-    $ docker info
-    Containers: 1
-    Nodes: 1
-     swarm-master: 192.168.99.100:2376
-      └ Containers: 2
-      └ Reserved CPUs: 0 / 4
-      └ Reserved Memory: 0 B / 999.9 MiB
+## Where to go next
+-   Example: Provision Dockerized [Digital Ocean Droplets](examples/ocean.md)
+-   Example: Provision Dockerized [AWS EC2 Instances](examples/aws.md)
+-   [Understand Machine concepts](concepts.md)
+-   [Docker Machine driver reference](drivers/index.md)
+-   [Docker Machine subcommand reference](reference/index.md)
+-   [Provision a Docker Swarm cluster with Docker Machine](https://docs.docker.com/swarm/provision-with-machine/)
