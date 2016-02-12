@@ -13,6 +13,7 @@ import (
 
 	"github.com/docker/machine/libmachine/auth"
 	"github.com/docker/machine/libmachine/cert"
+	"github.com/docker/machine/libmachine/engine"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnutils"
 	"github.com/docker/machine/libmachine/provision/serviceaction"
@@ -161,7 +162,7 @@ func ConfigureAuth(p Provisioner) error {
 	if err != nil {
 		return err
 	}
-	dockerPort := 2376
+	dockerPort := engine.DefaultPort
 	parts := strings.Split(u.Host, ":")
 	if len(parts) == 2 {
 		dPort, err := strconv.Atoi(parts[1])
@@ -186,7 +187,7 @@ func ConfigureAuth(p Provisioner) error {
 		return err
 	}
 
-	return waitForDocker(p, dockerPort)
+	return WaitForDocker(p, dockerPort)
 }
 
 func matchNetstatOut(reDaemonListening, netstatOut string) bool {
@@ -208,6 +209,46 @@ func matchNetstatOut(reDaemonListening, netstatOut string) bool {
 	return false
 }
 
+func decideStorageDriver(p Provisioner, defaultDriver, suppliedDriver string) (string, error) {
+	if suppliedDriver != "" {
+		return suppliedDriver, nil
+	}
+	bestSuitedDriver := ""
+
+	defer func() {
+		if bestSuitedDriver != "" {
+			log.Debugf("No storagedriver specified, using %s\n", bestSuitedDriver)
+		}
+	}()
+
+	if defaultDriver != "aufs" {
+		bestSuitedDriver = defaultDriver
+	} else {
+		remoteFilesystemType, err := getFilesystemType(p, "/var/lib")
+		if err != nil {
+			return "", err
+		}
+		if remoteFilesystemType == "btrfs" {
+			bestSuitedDriver = "btrfs"
+		} else {
+			bestSuitedDriver = "aufs"
+		}
+	}
+	return bestSuitedDriver, nil
+
+}
+
+func getFilesystemType(p Provisioner, directory string) (string, error) {
+	statCommandOutput, err := p.SSHCommand("stat -f -c %T " + directory)
+	if err != nil {
+		err = fmt.Errorf("Error looking up filesystem type: %s", err)
+		return "", err
+	}
+
+	fstype := strings.TrimSpace(statCommandOutput)
+	return fstype, nil
+}
+
 func checkDaemonUp(p Provisioner, dockerPort int) func() bool {
 	reDaemonListening := fmt.Sprintf(":%d.*LISTEN", dockerPort)
 	return func() bool {
@@ -222,7 +263,7 @@ func checkDaemonUp(p Provisioner, dockerPort int) func() bool {
 	}
 }
 
-func waitForDocker(p Provisioner, dockerPort int) error {
+func WaitForDocker(p Provisioner, dockerPort int) error {
 	if err := mcnutils.WaitForSpecific(checkDaemonUp(p, dockerPort), 10, 3*time.Second); err != nil {
 		return NewErrDaemonAvailable(err)
 	}

@@ -32,17 +32,22 @@ const (
 )
 
 var (
-	stateTimeoutDuration = lsDefaultTimeout * time.Second
+	headers = map[string]string{
+		"Name":          "NAME",
+		"Active":        "ACTIVE",
+		"ActiveHost":    "ACTIVE_HOST",
+		"ActiveSwarm":   "ACTIVE_SWARM",
+		"DriverName":    "DRIVER",
+		"State":         "STATE",
+		"URL":           "URL",
+		"SwarmOptions":  "SWARM_OPTIONS",
+		"Swarm":         "SWARM",
+		"EngineOptions": "ENGINE_OPTIONS",
+		"Error":         "ERRORS",
+		"DockerVersion": "DOCKER",
+		"ResponseTime":  "RESPONSE",
+	}
 )
-
-// FilterOptions -
-type FilterOptions struct {
-	SwarmName  []string
-	DriverName []string
-	State      []string
-	Name       []string
-	Labels     []string
-}
 
 type HostListItem struct {
 	Name          string
@@ -57,27 +62,19 @@ type HostListItem struct {
 	EngineOptions *engine.Options
 	Error         string
 	DockerVersion string
+	ResponseTime  time.Duration
 }
 
-type Headers struct {
-	Name          string
-	Active        string
-	ActiveHost    string
-	ActiveSwarm   string
-	DriverName    string
-	State         string
-	URL           string
-	SwarmOptions  string
-	Swarm         string
-	EngineOptions string
-	Error         string
-	DockerVersion string
+// FilterOptions -
+type FilterOptions struct {
+	SwarmName  []string
+	DriverName []string
+	State      []string
+	Name       []string
+	Labels     []string
 }
 
 func cmdLs(c CommandLine, api libmachine.API) error {
-	stateTimeoutDuration = time.Duration(c.Int("timeout")) * time.Second
-	log.Debugf("ls timeout set to %s", stateTimeoutDuration)
-
 	filters, err := parseFilters(c.StringSlice("filter"))
 	if err != nil {
 		return err
@@ -110,21 +107,6 @@ func cmdLs(c CommandLine, api libmachine.API) error {
 
 		w = tabWriter
 
-		headers := &Headers{
-			Name:          "NAME",
-			Active:        "ACTIVE",
-			ActiveHost:    "DRIVER",
-			ActiveSwarm:   "STATE",
-			DriverName:    "URL",
-			State:         "STATE",
-			URL:           "URL",
-			SwarmOptions:  "SWARM_OPTIONS",
-			Swarm:         "SWARM",
-			EngineOptions: "ENGINE_OPTIONS",
-			Error:         "ERRORS",
-			DockerVersion: "DOCKER",
-		}
-
 		if err := template.Execute(w, headers); err != nil {
 			return err
 		}
@@ -132,7 +114,8 @@ func cmdLs(c CommandLine, api libmachine.API) error {
 		w = os.Stdout
 	}
 
-	items := getHostListItems(hostList, hostInError)
+	timeout := time.Duration(c.Int("timeout")) * time.Second
+	items := getHostListItems(hostList, hostInError, timeout)
 
 	swarmMasters := make(map[string]string)
 	swarmInfo := make(map[string]string)
@@ -312,8 +295,8 @@ func matchesName(host *host.Host, names []string) bool {
 	for _, n := range names {
 		r, err := regexp.Compile(n)
 		if err != nil {
-			// TODO: remove that call to Fatal
-			log.Fatal(err)
+			log.Error(err)
+			os.Exit(1) // TODO: Can we get rid of this call, and exit 'properly' ?
 		}
 		if r.MatchString(host.Driver.GetMachineName()) {
 			return true
@@ -349,6 +332,7 @@ func matchesLabel(host *host.Host, labels []string) bool {
 // to call the underlying drivers as less as possible to get the information
 // we need.
 func attemptGetHostState(h *host.Host, stateQueryChan chan<- HostListItem) {
+	requestBeginning := time.Now()
 	url := ""
 	currentState := state.None
 	dockerVersion := "Unknown"
@@ -427,10 +411,11 @@ func attemptGetHostState(h *host.Host, stateQueryChan chan<- HostListItem) {
 		EngineOptions: engineOptions,
 		DockerVersion: dockerVersion,
 		Error:         hostError,
+		ResponseTime:  time.Now().Round(time.Millisecond).Sub(requestBeginning.Round(time.Millisecond)),
 	}
 }
 
-func getHostState(h *host.Host, hostListItemsChan chan<- HostListItem) {
+func getHostState(h *host.Host, hostListItemsChan chan<- HostListItem, timeout time.Duration) {
 	// This channel is used to communicate the properties we are querying
 	// about the host in the case of a successful read.
 	stateQueryChan := make(chan HostListItem)
@@ -444,21 +429,24 @@ func getHostState(h *host.Host, hostListItemsChan chan<- HostListItem) {
 		hostListItemsChan <- hli
 
 	// Otherwise, give up after a predetermined duration.
-	case <-time.After(stateTimeoutDuration):
+	case <-time.After(timeout):
 		hostListItemsChan <- HostListItem{
-			Name:       h.Name,
-			DriverName: h.Driver.DriverName(),
-			State:      state.Timeout,
+			Name:         h.Name,
+			DriverName:   h.Driver.DriverName(),
+			State:        state.Timeout,
+			ResponseTime: timeout,
 		}
 	}
 }
 
-func getHostListItems(hostList []*host.Host, hostsInError map[string]error) []HostListItem {
+func getHostListItems(hostList []*host.Host, hostsInError map[string]error, timeout time.Duration) []HostListItem {
+	log.Debugf("timeout set to %s", timeout)
+
 	hostListItems := []HostListItem{}
 	hostListItemsChan := make(chan HostListItem)
 
 	for _, h := range hostList {
-		go getHostState(h, hostListItemsChan)
+		go getHostState(h, hostListItemsChan, timeout)
 	}
 
 	for range hostList {
@@ -468,16 +456,20 @@ func getHostListItems(hostList []*host.Host, hostsInError map[string]error) []Ho
 	close(hostListItemsChan)
 
 	for name, err := range hostsInError {
-		itemInError := HostListItem{}
-		itemInError.Name = name
-		itemInError.DriverName = "not found"
-		itemInError.State = state.Error
-		itemInError.Error = err.Error()
-		hostListItems = append(hostListItems, itemInError)
+		hostListItems = append(hostListItems, newHostListItemInError(name, err))
 	}
 
 	sortHostListItemsByName(hostListItems)
 	return hostListItems
+}
+
+func newHostListItemInError(name string, err error) HostListItem {
+	return HostListItem{
+		Name:       name,
+		DriverName: "not found",
+		State:      state.Error,
+		Error:      strings.Replace(err.Error(), "\n", " ", -1),
+	}
 }
 
 func sortHostListItemsByName(items []HostListItem) {

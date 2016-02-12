@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/docker/machine/libmachine/auth"
-	"github.com/docker/machine/libmachine/crashreport"
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/engine"
 	"github.com/docker/machine/libmachine/log"
@@ -21,9 +20,22 @@ import (
 )
 
 var (
-	validHostNamePattern              = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9\-\.]*$`)
-	errMachineMustBeRunningForUpgrade = errors.New("Error: machine must be running to upgrade.")
+	validHostNamePattern                               = regexp.MustCompile(`^[a-zA-Z0-9][a-zA-Z0-9\-\.]*$`)
+	errMachineMustBeRunningForUpgrade                  = errors.New("Error: machine must be running to upgrade.")
+	stdSSHClientCreator               SSHClientCreator = &StandardSSHClientCreator{}
 )
+
+type SSHClientCreator interface {
+	CreateSSHClient(d drivers.Driver) (ssh.Client, error)
+}
+
+type StandardSSHClientCreator struct {
+	drivers.Driver
+}
+
+func SetSSHClientCreator(creator SSHClientCreator) {
+	stdSSHClientCreator = creator
+}
 
 type Host struct {
 	ConfigVersion int
@@ -58,22 +70,26 @@ func (h *Host) RunSSHCommand(command string) (string, error) {
 }
 
 func (h *Host) CreateSSHClient() (ssh.Client, error) {
-	addr, err := h.Driver.GetSSHHostname()
+	return stdSSHClientCreator.CreateSSHClient(h.Driver)
+}
+
+func (creator *StandardSSHClientCreator) CreateSSHClient(d drivers.Driver) (ssh.Client, error) {
+	addr, err := d.GetSSHHostname()
 	if err != nil {
-		return ssh.ExternalClient{}, err
+		return &ssh.ExternalClient{}, err
 	}
 
-	port, err := h.Driver.GetSSHPort()
+	port, err := d.GetSSHPort()
 	if err != nil {
-		return ssh.ExternalClient{}, err
+		return &ssh.ExternalClient{}, err
 	}
 
 	auth := &ssh.Auth{}
-	if h.Driver.GetSSHKeyPath() != "" {
-		auth.Keys = []string{h.Driver.GetSSHKeyPath()}
+	if d.GetSSHKeyPath() != "" {
+		auth.Keys = []string{d.GetSSHKeyPath()}
 	}
 
-	return ssh.NewClient(h.Driver.GetSSHUsername(), addr, port, auth)
+	return ssh.NewClient(d.GetSSHUsername(), addr, port, auth)
 }
 
 func (h *Host) runActionForState(action func() error, desiredState state.State) error {
@@ -88,6 +104,15 @@ func (h *Host) runActionForState(action func() error, desiredState state.State) 
 	return mcnutils.WaitFor(drivers.MachineInState(h.Driver, desiredState))
 }
 
+func (h *Host) WaitForDocker() error {
+	provisioner, err := provision.DetectProvisioner(h.Driver)
+	if err != nil {
+		return err
+	}
+
+	return provision.WaitForDocker(provisioner, engine.DefaultPort)
+}
+
 func (h *Host) Start() error {
 	log.Infof("Starting %q...", h.Name)
 	if err := h.runActionForState(h.Driver.Start, state.Running); err != nil {
@@ -95,7 +120,8 @@ func (h *Host) Start() error {
 	}
 
 	log.Infof("Machine %q was started.", h.Name)
-	return nil
+
+	return h.WaitForDocker()
 }
 
 func (h *Host) Stop() error {
@@ -121,17 +147,19 @@ func (h *Host) Kill() error {
 func (h *Host) Restart() error {
 	log.Infof("Restarting %q...", h.Name)
 	if drivers.MachineInState(h.Driver, state.Stopped)() {
-		return h.Start()
-	}
-
-	if drivers.MachineInState(h.Driver, state.Running)() {
+		if err := h.Start(); err != nil {
+			return err
+		}
+	} else if drivers.MachineInState(h.Driver, state.Running)() {
 		if err := h.Driver.Restart(); err != nil {
 			return err
 		}
-		return mcnutils.WaitFor(drivers.MachineInState(h.Driver, state.Running))
+		if err := mcnutils.WaitFor(drivers.MachineInState(h.Driver, state.Running)); err != nil {
+			return err
+		}
 	}
 
-	return nil
+	return h.WaitForDocker()
 }
 
 func (h *Host) Upgrade() error {
@@ -146,22 +174,12 @@ func (h *Host) Upgrade() error {
 
 	provisioner, err := provision.DetectProvisioner(h.Driver)
 	if err != nil {
-		return crashreport.CrashError{
-			Cause:      err,
-			Command:    "Upgrade",
-			Context:    "provision.DetectProvisioner",
-			DriverName: h.Driver.DriverName(),
-		}
+		return err
 	}
 
 	log.Info("Upgrading docker...")
 	if err := provisioner.Package("docker", pkgaction.Upgrade); err != nil {
-		return crashreport.CrashError{
-			Cause:      err,
-			Command:    "Upgrade",
-			Context:    "provisioner.Package",
-			DriverName: h.Driver.DriverName(),
-		}
+		return err
 	}
 
 	log.Info("Restarting docker...")
@@ -191,4 +209,13 @@ func (h *Host) ConfigureAuth() error {
 	//
 	// Call provision to re-provision the certs properly.
 	return provisioner.Provision(swarm.Options{}, *h.HostOptions.AuthOptions, *h.HostOptions.EngineOptions)
+}
+
+func (h *Host) Provision() error {
+	provisioner, err := provision.DetectProvisioner(h.Driver)
+	if err != nil {
+		return err
+	}
+
+	return provisioner.Provision(*h.HostOptions.SwarmOptions, *h.HostOptions.AuthOptions, *h.HostOptions.EngineOptions)
 }

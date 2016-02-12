@@ -18,7 +18,7 @@ func TestCmdRmMissingMachineName(t *testing.T) {
 
 	err := cmdRm(commandLine, api)
 
-	assert.EqualError(t, err, "Error: Expected to get one or more machine names as arguments")
+	assert.Equal(t, ErrNoMachineSpecified, err)
 	assert.True(t, commandLine.HelpShown)
 }
 
@@ -202,7 +202,7 @@ func TestForceRemoveEvenWhenItFails(t *testing.T) {
 	}
 
 	err := cmdRm(commandLine, api)
-	assert.EqualError(t, err, "Error removing host \"machineToRemove1\": unknown error")
+	assert.NoError(t, err)
 
 	assert.False(t, libmachinetest.Exists(api, "machineToRemove1"))
 }

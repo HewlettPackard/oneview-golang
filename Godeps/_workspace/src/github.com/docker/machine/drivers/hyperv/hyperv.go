@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"errors"
+
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnflag"
@@ -78,6 +80,9 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 }
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
+	if drivers.EngineInstallURLFlagSet(flags) {
+		return errors.New("--engine-install-url cannot be used with the hyperv driver, use --hyperv-boot2docker-url instead")
+	}
 	d.Boot2DockerURL = flags.String("hyperv-boot2docker-url")
 	d.VSwitch = flags.String("hyperv-virtual-switch")
 	d.DiskSize = flags.Int("hyperv-disk-size")
@@ -234,7 +239,7 @@ func (d *Driver) chooseVirtualSwitch() (string, error) {
 
 	if d.VSwitch == "" {
 		if len(switches) < 1 {
-			return "", fmt.Errorf("no vswitch found")
+			return "", fmt.Errorf("no vswitch found. A valid vswitch must be available for this command to run. Check https://docs.docker.com/machine/drivers/hyper-v/")
 		}
 
 		return switches[0], nil

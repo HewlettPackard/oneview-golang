@@ -6,7 +6,7 @@ PROJECT_URL="git@github.com:${GITHUB_USER}/${GITHUB_REPO}"
 
 function usage {
   echo "Usage: "
-  echo "   GITHUB_TOKEN=XXXXX ${0} 0.5.x"
+  echo "   GITHUB_TOKEN=XXXXX ${0} 0.6.x"
 }
 
 function display {
@@ -65,6 +65,9 @@ LAST_RELEASE_VERSION=$(git describe --abbrev=0 --tags)
 checkError "Unable to find current version tag"
 
 display "Starting release from ${LAST_RELEASE_VERSION} to ${GITHUB_VERSION} on ${PROJECT_URL} with token ${GITHUB_TOKEN}"
+if [[ "${GITHUB_USER}" == "docker" ]]; then
+    display "THIS IS A REAL RELEASE, on OFFICIAL DOCKER REPO"
+fi
 while true; do
     read -p "🐳  Do you want to proceed with this release? (y/n) > " yn
     echo ""
@@ -94,7 +97,7 @@ else
   fi
 fi
 
-eval $(docker-machine env release)
+eval "$(docker-machine env release)"
 checkError "Machine 'release' is in a weird state, aborting"
 
 if [[ -d "${RELEASE_DIR}" ]]; then
@@ -113,22 +116,27 @@ checkError "Can't clone into ${RELEASE_DIR}, aborting"
 cd "${RELEASE_DIR}"
 
 display "Bump version number to ${VERSION}"
-sed -i "" "s/Version = \".*-dev\"/Version = \"${VERSION}\"/g" version/version.go
+
+# Why 'sed' and then 'mv' instead of 'sed -i'?  BSD / GNU sed compatibility.
+# Macs have BSD sed by default, Linux has GNU sed.  See
+# http://unix.stackexchange.com/questions/92895/how-to-achieve-portability-with-sed-i-in-place-editing
+sed -e "s/Version = \".*-dev\"/Version = \"${VERSION}\"/g" version/version.go >version/version.go.new
 checkError "Unable to change version in version/version.go"
+mv -- version/version.go.new version/version.go
 
 git add version/version.go
 git commit -q -m"Bump version to ${VERSION}" -s
 checkError "Can't git commit the version upgrade, aborting"
 
 display "Building in-container style"
-USE_CONTAINER=true make clean validate build-x
+USE_CONTAINER=true make clean build validate build-x
 checkError "Build error, aborting"
 
 display "Generating github release"
 cp -f script/release/github-release-template.md "${GITHUB_RELEASE_FILE}"
 checkError "Can't find github release template"
 CONTRIBUTORS=$(git log "${LAST_RELEASE_VERSION}".. --format="%aN" --reverse | sort | uniq | awk '{printf "- %s\n", $0 }')
-CHANGELOG=$(git log "${LAST_RELEASE_VERSION}".. --oneline)
+CHANGELOG=$(git log "${LAST_RELEASE_VERSION}".. --oneline | grep -v 'Merge pull request')
 
 CHECKSUM=""
 for file in $(ls bin/docker-machine*); do
@@ -207,7 +215,7 @@ github-release release \
 checkError "Could not create release, aborting"
 
 display "Uploading binaries"
-for file in $(ls bin/docker-machine*); do
+for file in $(ls bin/docker-machine-*); do
   display "Uploading ${file}..."
   github-release upload \
       --security-token  "${GITHUB_TOKEN}" \

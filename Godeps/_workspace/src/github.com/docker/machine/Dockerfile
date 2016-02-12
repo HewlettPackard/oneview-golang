@@ -1,4 +1,4 @@
-FROM golang:1.5.2
+FROM golang:1.5.3
 
 RUN go get  github.com/golang/lint/golint \
             github.com/mattn/goveralls \
@@ -9,5 +9,5 @@ RUN go get  github.com/golang/lint/golint \
 ENV USER root
 WORKDIR /go/src/github.com/docker/machine
 
-ADD . /go/src/github.com/docker/machine
+COPY . /go/src/github.com/docker/machine
 RUN mkdir bin

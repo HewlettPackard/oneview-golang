@@ -3,6 +3,7 @@ package amazonec2
 import (
 	"crypto/md5"
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/docker/machine/libmachine/drivers"
@@ -46,40 +46,52 @@ const (
 )
 
 var (
-	dockerPort = 2376
-	swarmPort  = 3376
+	dockerPort                  = 2376
+	swarmPort                   = 3376
+	errorMissingAccessKeyOption = errors.New("amazonec2 driver requires the --amazonec2-access-key option or proper credentials in ~/.aws/credentials")
+	errorMissingSecretKeyOption = errors.New("amazonec2 driver requires the --amazonec2-secret-key option or proper credentials in ~/.aws/credentials")
+	errorNoVPCIdFound           = errors.New("amazonec2 driver requires either the --amazonec2-subnet-id or --amazonec2-vpc-id option or an AWS Account with a default vpc-id")
 )
 
 type Driver struct {
 	*drivers.BaseDriver
-	Id                  string
-	AccessKey           string
-	SecretKey           string
-	SessionToken        string
-	Region              string
-	AMI                 string
-	SSHKeyID            int
-	KeyName             string
-	InstanceId          string
-	InstanceType        string
-	PrivateIPAddress    string
-	SecurityGroupId     string
-	SecurityGroupName   string
-	Tags                string
-	ReservationId       string
-	DeviceName          string
-	RootSize            int64
-	VolumeType          string
-	IamInstanceProfile  string
-	VpcId               string
-	SubnetId            string
-	Zone                string
-	keyPath             string
-	RequestSpotInstance bool
-	SpotPrice           string
-	PrivateIPOnly       bool
-	UsePrivateIP        bool
-	Monitoring          bool
+	clientFactory           func() Ec2Client
+	awsCredentials          awsCredentials
+	Id                      string
+	AccessKey               string
+	SecretKey               string
+	SessionToken            string
+	Region                  string
+	AMI                     string
+	SSHKeyID                int
+	KeyName                 string
+	InstanceId              string
+	InstanceType            string
+	PrivateIPAddress        string
+	SecurityGroupId         string
+	SecurityGroupName       string
+	Tags                    string
+	ReservationId           string
+	DeviceName              string
+	RootSize                int64
+	VolumeType              string
+	IamInstanceProfile      string
+	VpcId                   string
+	SubnetId                string
+	Zone                    string
+	keyPath                 string
+	RequestSpotInstance     bool
+	SpotPrice               string
+	PrivateIPOnly           bool
+	UsePrivateIP            bool
+	UseEbsOptimizedInstance bool
+	Monitoring              bool
+	SSHPrivateKeyPath       string
+	RetryCount              int
+}
+
+type clientFactory interface {
+	build(d *Driver) Ec2Client
 }
 
 func (d *Driver) GetCreateFlags() []mcnflag.Flag {
@@ -193,12 +205,26 @@ func (d *Driver) GetCreateFlags() []mcnflag.Flag {
 			Name:  "amazonec2-monitoring",
 			Usage: "Set this flag to enable CloudWatch monitoring",
 		},
+		mcnflag.BoolFlag{
+			Name:  "amazonec2-use-ebs-optimized-instance",
+			Usage: "Create an EBS optimized instance",
+		},
+		mcnflag.StringFlag{
+			Name:   "amazonec2-ssh-keypath",
+			Usage:  "SSH Key for Instance",
+			EnvVar: "AWS_SSH_KEYPATH",
+		},
+		mcnflag.IntFlag{
+			Name:  "amazonec2-retries",
+			Usage: "Set retry count for recoverable failures (use -1 to disable)",
+			Value: 5,
+		},
 	}
 }
 
-func NewDriver(hostName, storePath string) drivers.Driver {
+func NewDriver(hostName, storePath string) *Driver {
 	id := generateId()
-	return &Driver{
+	driver := &Driver{
 		Id:                id,
 		AMI:               defaultAmiId,
 		Region:            defaultRegion,
@@ -212,7 +238,27 @@ func NewDriver(hostName, storePath string) drivers.Driver {
 			MachineName: hostName,
 			StorePath:   storePath,
 		},
+		awsCredentials: &defaultAWSCredentials{},
 	}
+
+	driver.clientFactory = driver.buildClient
+
+	return driver
+}
+
+func (d *Driver) buildClient() Ec2Client {
+	config := aws.NewConfig()
+	alogger := AwsLogger()
+	config = config.WithRegion(d.Region)
+	config = config.WithCredentials(d.awsCredentials.NewStaticCredentials(d.AccessKey, d.SecretKey, d.SessionToken))
+	config = config.WithLogger(alogger)
+	config = config.WithLogLevel(aws.LogDebugWithHTTPBody)
+	config = config.WithMaxRetries(d.RetryCount)
+	return ec2.New(session.New(config))
+}
+
+func (d *Driver) getClient() Ec2Client {
+	return d.clientFactory()
 }
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
@@ -249,18 +295,40 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.PrivateIPOnly = flags.Bool("amazonec2-private-address-only")
 	d.UsePrivateIP = flags.Bool("amazonec2-use-private-address")
 	d.Monitoring = flags.Bool("amazonec2-monitoring")
+	d.UseEbsOptimizedInstance = flags.Bool("amazonec2-use-ebs-optimized-instance")
+	d.SSHPrivateKeyPath = flags.String("amazonec2-ssh-keypath")
 	d.SetSwarmConfigFromFlags(flags)
+	d.RetryCount = flags.Int("amazonec2-retries")
+
+	if d.AccessKey == "" && d.SecretKey == "" {
+		credentials, err := d.awsCredentials.NewSharedCredentials("", "").Get()
+		if err != nil {
+			log.Debug("Could not load credentials from ~/.aws/credentials")
+		} else {
+			log.Debug("Successfully loaded credentials from ~/.aws/credentials")
+			d.AccessKey = credentials.AccessKeyID
+			d.SecretKey = credentials.SecretAccessKey
+			d.SessionToken = credentials.SessionToken
+		}
+	}
 
 	if d.AccessKey == "" {
-		return fmt.Errorf("amazonec2 driver requires the --amazonec2-access-key option")
+		return errorMissingAccessKeyOption
 	}
 
 	if d.SecretKey == "" {
-		return fmt.Errorf("amazonec2 driver requires the --amazonec2-secret-key option")
+		return errorMissingSecretKeyOption
+	}
+
+	if d.VpcId == "" {
+		d.VpcId, err = d.getDefaultVPCId()
+		if err != nil {
+			log.Warnf("Couldn't determine your account Default VPC ID : %q", err)
+		}
 	}
 
 	if d.SubnetId == "" && d.VpcId == "" {
-		return fmt.Errorf("amazonec2 driver requires either the --amazonec2-subnet-id or --amazonec2-vpc-id option")
+		return errorNoVPCIdFound
 	}
 
 	if d.SubnetId != "" && d.VpcId != "" {
@@ -429,6 +497,7 @@ func (d *Driver) Create() error {
 				IamInstanceProfile: &ec2.IamInstanceProfileSpecification{
 					Name: &d.IamInstanceProfile,
 				},
+				EbsOptimized:        &d.UseEbsOptimizedInstance,
 				BlockDeviceMappings: []*ec2.BlockDeviceMapping{bdm},
 			},
 			InstanceCount: aws.Int64(1),
@@ -494,6 +563,7 @@ func (d *Driver) Create() error {
 			IamInstanceProfile: &ec2.IamInstanceProfileSpecification{
 				Name: &d.IamInstanceProfile,
 			},
+			EbsOptimized:        &d.UseEbsOptimizedInstance,
 			BlockDeviceMappings: []*ec2.BlockDeviceMapping{bdm},
 		})
 
@@ -600,7 +670,7 @@ func (d *Driver) GetSSHHostname() (string, error) {
 
 func (d *Driver) GetSSHUsername() string {
 	if d.SSHUser == "" {
-		d.SSHUser = "ubuntu"
+		d.SSHUser = defaultSSHUser
 	}
 
 	return d.SSHUser
@@ -653,13 +723,6 @@ func (d *Driver) Remove() error {
 	return nil
 }
 
-func (d *Driver) getClient() *ec2.EC2 {
-	config := aws.NewConfig()
-	config = config.WithRegion(d.Region)
-	config = config.WithCredentials(credentials.NewStaticCredentials(d.AccessKey, d.SecretKey, d.SessionToken))
-	return ec2.New(session.New(config))
-}
-
 func (d *Driver) getInstance() (*ec2.Instance, error) {
 	instances, err := d.getClient().DescribeInstances(&ec2.DescribeInstancesInput{
 		InstanceIds: []*string{&d.InstanceId},
@@ -690,11 +753,27 @@ func (d *Driver) waitForInstance() error {
 }
 
 func (d *Driver) createKeyPair() error {
-	if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
-		return err
+
+	keyPath := ""
+
+	if d.SSHPrivateKeyPath == "" {
+		log.Debugf("Creating New SSH Key")
+		if err := ssh.GenerateSSHKey(d.GetSSHKeyPath()); err != nil {
+			return err
+		}
+		keyPath = d.GetSSHKeyPath()
+	} else {
+		log.Debugf("Using ExistingKeyPair: %s", d.SSHPrivateKeyPath)
+		if err := mcnutils.CopyFile(d.SSHPrivateKeyPath, d.GetSSHKeyPath()); err != nil {
+			return err
+		}
+		if err := mcnutils.CopyFile(d.SSHPrivateKeyPath+".pub", d.GetSSHKeyPath()+".pub"); err != nil {
+			return err
+		}
+		keyPath = d.SSHPrivateKeyPath
 	}
 
-	publicKey, err := ioutil.ReadFile(d.GetSSHKeyPath() + ".pub")
+	publicKey, err := ioutil.ReadFile(keyPath + ".pub")
 	if err != nil {
 		return err
 	}
@@ -855,13 +934,15 @@ func (d *Driver) configureSecurityGroupPermissions(group *ec2.SecurityGroup) []*
 	hasDockerPort := false
 	hasSwarmPort := false
 	for _, p := range group.IpPermissions {
-		switch *p.FromPort {
-		case 22:
-			hasSshPort = true
-		case int64(dockerPort):
-			hasDockerPort = true
-		case int64(swarmPort):
-			hasSwarmPort = true
+		if p.FromPort != nil {
+			switch *p.FromPort {
+			case 22:
+				hasSshPort = true
+			case int64(dockerPort):
+				hasDockerPort = true
+			case int64(swarmPort):
+				hasSwarmPort = true
+			}
 		}
 	}
 
@@ -923,6 +1004,21 @@ func (d *Driver) deleteKeyPair() error {
 	}
 
 	return nil
+}
+
+func (d *Driver) getDefaultVPCId() (string, error) {
+	output, err := d.getClient().DescribeAccountAttributes(&ec2.DescribeAccountAttributesInput{})
+	if err != nil {
+		return "", err
+	}
+
+	for _, attribute := range output.AccountAttributes {
+		if *attribute.AttributeName == "default-vpc" {
+			return *attribute.AttributeValues[0].AttributeValue, nil
+		}
+	}
+
+	return "", errors.New("No default-vpc attribute")
 }
 
 func generateId() string {

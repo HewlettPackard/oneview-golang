@@ -18,6 +18,8 @@ import (
 	"text/template"
 	"time"
 
+	"errors"
+
 	"github.com/docker/machine/libmachine/drivers"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/docker/machine/libmachine/mcnflag"
@@ -144,6 +146,9 @@ func (d *Driver) DriverName() string {
 }
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
+	if drivers.EngineInstallURLFlagSet(flags) {
+		return errors.New("--engine-install-url cannot be used with the vmwarefusion driver, use --vmwarefusion-boot2docker-url instead")
+	}
 	d.Memory = flags.Int("vmwarefusion-memory-size")
 	d.CPU = flags.Int("vmwarefusion-cpu-count")
 	d.DiskSize = flags.Int("vmwarefusion-disk-size")
@@ -415,8 +420,15 @@ func (d *Driver) Stop() error {
 }
 
 func (d *Driver) Restart() error {
-	_, _, err := vmrun("reset", d.vmxPath(), "nogui")
-	return err
+	// Stop VM gracefully
+	if err := d.Stop(); err != nil {
+		return err
+	}
+	// Start it again and mount shared folder
+	if err := d.Start(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (d *Driver) Kill() error {
@@ -449,19 +461,10 @@ func (d *Driver) vmdkPath() string {
 }
 
 func (d *Driver) getIPfromDHCPLease() (string, error) {
-	var vmxfh *os.File
-	var dhcpfh *os.File
-	var vmxcontent []byte
-	var dhcpcontent []byte
-	var macaddr string
-	var err error
-	var lastipmatch string
-	var currentip string
-	var lastleaseendtime time.Time
-	var currentleadeendtime time.Time
 
-	// DHCP lease table for NAT vmnet interface
-	var dhcpfile = "/var/db/vmware/vmnet-dhcpd-vmnet8.leases"
+	var vmxfh *os.File
+	var vmxcontent []byte
+	var err error
 
 	if vmxfh, err = os.Open(d.vmxPath()); err != nil {
 		return "", err
@@ -473,6 +476,7 @@ func (d *Driver) getIPfromDHCPLease() (string, error) {
 	}
 
 	// Look for generatedAddress as we're passing a VMX with addressType = "generated".
+	var macaddr string
 	vmxparse := regexp.MustCompile(`^ethernet0.generatedAddress\s*=\s*"(.*?)"\s*$`)
 	for _, line := range strings.Split(string(vmxcontent), "\n") {
 		if matches := vmxparse.FindStringSubmatch(line); matches == nil {
@@ -487,6 +491,29 @@ func (d *Driver) getIPfromDHCPLease() (string, error) {
 	}
 
 	log.Debugf("MAC address in VMX: %s", macaddr)
+
+	// DHCP lease table for NAT vmnet interface
+	leasesFiles, _ := filepath.Glob("/var/db/vmware/*.leases")
+	for _, dhcpfile := range leasesFiles {
+		log.Debugf("Trying to find IP address in leases file: %s", dhcpfile)
+		if ipaddr, err := d.getIPfromDHCPLeaseFile(dhcpfile, macaddr); err == nil {
+			return ipaddr, err
+		}
+	}
+
+	return "", fmt.Errorf("IP not found for MAC %s in DHCP leases", macaddr)
+}
+
+func (d *Driver) getIPfromDHCPLeaseFile(dhcpfile, macaddr string) (string, error) {
+
+	var dhcpfh *os.File
+	var dhcpcontent []byte
+	var lastipmatch string
+	var currentip string
+	var lastleaseendtime time.Time
+	var currentleadeendtime time.Time
+	var err error
+
 	if dhcpfh, err = os.Open(dhcpfile); err != nil {
 		return "", err
 	}
@@ -526,8 +553,8 @@ func (d *Driver) getIPfromDHCPLease() (string, error) {
 	}
 
 	log.Debugf("IP found in DHCP lease table: %s", currentip)
-	return currentip, nil
 
+	return currentip, nil
 }
 
 func (d *Driver) publicSSHKeyPath() string {

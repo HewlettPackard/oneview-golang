@@ -22,6 +22,9 @@ The driver will perform a list of tasks on create:
 -   It will generate certificates to secure the docker daemon
 -   The docker daemon will be restarted, thus all running containers will be stopped.
 
+
+    $ docker-machine create --driver generic --generic-ip-address=203.0.113.81 vm
+
 Options:
 
 -   `--generic-ip-address`: **required** IP Address of host.
@@ -34,7 +37,7 @@ Options:
 Environment variables and default values:
 
 | CLI option                 | Environment variable | Default                   |
-|----------------------------|----------------------|---------------------------|
+| -------------------------- | -------------------- | ------------------------- |
 | **`--generic-ip-address`** | `GENERIC_IP_ADDRESS` | -                         |
 | `--generic-ssh-key`        | `GENERIC_SSH_KEY`    | _(defers to `ssh-agent`)_ |
 | `--generic-ssh-user`       | `GENERIC_SSH_USER`   | `root`                    |
