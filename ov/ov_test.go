@@ -63,7 +63,7 @@ func getTestDriverA() (*OVTest, *OVClient) {
 	}
 	err := ot.Client.RefreshVersion()
 	if err != nil {
-		log.Fatalf("Problem with getting api version refreshed : %+v", err)
+		log.Errorf("Problem with getting api version refreshed : %+v", err)
 	}
 	// fmt.Println("Setting up test with getTestDriverA")
 	return ot, ot.Client

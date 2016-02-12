@@ -102,9 +102,6 @@ func (n *NetConfig) NewNetConfigInterface(
 
 	var inetconfig NetConfigInterface
 
-	if macaddr == "" {
-		log.Fatal("Network configuration (NetConfigInterface) requires a MAC Address to create a new interface object.")
-	}
 	inetconfig = NetConfigInterface{
 		Enabled:        enable,
 		MACAddr:        macaddr,
@@ -112,19 +109,22 @@ func (n *NetConfig) NewNetConfigInterface(
 		IPv6Autoconfig: isipv6,
 		VlanID:         vlandid,
 	}
+	if macaddr == "" {
+		log.Error("Network configuration (NetConfigInterface) requires a MAC Address to create a new interface object.")
+	}
 	if isipv6 {
 		if ipv6gateway.IsNil() {
-			log.Fatal("Gateway for ipv6 is required, configure IPv6Gateway")
+			log.Error("Gateway for ipv6 is required, configure IPv6Gateway")
 		}
 		inetconfig.IPv6Gateway = ipv6gateway.String()
 	}
 	if !isdhcp {
 		if ipv4gateway.IsNil() {
-			log.Fatal("Static ipv4 configuration requires a gateway configured (IPv4Gateway)")
+			log.Error("Static ipv4 configuration requires a gateway configured (IPv4Gateway)")
 		}
 		inetconfig.IPv4Gateway = ipv4gateway.String()
 		if staticnets.IsNil() {
-			log.Fatal("Static ipv4 configuration requires static network list")
+			log.Error("Static ipv4 configuration requires static network list")
 		}
 		inetconfig.StaticNetworks = strings.Split(staticnets.String(), SplitSep)
 	}
