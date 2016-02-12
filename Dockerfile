@@ -1,4 +1,4 @@
-FROM golang:1.5.1
+FROM golang:1.5.3
 
 RUN go get  github.com/golang/lint/golint \
             github.com/mattn/goveralls \
@@ -9,4 +9,4 @@ RUN go get  github.com/golang/lint/golint \
 ENV USER root
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
-ADD . /go/src/github.com/HewlettPackard/oneview-golang
+COPY . /go/src/github.com/HewlettPackard/oneview-golang
