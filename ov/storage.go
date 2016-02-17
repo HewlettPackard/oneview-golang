@@ -51,7 +51,7 @@ type StoragePath struct {
 	ConnectionID      int      `json:"connectionId,omitempty"`      // connectionId (required), The ID of the connection associated with this storage path. Use GET /rest/server-profiles/available-networks to retrieve the list of available networks.
 	IsEnabled         bool     `json:"isEnabled,omitempty"`         // isEnabled (required), Identifies whether the storage path is enabled.
 	Status            string   `json:"status,omitempty"`            // status (read only), The overall health status of the storage path.
-	StorageTargetType string   `json:"StorageTargetType,omitempty"` // storageTargetType ('Auto', 'TargetPorts')
+	StorageTargetType string   `json:"storageTargetType,omitempty"` // storageTargetType ('Auto', 'TargetPorts')
 	StorageTargets    []string `json:"storageTargets,omitempty"`    // only set when storageTargetType is TargetPorts
 }
 
