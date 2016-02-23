@@ -30,17 +30,17 @@ type LocalStorageSettingsV3 struct { // "localStorage": {
 
 // LocalStorageEmbeddedController -
 type LocalStorageEmbeddedController struct {
-	ImportConfiguration bool             `json:"importConfiguration"`     // importConfiguration Determines if the logical drives in the current configuration should be imported. Boolean
-	Initialize          bool             `json:"initialize"`              // initialize Determines if the controller should be initialized before configuration. Boolean
-	LogicalDrives       []LogicalDriveV3 `json:"logicalDrives,omitempty"` // LogicalDriveV3 The list of logical drives associated with the controller.
-	Managed             bool             `json:"managed"`                 // managed Determines if the specific controller is managed by OneView. Boolean
-	Mode                string           `json:"mode,omitempty"`          // mode Determines the mode of operation of the controller. The controller mode can be changed between RAID and HBA mode when supported by the selected server hardware type. string
-	SlotNumber          string           `json:"slotNumber,omitempty"`    // slotNumber The PCI slot number used by the controller. This value will always be set to "0", as only the embedded controller is supported in the current version. string
+	ImportConfiguration bool             `json:"importConfiguration,omitempty"` // importConfiguration Determines if the logical drives in the current configuration should be imported. Boolean
+	Initialize          bool             `json:"initialize,omitempty"`          // initialize Determines if the controller should be initialized before configuration. Boolean
+	LogicalDrives       []LogicalDriveV3 `json:"logicalDrives,omitempty"`       // LogicalDriveV3 The list of logical drives associated with the controller.
+	Managed             bool             `json:"managed,omitempty"`             // managed Determines if the specific controller is managed by OneView. Boolean
+	Mode                string           `json:"mode,omitempty"`                // mode Determines the mode of operation of the controller. The controller mode can be changed between RAID and HBA mode when supported by the selected server hardware type. string
+	SlotNumber          string           `json:"slotNumber,omitempty"`          // slotNumber The PCI slot number used by the controller. This value will always be set to "0", as only the embedded controller is supported in the current version. string
 }
 
 // LogicalDriveV3 -
 type LogicalDriveV3 struct {
-	Bootable          bool   `json:"bootable"`                    // bootable Indicates if the logical drive is bootable or not. Boolean
+	Bootable          bool   `json:"bootable,omitempty"`          // bootable Indicates if the logical drive is bootable or not. Boolean
 	DriveName         string `json:"driveName,omitempty"`         // driveName The name of the logical drive. string
 	DriveNumber       int    `json:"driveNumber,omitempty"`       // driveNumber The number assigned to the logical drive by HP SSA. This value is read-only and gets automatically populated once the logical drive is created. integer read only
 	DriveTechnology   string `json:"driveTechnology,omitempty"`   // driveTechnology Defines the interface type for drives that will be used to build the logical drive. Supported values depend on the local storage capabilities of the selected server hardware type. string
@@ -123,7 +123,7 @@ func (o VolumeAttachmentStateV2) Equal(s string) bool {
 // StoragePathV2 - A list of host-to-target path associations.
 type StoragePathV2 struct {
 	ConnectionID      int      `json:"connectionId,omitempty"`      // connectionId The ID of the connection associated with this storage path. Use GET /rest/server-profiles/available-networks to retrieve the list of available networks. integer required
-	IsEnabled         bool     `json:"isEnabled"`                   // isEnabled Identifies whether the storage path is enabled. Boolean required
+	IsEnabled         bool     `json:"isEnabled,omitempty"`         // isEnabled Identifies whether the storage path is enabled. Boolean required
 	Status            string   `json:"status,omitempty"`            // status The overall health status of the storage path. string read only
 	StorageTargetType string   `json:"storageTargetType,omitempty"` // storageTargetType If set to Auto, the storage system will automatically identify the storage targets. In this case, set the storageTargets field to an empty array. If set to TargetPorts, the storage targets can be manually specified in the storageTargets field using comma-separated strings.
 	StorageTargets    []string `json:"storageTargets,omitempty"`    // The WWPNs (World Wide Port Names) of the targets on the storage system. If storageTargetType is set to Auto, the storage system will automatically select the target ports, in which case the storageTargets field is not needed and should be set to an empty array. If storageTargetType is set to TargetPorts, then the the storageTargets field should be an array of comma-separated strings representing the WWPNs intended to be used to connect with the storage system. Use GET /rest/storage-systems/{arrayid}/managedPorts?query="expectedNetworkUri EQ '/rest/fc-networks/{netowrk-id}'" to retrieve the storage targets for the associated network.

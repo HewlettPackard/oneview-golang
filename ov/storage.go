@@ -30,9 +30,9 @@ type LogicalDrive struct {
 // LocalStorageOptions -
 type LocalStorageOptions struct { // "localStorage": {
 	LocalStorageSettingsV3
-	ManageLocalStorage bool           `json:"manageLocalStorage"`      // "manageLocalStorage": true,
-	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"` // "logicalDrives": [],
-	Initialize         bool           `json:"initialize"`              // 				"initialize": true
+	ManageLocalStorage bool           `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
+	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
+	Initialize         bool           `json:"initialize,omitempty"`         // 				"initialize": true
 } // 		},
 
 // Clone local storage
