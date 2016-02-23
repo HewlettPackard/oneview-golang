@@ -23,16 +23,16 @@ import (
 
 // LogicalDrive logical drive options
 type LogicalDrive struct {
-	Bootable  bool   `json:"bootable,omitempty"`  // "bootable": true,
+	Bootable  bool   `json:"bootable"`            // "bootable": true,
 	RaidLevel string `json:"raidLevel,omitempty"` // "raidLevel": "RAID1"
 }
 
 // LocalStorageOptions -
 type LocalStorageOptions struct { // "localStorage": {
 	LocalStorageSettingsV3
-	ManageLocalStorage bool           `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
-	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
-	Initialize         bool           `json:"initialize,omitempty"`         // 				"initialize": true
+	ManageLocalStorage bool           `json:"manageLocalStorage"`      // "manageLocalStorage": true,
+	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"` // "logicalDrives": [],
+	Initialize         bool           `json:"initialize"`              // 				"initialize": true
 } // 		},
 
 // Clone local storage
@@ -49,7 +49,7 @@ func (c LocalStorageOptions) Clone() LocalStorageOptions {
 //to retrieve the storage targets for the associated network.
 type StoragePath struct {
 	ConnectionID      int      `json:"connectionId,omitempty"`      // connectionId (required), The ID of the connection associated with this storage path. Use GET /rest/server-profiles/available-networks to retrieve the list of available networks.
-	IsEnabled         bool     `json:"isEnabled,omitempty"`         // isEnabled (required), Identifies whether the storage path is enabled.
+	IsEnabled         bool     `json:"isEnabled"`                   // isEnabled (required), Identifies whether the storage path is enabled.
 	Status            string   `json:"status,omitempty"`            // status (read only), The overall health status of the storage path.
 	StorageTargetType string   `json:"storageTargetType,omitempty"` // storageTargetType ('Auto', 'TargetPorts')
 	StorageTargets    []string `json:"storageTargets,omitempty"`    // only set when storageTargetType is TargetPorts
@@ -70,7 +70,7 @@ type VolumeAttachment struct {
 	ID                             int           `json:"id,omitempty"`                             // id, The ID of the attached storage volume.
 	LUN                            string        `json:"lun,omitempty"`                            // lun, The logical unit number.
 	LUNType                        string        `json:"lunType,omitempty"`                        // lunType(required), The logical unit number type: Auto or Manual.
-	Permanent                      bool          `json:"permanent,omitempty"`                      // permanent, If true, indicates that the volume will persist when the profile is deleted. If false, then the volume will be deleted when the profile is deleted.
+	Permanent                      bool          `json:"permanent"`                                // permanent, If true, indicates that the volume will persist when the profile is deleted. If false, then the volume will be deleted when the profile is deleted.
 	State                          string        `json:"state,omitempty"`                          // state(read only), current state of the attachment
 	Status                         string        `json:"status,omitempty"`                         // status(read only), The current status of the attachment.
 	StoragePaths                   []StoragePath `json:"storagePaths,omitempty"`                   // A list of host-to-target path associations.
@@ -78,7 +78,7 @@ type VolumeAttachment struct {
 	VolumeName                     string        `json:"volumeName,omitempty"`                     // The name of the volume. This attribute is required when creating a volume.
 	VolumeProvisionType            string        `json:"volumeProvisionType,omitempty"`            // The provisioning type of the new volume: Thin or Thick. This attribute is required when creating a volume.
 	VolumeProvisionedCapacityBytes string        `json:"volumeProvisionedCapacityBytes,omitempty"` // The requested provisioned capacity of the storage volume in bytes. This attribute is required when creating a volume.
-	VolumeShareable                bool          `json:"volumeShareable,omitempty"`                // Identifies whether the storage volume is shared or private. If false, then the volume will be private. If true, then the volume will be shared. This attribute is required when creating a volume.
+	VolumeShareable                bool          `json:"volumeShareable"`                          // Identifies whether the storage volume is shared or private. If false, then the volume will be private. If true, then the volume will be shared. This attribute is required when creating a volume.
 	VolumeStoragePoolURI           utils.Nstring `json:"volumeStoragePoolUri,omitempty"`           // The URI of the storage pool associated with this volume attachment's volume. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage pool associated with a volume.
 	VolumeStorageSystemURI         utils.Nstring `json:"volumeStorageSystemUri,omitempty"`         // The URI of the storage system associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URI of the storage system associated with a volume.
 	VolumeURI                      utils.Nstring `json:"volumenUri,omitempty"`                     // The URI of the storage volume associated with this volume attachment. Use GET /rest/server-profiles/available-storage-systems to retrieve the URIs of available storage volumes.
@@ -116,7 +116,7 @@ func (c VolumeAttachment) Clone() VolumeAttachment {
 type SanStorageOptions struct { // sanStorage
 	SanStorageV3
 	HostOSType            string             `json:"hostOSType,omitempty"`            // hostOSType(required),  The operating system type of the host. To retrieve the list of supported host OS types, issue a REST Get request using the /rest/storage-systems/host-types API.
-	ManageSanStorage      bool               `json:"manageSanStorage,omitempty"`      // manageSanStorage(required),  Identifies whether SAN storage is managed in this profile.
+	ManageSanStorage      bool               `json:"manageSanStorage"`                // manageSanStorage(required),  Identifies whether SAN storage is managed in this profile.
 	VolumeAttachments     []VolumeAttachment `json:"volumeAttachments,omitempty"`     // volumeAttachments, The list of storage volume attachments. array of Volume Attachment
 	SerialNumber          string             `json:"serialNumber,omitempty"`          // serialNumber (searchable) A 10-byte value that is exposed to the Operating System as the server hardware's Serial Number. The value can be a virtual serial number, user defined serial number or physical serial number read from the server's ROM. It cannot be modified after the profile is created.
 	SerialNumberType      string             `json:"serialNumberType,omitempty"`      // serialNumberType (searchable) Specifies the type of Serial Number and UUID to be programmed into the server ROM. The value can be 'Virtual', 'UserDefined', or 'Physical'. The serialNumberType defaults to 'Virtual' when serialNumber or uuid are not specified. It cannot be modified after the profile is created.
