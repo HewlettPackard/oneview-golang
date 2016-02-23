@@ -45,6 +45,7 @@ test: gen-dockerfile
 		    -e TARGET_ARCH \
 		    -e PREFIX \
 		    -e GO15VENDOREXPERIMENT \
+				-e TEST_RUN \
 		    $(DOCKER_IMAGE_NAME) \
 		    make $@
 
