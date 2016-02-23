@@ -3,7 +3,7 @@
 # we use secrets project for variables, see http://readme.drone.io/build/secrets.html
 #
 build:
-  image: golang:1.5.1
+  image: golang:1.6
   environment:
     - HTTP_PROXY=$$HTTP_PROXY
     - HTTPS_PROXY=$$HTTPS_PROXY

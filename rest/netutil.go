@@ -115,7 +115,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	client := &http.Client{Transport: tr}
 
 	log.Debugf("*** url => %s", Url.String())
-	log.Debugf("*** method => %s", string(method))
+	log.Debugf("*** method => %s", method.String())
 
 	// parse url
 	reqUrl, err := url.Parse(Url.String())
@@ -130,9 +130,9 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 			return nil, err
 		}
 		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
-		req, err = http.NewRequest(string(method), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
+		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
-		req, err = http.NewRequest(string(method), reqUrl.String(), nil)
+		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
 	}
 
 	if err != nil {
@@ -156,7 +156,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	}
 
 	// req.SetBasicAuth(c.User, c.APIKey)
-	req.Method = fmt.Sprintf("%s", method)
+	req.Method = fmt.Sprintf("%s", method.String())
 
 	resp, err := client.Do(req)
 	if err != nil {
