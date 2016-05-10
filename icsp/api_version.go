@@ -20,8 +20,8 @@ package icsp
 import (
 	"encoding/json"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
 )
 
 // URLEndPoint export this constant

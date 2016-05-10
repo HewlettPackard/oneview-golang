@@ -3,9 +3,9 @@ package ov
 import (
 	"os"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/testconfig"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
+	"github.com/mbfrahry/oneview-golang/testconfig"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats

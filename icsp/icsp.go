@@ -24,9 +24,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // ICSPClient - wrapper class for icsp api's

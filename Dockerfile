@@ -7,6 +7,6 @@ RUN go get  github.com/golang/lint/golint \
             github.com/aktau/github-release
 
 ENV USER root
-WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
+WORKDIR /go/src/github.com/mbfrahry/oneview-golang
 
-COPY . /go/src/github.com/HewlettPackard/oneview-golang
+COPY . /go/src/github.com/mbfrahry/oneview-golang

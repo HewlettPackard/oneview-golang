@@ -22,9 +22,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // FirmwareOption structure for firware settings
