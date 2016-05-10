@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/utils"
 	"github.com/stretchr/testify/assert"
 )
 

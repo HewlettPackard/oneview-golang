@@ -20,7 +20,7 @@ package ov
 import (
 	"strings"
 
-	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // LocalStorageSettingsV3 -

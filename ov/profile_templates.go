@@ -21,9 +21,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/HewlettPackard/oneview-golang/liboneview"
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/liboneview"
+	"github.com/mbfrahry/oneview-golang/rest"
 )
 
 // introduced in v200 for oneview, allows for an easier method

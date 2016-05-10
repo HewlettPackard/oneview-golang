@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
 )
 
 // FailModeData stage const

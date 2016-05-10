@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
 )
 
 // Create a PowerState type
