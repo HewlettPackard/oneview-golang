@@ -1,4 +1,4 @@
-# HPE OneView golang bindings
+# HPE OneView golang binding
 
 [![Build Status](https://travis-ci.org/.svg?branch=master)](https://travis-ci.org/)
 
