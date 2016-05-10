@@ -17,7 +17,7 @@ limitations under the License.
 // Package ov -
 package ov
 
-import "github.com/HewlettPackard/oneview-golang/utils"
+import "github.com/mbfrahry/oneview-golang/utils"
 
 // firmware additional properties introduced in 200
 // "FirmwareOnly" - Updates the firmware without powering down the server hardware using using HP Smart Update Tools.

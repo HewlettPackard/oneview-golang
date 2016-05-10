@@ -20,9 +20,9 @@ package ov
 import (
 	"strings"
 
-	"github.com/HewlettPackard/oneview-golang/liboneview"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/liboneview"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // introduced in v200 for oneview, new v2 hardware attributes

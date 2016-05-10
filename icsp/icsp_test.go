@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/testconfig"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
+	"github.com/mbfrahry/oneview-golang/testconfig"
+	"github.com/mbfrahry/oneview-golang/utils"
 	"github.com/stretchr/testify/assert"
 )
 

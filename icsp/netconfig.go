@@ -22,8 +22,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // NetConfigInterface - part of NetCustomization type , describes interface configuration

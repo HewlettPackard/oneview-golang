@@ -10,8 +10,8 @@ import (
 	"net/url"
 	"reflect"
 
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // Options for REST call
@@ -125,12 +125,14 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 
 	// handle options
 	if options != nil {
+
 		OptionsJSON, err := json.Marshal(options)
 		if err != nil {
 			return nil, err
 		}
 		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
 		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
+
 	} else {
 		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
 	}
@@ -174,14 +176,13 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	// DEBUGGING WHILE WE WORK
 
 	data, err := ioutil.ReadAll(resp.Body)
-
 	if !c.isOkStatus(resp.StatusCode) {
 		type apiErr struct {
 			Err string `json:"details"`
 		}
 		var outErr apiErr
 		json.Unmarshal(data, &outErr)
-		return nil, fmt.Errorf("Error in response: %s\n Response Status: %s", outErr.Err, resp.Status)
+		return nil, fmt.Errorf("Error in response: %s\n Response Status: %+v", outErr.Err, resp.Status)
 	}
 
 	if err != nil {

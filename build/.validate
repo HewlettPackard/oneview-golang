@@ -4,7 +4,7 @@ if [ -z "$VALIDATE_UPSTREAM" ]; then
 	# this is kind of an expensive check, so let's not do this twice if we
 	# are running more than one validate bundlescript
 
-	VALIDATE_REPO='git@github.com:HewlettPackard/oneview-golang.git'
+	VALIDATE_REPO='git@github.com:.git'
 	VALIDATE_BRANCH='master'
 
 	if [ "$TRAVIS" = 'true' -a "$TRAVIS_PULL_REQUEST" != 'false' ]; then
