@@ -16,7 +16,6 @@ define goacceptance
 	TESTCONFIG_JSON_DATA_DIR=$(TESTCONFIG_JSON_DATA_DIR) \
 	ONEVIEW_TEST_DATA=$(call testcase,$(1)) \
 	ONEVIEW_TEST_ACCEPTANCE=true \
-	ICSP_TEST_ACCEPTANCE=true \
 	$(GO) test $(VERBOSE_GO) \
 	  -test.timeout=60m -test.v=true --short \
 		-tags "$(BUILDTAGS)" $(PKGS) $(TEST_RUN);

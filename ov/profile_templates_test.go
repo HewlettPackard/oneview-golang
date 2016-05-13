@@ -31,7 +31,7 @@ func TestGetProfileTemplateByName(t *testing.T) {
 		assert.Equal(t, "", data.Name)
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		// determine if we should execute
 		if c.ProfileTemplatesNotSupported() {
 			return

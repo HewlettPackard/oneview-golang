@@ -33,12 +33,12 @@ type OVTest struct {
 }
 
 // get Environment
-func (ot *OVTest) GetEnvironment() {
+func (ot *OVTest) GetEnvironment(env string) {
 	if os.Getenv("ONEVIEW_TEST_ENV") != "" {
 		ot.Env = os.Getenv("ONEVIEW_TEST_ENV")
 		return
 	}
-	ot.Env = "dev"
+	ot.Env = env
 	return
 }
 
@@ -48,7 +48,7 @@ func getTestDriverA() (*OVTest, *OVClient) {
 	var ot *OVTest
 	var tc *testconfig.TestConfig
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot.GetEnvironment("dev")
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &OVClient{
 		rest.Client{
@@ -70,11 +70,11 @@ func getTestDriverA() (*OVTest, *OVClient) {
 }
 
 // Unit test
-func getTestDriverU() (*OVTest, *OVClient) {
+func getTestDriverU(env string) (*OVTest, *OVClient) {
 	var ot *OVTest
 	var tc *testconfig.TestConfig
-	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
+	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &OVClient{
 		rest.Client{

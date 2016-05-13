@@ -99,7 +99,7 @@ func TestGetProfileByName(t *testing.T) {
 		assert.Equal(t, "", data.Name)
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		data, err := c.GetProfileByName(testname)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
@@ -160,7 +160,7 @@ func TestGetProfileBySN(t *testing.T) {
 		assert.Equal(t, "null", data.SerialNumber.String())
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		testSerial = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		data, err := c.GetProfileBySN(testSerial)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
@@ -185,7 +185,7 @@ func TestGetProfiles(t *testing.T) {
 		assert.NoError(t, err, "GetProfiles name:asc error -> %s, %+v", err, data)
 
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		data, err := c.GetProfiles("", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
@@ -212,7 +212,7 @@ func TestDeleteProfileNotFound(t *testing.T) {
 		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
 		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		err := c.DeleteProfile(testProfileName)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
 	}
@@ -240,7 +240,7 @@ func TestDeleteProfile(t *testing.T) {
 		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
 		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		err := c.DeleteProfile("footest")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
 	}
