@@ -21,8 +21,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
+	"github.com/mbfrahry/oneview-golang/rest"
 )
 
 // OVClient - wrapper class for ov api's

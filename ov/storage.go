@@ -18,7 +18,7 @@ limitations under the License.
 package ov
 
 import (
-	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/mbfrahry/oneview-golang/utils"
 )
 
 // LogicalDrive logical drive options

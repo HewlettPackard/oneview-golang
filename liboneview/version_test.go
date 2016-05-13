@@ -31,13 +31,13 @@ func TestCalculateVersion(t *testing.T) {
 // Test GetAPIVersion
 func TestCheckVersion(t *testing.T) {
 	// TODO: removing refrences to icsp/ov libs because we get this error:
-	// 	# github.com/HewlettPackard/oneview-golang/liboneview
+	// 	# github.com/mbfrahry/oneview-golang/liboneview
 	// import cycle not allowed in test
-	// package github.com/HewlettPackard/oneview-golang/liboneview (test)
+	// package github.com/mbfrahry/oneview-golang/liboneview (test)
 	// 	imports github.com/docker/machine/drivers/oneview/ov
-	// 	imports github.com/HewlettPackard/oneview-golang/liboneview
+	// 	imports github.com/mbfrahry/oneview-golang/liboneview
 	//
-	// FAIL	github.com/HewlettPackard/oneview-golang/liboneview [setup failed]
+	// FAIL	github.com/mbfrahry/oneview-golang/liboneview [setup failed]
 
 	// var (
 	// 	ClientICSP *icsp.ICSPClient

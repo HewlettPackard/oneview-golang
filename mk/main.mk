@@ -4,7 +4,7 @@ GO_GCFLAGS :=
 
 # Full package list
 # PKGS := $(shell go list -tags "$(BUILDTAGS)" ./testconfig/... ./ov/... ./icsp/... ./liboneview/... ./rest/... ./utils/... | grep -v "/vendor/" | grep -v "/Godeps/")
-PKGS := ./testconfig ./ov ./icsp ./liboneview ./rest ./utils
+PKGS := ./testconfig ./ov ./liboneview ./rest ./utils
 
 # Resolving binary dependencies for specific targets
 GOLINT_BIN := $(GOPATH)/bin/golint

@@ -35,7 +35,7 @@ func TestSessionLogin(t *testing.T) {
 		data, err = c.SessionLogin()
 		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		data, err := c.SessionLogin()
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 		assert.Equal(t, "none", c.APIKey)
@@ -68,7 +68,7 @@ func TestSessionLogout(t *testing.T) {
 		//_, err = c.GetProfileBySN(testSerial)
 		//assert.Error(t, err, "SessionLogin threw error -> %s", err)
 	} else {
-		/*_, c = getTestDriverU()
+		/*_, c = getTestDriverU("dev")
 		data, err := c.SessionLogin()
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
 		assert.Equal(t, "none", c.APIKey)
