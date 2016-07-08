@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
-	"time"
+	//"time"
 
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -18,7 +18,7 @@ func TestSessionLogin(t *testing.T) {
 		// env = os.Getenv("ONEVIEW_TEST_ENV") || "dev"
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -35,7 +35,7 @@ func TestSessionLogin(t *testing.T) {
 		data, err = c.SessionLogin()
 		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		data, err := c.SessionLogin()
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 		assert.Equal(t, "none", c.APIKey)
@@ -50,7 +50,7 @@ func TestSessionLogout(t *testing.T) {
 		//testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -68,7 +68,7 @@ func TestSessionLogout(t *testing.T) {
 		//_, err = c.GetProfileBySN(testSerial)
 		//assert.Error(t, err, "SessionLogin threw error -> %s", err)
 	} else {
-		/*_, c = getTestDriverU()
+		/*_, c = getTestDriverU("dev")
 		data, err := c.SessionLogin()
 		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
 		assert.Equal(t, "none", c.APIKey)
@@ -83,7 +83,7 @@ func TestGetIdleTimeout(t *testing.T) {
 		// d *OVTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -106,7 +106,7 @@ func TestSetIdleTimeout(t *testing.T) {
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		testtime = 25000
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -125,6 +125,7 @@ func TestSetIdleTimeout(t *testing.T) {
 
 }
 
+/*
 // Test for expired key and see if RefreshLogin can restore the key if we have a bad key
 func TestSessionExpiredKey(t *testing.T) {
 	var (
@@ -132,7 +133,7 @@ func TestSessionExpiredKey(t *testing.T) {
 		d *OVTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("test_ethernet_network")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -152,11 +153,12 @@ func TestSessionExpiredKey(t *testing.T) {
 
 		// verify that we can access something from icps with this client
 		// This should not fail because it uses RefreshLogin to get a new login session and avoid timeout
-		profileName := d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
-		data, err := c.GetProfileByName(profileName)
-		assert.NoError(t, err, "GetProfileByName threw error -> %s", err)
-		assert.Equal(t, profileName, data.Name)
+		ethNetName := d.Tc.GetTestData(d.Env, "Name").(string)
+		data, err := c.GetEthernetNetworkByName(ethNetName)
+		assert.NoError(t, err, "GetEthNetByName threw error -> %s", err)
+		assert.Equal(t, ethNetName, data.Name)
 
 	}
 
 }
+*/
