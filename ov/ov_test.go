@@ -3,9 +3,9 @@ package ov
 import (
 	"os"
 
+	"github.com/docker/machine/libmachine/log"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/testconfig"
-	"github.com/docker/machine/libmachine/log"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats
@@ -33,22 +33,22 @@ type OVTest struct {
 }
 
 // get Environment
-func (ot *OVTest) GetEnvironment() {
+func (ot *OVTest) GetEnvironment(env string) {
 	if os.Getenv("ONEVIEW_TEST_ENV") != "" {
 		ot.Env = os.Getenv("ONEVIEW_TEST_ENV")
 		return
 	}
-	ot.Env = "dev"
+	ot.Env = env
 	return
 }
 
 // get a test driver for acceptance testing
-func getTestDriverA() (*OVTest, *OVClient) {
+func getTestDriverA(env string) (*OVTest, *OVClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *OVTest
 	var tc *testconfig.TestConfig
-	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
+	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &OVClient{
 		rest.Client{
@@ -70,11 +70,11 @@ func getTestDriverA() (*OVTest, *OVClient) {
 }
 
 // Unit test
-func getTestDriverU() (*OVTest, *OVClient) {
+func getTestDriverU(env string) (*OVTest, *OVClient) {
 	var ot *OVTest
 	var tc *testconfig.TestConfig
-	ot = &OVTest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
+	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &OVClient{
 		rest.Client{
