@@ -18,7 +18,7 @@ func TestServerHardware(t *testing.T) {
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
@@ -42,7 +42,7 @@ func TestGetAvailableHardware(t *testing.T) {
 		testHWGroup_URI utils.Nstring
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testHwType_URI = utils.Nstring(d.Tc.GetTestData(d.Env, "HardwareTypeURI").(string))
 		testHWGroup_URI = utils.Nstring(d.Tc.GetTestData(d.Env, "GroupURI").(string))
 		if c == nil {
@@ -68,7 +68,7 @@ func TestGetIloIPAddress(t *testing.T) {
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "IloIPAddress").(string)
 		if c == nil {
