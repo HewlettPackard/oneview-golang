@@ -1,12 +1,13 @@
 package ov
 
+
 import (
 	"os"
 	"testing"
 
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 // testing power state type
@@ -18,7 +19,7 @@ func TestPowerState(t *testing.T) {
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
@@ -51,3 +52,4 @@ func TestPowerState(t *testing.T) {
 
 	}
 }
+
