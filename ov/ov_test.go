@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/docker/machine/libmachine/log"
-	"github.hpe.com/matthew-frahry/oneview-golang/rest"
-	"github.hpe.com/matthew-frahry/oneview-golang/testconfig"
+	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/testconfig"
 )
 
 //TODO: need to learn a better way of how integration testing works with bats
