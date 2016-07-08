@@ -15,7 +15,7 @@ func TestGetAPIVersion(t *testing.T) {
 		c *OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -26,7 +26,7 @@ func TestGetAPIVersion(t *testing.T) {
 		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env, "CurrentVersion"), data.CurrentVersion))
 		assert.Equal(t, true, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env, "MinimumVersion"), data.MinimumVersion))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		data, err := c.GetAPIVersion()
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
@@ -40,7 +40,7 @@ func TestRefreshVersion(t *testing.T) {
 		c *OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -50,7 +50,7 @@ func TestRefreshVersion(t *testing.T) {
 		assert.NoError(t, err, "RefreshVersion threw error -> %s", err)
 		assert.True(t, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env, "CurrentVersion"), c.APIVersion))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		err := c.RefreshVersion()
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s", err))
 	}
