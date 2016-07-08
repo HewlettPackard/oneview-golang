@@ -1,13 +1,12 @@
 package ov
 
-
 import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
-	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 // testing power state type
@@ -52,4 +51,3 @@ func TestPowerState(t *testing.T) {
 
 	}
 }
-
