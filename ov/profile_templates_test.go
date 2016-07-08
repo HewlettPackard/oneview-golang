@@ -16,7 +16,7 @@ func TestGetProfileTemplateByName(t *testing.T) {
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		// determine if we should execute
 		testname = d.Tc.GetTestData(d.Env, "TemplateProfile").(string)
 		if c == nil {
@@ -31,7 +31,7 @@ func TestGetProfileTemplateByName(t *testing.T) {
 		assert.Equal(t, "", data.Name)
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		// determine if we should execute
 		if c.ProfileTemplatesNotSupported() {
 			return

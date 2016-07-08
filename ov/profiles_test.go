@@ -22,7 +22,7 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 		testTemplate     ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -85,7 +85,7 @@ func TestGetProfileByName(t *testing.T) {
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -99,7 +99,7 @@ func TestGetProfileByName(t *testing.T) {
 		assert.Equal(t, "", data.Name)
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		data, err := c.GetProfileByName(testname)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
@@ -114,7 +114,7 @@ func TestGetConnectionByName(t *testing.T) {
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testname = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
 		pubcname := d.Tc.GetTestData(d.Env, "FreePublicConnection").(string)
 		expectsmac := d.Tc.GetExpectsData(d.Env, "MACAddress").(string)
@@ -146,7 +146,7 @@ func TestGetProfileBySN(t *testing.T) {
 		testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testSerial = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -160,7 +160,7 @@ func TestGetProfileBySN(t *testing.T) {
 		assert.Equal(t, "null", data.SerialNumber.String())
 
 	} else {
-		d, c = getTestDriverU()
+		d, c = getTestDriverU("dev")
 		testSerial = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		data, err := c.GetProfileBySN(testSerial)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
@@ -174,7 +174,7 @@ func TestGetProfiles(t *testing.T) {
 		c *OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -185,7 +185,7 @@ func TestGetProfiles(t *testing.T) {
 		assert.NoError(t, err, "GetProfiles name:asc error -> %s, %+v", err, data)
 
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		data, err := c.GetProfiles("", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
@@ -200,7 +200,7 @@ func TestDeleteProfileNotFound(t *testing.T) {
 		testProfile     ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -212,7 +212,7 @@ func TestDeleteProfileNotFound(t *testing.T) {
 		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
 		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		err := c.DeleteProfile(testProfileName)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
 	}
@@ -227,7 +227,7 @@ func TestDeleteProfile(t *testing.T) {
 		testProfile     ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -240,7 +240,7 @@ func TestDeleteProfile(t *testing.T) {
 		assert.NoError(t, err, "GetProfileByName with deleted profile -> %+v", err)
 		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting template name, %+v", testProfile))
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 		err := c.DeleteProfile("footest")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
 	}
