@@ -1,5 +1,6 @@
 package ov
 
+
 import (
 	"os"
 	"testing"
@@ -18,7 +19,7 @@ func TestConnections(t *testing.T) {
 		c *OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -29,3 +30,4 @@ func TestConnections(t *testing.T) {
 
 	}
 }
+
