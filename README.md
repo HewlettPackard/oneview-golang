@@ -1,4 +1,6 @@
-# HPE OneView golang SDK 
+# HPE OneView golang bindings
+
+[![Build Status](https://travis-ci.org/HewlettPackard/oneview-golang.svg?branch=master)](https://travis-ci.org/HewlettPackard/oneview-golang)
 
 HPE OneView allows you to treat your physical infrastructure as code, and now
 you can integrate your favorite tools based in golang with HPE OneView.
@@ -19,11 +21,20 @@ make test
 ```
 
 ### Without docker
+=======
 * Install golang 1.5 or better
 * Install go packages listed in .travis.yml
 ```
-USE_CONTAINER=false make test
+USE_CONTAINER=1 make test
 ```
+
+USE_CONTAINER=false make test
+
+## Contributing
+
+Want to hack on oneview-golang? Please start with the [Contributing Guide](https://github.com/HewlettPackard/docker-machine-oneview/blob/master/CONTRIBUTING.md).
+
+This code base is primarily consumed and used by the docker-machine-oneview project.  We will follow contribution standards set by this project.
 
 ## Hacking Guide
 
