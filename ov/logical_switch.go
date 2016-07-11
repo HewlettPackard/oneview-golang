@@ -1,5 +1,9 @@
 package ov
 
+import (
+	"github.com/HewlettPackard/oneview-golang/utils"
+)
+
 type LogicalSwitch struct {
 	Category                string                  `json:"category,omitempty"`          // "category": "logcial-switch-groups",
 	ConstitencyStatus       string                  `json:"constitencyStatus,omitempty"` //"consitencyStatue": "CONSISTENT",
