@@ -1,9 +1,8 @@
 # Project name, used to name the binaries
 PKG_NAME := oneview-golang
 # Github infos
-GITHUB_INFO := $(shell git config --get remote.origin.url | sed 's/\.git//g'| sed -e 's/\(.*:\/\/\)\(.*\)/\2/')
-GH_USER ?= $(shell echo $(GITHUB_INFO) | cut -d \/ -f 2)
-GH_REPO ?= $(shell echo $(GITHUB_INFO) | cut -d \/ -f 3)
+GH_USER ?= HewlettPackard
+GH_REPO ?= oneview-golang
 
 # If true, disable optimizations and does NOT strip the binary
 DEBUG ?=

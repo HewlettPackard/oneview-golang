@@ -1,5 +1,7 @@
 # # Plain make targets if not requested inside a container
 
+USE_CONTAINER ?= true
+
 define noop_targets
 	@make -pn | sed -rn '/^[^# \t\.%].*:[^=]?/p'|grep -v '='| grep -v '(%)'| grep -v '/'| awk -F':' '{print $$1}'|sort -u;
 endef
@@ -8,7 +10,7 @@ include Makefile.inc
 
 ifneq (,$(findstring test-integration,$(MAKECMDGOALS)))
 	include mk/main.mk
-else ifeq ($(USE_CONTAINER),)
+else ifeq ($(USE_CONTAINER),false)
 	include mk/main.mk
 else
 # Otherwise, with docker, swallow all targets and forward into a container
@@ -45,7 +47,11 @@ test: gen-dockerfile
 		    -e TARGET_ARCH \
 		    -e PREFIX \
 		    -e GO15VENDOREXPERIMENT \
-				-e TEST_RUN \
+		    -e TEST_RUN \
+		    -e ONEVIEW_DEBUG \
+		    -e GH_USER \
+		    -e GH_REPO \
+		    -e USE_CONTAINER=false \
 		    $(DOCKER_IMAGE_NAME) \
 		    make $@
 
