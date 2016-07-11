@@ -21,14 +21,11 @@ make test
 ```
 
 ### Without docker
-=======
 * Install golang 1.5 or better
 * Install go packages listed in .travis.yml
 ```
-USE_CONTAINER=1 make test
-```
-
 USE_CONTAINER=false make test
+```
 
 ## Contributing
 
