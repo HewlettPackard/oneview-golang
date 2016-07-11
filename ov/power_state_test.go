@@ -18,7 +18,7 @@ func TestPowerState(t *testing.T) {
 		expectsData string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA()
+		d, c = getTestDriverA("dev")
 		testData = utils.Nstring(d.Tc.GetTestData(d.Env, "ServerHardwareURI").(string))
 		expectsData = d.Tc.GetExpectsData(d.Env, "SerialNumber").(string)
 		if c == nil {
