@@ -45,7 +45,7 @@
         "IloIPAddress":  "16.85.0.102",
         "SAObjectID": "1340001",
         "TemplateProfile": "Dev Docker Host",
-        "SerialNumber": "VCG61SU01Q",
+        "SerialNumber": "VCGM123023",
         "MacAddr": "AA:43:83:10:00:BB",
         "UsedBladeName": "02-CN751500Z9, bay 4",
         "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303548",
@@ -60,8 +60,142 @@
         "MinimumVersion": 1,
         "FakeData": "foo",
         "IcspName" : "IC04-HOUEGSL-C7000-04-4",
-        "SerialNumber": "CN7518005H",
+        "SerialNumber": "VCGM123023",
         "IloIPAddress":  "16.85.0.90"
+      }
+    },
+    {
+      "name": "test_network_set",
+      "enabled": true,
+      "test_data": {
+        "Type": "network-set",
+        "NetworkUris": [
+          "/rest/ethernet-networks/ebd4ab9c-4618-4bd8-83fd-75a36705f261"
+        ],
+        "ConnectionTemplateUri": "/rest/connection-templates/d49da7c5-3a1e-44dd-9666-89f700ac58c1",
+        "NativeNetworkUri": "/rest/ethernet-networks/ebd4ab9c-4618-4bd8-83fd-75a36705f261",
+        "Description": null,
+        "Name": "netset test",
+        "State": "Active",
+        "Status": "OK",
+        "ETAG": "92044486-474b-4d6b-be39-0376f331e4e0",
+        "Modified": "2016-05-31T20:52:06.221Z",
+        "Created": "2016-05-31T20:52:06.220Z",
+        "Category": "network-sets",
+        "URI": "/rest/network-sets/93b128a2-d565-4d2e-8338-bf17c7a0c15d"
+      }
+    },
+    {
+      "name": "test_logical_switch_group",
+      "enabled": true,
+      "test_data": {
+        "Category": "logical-switch-groups",
+        "Name":     "test logical switch group",
+        "Type": "logical-switch-group",
+        "SwitchMapTemplate": {
+          "SwitchMapEntryTemplates" : [
+            {
+              "LogicalLocation": {
+                "LocationEntries": [
+                  {
+                    "RelativeValue": 1,
+                    "Type": "StackingMemberId"
+                  }
+                ]
+              },
+              "PermittedSwitchTypeUri": "/rest/switch-types/a2bc8f42-8bb8-4560-b80f-6c3c0e0d66e0"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "test_ethernet_network",
+      "enabled": true,
+      "test_data": {
+        "Type": "ethernet-networkV3",
+        "VlanId": 7,
+        "EthernetNetworkType": "Tagged",
+        "SmartLink": false,
+        "ConnectionTemplateUri": "/rest/connection-templates/14b671d8-898e-49ab-bfd8-c13b8b3306f8",
+        "Purpose": "General",
+        "FabricUri": "/rest/fabrics/c1c5f38d-1038-4534-a62a-5617165ee244",
+        "PrivateNetwork": false,
+        "Description": null,
+        "Name": "Test Ethernet Network 1",
+        "State": "Active",
+        "Status": "OK",
+        "ETAG": "57d60dc9-a346-4ce1-a7c9-37cf66fddb4e",
+        "Modified": "2016-04-04T21:04:24.209Z",
+        "Created": "2016-04-04T21:04:24.207Z",
+        "Category": "ethernet-networks",
+        "URI": "/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"
+      }
+    },
+    {
+      "name": "test_fcoe_network",
+      "enabled": true,
+      "test_data": {
+        "Type": "fcoe-network",
+        "VlanId": 2,
+        "ConnectionTemplateUri": "/rest/connection-templates/264fb17b-b4a7-49d2-9ac7-f67f5f21c3de",
+        "ManagedSanUri": null,
+        "FabricUri": "/rest/fabrics/c1c5f38d-1038-4534-a62a-5617165ee244",
+        "Description": null,
+        "Name": "test-fcoe-network 1",
+        "State": "Active",
+        "Status": "OK",
+        "ETAG": "f5b6e363-03e4-45d7-a90b-c617b8fe261c",
+        "Modified": "2016-05-20T19:30:27.327Z",
+        "Created": "2016-05-20T19:30:27.324Z",
+        "Category": "fcoe-networks",
+        "Uri": "/rest/fcoe-networks/5b0c7eca-e9bc-4cea-99ab-c03b4414c9cc"
+      }
+    },
+    {
+      "Name": "test_fc_network",
+      "Enabled": true,
+      "Test_data": {
+      "Type": "fc-networkV2",
+      "FabricType": "FabricAttach",
+      "ConnectionTemplateUri": "/rest/connection-templates/21f7011e-409a-40f5-b717-e04914abf60b",
+      "ManagedSanUri": null,
+      "LinkStabilityTime": 30,
+      "AutoLoginRedistribution": true,
+      "Description": null,
+      "Name": "FC Network 1",
+      "State": "Active",
+      "Status": "OK",
+      "ETAG": "d063ee03-3e47-4e85-b6df-fe54cad4ab86",
+      "Modified": "2016-04-04T21:04:27.711Z",
+      "Created": "2016-04-04T21:04:27.703Z",
+      "Category": "fc-networks",
+      "URI": "/rest/fc-networks/72dc37d9-320e-42c5-8417-8e899cd735dd"
+      }
+    },
+    {
+      "Name": "test_switch_type",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "Cisco Nexus 50xx",
+        "URI": "/rest/switch-types/a2bc8f42-8bb8-4560-b80f-6c3c0e0d66e0"
+      }
+    },
+    {
+      "Name": "test_interconnect_type",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "HP VC FlexFabric-20/40 F8 Module",
+        "URI": "/rest/interconnect-types/e9e79d17-6a81-4365-8b6f-619bb5b81476"
+      }
+    },
+    {
+      "Name": "test_logical_interconnect_group",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go LIG test",
+        "Type": "logical-interconnect-groupV3",
+        "EnclosureType": "C7000"
       }
     },
     {
@@ -75,7 +209,6 @@
         "MinimumVersion": 1,
         "FakeData": "foo"
       }
-
     }
   ]
 }
