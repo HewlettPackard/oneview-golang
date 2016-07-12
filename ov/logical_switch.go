@@ -8,7 +8,7 @@ type LogicalSwitch struct {
 	Category                string                  `json:"category,omitempty"`          // "category": "logcial-switch-groups",
 	ConstitencyStatus       string                  `json:"constitencyStatus,omitempty"` //"consitencyStatue": "CONSISTENT",
 	Created                 string                  `json:"created,omitempty"`           // "created": "20150831T154835.250Z",
-	Description             string                  `json:"description,omitempty"`       // "description": "Logical Switch 1",
+	Description             utils.Nstring           `json:"description,omitempty"`       // "description": "Logical Switch 1",
 	ETAG                    string                  `json:"eTag,omitempty"`              // "eTag": "1441036118675/8",
 	FabricUri               utils.Nstring           `json:"fabricUri,omitempty"`         // "fabricUri": "/rest/fabrics/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",
 	LogicalSwitchDomainInfo LogicalSwitchDomainInfo `json:"logicalSwitchDomainInfo"`

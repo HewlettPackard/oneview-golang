@@ -19,7 +19,7 @@ type InterconnectType struct {
 	MaximumFirmwareVersion   string                 `json:"maximumFirmwareVersion,omitempty"`   // "maximumFirmwareVersion": "3.0.0",
 	MinimumFirmwareVersion   string                 `json:"minimumFirmwareVersion,omitempty"`   // "minimumFirmwareVersion": "2.0.0",
 	Modified                 string                 `json:"modified,omitempty"`                 // "modified": "20150831T154835.250Z",
-	Name                     string                 `json:"name,omitempty"`                     // "name": null,
+	Name                     utils.Nstring          `json:"name,omitempty"`                     // "name": null,
 	PartNumber               string                 `json:"partNumber,omitempty"`               // "partNumber": "572018-B21",
 	PortInfos                []PortInfo             `json:"portInfos,omitempty"`                // "portInfos": {...},
 	State                    string                 `json:"state,omitempty"`                    // "state": "Normal",
@@ -30,14 +30,14 @@ type InterconnectType struct {
 }
 
 type DownlinkPortCapability struct {
-	Category           string                 `json:"category,omitempty"`           // "category": null,
+	Category           utils.Nstring          `json:"category,omitempty"`           // "category": null,
 	Created            string                 `json:"created,omitempty"`            // "created": "20150831T154835.250Z",
 	Description        string                 `json:"description,omitempty"`        // "description": "Downlink Port Capability",
 	DownlinkSubPorts   map[string]interface{} `json:"downlinkSubPorts,omitempty"`   // "downlinkSubPorts": null,
 	ETAG               string                 `json:"eTag,omitempty"`               // "eTag": "1441036118675/8",
 	MaxBandwidthInGbps int                    `json:"maxBandwidthInGbps,omitempty"` // "maxBandwidthInGbps": 10,
 	Modified           string                 `json:"modified,omitempty"`           // "modified": "20150831T154835.250Z",
-	Name               string                 `json:"name,omitempty"`               // "name": null,
+	Name               utils.Nstring          `json:"name,omitempty"`               // "name": null,
 	PortCapabilities   []string               `json:"portCapabilities,omitempty"`   //"portCapabilites":  ["ConnectionReservation","FibreChannel","ConnectionDeployment"],
 	State              string                 `json:"state,omitempty"`              // "state": "Normal",
 	Status             string                 `json:"status,omitempty"`             // "status": "Critical",
@@ -52,12 +52,12 @@ type InterconnectCapability struct {
 }
 
 type PortInfo struct {
-	DownlinkCapable  bool     `json:"downlinkCapable,omitempty"` // "downlinkCapable": true,
-	PairedPortName   string   `json:"pairedPortName,omitempty"`  // "pairedPortName": null,
-	PortCapabilities []string `json:"portCapabilites,omitempty"` // "portCapabilities":  ["ConnectionReservation","FibreChannel","ConnectionDeployment"],
-	PortName         string   `json:"portName,omitempty"`        // "portName": "4",
-	PortNumber       int      `json:"portNumber,omitempty"`      // "portNumber": 20,
-	UplinkCapable    bool     `json:"uplinkCapable,omitempty"`   // "uplinkCapable": true,
+	DownlinkCapable  bool          `json:"downlinkCapable,omitempty"` // "downlinkCapable": true,
+	PairedPortName   utils.Nstring `json:"pairedPortName,omitempty"`  // "pairedPortName": null,
+	PortCapabilities []string      `json:"portCapabilites,omitempty"` // "portCapabilities":  ["ConnectionReservation","FibreChannel","ConnectionDeployment"],
+	PortName         string        `json:"portName,omitempty"`        // "portName": "4",
+	PortNumber       int           `json:"portNumber,omitempty"`      // "portNumber": 20,
+	UplinkCapable    bool          `json:"uplinkCapable,omitempty"`   // "uplinkCapable": true,
 }
 
 type InterconnectTypeList struct {

@@ -12,7 +12,7 @@ type NetworkSet struct {
 	Category              string          `json:"category,omitempty"`              // "category": "network-sets",
 	ConnectionTemplateUri utils.Nstring   `json:"connectionTemplateUri,omitempty"` // "connectionTemplateUri": "/rest/connection-templates/7769cae0-b680-435b-9b87-9b864c81657f",
 	Created               string          `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
-	Description           string          `json:"description,omitempty"`           // "description": "Network Set 1",
+	Description           utils.Nstring   `json:"description,omitempty"`           // "description": "Network Set 1",
 	ETAG                  string          `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8",
 	Modified              string          `json:"modified,omitempty"`              // "modified": "20150831T154835.250Z",
 	Name                  string          `json:"name"`                            // "name": "Network Set 1",

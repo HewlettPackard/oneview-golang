@@ -12,7 +12,7 @@ type EthernetNetwork struct {
 	Category              string        `json:"category,omitempty"`              // "category": "ethernet-networks",
 	ConnectionTemplateUri utils.Nstring `json:"connectionTemplateUri,omitempty"` // "connectionTemplateUri": "/rest/connection-templates/7769cae0-b680-435b-9b87-9b864c81657f",
 	Created               string        `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
-	Description           string        `json:"description,omitempty"`           // "description": "Ethernet network 1",
+	Description           utils.Nstring `json:"description,omitempty"`           // "description": "Ethernet network 1",
 	ETAG                  string        `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8",
 	EthernetNetworkType   string        `json:"ethernetNetworkType,omitempty"`   // "ethernetNetworkType": "Tagged",
 	FabricUri             utils.Nstring `json:"fabricUri,omitempty"`             // "fabricUri": "/rest/fabrics/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",

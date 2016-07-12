@@ -14,7 +14,7 @@ type FCoENetwork struct {
 	ConnectionTemplateUri utils.Nstring `json:"connectionTemplateUri,omitempty"`
 	ManagedSanUri         utils.Nstring `json:"managedSanUri,omitempty"`
 	FabricUri             utils.Nstring `json:"fabricUri,omitempty"`
-	Description           string        `json:"description,omitempty"`
+	Description           utils.Nstring `json:"description,omitempty"`
 	Name                  string        `json:"name,omitempty"`
 	State                 string        `json:"state,omitempty"`
 	Status                string        `json:"status,omitempty"`
