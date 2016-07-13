@@ -119,7 +119,7 @@ type ProgressUpdate struct {
 // Task structure
 type Task struct {
 	Type                    string             `json:"type,omitempty"`                    // "type": "TaskResourceV2",
-	Data                    utils.Nstring      `json:"data,omitempty"`                    // "data": null,
+	Data                    TaskData           `json:"data,omitempty"`                    // "data": null,
 	Category                string             `json:"category,omitempty"`                // "category": "tasks",
 	Hidden                  bool               `json:"hidden,omitempty"`                  // "hidden": false,
 	StateReason             string             `json:"stateReason,omitempty"`             // "stateReason": null,
@@ -156,6 +156,10 @@ type Task struct {
 type TaskServer struct {
 	Name string `json:"name,omitempty"` // "Name to server
 	URI  string `json:"uri,omitempty"`  // "URI to server
+}
+
+type TaskData struct {
+	TaskCategory string `json:"taskCategory,omitempty"`
 }
 
 // NewProfileTask - Create New Task
