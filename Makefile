@@ -58,4 +58,4 @@ test: gen-dockerfile
 endif
 
 include mk/utils/dockerfile.mk
-include mk/utils/godeps.mk
+include mk/utils/glide.mk

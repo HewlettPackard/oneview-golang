@@ -1,0 +1,12 @@
+hash: 365d5757eeb552593cb3bef3b037eeccfa8d6f8863efa09bf78be08b8f92c410
+updated: 2016-07-15T03:27:25.886202358Z
+imports:
+- name: github.com/docker/machine
+  version: 4ca1b85719a3c1dd488c00483b1137e75b034daa
+  subpackages:
+  - libmachine/log
+- name: github.com/stretchr/testify
+  version: f390dcf405f7b83c997eac1b06768bb9f44dec18
+  subpackages:
+  - assert
+testImports: []
