@@ -3,17 +3,11 @@ GO_LDFLAGS := -X `go list ./version`.GitCommit=`git rev-parse --short HEAD`
 GO_GCFLAGS :=
 
 # Full package list
-# PKGS := $(shell go list -tags "$(BUILDTAGS)" ./testconfig/... ./ov/... ./icsp/... ./liboneview/... ./rest/... ./utils/... | grep -v "/vendor/" | grep -v "/Godeps/")
 PKGS := ./testconfig ./ov ./icsp ./liboneview ./rest ./utils
 
 # Resolving binary dependencies for specific targets
 GOLINT_BIN := $(GOPATH)/bin/golint
 GOLINT := $(shell [ -x $(GOLINT_BIN) ] && echo $(GOLINT_BIN) || echo '')
-
-# Support go1.5 vendoring (let us avoid messing with GOPATH or using godep)
-ifneq ($(GO15VENDOREXPERIMENT),1)
-GOPATH := $(GOPATH):$(PREFIX)/Godeps/_workspace
-endif
 
 # Honor debug
 ifeq ($(DEBUG),true)
