@@ -12,7 +12,7 @@ dco:
 # Fmt
 fmt:
 	@echo 'Performing FMT checks, if any files appear they run gofmt -s -w on each file'
-	@test -z "$$(gofmt -s -l . 2>&1 | grep -v vendor/ | grep -v Godeps/ | tee /dev/stderr)"
+	@test -z "$$(gofmt -s -l . 2>&1 | grep -v vendor/ | grep -v Vendor/ | tee /dev/stderr)"
 
 # Vet
 vet: build
@@ -25,4 +25,4 @@ lint:
 	@echo 'Performing lint checks'
 	$(if $(GOLINT), , \
 		$(error Please install golint: go get -u github.com/golang/lint/golint))
-	@test -z "$$($(GOLINT) ./... 2>&1 | grep -v vendor/ | grep -v Godeps/ | tee /dev/stderr)"
+	@test -z "$$($(GOLINT) ./... 2>&1 | grep -v vendor/ | grep -v Vendor/ | tee /dev/stderr)"
