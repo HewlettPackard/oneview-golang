@@ -61,31 +61,41 @@ ONEVIEW_DEBUG=true make test-acceptance TEST_RUN='-test.run=TestGetAPIVersion'
 
 Updating external dependencies
 ------------------------------
-This project relies on external libraries that are committed into Godeps folder.
-The libraries are used throughout the project to maintain compatibility with
-projects such as docker-machine-oneview and docker/machine project.
+This project is no relying on glide to provide reliable & repeatable builds.
+To learn more about glide, please visit : https://glide.sh/
 
-1. Start by cleaning all libraries from Godeps folder
+Special thanks to Matt Farina for introducing it to us.
+
+Start by installing glide:
+
+```
+curl https://glide.sh/get | sh
+```
+
+1. Add a dependency by editing the glide.yml in the root directory or run glide,
+   glide get <package>#<version>, for example:
 
    ```
-   make godeps-clean
+   glide get github.com/docker/machine#0.8.0
    ```
-   You can verify the execution by checking that there are no files left in the folder `Godeps/_workspace/src`.
 
-2. Get the latest packages with godeps target
+2. To update the existing packages, we use glide install.  Edit the glide.yaml and run:
 
    ```
-   make godeps
+   make glide
    ```
 
 3. Run a build in a docker container.
 
    ```
-   USE_CONTAINER=true make test
+   make test
    ```
 
 4. Evaluate changes.
-   At this point you might have changes to the dependent libraries that have to be incorporated into the build process.   Update any additional or no longer libraries by editing the file : [mk/utils/godeps.mk](mk/utils/godeps.mk).  This file contains arguments GO_PACKAGES that should have a space separated list of all needed packages.
+   At this point you might have changes to the dependent libraries that have 
+   to be incorporated into the build process.   Update any additional or 
+   no longer libraries by editing the file : [glide.yaml](glide.yaml).  
+   This file contains all needed packages.
    Whenever adjusting libraries, make sure to re-do steps 1-3 iteratively.
 
 5. Ok, it all test and passes, so it's time to commit your changes.
