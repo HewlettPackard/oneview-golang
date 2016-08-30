@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/docker/machine/libmachine/log"
-	"github.hpe.com/matthew-frahry/oneview-golang/rest"
-	"github.hpe.com/matthew-frahry/oneview-golang/utils"
+	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 type FCNetwork struct {
