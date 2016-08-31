@@ -3,15 +3,15 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/docker/machine/libmachine/log"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"github.com/docker/machine/libmachine/log"
 )
 
 type LogicalInterconnectGroup struct {
 	Category                string                   `json:"category,omitempty"`               // "category": "logical-interconnect-groups",
 	Created                 string                   `json:"created,omitempty"`                // "created": "20150831T154835.250Z",
-	Description             utils.Nstring            `json:"description,omitempty"`            // "description": "Logical Interconnect Group 1",
+	Description             string                   `json:"description,omitempty"`            // "description": "Logical Interconnect Group 1",
 	ETAG                    string                   `json:"eTag,omitempty"`                   // "eTag": "1441036118675/8",
 	EnclosureIndexes        []int                    `json:"enclosureIndexes,omitempty"`       // "enclosureIndexes": [1],
 	EnclosureType           string                   `json:"enclosureType,omitempty"`          // "enclosureType": "C7000",
@@ -35,10 +35,10 @@ type LogicalInterconnectGroup struct {
 }
 
 type EthernetSettings struct {
-	Category                    utils.Nstring `json:"category,omitempty"`                    // "category": null,
+	Category                    string        `json:"category,omitempty"`                    // "category": null,
 	Created                     string        `json:"created,omitempty"`                     // "created": "20150831T154835.250Z",
 	DependentResourceUri        utils.Nstring `json:"dependentResourceUri,omitempty"`        // dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
-	Description                 utils.Nstring `json:"description,omitempty,omitempty"`       // "description": "Ethernet Settings",
+	Description                 string        `json:"description,omitempty,omitempty"`       // "description": "Ethernet Settings",
 	ETAG                        string        `json:"eTag,omitempty"`                        // "eTag": "1441036118675/8",
 	EnableFastMacCacheFailover  *bool         `json:"enableFastMacCacheFailover,omitempty"`  //"enableFastMacCacheFailover": false,
 	EnableIgmpSnooping          *bool         `json:"enableIgmpSnooping,omitempty"`          // "enableIgmpSnooping": false,
@@ -81,7 +81,7 @@ type QosConfiguration struct {
 	ActiveQosConfig          ActiveQosConfig           `json:"activeQosConfig,omitempty"`          //"activeQosConfig": {...},
 	Category                 string                    `json:"category,omitempty"`                 // "category": "qos-aggregated-configuration",
 	Created                  string                    `json:"created,omitempty"`                  // "created": "20150831T154835.250Z",
-	Description              utils.Nstring             `json:"description,omitempty,omitempty"`    // "description": null,
+	Description              string                    `json:"description,omitempty,omitempty"`    // "description": null,
 	ETAG                     string                    `json:"eTag,omitempty"`                     // "eTag": "1441036118675/8",
 	InactiveFCoEQosConfig    *InactiveFCoEQosConfig    `json:"inactiveFCoEQosConfig,omitempty"`    // "inactiveFCoEQosConfig": {...},
 	InactiveNonFCoEQosConfig *InactiveNonFCoEQosConfig `json:"inactiveNonFCoEQosConfig,omitempty"` // "inactiveNonFCoEQosConfig": {...},
@@ -94,10 +94,10 @@ type QosConfiguration struct {
 }
 
 type ActiveQosConfig struct {
-	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
+	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -111,10 +111,10 @@ type ActiveQosConfig struct {
 }
 
 type InactiveFCoEQosConfig struct {
-	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
+	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -128,10 +128,10 @@ type InactiveFCoEQosConfig struct {
 }
 
 type InactiveNonFCoEQosConfig struct {
-	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
+	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -165,9 +165,9 @@ type QosTrafficClass struct {
 
 //TODO SNMPConfiguration
 type SnmpConfiguration struct {
-	Category         utils.Nstring     `json:"category,omitempty"`         // "category": "snmp-configuration",
+	Category         string            `json:"category,omitempty"`         // "category": "snmp-configuration",
 	Created          string            `json:"created,omitempty"`          // "created": "20150831T154835.250Z",
-	Description      utils.Nstring     `json:"description,omitempty"`      // "description": null,
+	Description      string            `json:"description,omitempty"`      // "description": null,
 	ETAG             string            `json:"eTag,omitempty"`             // "eTag": "1441036118675/8",
 	Enabled          *bool             `json:"enabled,omitempty"`          // "enabled": true,
 	Modified         string            `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
@@ -195,7 +195,7 @@ type TrapDestination struct {
 type TelemetryConfiguration struct {
 	Category        string        `json:"category,omitempty"`        // "category": "telemetry-configuration",
 	Created         string        `json:"created,omitempty"`         // "created": "20150831T154835.250Z",
-	Description     utils.Nstring `json:"description,omitempty"`     // "description": null,
+	Description     string        `json:"description,omitempty"`     // "description": null,
 	ETAG            string        `json:"eTag,omitempty"`            // "eTag": "1441036118675/8",
 	EnableTelemetry *bool         `json:"enableTelemetry,omitempty"` // "enableTelemetry": false,
 	Modified        string        `json:"modified,omitempty"`        // "modified": "20150831T154835.250Z",
@@ -217,7 +217,7 @@ type UplinkSet struct {
 	NativeNetworkUri       utils.Nstring           `json:"nativeNetworkUri,omitempty"`    // "nativeNetworkUri": null,
 	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
 	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
-	PrimaryPort            LogicalLocation         `json:"primaryPort,omitempty"`         // "primaryPort": {...},
+	PrimaryPort            *LogicalLocation        `json:"primaryPort,omitempty"`         // "primaryPort": {...},
 	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
 }
 
@@ -246,6 +246,24 @@ func (c *OVClient) GetLogicalInterconnectGroupByName(name string) (LogicalInterc
 	} else {
 		return logicalInterconnectGroup, err
 	}
+}
+
+func (c *OVClient) GetLogicalInterconnectGroupByUri(uri utils.Nstring) (LogicalInterconnectGroup, error) {
+	var (
+		lig LogicalInterconnectGroup
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return lig, err
+	}
+	log.Debugf("GetLogicalInterconnectGroup %s", data)
+	if err := json.Unmarshal([]byte(data), &lig); err != nil {
+		return lig, err
+	}
+	return lig, nil
 }
 
 func (c *OVClient) GetLogicalInterconnectGroups(filter string, sort string) (LogicalInterconnectGroupList, error) {
@@ -298,6 +316,7 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	log.Debugf("REST : %s \n %+v\n", uri, logicalInterconnectGroup)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, logicalInterconnectGroup)
+
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new logical interconnect group request: %s", err)
@@ -388,6 +407,7 @@ func (c *OVClient) UpdateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	}
 
 	log.Debugf("Response update LogicalInterConnectGroup %s", data)
+
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)

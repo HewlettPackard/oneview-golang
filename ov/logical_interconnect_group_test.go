@@ -2,9 +2,9 @@ package ov
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"testing"
 )
