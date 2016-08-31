@@ -217,7 +217,7 @@ type UplinkSet struct {
 	NativeNetworkUri       utils.Nstring           `json:"nativeNetworkUri,omitempty"`    // "nativeNetworkUri": null,
 	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
 	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
-	PrimaryPort            LogicalLocation         `json:"primaryPort,omitempty"`         // "primaryPort": {...},
+	PrimaryPort            *LogicalLocation         `json:"primaryPort,omitempty"`         // "primaryPort": {...},
 	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
 }
 
@@ -246,6 +246,24 @@ func (c *OVClient) GetLogicalInterconnectGroupByName(name string) (LogicalInterc
 	} else {
 		return logicalInterconnectGroup, err
 	}
+}
+
+func (c *OVClient) GetLogicalInterconnectGroupByUri(uri utils.Nstring) (LogicalInterconnectGroup, error) {
+	var (
+		lig LogicalInterconnectGroup
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return lig, err
+	}
+	log.Debugf("GetLogicalInterconnectGroup %s", data)
+	if err := json.Unmarshal([]byte(data), &lig); err != nil {
+		return lig, err
+	}
+	return lig, nil
 }
 
 func (c *OVClient) GetLogicalInterconnectGroups(filter string, sort string) (LogicalInterconnectGroupList, error) {
