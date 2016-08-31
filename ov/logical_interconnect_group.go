@@ -3,9 +3,9 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/docker/machine/libmachine/log"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 type LogicalInterconnectGroup struct {
