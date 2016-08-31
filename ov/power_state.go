@@ -65,7 +65,7 @@ var powercontrols = [...]string{
 	"ColdBoot", // ColdBoot       - A hard reset that immediately removes power from the server
 	//                hardware and then restarts the server after approximately six seconds.
 	"MomentaryPress", // MomentaryPress - Power on or a normal (soft) power off,
-	"PressAndHold", //                  depending on powerState. PressAndHold
+	"PressAndHold",   //                  depending on powerState. PressAndHold
 	//                  An immediate (hard) shutdown.
 	"Reset", // Reset          - A normal server reset that resets the device in an orderly sequence.
 }
