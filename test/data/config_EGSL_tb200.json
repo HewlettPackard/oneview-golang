@@ -182,6 +182,23 @@
       }
     },
     {
+      "Name": "test_server_hardware_type",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "BL460c G7 1"
+      }
+    },
+    {
+      "Name": "test_server_profile_template",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "goTestSPT",
+        "Type": "ServerProfileTemplateV1",
+        "ServerHardwareTypeUri": "/rest/server-hardware-types/08D06441-6C1A-4B55-998F-E345BF0CE7BF",
+        "EnclosureGroupUri":  "/rest/enclosure-groups/8c03d9b8-8274-4191-9757-440d24a61757"
+      }
+    },
+    {
       "Name": "test_interconnect_type",
       "Enabled": true,
       "Test_data": {
@@ -196,6 +213,30 @@
         "Name": "go LIG test",
         "Type": "logical-interconnect-groupV3",
         "EnclosureType": "C7000"
+      }
+    },
+    {
+      "Name": "test_enclosure_group",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go enclosure test",
+        "Type": "EnclosureGroupV200",
+        "StackingMode": "Enclosure"
+      }
+    },
+    {
+      "Name": "test_storage_volume",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "Volume_1",
+        "Type": "StorageVolumeV3",
+        "StorageSystemUri": "/rest/storage-systems/TXQ1000307",
+        "ProvisioningParameters": {
+            "storagePoolUri": "rest/storage-pools/000D692C-74B3-44AC-B297-3741AABE29F8",
+            "requestedCapacity": "987654321",
+            "provisionType": "Full",
+            "shareable": false
+        }        
       }
     },
     {
