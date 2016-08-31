@@ -57,6 +57,7 @@ type PowerControl int
 const (
 	P_COLDBOOT PowerControl = 1 + iota
 	P_MOMPRESS
+	P_PRESSANDHOLD
 	P_RESET
 )
 
@@ -64,7 +65,7 @@ var powercontrols = [...]string{
 	"ColdBoot", // ColdBoot       - A hard reset that immediately removes power from the server
 	//                hardware and then restarts the server after approximately six seconds.
 	"MomentaryPress", // MomentaryPress - Power on or a normal (soft) power off,
-	//                  depending on powerState. PressAndHold
+	"PressAndHold", //                  depending on powerState. PressAndHold
 	//                  An immediate (hard) shutdown.
 	"Reset", // Reset          - A normal server reset that resets the device in an orderly sequence.
 }
@@ -147,7 +148,7 @@ func (pt *PowerTask) SubmitPowerState(s PowerState) {
 	if s != pt.State {
 		log.Infof("Powering %s server %s for %s.", s, pt.Blade.Name, pt.Blade.SerialNumber)
 		var (
-			body = PowerRequest{PowerState: s.String(), PowerControl: P_MOMPRESS.String()}
+			body = PowerRequest{PowerState: s.String(), PowerControl: P_PRESSANDHOLD.String()}
 			uri  = strings.Join([]string{pt.Blade.URI.String(),
 				"/powerState"}, "")
 		)
