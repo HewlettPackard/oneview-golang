@@ -108,3 +108,112 @@ func (c *OVClient) GetProfileTemplates(filter string, sort string) (ServerProfil
 	}
 	return profiles, nil
 }
+
+func (c *OVClient) CreateProfileTemplate(serverProfileTemplate ServerProfile) error {
+	log.Infof("Initializing creation of server profile template for %s.", serverProfileTemplate.Name)
+	var (
+		uri = "/rest/server-profile-templates"
+		t   *Task
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Debugf("REST : %s \n %+v\n", uri, serverProfileTemplate)
+	log.Debugf("task -> %+v", t)
+	data, err := c.RestAPICall(rest.POST, uri, serverProfileTemplate)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error submitting new server profile template request: %s", err)
+		return err
+	}
+
+	log.Debugf("Response New Server Profile Template %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *OVClient) DeleteProfileTemplate(name string) error {
+	var (
+		serverProfileTemplate ServerProfile
+		err                   error
+		t                     *Task
+		uri                   string
+	)
+
+	serverProfileTemplate, err = c.GetProfileTemplateByName(name)
+	if err != nil {
+		return err
+	}
+	if serverProfileTemplate.Name != "" {
+		t = t.NewProfileTask(c)
+		t.ResetTask()
+		log.Debugf("REST : %s \n %+v\n", serverProfileTemplate.URI, serverProfileTemplate)
+		log.Debugf("task -> %+v", t)
+		uri = serverProfileTemplate.URI.String()
+		if uri == "" {
+			log.Warn("Unable to post delete, no uri found.")
+			t.TaskIsDone = true
+			return err
+		}
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
+		if err != nil {
+			log.Errorf("Error submitting delete server profile template request: %s", err)
+			t.TaskIsDone = true
+			return err
+		}
+
+		return nil
+	} else {
+		log.Infof("ServerProfileTemplate could not be found to delete, %s, skipping delete ...", name)
+	}
+	return nil
+}
+
+func (c *OVClient) UpdateProfileTemplate(serverProfileTemplate ServerProfile) error {
+	log.Infof("Initializing update of server profile template for %s.", serverProfileTemplate.Name)
+	var (
+		uri = serverProfileTemplate.URI.String()
+		t   *Task
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Debugf("REST : %s \n %+v\n", uri, serverProfileTemplate)
+	log.Debugf("task -> %+v", t)
+	data, err := c.RestAPICall(rest.PUT, uri, serverProfileTemplate)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error submitting update server profile template request: %s", err)
+		return err
+	}
+
+	log.Debugf("Response update ServerProfileTemplate %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
