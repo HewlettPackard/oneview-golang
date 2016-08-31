@@ -11,7 +11,7 @@ import (
 type LogicalInterconnectGroup struct {
 	Category                string                   `json:"category,omitempty"`               // "category": "logical-interconnect-groups",
 	Created                 string                   `json:"created,omitempty"`                // "created": "20150831T154835.250Z",
-	Description             string                   `json:"description,omitempty"`            // "description": "Logical Interconnect Group 1",
+	Description             utils.Nstring            `json:"description,omitempty"`            // "description": "Logical Interconnect Group 1",
 	ETAG                    string                   `json:"eTag,omitempty"`                   // "eTag": "1441036118675/8",
 	EnclosureIndexes        []int                    `json:"enclosureIndexes,omitempty"`       // "enclosureIndexes": [1],
 	EnclosureType           string                   `json:"enclosureType,omitempty"`          // "enclosureType": "C7000",
@@ -35,10 +35,10 @@ type LogicalInterconnectGroup struct {
 }
 
 type EthernetSettings struct {
-	Category                    string        `json:"category,omitempty"`                    // "category": null,
+	Category                    utils.Nstring `json:"category,omitempty"`                    // "category": null,
 	Created                     string        `json:"created,omitempty"`                     // "created": "20150831T154835.250Z",
 	DependentResourceUri        utils.Nstring `json:"dependentResourceUri,omitempty"`        // dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
-	Description                 string        `json:"description,omitempty,omitempty"`       // "description": "Ethernet Settings",
+	Description                 utils.Nstring `json:"description,omitempty,omitempty"`       // "description": "Ethernet Settings",
 	ETAG                        string        `json:"eTag,omitempty"`                        // "eTag": "1441036118675/8",
 	EnableFastMacCacheFailover  *bool         `json:"enableFastMacCacheFailover,omitempty"`  //"enableFastMacCacheFailover": false,
 	EnableIgmpSnooping          *bool         `json:"enableIgmpSnooping,omitempty"`          // "enableIgmpSnooping": false,
@@ -81,7 +81,7 @@ type QosConfiguration struct {
 	ActiveQosConfig          ActiveQosConfig           `json:"activeQosConfig,omitempty"`          //"activeQosConfig": {...},
 	Category                 string                    `json:"category,omitempty"`                 // "category": "qos-aggregated-configuration",
 	Created                  string                    `json:"created,omitempty"`                  // "created": "20150831T154835.250Z",
-	Description              string                    `json:"description,omitempty,omitempty"`    // "description": null,
+	Description              utils.Nstring             `json:"description,omitempty,omitempty"`    // "description": null,
 	ETAG                     string                    `json:"eTag,omitempty"`                     // "eTag": "1441036118675/8",
 	InactiveFCoEQosConfig    *InactiveFCoEQosConfig    `json:"inactiveFCoEQosConfig,omitempty"`    // "inactiveFCoEQosConfig": {...},
 	InactiveNonFCoEQosConfig *InactiveNonFCoEQosConfig `json:"inactiveNonFCoEQosConfig,omitempty"` // "inactiveNonFCoEQosConfig": {...},
@@ -94,10 +94,10 @@ type QosConfiguration struct {
 }
 
 type ActiveQosConfig struct {
-	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
+	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -111,10 +111,10 @@ type ActiveQosConfig struct {
 }
 
 type InactiveFCoEQosConfig struct {
-	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
+	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -128,10 +128,10 @@ type InactiveFCoEQosConfig struct {
 }
 
 type InactiveNonFCoEQosConfig struct {
-	Category                   string                 `json:"category,omitempty"`                   // "category": "null",
+	Category                   utils.Nstring          `json:"category,omitempty"`                   // "category": "null",
 	ConfigType                 string                 `json:"configType,omitempty"`                 // "configType": "CustomWithFCoE",
 	Created                    string                 `json:"created,omitempty"`                    // "created": "20150831T154835.250Z",
-	Description                string                 `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
+	Description                utils.Nstring          `json:"description,omitempty,omitempty"`      // "description": "Ethernet Settings",
 	DownlinkClassificationType string                 `json:"downlinkClassificationType,omitempty"` //"downlinkClassifcationType": "DOT1P_AND_DSCP",
 	ETAG                       string                 `json:"eTag,omitempty"`                       // "eTag": "1441036118675/8",
 	Modified                   string                 `json:"modified,omitempty"`                   // "modified": "20150831T154835.250Z",
@@ -165,9 +165,9 @@ type QosTrafficClass struct {
 
 //TODO SNMPConfiguration
 type SnmpConfiguration struct {
-	Category         string            `json:"category,omitempty"`         // "category": "snmp-configuration",
+	Category         utils.Nstring     `json:"category,omitempty"`         // "category": "snmp-configuration",
 	Created          string            `json:"created,omitempty"`          // "created": "20150831T154835.250Z",
-	Description      string            `json:"description,omitempty"`      // "description": null,
+	Description      utils.Nstring     `json:"description,omitempty"`      // "description": null,
 	ETAG             string            `json:"eTag,omitempty"`             // "eTag": "1441036118675/8",
 	Enabled          *bool             `json:"enabled,omitempty"`          // "enabled": true,
 	Modified         string            `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
@@ -195,7 +195,7 @@ type TrapDestination struct {
 type TelemetryConfiguration struct {
 	Category        string        `json:"category,omitempty"`        // "category": "telemetry-configuration",
 	Created         string        `json:"created,omitempty"`         // "created": "20150831T154835.250Z",
-	Description     string        `json:"description,omitempty"`     // "description": null,
+	Description     utils.Nstring `json:"description,omitempty"`     // "description": null,
 	ETAG            string        `json:"eTag,omitempty"`            // "eTag": "1441036118675/8",
 	EnableTelemetry *bool         `json:"enableTelemetry,omitempty"` // "enableTelemetry": false,
 	Modified        string        `json:"modified,omitempty"`        // "modified": "20150831T154835.250Z",
