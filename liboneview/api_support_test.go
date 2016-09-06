@@ -39,10 +39,10 @@ func TestIsSupported(t *testing.T) {
 	assert.True(t, asc.IsSupported(currentversion)) // should be true for any version
 
 	asc = asc.New(asc.Get("profile_templates.go"))
-	assert.True(t, (asc == C_PROFILE_TEMPLATES))      // is same as C_PROFILE_TEMPLATES
-	assert.False(t, asc.IsSupported(currentversion))  // should be false for ver1
-	assert.True(t, asc.IsSupported(API_VER2))         // should be true for ver2
-	assert.False(t, asc.IsSupported(API_VER_UNKNOWN)) // should be false if we don't know the version
+	assert.True(t, (asc == C_PROFILE_TEMPLATES))     // is same as C_PROFILE_TEMPLATES
+	assert.False(t, asc.IsSupported(currentversion)) // should be false for ver1
+	assert.True(t, asc.IsSupported(API_VER2))        // should be true for ver2
+	assert.True(t, asc.IsSupported(API_VER_UNKNOWN)) // should still be supported just unkown
 
 	// simulate client versions
 	var clientversion Version

@@ -52,11 +52,29 @@ Output from test case debugging log can be handy.
 ONEVIEW_DEBUG=true make test-acceptance
 ```
 
-Run a single specific test
+Run a single specific test with docker
 ---------------------------
 Sometimes it's usefull to run just a single test case.
 ```bash
-ONEVIEW_DEBUG=true make test-acceptance TEST_RUN='-test.run=TestGetAPIVersion'
+TEST_CASES=EGSL_HOUSTB200_LAB:/home/docker/creds.env \
+ONEVIEW_DEBUG=true \
+   make test-case TEST_RUN='-test.run=TestGetAPIVersion'
+```
+
+Run a single test without docker
+------------------------------
+Setup the libraries, example:
+```
+cp -R vendor/* /home/docker/go/src/
+ln -s /home/docker/git/github.com/HewlettPackard/oneview-golang /home/docker/go/src/github.com/HewlettPackard/oneview-golang
+```
+
+Run a Test
+```bash
+TEST_CASES=EGSL_HOUSTB200_LAB:/home/docker/creds.env \
+USE_CONTAINER=false \
+ONEVIEW_DEBUG=true \
+   make test-acceptance TEST_RUN='-test.run=TestGetAPIVersion'
 ```
 
 Updating external dependencies
@@ -92,8 +110,8 @@ curl https://glide.sh/get | sh
    ```
 
 4. Evaluate changes.
-   At this point you might have changes to the dependent libraries that have 
-   to be incorporated into the build process.   Update any additional or 
+   At this point you might have changes to the dependent libraries that have
+   to be incorporated into the build process.   Update any additional or
    no longer libraries by editing the file : [glide.yaml](glide.yaml).  
    This file contains all needed packages.
    Whenever adjusting libraries, make sure to re-do steps 1-3 iteratively.

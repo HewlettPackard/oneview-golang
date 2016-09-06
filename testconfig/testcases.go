@@ -27,13 +27,71 @@ type TestCases struct {
 	ExpectsData map[string]interface{} `json:"expects_data,omitempty"` // map[string]interface{}{"expects_data": []interface{}}
 }
 
-// compare test data to a int num
-func (tc *TestConfig) EqualFaceI(f interface{}, i int) bool {
-	// convert the int to a float
-	return float64(f.(float64)) == float64(i)
+// IsGreaterEqual source greater or equal than target
+func (tc *TestConfig) IsGreaterEqual(source interface{}, target interface{}) bool {
+	return tc.Equal(source, target) || tc.IsGreater(source, target)
 }
 
-// Compare interface to string
+// IsGreater source number greater than target
+func (tc *TestConfig) IsGreater(source interface{}, target interface{}) bool {
+	var a, b float64
+
+	switch ts := source.(type) {
+	case int:
+		a = float64(source.(int))
+	case float64:
+		a = float64(source.(float64))
+	default:
+		_ = ts
+		return false
+	}
+
+	switch ts := target.(type) {
+	case int:
+		b = float64(target.(int))
+	case float64:
+		b = float64(target.(float64))
+	default:
+		_ = ts
+		return false
+	}
+
+	return a > b
+}
+
+// Equal determin numeric type and determine equality
+func (tc *TestConfig) Equal(source interface{}, target interface{}) bool {
+	var a, b float64
+	switch ts := source.(type) {
+	case int:
+		a = float64(source.(int))
+	case float64:
+		a = float64(source.(float64))
+	default:
+		_ = ts
+		return false
+	}
+
+	switch ts := target.(type) {
+	case int:
+		b = float64(target.(int))
+	case float64:
+		b = float64(target.(float64))
+	default:
+		_ = ts
+		return false
+	}
+
+	return (a == b)
+}
+
+// EqualFaceI compare test data to a int num
+func (tc *TestConfig) EqualFaceI(f interface{}, i int) bool {
+	// convert the int to a float
+	return tc.Equal(f, i)
+}
+
+// EqualFaceS Compare interface to string
 // doesn't seem to really be needed....
 func (tc *TestConfig) EqualFaceS(is interface{}, s string) bool {
 	// convert the int to a float
