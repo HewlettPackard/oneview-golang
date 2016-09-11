@@ -123,17 +123,18 @@ type ServerHardware struct {
 func (h ServerHardware) GetIloIPAddress() string {
 	if h.Client.IsHardwareSchemaV2() {
 		if h.MpHostInfo != nil {
-			log.Debug("working on getting IloIPAddress from MpHostInfo")
-			for _, MpIpObj := range h.MpHostInfo.MpIPAddress {
-				if len(MpIpObj.Address) > 0 &&
-					(MpDHCP.Equal(MpIpObj.Type) ||
-						MpStatic.Equal(MpIpObj.Type) ||
-						MpUndefined.Equal(MpIpObj.Type)) {
-					return MpIpObj.Address
+			log.Debug("working on getting IloIPAddress from MpHostInfo using v2")
+			for _, MpIPObj := range h.MpHostInfo.MpIPAddress {
+				if len(MpIPObj.Address) > 0 &&
+					(MpDHCP.Equal(MpIPObj.Type) ||
+						MpStatic.Equal(MpIPObj.Type) ||
+						MpUndefined.Equal(MpIPObj.Type)) {
+					return MpIPObj.Address
 				}
 			}
 		}
 	} else {
+		log.Debug("working on getting IloIPAddress from MpIpAddress")
 		return h.MpIpAddress
 	}
 	return ""

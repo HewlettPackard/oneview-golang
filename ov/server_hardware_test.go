@@ -75,10 +75,10 @@ func TestGetIloIPAddress(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		s, err := c.GetServerHardware(testData)
+		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
 		ip := s.GetIloIPAddress()
 		log.Debugf("server -> %+v", s)
 		log.Debugf("ip -> %+v", ip)
-		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
 		assert.Equal(t, expectsData, ip)
 
 	}
