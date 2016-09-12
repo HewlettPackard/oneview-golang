@@ -64,9 +64,9 @@ func (o APISupport) New(i int) APISupport {
 func (o APISupport) IsSupported(v Version) bool {
 	switch o {
 	case C_SERVER_HARDWAREV2:
-		return API_VER2 == v
+		return (API_VER2 == v) || (API_VER_UNKNOWN == v) // adding unkonw to assume this is the latest
 	case C_PROFILE_TEMPLATES:
-		return API_VER2 == v
+		return (API_VER2 == v) || (API_VER_UNKNOWN == v) // lets assume this is the latest
 	default:
 		return true
 	}
