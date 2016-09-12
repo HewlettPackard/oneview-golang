@@ -219,7 +219,8 @@ func TestApplyDeploymentJobs(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		// get a Server
-		osBuildPlan := d.Tc.GetTestData(d.Env, "OSBuildPlan").(string)
+		osBuildPlans := make([]string, 1)
+		osBuildPlans[0] = d.Tc.GetTestData(d.Env, "OSBuildPlan").(string)
 		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
 			serialNumber = d.Tc.GetTestData(d.Env, "SerialNumber").(string)
 		} else {
@@ -245,16 +246,18 @@ func TestApplyDeploymentJobs(t *testing.T) {
 
 		if os.Getenv("ONEVIEW_TEST_PROVISION") != "true" {
 			log.Info("env ONEVIEW_TEST_PROVISION != ture for ApplyDeploymentJobs")
-			log.Infof("Skipping OS build for : %s, %s", osBuildPlan, serialNumber)
+			log.Infof("Skipping OS build for : %s, %s", osBuildPlans, serialNumber)
 			return
 		}
-		_, err = c.ApplyDeploymentJobs(osBuildPlan, nil, s)
+		_, err = c.ApplyDeploymentJobs(osBuildPlans, nil, s)
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
 	} else {
 		var s Server
 		_, c = getTestDriverU()
 		log.Debug("implements unit test for ApplyDeploymentJobs")
-		_, err := c.ApplyDeploymentJobs("testbuildplan", nil, s)
+		testPlans := make([]string, 1)
+		testPlans[0] = "testbuildplan"
+		_, err := c.ApplyDeploymentJobs(testPlans, nil, s)
 		assert.Error(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, s)
 	}
 }

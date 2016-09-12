@@ -47,10 +47,10 @@
         "TemplateProfile": "Dev Docker Host",
         "SerialNumber": "VCGM123023",
         "MacAddr": "AA:43:83:10:00:BB",
-        "UsedBladeName": "02-CN751500Z9, bay 4",
-        "ServerHardwareURI": "/rest/server-hardware/36343537-3338-4E43-3735-313830303548",
-        "ServerProfileName": "Frame2, Bay 4 Gold",
-        "HardwareTypeURI": "/rest/server-hardware-types/01B10F88-4BF6-4A02-9065-DC9468008573",
+        "UsedBladeName": "HOUEGSL-C7000-05, bay 10",
+        "ServerHardwareURI": "/rest/server-hardware/30373237-3132-4D32-3235-333830575438",
+        "ServerProfileName": "wenlock-machine-1",
+        "HardwareTypeURI": "/rest/server-hardware-types/486B9A87-FCEB-4E9E-9E50-B0F54FAA0903",
         "GroupURI": "/rest/enclosure-groups/e0ee00e0-38bc-47e3-a4fe-bf6d13ce4cd2",
         "OSBuildPlan":"RHEL71_DOCKER_1.8"
       },
@@ -61,7 +61,7 @@
         "FakeData": "foo",
         "IcspName" : "IC04-HOUEGSL-C7000-04-4",
         "SerialNumber": "VCGM123023",
-        "IloIPAddress":  "16.85.0.90"
+        "IloIPAddress":  "16.85.0.59"
       }
     },
     {

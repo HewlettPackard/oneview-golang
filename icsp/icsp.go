@@ -78,7 +78,7 @@ type CustomizeServer struct {
 	IloPassword      string                  // should be the ilo password to use
 	IloIPAddress     string                  // PXE ip address for ilo
 	IloPort          int                     // port number for ilo server
-	OSBuildPlan      string                  // name of the OS build plan
+	OSBuildPlans     []string                // name of the OS build plan
 	ServerProperties *CustomServerAttributes // name value pairs for server custom attributes
 	PublicSlotID     int                     // the public interface that will be used to get public ipaddress
 	PublicMAC        string                  // public connection name, overrides PublicSlotID
@@ -130,7 +130,9 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 	}
 
 	// apply os build plan customizations for netconfig
-	_, err = c.ApplyDeploymentJobs("ProLiant SW - Post Install Network Personalization", netconfig.GetPersonalityData(), s)
+	buildplans := make([]string, 1)
+	buildplans[0] = "ProLiant SW - Post Install Network Personalization"
+	_, err = c.ApplyDeploymentJobs(buildplans, netconfig.GetPersonalityData(), s)
 	if err != nil {
 		return err
 	}
@@ -239,7 +241,7 @@ func (c *ICSPClient) CustomizeServer(cs CustomizeServer) error {
 	}
 
 	// apply the build Plan
-	jt, err := c.ApplyDeploymentJobs(cs.OSBuildPlan, nil, newserver)
+	jt, err := c.ApplyDeploymentJobs(cs.OSBuildPlans, nil, newserver)
 	if err != nil {
 		return err
 	}
