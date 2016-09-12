@@ -127,17 +127,20 @@ func (c *ICSPClient) SubmitDeploymentJobs(dj DeploymentJobs) (jt *JobTask, err e
 }
 
 // ApplyDeployment plan to server
-func (c *ICSPClient) ApplyDeploymentJobs(buildplan string, bpdata *OSDPersonalityDataV2, s Server) (jt *JobTask, err error) {
+func (c *ICSPClient) ApplyDeploymentJobs(buildplans []string, bpdata *OSDPersonalityDataV2, s Server) (jt *JobTask, err error) {
 
 	var dj DeploymentJobs
 	var bplans []OSDBuildPlan
 	var servers []Server
 	// lookup buildplan by name
-	bp, err := c.GetBuildPlanByName(buildplan)
-	if err != nil {
-		return jt, err
+	for _, buildPlan := range buildplans {
+		bp, err := c.GetBuildPlanByName(buildPlan)
+		if err != nil {
+			return jt, err
+		}
+		bplans = append(bplans, bp)
 	}
-	bplans = append(bplans, bp)
+
 	servers = append(servers, s)
 	dj = dj.NewDeploymentJobs(bplans, bpdata, servers)
 	jt, err = c.SubmitDeploymentJobs(dj)

@@ -23,8 +23,8 @@ func TestGetAPIVersion(t *testing.T) {
 		// fmt.Printf("after GetAPIVersion: %s -> (err) %s", data.CurrentVersion, err)
 		// assert.Error(t,err, fmt.Sprintf("Error caught as expected: %s",err))
 		assert.NoError(t, err, "GetAPIVersion threw error -> %s", err)
-		assert.True(t, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env+"_icsp", "CurrentVersion"), data.CurrentVersion))
-		assert.True(t, d.Tc.EqualFaceI(d.Tc.GetExpectsData(d.Env+"_icsp", "MinimumVersion"), data.MinimumVersion))
+		assert.True(t, d.Tc.IsGreaterEqual(data.CurrentVersion, d.Tc.GetExpectsData(d.Env+"_icsp", "CurrentVersion")))
+		assert.True(t, d.Tc.IsGreaterEqual(data.MinimumVersion, d.Tc.GetExpectsData(d.Env+"_icsp", "MinimumVersion")))
 	} else {
 		_, c = getTestDriverU()
 		data, err := c.GetAPIVersion()
