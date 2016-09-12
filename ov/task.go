@@ -103,7 +103,7 @@ type TaskError struct {
 	Data               map[string]interface{} `json:"data,omitempty"`               // "data":{},
 	ErrorCode          string                 `json:"errorCode,omitempty"`          // "errorCode":"MacTypeDiffGlobalMacType",
 	Details            string                 `json:"details,omitempty"`            // "details":"",
-	NestedErrors       []string               `json:"nestedErrors,omitempty"`       // "nestedErrors":[],
+	NestedErrors       []TaskError            `json:"nestedErrors,omitempty"`       // "nestedErrors":[],
 	Message            string                 `json:"message,omitempty"`            // "message":"When macType is not user defined, mac type should be same as the global Mac assignment Virtual."
 	ErrorSource        utils.Nstring          `json:"errorSource,omitempty"`        // "errorSource":null,
 	RecommendedActions []string               `json:"recommendedActions,omitempty"` // "recommendedActions":["Verify parameters and try again."],
@@ -159,7 +159,7 @@ type TaskServer struct {
 }
 
 type TaskData struct {
-	TaskCategory string `json:"taskCategory,omitempty"`
+	TaskCategory string `json:"task-category,omitempty"`
 }
 
 // NewProfileTask - Create New Task
