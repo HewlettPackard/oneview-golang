@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -65,7 +64,7 @@ type ServerProfile struct {
 	ServerProfilev200
 	Affinity              string              `json:"affinity,omitempty"`         // "affinity": "Bay",
 	AssociatedServer      utils.Nstring       `json:"associatedServer,omitempty"` // "associatedServer": null,
-	Bios                  BiosOption          `json:"bios,omitempty"`             // "bios": {	},
+	Bios                  *BiosOption         `json:"bios,omitempty"`             // "bios": {	},
 	Boot                  BootManagement      `json:"boot,omitempty"`             // "boot": { },
 	BootMode              BootModeOption      `json:"bootMode,omitempty"`         // "bootMode": {},
 	Category              string              `json:"category,omitempty"`         // "category": "server-profiles",
