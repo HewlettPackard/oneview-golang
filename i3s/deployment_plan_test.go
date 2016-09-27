@@ -26,8 +26,8 @@ import (
 
 func TestCreateDeploymentPlan(t *testing.T) {
 	var (
-		d        *OVTest
-		c        *OVClient
+		d        *I3STest
+		c        *I3SClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -64,8 +64,8 @@ func TestCreateDeploymentPlan(t *testing.T) {
 
 func TestGetDeploymentPlanByName(t *testing.T) {
 	var (
-		d        *OVTest
-		c        *OVClient
+		d        *I3STest
+		c        *I3SClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -93,7 +93,7 @@ func TestGetDeploymentPlanByName(t *testing.T) {
 
 func TestGetDeploymentPlans(t *testing.T) {
 	var (
-		c *OVClient
+		c *I3SClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_deployment_plan")
@@ -115,7 +115,7 @@ func TestGetDeploymentPlans(t *testing.T) {
 
 func TestDeleteDeploymentPlanNotFound(t *testing.T) {
 	var (
-		c                  *OVClient
+		c                  *I3SClient
 		testName           = "fake"
 		testDeploymentPlan DeploymentPlan
 	)
@@ -140,8 +140,8 @@ func TestDeleteDeploymentPlanNotFound(t *testing.T) {
 
 func TestDeleteDeploymentPlan(t *testing.T) {
 	var (
-		d                  *OVTest
-		c                  *OVClient
+		d                  *I3STest
+		c                  *I3SClient
 		testName           string
 		testDeploymentPlan DeploymentPlan
 	)
