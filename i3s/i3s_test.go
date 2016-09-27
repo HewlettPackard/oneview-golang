@@ -17,22 +17,22 @@ type I3STest struct {
 }
 
 // get Environment
-func (ot *I3STest) GetEnvironment() {
+func (ot *I3STest) GetEnvironment(env string) {
 	if os.Getenv("ONEVIEW_TEST_ENV") != "" {
 		ot.Env = os.Getenv("ONEVIEW_TEST_ENV")
 		return
 	}
-	ot.Env = "dev"
+	ot.Env = env
 	return
 }
 
 // get a test driver for acceptance testing
-func getTestDriverA() (*I3STest, *I3SClient) {
+func getTestDriverA(env string) (*I3STest, *I3SClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *I3STest
 	var tc *testconfig.TestConfig
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &I3SClient{
 		rest.Client{
@@ -50,11 +50,11 @@ func getTestDriverA() (*I3STest, *I3SClient) {
 }
 
 // Unit test
-func getTestDriverU() (*I3STest, *I3SClient) {
+func getTestDriverU(env string) (*I3STest, *I3SClient) {
 	var ot *I3STest
 	var tc *testconfig.TestConfig
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
-	ot.GetEnvironment()
+	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &I3SClient{
 		rest.Client{
@@ -77,9 +77,9 @@ func TestNewI3SClient(t *testing.T) {
 	)
 	log.Debug("implements unit test for TestNewI3SClient")
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 	}
 	assert.True(t, (c != nil), "Failed to get proper client")
 }
