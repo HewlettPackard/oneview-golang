@@ -1,0 +1,151 @@
+package ov
+
+import (
+	"fmt"
+	"github.com/docker/machine/libmachine/log"
+	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
+)
+
+func TestCreateDeploymentPlan(t *testing.T) {
+	var (
+		d        *OVTest
+		c        *OVClient
+		testName string
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("test_deployment_plan")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		// find out if the test deployment plan already exist
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+
+		testDeploymentPlan, err := c.GetDeploymentPlanByName(testName)
+		assert.NoError(t, err, "CreateDeploymentPlan get the DeploymentPlan error -> %s", err)
+
+		if testDeploymentPlan.URI.IsNil() {
+			testDeploymentPlan = DeploymentPlan{
+				Name: testName,
+				Type: d.Tc.GetTestData(d.Env, "Type").(string),
+			}
+			err := c.CreateDeploymentPlan(testDeploymentPlan)
+			assert.NoError(t, err, "CreateDeploymentPlan error -> %s", err)
+
+			err = c.CreateDeploymentPlan(testDeploymentPlan)
+			assert.Error(t, err, "CreateDeploymentPlan should error because the DeploymentPlan already exists, err-> %s", err)
+
+		} else {
+			log.Warnf("The deploymentPlan already exist, so skipping CreateDeploymentPlan test for %s", testName)
+		}
+
+		// reload the test profile that we just created
+		testDeploymentPlan, err = c.GetDeploymentPlanByName(testName)
+		assert.NoError(t, err, "GetDeplymentPlan error -> %s", err)
+	}
+}
+
+func TestGetDeploymentPlanByName(t *testing.T) {
+	var (
+		d        *OVTest
+		c        *OVClient
+		testName string
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("test_deployment_plan")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+
+		testDeploymentPlan, err := c.GetDeploymentPlanByName(testName)
+		assert.NoError(t, err, "GetDeploymentPlanByName thew an error -> %s", err)
+		assert.Equal(t, testName, testDeploymentPlan.Name)
+
+		testDeploymentPlan, err = c.GetDeploymentPlanByName("bad")
+		assert.NoError(t, err, "GetDeploymentPlanByName with fake name -> %s", err)
+		assert.Equal(t, "", testDeploymentPlan.Name)
+
+	} else {
+		d, c = getTestDriverU("test_deployment_plan")
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+		data, err := c.GetDeploymentPlanByName(testName)
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
+	}
+}
+
+func TestGetDeploymentPlans(t *testing.T) {
+	var (
+		c *OVClient
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA("test_deployment_plan")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		deploymentPlans, err := c.GetDeploymentPlans("", "")
+		assert.NoError(t, err, "GetDeploymentPlans threw error -> %s, %+v\n", err, deploymentPlans)
+
+		deploymentPlans, err = c.GetDeploymentPlans("", "name:asc")
+		assert.NoError(t, err, "GetDeploymentPlans name:asc error -> %s, %+v\n", err, deploymentPlans)
+
+	} else {
+		_, c = getTestDriverU("test_deployment_plan")
+		data, err := c.GetDeploymentPlans("", "")
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
+	}
+}
+
+func TestDeleteDeploymentPlanNotFound(t *testing.T) {
+	var (
+		c                  *OVClient
+		testName           = "fake"
+		testDeploymentPlan DeploymentPlan
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA("test_deployment_plan")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		err := c.DeleteDeploymentPlan(testName)
+		assert.NoError(t, err, "DeleteDeploymentPlan err-> %s", err)
+
+		testDeploymentPlan, err = c.GetDeploymentPlanByName(testName)
+		assert.NoError(t, err, "GetDeploymentPlanByName with deleted deployment plan -> %+v", err)
+		assert.Equal(t, "", testDeploymentPlan.Name, fmt.Sprintf("Problem getting deployment plan name, %+v", testDeploymentPlan))
+	} else {
+		_, c = getTestDriverU("test_deployment_plan")
+		err := c.DeleteDeploymentPlan(testName)
+		assert.Error(t, err, fmt.Sprintf("All ok, no error, caught as expected: %s,%+v\n", err, testDeploymentPlan))
+	}
+}
+
+func TestDeleteDeploymentPlan(t *testing.T) {
+	var (
+		d                  *OVTest
+		c                  *OVClient
+		testName           string
+		testDeploymentPlan DeploymentPlan
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("test_deployment_plan")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+
+		err := c.DeleteDeploymentPlan(testName)
+		assert.NoError(t, err, "DeleteDeploymentPlan err-> %s", err)
+
+		testDeploymentPlan, err = c.GetDeploymentPlanByName(testName)
+		assert.NoError(t, err, "GetDeploymentPlanByName with deleted deployment plan-> %+v", err)
+		assert.Equal(t, "", testDeploymentPlan.Name, fmt.Sprintf("Problem getting deployment plan name, %+v", testDeploymentPlan))
+	} else {
+		_, c = getTestDriverU("test_deployment_plan")
+		err := c.DeleteDeploymentPlan("footest")
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testDeploymentPlan))
+	}
+
+}

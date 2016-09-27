@@ -240,6 +240,14 @@
       }
     },
     {
+      "Name": "test_deployment_plan",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go deployment plan test",
+        "Type": "OEDeploymentPlan"
+      }
+    }
+    {
       "name": "dev_icsp",
       "enabled": true,
       "test_data": {
