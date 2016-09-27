@@ -1,3 +1,19 @@
+/*
+(c) Copyright [2015] Hewlett Packard Enterprise Development LP
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 package i3s
 
 import (
@@ -44,7 +60,7 @@ type DeploymentPlanList struct {
 	Members     []DeploymentPlan `json:"members,omitempty"`     // "members":[]
 }
 
-func (c *OVClient) GetDeploymentPlanByName(name string) (DeploymentPlan, error) {
+func (c *I3SClient) GetDeploymentPlanByName(name string) (DeploymentPlan, error) {
 	var (
 		depPlan DeploymentPlan
 	)
@@ -59,7 +75,7 @@ func (c *OVClient) GetDeploymentPlanByName(name string) (DeploymentPlan, error) 
 	}
 }
 
-func (c *OVClient) GetDeploymentPlans(filter string, sort string) (DeploymentPlanList, error) {
+func (c *I3SClient) GetDeploymentPlans(filter string, sort string) (DeploymentPlanList, error) {
 	var (
 		uri             = "/rest/deployment-plans"
 		q               map[string]interface{}
@@ -94,7 +110,7 @@ func (c *OVClient) GetDeploymentPlans(filter string, sort string) (DeploymentPla
 	return deploymentPlans, nil
 }
 
-func (c *OVClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
+func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	log.Infof("Initializing creation of deploymentPlan for %s.", deploymentPlan.Name)
 	var (
 		uri = "/rest/deployment-plans"
@@ -130,7 +146,7 @@ func (c *OVClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	return nil
 }
 
-func (c *OVClient) DeleteDeploymentPlan(name string) error {
+func (c *I3SClient) DeleteDeploymentPlan(name string) error {
 	var (
 		deploymentPlan DeploymentPlan
 		err            error
@@ -177,7 +193,7 @@ func (c *OVClient) DeleteDeploymentPlan(name string) error {
 	return nil
 }
 
-func (c *OVClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
+func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	log.Infof("Initializing update of deployment plan for %s.", deploymentPlan.Name)
 	var (
 		uri = deploymentPlan.URI.String()
