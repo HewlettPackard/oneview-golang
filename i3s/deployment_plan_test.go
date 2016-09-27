@@ -30,7 +30,7 @@ func TestCreateDeploymentPlan(t *testing.T) {
 		c        *I3SClient
 		testName string
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_deployment_plan")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -68,7 +68,7 @@ func TestGetDeploymentPlanByName(t *testing.T) {
 		c        *I3SClient
 		testName string
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_deployment_plan")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -95,7 +95,7 @@ func TestGetDeploymentPlans(t *testing.T) {
 	var (
 		c *I3SClient
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_deployment_plan")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -119,7 +119,7 @@ func TestDeleteDeploymentPlanNotFound(t *testing.T) {
 		testName           = "fake"
 		testDeploymentPlan DeploymentPlan
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_deployment_plan")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -145,7 +145,7 @@ func TestDeleteDeploymentPlan(t *testing.T) {
 		testName           string
 		testDeploymentPlan DeploymentPlan
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_deployment_plan")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")

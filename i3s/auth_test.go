@@ -17,7 +17,7 @@ func TestSessionLogin(t *testing.T) {
 		c *I3SClient
 		// env = os.Getenv("ONEVIEW_TEST_ENV") || "dev"
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -49,7 +49,7 @@ func TestSessionLogout(t *testing.T) {
 		c *I3SClient
 		//testSerial string
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -82,7 +82,7 @@ func TestGetIdleTimeout(t *testing.T) {
 		c *I3SClient
 		// d *OVTest
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("dev")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
@@ -104,7 +104,7 @@ func TestSetIdleTimeout(t *testing.T) {
 		c        *I3SClient
 		testtime int64
 	)
-	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		testtime = 25000
 		_, c = getTestDriverA("dev")
 		if c == nil {

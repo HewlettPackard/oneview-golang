@@ -70,8 +70,6 @@ func getTestDriverU(env string) (*I3STest, *I3SClient) {
 	return ot, ot.Client
 }
 
-/*
-//Not sure what we are aiming to do with this. Will leave commented for now
 // Test Getting New I3SClient
 func TestNewI3SClient(t *testing.T) {
 	var (
@@ -79,9 +77,9 @@ func TestNewI3SClient(t *testing.T) {
 	)
 	log.Debug("implements unit test for TestNewI3SClient")
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA()
+		_, c = getTestDriverA("dev")
 	} else {
-		_, c = getTestDriverU()
+		_, c = getTestDriverU("dev")
 	}
 	assert.True(t, (c != nil), "Failed to get proper client")
-}*/
+}
