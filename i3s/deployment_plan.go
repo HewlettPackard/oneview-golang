@@ -18,7 +18,9 @@ package i3s
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 type DeploymentPlan struct {
@@ -120,7 +122,7 @@ func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
+	t = t.NewTask(c)
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
 	log.Debugf("task -> %+v", t)
@@ -159,7 +161,7 @@ func (c *I3SClient) DeleteDeploymentPlan(name string) error {
 		return err
 	}
 	if deploymentPlan.Name != "" {
-		t = t.NewProfileTask(c)
+		t = t.NewTask(c)
 		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", deploymentPlan.URI, deploymentPlan)
 		log.Debugf("task -> %+v", t)
@@ -203,7 +205,7 @@ func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
+	t = t.NewTask(c)
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
 	log.Debugf("task -> %+v", t)
