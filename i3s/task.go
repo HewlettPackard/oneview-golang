@@ -67,6 +67,13 @@ type AssociatedResource struct {
 	ResourceURI      utils.Nstring `json:"resourceUri,omitempty"`      // "resourceUri": "/rest/deployment-plans/30373237-3132-4D32-3235-303930524D57"
 }
 
+// TaskServer Example:
+// {"name":"deployment plan name", "uri":"/rest/deployment-plans/30373237-3132-4D32-3235-303930524D52"}
+type TaskServer struct {
+	Name string `json:"name,omitempty"` // "Name to server
+	URI  string `json:"uri,omitempty"`  // "URI to server
+}
+
 type TaskData struct {
 	TaskCategory string `json:"task-category,omitempty"`
 }

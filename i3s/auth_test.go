@@ -14,7 +14,7 @@ import (
 func TestSessionLogin(t *testing.T) {
 	var (
 		// d *OVTest
-		c *OVClient
+		c *I3SClient
 		// env = os.Getenv("ONEVIEW_TEST_ENV") || "dev"
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -46,7 +46,7 @@ func TestSessionLogin(t *testing.T) {
 func TestSessionLogout(t *testing.T) {
 	var (
 		//d *OVTest
-		c *OVClient
+		c *I3SClient
 		//testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -79,7 +79,7 @@ func TestSessionLogout(t *testing.T) {
 // Get the current idle timeout from the logged in session
 func TestGetIdleTimeout(t *testing.T) {
 	var (
-		c *OVClient
+		c *I3SClient
 		// d *OVTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -101,7 +101,7 @@ func TestGetIdleTimeout(t *testing.T) {
 // Set idle timeout
 func TestSetIdleTimeout(t *testing.T) {
 	var (
-		c        *OVClient
+		c        *I3SClient
 		testtime int64
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
