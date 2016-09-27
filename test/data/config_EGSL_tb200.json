@@ -246,7 +246,7 @@
         "Name": "go deployment plan test",
         "Type": "OEDeploymentPlan"
       }
-    }
+    },
     {
       "name": "dev_icsp",
       "enabled": true,
