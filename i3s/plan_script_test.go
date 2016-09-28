@@ -100,7 +100,7 @@ func TestGetPlanScripts(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		planScripts, err := c.GetPlanScript("", "")
+		planScripts, err := c.GetPlanScripts("", "")
 		assert.NoError(t, err, "GetPlanScript threw error -> %s, %+v\n", err, planScripts)
 
 		planScripts, err = c.GetPlanScripts("", "name:asc")

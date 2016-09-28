@@ -93,17 +93,17 @@ func (c *I3SClient) GetPlanScripts(filter string, sort string) (PlanScriptList, 
 
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
-		return planScriptList, err
+		return planScripts, err
 	}
 
 	log.Debugf("GetPlanScripts %s", data)
-	if err := json.Unmarshal([]byte(data), &planScriptList); err != nil {
-		return planScriptList, err
+	if err := json.Unmarshal([]byte(data), &planScripts); err != nil {
+		return planScripts, err
 	}
-	return planScriptList, nil
+	return planScripts, nil
 }
 
-func (c *I3SClient) CreatePlanScript(planScriptList PlanScript) error {
+func (c *I3SClient) CreatePlanScript(planScript PlanScript) error {
 	log.Infof("Initializing creation of plan script for %s.", planScript.Name)
 	var (
 		uri = "/rest/plan-scripts"
