@@ -38,7 +38,7 @@ func TestCreateOSBuildPlan(t *testing.T) {
 		// find out if the test os build plan already exist
 		testName = d.Tc.GetTestData(d.Env, "Name").(string)
 
-		testOSBuildPlan, err := c.GetOSBuildPlanName(testName)
+		testOSBuildPlan, err := c.GetOSBuildPlanByName(testName)
 		assert.NoError(t, err, "CreateOSBuildPlan get the OS BuildPlan error -> %s", err)
 
 		if testOSBuildPlan.URI.IsNil() {
@@ -101,10 +101,10 @@ func TestGetOSBuildPlans(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		osBuildPlans, err := c.GetOSBuildPlans("", "")
-		assert.NoError(t, err, "GetOSBuildPlans threw error -> %s, %+v\n", err, osBuildplans)
+		assert.NoError(t, err, "GetOSBuildPlans threw error -> %s, %+v\n", err, osBuildPlans)
 
 		osBuildPlans, err = c.GetOSBuildPlans("", "name:asc")
-		assert.NoError(t, err, "GetOSBuildPlans name:asc error -> %s, %+v\n", err, osBuildplans)
+		assert.NoError(t, err, "GetOSBuildPlans name:asc error -> %s, %+v\n", err, osBuildPlans)
 
 	} else {
 		_, c = getTestDriverU("test_os_build_plan")
