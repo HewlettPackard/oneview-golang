@@ -248,6 +248,14 @@
       }
     },
     {
+      "Name": "test_os_build_plan",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go deployment plan test",
+        "Type": "OeBuildPlan"
+      }
+    },
+    {
       "Name": "test_golden_image",
       "Enabled": true,
       "Test_data": {
