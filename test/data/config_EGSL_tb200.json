@@ -248,6 +248,14 @@
       }
     },
     {
+      "Name": "test_golden_image",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go golden image test",
+        "Type": "GoldenImage"
+      }
+    },
+    {
       "name": "dev_icsp",
       "enabled": true,
       "test_data": {
