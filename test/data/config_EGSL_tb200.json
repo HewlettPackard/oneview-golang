@@ -272,6 +272,13 @@
       }
     },
     {
+      "Name": "test_os_volume",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go os volume"
+      }
+    },
+    {
       "name": "dev_icsp",
       "enabled": true,
       "test_data": {
