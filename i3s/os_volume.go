@@ -25,15 +25,15 @@ import (
 )
 
 type OSVolume struct {
-	Category             string              `json:"category,omitempty"`             // "category": "oe-deployment-plan",
+	Category             string              `json:"category,omitempty"`             // "category": "os-volumes",
 	Created              string              `json:"created,omitempty"`              // "created": "20150831T154835.250Z",
 	DependentArtifacts   []DependentArtifact `json:"dependentArtifacts,omitempty"`   // "dependentArtifacts": [],
 	DeploymentClusterUri utils.Nstring       `json:"deploymentClusterUri,omitempty"` // "deploymentClusterUri": "",
-	Description          string              `json:"description,omitempty"`          // "description": "Deployment Plan 1",
+	Description          string              `json:"description,omitempty"`          // "description": "OS Volume 1",
 	ETAG                 string              `json:"eTag,omitempty"`                 // "eTag": "1441036118675/8",
 	GoldenVolumeUri      utils.Nstring       `json:"goldenVolumeUri,omitempty"`      // "goldenVolumeUri": "",
 	Modified             string              `json:"modified,omitempty"`             // "modified": "20150831T154835.250Z",
-	Name                 string              `json:"name,omitempty"`                 // "name": "Deployment Plan 1",
+	Name                 string              `json:"name,omitempty"`                 // "name": "OS Volume1 1",
 	OEVolumeIQN          string              `json:"oeVolumeIQN,omitempty"`          // "",
 	OEVolumeID           string              `json:"oeVolumeId,omitempty"`           // "",
 	OEVolumeIp           string              `json:"oeVolumeIp,omitempty"`           // "",
@@ -41,8 +41,8 @@ type OSVolume struct {
 	State                string              `json:"state,omitempty"`                // "state": "Normal",
 	StatelessServerUri   utils.Nstring       `json:"statelessServerUri,omitempty"`   // "statelessServerUri": "",
 	Status               string              `json:"status,omitempty"`               // "status": "Critical",
-	Type                 string              `json:"type,omitempty"`                 // "type": "OEDeploymentPlan",
-	URI                  utils.Nstring       `json:"uri,omitempty"`                  // "uri": "/rest/deployment-plans/31e5dcba-b8ac-4f64-bbaa-7a4474f11994"
+	Type                 string              `json:"type,omitempty"`                 // "type": "OSVolume",
+	URI                  utils.Nstring       `json:"uri,omitempty"`                  // "uri": "/rest/os-volumes/31e5dcba-b8ac-4f64-bbaa-7a4474f11994"
 }
 
 type OSVolumeList struct {
