@@ -25,36 +25,35 @@ import (
 )
 
 type OSVolume struct {
-	Category         string            `json:"category,omitempty"`         // "category": "oe-deployment-plan",
-	Created          string            `json:"created,omitempty"`          // "created": "20150831T154835.250Z",
-	DependentArtifacts []DependentArtifact `json:"dependentArtifacts,omitempty"` // "dependentArtifacts": [],
-	DeploymentClusterUri utils.Nstring `json:"deploymentClusterUri,omitempty"` // "deploymentClusterUri": "",
-	Description      string            `json:"description,omitempty"`      // "description": "Deployment Plan 1",
-	ETAG             string            `json:"eTag,omitempty"`             // "eTag": "1441036118675/8",
-	GoldenVolumeUri  utils.Nstring     `json:"goldenVolumeUri,omitempty"`  // "goldenVolumeUri": "",
-	Modified         string            `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
-	Name             string            `json:"name,omitempty"`             // "name": "Deployment Plan 1",
-	OEVolumeIQN      string            `json:"oeVolumeIQN,omitempty"`      // "",
-	OEVolumeID       string            `json:"oeVolumeId,omitempty"`       // "",
-	OEVolumeIp       string            `json:"oeVolumeIp,omitempty"`       // "",
-	Size             int               `json:"size,omitempty"`             // 99,
-	State            string            `json:"state,omitempty"`            // "state": "Normal",
-	StatelessServerUri utils.Nstring   `json:"statelessServerUri,omitempty"` // "statelessServerUri": "",
-	Status           string            `json:"status,omitempty"`           // "status": "Critical",
-	Type             string            `json:"type,omitempty"`             // "type": "OEDeploymentPlan",
-	URI              utils.Nstring     `json:"uri,omitempty"`              // "uri": "/rest/deployment-plans/31e5dcba-b8ac-4f64-bbaa-7a4474f11994"
+	Category             string              `json:"category,omitempty"`             // "category": "oe-deployment-plan",
+	Created              string              `json:"created,omitempty"`              // "created": "20150831T154835.250Z",
+	DependentArtifacts   []DependentArtifact `json:"dependentArtifacts,omitempty"`   // "dependentArtifacts": [],
+	DeploymentClusterUri utils.Nstring       `json:"deploymentClusterUri,omitempty"` // "deploymentClusterUri": "",
+	Description          string              `json:"description,omitempty"`          // "description": "Deployment Plan 1",
+	ETAG                 string              `json:"eTag,omitempty"`                 // "eTag": "1441036118675/8",
+	GoldenVolumeUri      utils.Nstring       `json:"goldenVolumeUri,omitempty"`      // "goldenVolumeUri": "",
+	Modified             string              `json:"modified,omitempty"`             // "modified": "20150831T154835.250Z",
+	Name                 string              `json:"name,omitempty"`                 // "name": "Deployment Plan 1",
+	OEVolumeIQN          string              `json:"oeVolumeIQN,omitempty"`          // "",
+	OEVolumeID           string              `json:"oeVolumeId,omitempty"`           // "",
+	OEVolumeIp           string              `json:"oeVolumeIp,omitempty"`           // "",
+	Size                 int                 `json:"size,omitempty"`                 // 99,
+	State                string              `json:"state,omitempty"`                // "state": "Normal",
+	StatelessServerUri   utils.Nstring       `json:"statelessServerUri,omitempty"`   // "statelessServerUri": "",
+	Status               string              `json:"status,omitempty"`               // "status": "Critical",
+	Type                 string              `json:"type,omitempty"`                 // "type": "OEDeploymentPlan",
+	URI                  utils.Nstring       `json:"uri,omitempty"`                  // "uri": "/rest/deployment-plans/31e5dcba-b8ac-4f64-bbaa-7a4474f11994"
 }
 
 type OSVolumeList struct {
-	Total       int              `json:"total,omitempty"`       // "total": 1,
-	Count       int              `json:"count,omitempty"`       // "count": 1,
-	Start       int              `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring    `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring    `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring    `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
-	Members     []OSVolume       `json:"members,omitempty"`     // "members":[]
+	Total       int           `json:"total,omitempty"`       // "total": 1,
+	Count       int           `json:"count,omitempty"`       // "count": 1,
+	Start       int           `json:"start,omitempty"`       // "start": 0,
+	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
+	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
+	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	Members     []OSVolume    `json:"members,omitempty"`     // "members":[]
 }
-
 
 func (c *I3SClient) GetOSVolumeByName(name string) (OSVolume, error) {
 	var (
@@ -73,9 +72,9 @@ func (c *I3SClient) GetOSVolumeByName(name string) (OSVolume, error) {
 
 func (c *I3SClient) GetOSVolumes(filter string, sort string) (OSVolumeList, error) {
 	var (
-		uri             = "/rest/os-volumes"
-		q               map[string]interface{}
-		osVolumes       OSVolumeList
+		uri       = "/rest/os-volumes"
+		q         map[string]interface{}
+		osVolumes OSVolumeList
 	)
 	q = make(map[string]interface{})
 	if len(filter) > 0 {
@@ -105,4 +104,3 @@ func (c *I3SClient) GetOSVolumes(filter string, sort string) (OSVolumeList, erro
 	}
 	return osVolumes, nil
 }
-

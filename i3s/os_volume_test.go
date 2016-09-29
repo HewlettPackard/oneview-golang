@@ -18,7 +18,6 @@ package i3s
 
 import (
 	"fmt"
-	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
