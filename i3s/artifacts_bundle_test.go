@@ -42,7 +42,7 @@ func TestCreateArtifactsBundle(t *testing.T) {
 		assert.NoError(t, err, "CreateArtifactsBundle get the ArtifactsBundle error -> %s", err)
 
 		if testArtifactsBundle.URI.IsNil() {
-			testArtifactsBundle = ArtifactsBundle{
+			testArtifactsBundle = InputArtifactsBundle{
 				Name: testName,
 				Type: d.Tc.GetTestData(d.Env, "Type").(string),
 			}
