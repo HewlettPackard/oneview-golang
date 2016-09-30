@@ -42,13 +42,13 @@ func TestCreateArtifactsBundle(t *testing.T) {
 		assert.NoError(t, err, "CreateArtifactsBundle get the ArtifactsBundle error -> %s", err)
 
 		if testArtifactsBundle.URI.IsNil() {
-			testArtifactsBundle = InputArtifactsBundle{
+			testInputArtifactsBundle := InputArtifactsBundle{
 				Name: testName,
 			}
-			err := c.CreateArtifactsBundle(testArtifactsBundle)
+			err := c.CreateArtifactsBundle(testInputArtifactsBundle)
 			assert.NoError(t, err, "CreateArtifactsBundle error -> %s", err)
 
-			err = c.CreateArtifactsBundle(testArtifactsBundle)
+			err = c.CreateArtifactsBundle(testInputArtifactsBundle)
 			assert.Error(t, err, "CreateArtifactsBundle should error because the ArtifactsBundle already exists, err-> %s", err)
 
 		} else {
