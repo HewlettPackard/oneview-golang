@@ -92,7 +92,7 @@ type ArtifactsBundleList struct {
 	Members     []ArtifactsBundle `json:"members,omitempty"`     // "members":[]
 }
 
-type InputArtifactBundle struct {
+type InputArtifactsBundle struct {
 	BuildPlans         []InputArtifacts `json:"buildPlans,omitempty"`         // "buildPlans": [],
 	DeploymentClusters []string         `json:"deploymentClusters,omitempty"` // "deploymentClusters": [],
 	DeploymentGroups   []string         `json:"deploymentGroups,omitempty"`   // "deploymentGroups": [],
@@ -120,14 +120,14 @@ func (c *I3SClient) GetArtifactsBundleByName(name string) (ArtifactsBundle, erro
 	if err != nil {
 		return artifactsBundle, err
 	}
-	if artifactsBundle.Total > 0 {
+	if artifactsBundles.Total > 0 {
 		return artifactsBundles.Members[0], err
 	} else {
 		return artifactsBundle, err
 	}
 }
 
-func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactBundleList, error) {
+func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactsBundleList, error) {
 	var (
 		uri              = "/rest/artifact-bundles"
 		q                map[string]interface{}
