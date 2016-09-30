@@ -27,7 +27,7 @@ import (
 type ArtifactsBundle struct {
 	ArtifactsCount     int                      `json:"artifactsCount,omitempty"`     // "artifactsCount": 1,
 	ArtifactsBundleID  string                   `json:"artifactsbundleID,omitempty"`  // "artifactsbundleID": "id",
-	BackupService      bool                     `json:"backupService,omitempty"`       // "backupService": true,
+	BackupService      bool                     `json:"backupService,omitempty"`      // "backupService": true,
 	BuildPlans         []BuildPlanArtifact      `json:"buildPlans,omitempty"`         // "buildPlans": [],
 	Category           string                   `json:"category,omitempty"`           // "category": "artifacts-bundle"
 	CheckSum           string                   `json:"checkSum,omitempty"`           // "checkSum": "0",
@@ -83,15 +83,14 @@ type PlanScriptArtifact struct {
 }
 
 type ArtifactsBundleList struct {
-	Total       int              `json:"total,omitempty"`       // "total": 1,
-	Count       int              `json:"count,omitempty"`       // "count": 1,
-	Start       int              `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring    `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring    `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring    `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	Total       int               `json:"total,omitempty"`       // "total": 1,
+	Count       int               `json:"count,omitempty"`       // "count": 1,
+	Start       int               `json:"start,omitempty"`       // "start": 0,
+	PrevPageURI utils.Nstring     `json:"prevPageUri,omitempty"` // "prevPageUri": null,
+	NextPageURI utils.Nstring     `json:"nextPageUri,omitempty"` // "nextPageUri": null,
+	URI         utils.Nstring     `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
 	Members     []ArtifactsBundle `json:"members,omitempty"`     // "members":[]
 }
-
 
 type InputArtifactBundle struct {
 	BuildPlans         []InputArtifacts `json:"buildPlans,omitempty"`         // "buildPlans": [],
@@ -130,8 +129,8 @@ func (c *I3SClient) GetArtifactsBundleByName(name string) (ArtifactsBundle, erro
 
 func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactBundleList, error) {
 	var (
-		uri             = "/rest/artifact-bundles"
-		q               map[string]interface{}
+		uri              = "/rest/artifact-bundles"
+		q                map[string]interface{}
 		artifactsBundles ArtifactsBundleList
 	)
 	q = make(map[string]interface{})
@@ -162,7 +161,6 @@ func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactBun
 	}
 	return artifactsBundles, nil
 }
-
 
 func (c *I3SClient) CreateArtifactsBundle(artifactsBundle InputArtifactBundle) error {
 	log.Infof("Initializing creation of artifactsBundle for %s.", artifactsBundle.Name)
@@ -203,9 +201,9 @@ func (c *I3SClient) CreateArtifactsBundle(artifactsBundle InputArtifactBundle) e
 func (c *I3SClient) DeleteArtifactsBundle(name string) error {
 	var (
 		artifactsBundle ArtifactsBundle
-		err            error
-		t              *Task
-		uri            string
+		err             error
+		t               *Task
+		uri             string
 	)
 
 	artifactsBundle, err = c.GetArtifactsBundleByName(name)
@@ -282,4 +280,3 @@ func (c *I3SClient) UpdateArtifactsBundle(artifactsBundle ArtifactsBundle) error
 
 	return nil
 }
-

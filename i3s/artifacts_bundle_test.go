@@ -115,8 +115,8 @@ func TestGetArtifactsBundles(t *testing.T) {
 
 func TestDeleteArtifactsBundleNotFound(t *testing.T) {
 	var (
-		c                  *I3SClient
-		testName           = "fake"
+		c                   *I3SClient
+		testName            = "fake"
 		testArtifactsBundle ArtifactsBundle
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -140,9 +140,9 @@ func TestDeleteArtifactsBundleNotFound(t *testing.T) {
 
 func TestDeleteArtifactsBundle(t *testing.T) {
 	var (
-		d                  *I3STest
-		c                  *I3SClient
-		testName           string
+		d                   *I3STest
+		c                   *I3SClient
+		testName            string
 		testArtifactsBundle ArtifactsBundle
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
