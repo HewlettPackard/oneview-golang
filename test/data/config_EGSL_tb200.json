@@ -279,6 +279,14 @@
       }
     },
     {
+      "Name": "test_artifacts_bundle",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "go artifacts bundle test",
+        "Type": "ArtifactsBundle"
+      }
+    },
+    {
       "name": "dev_icsp",
       "enabled": true,
       "test_data": {
