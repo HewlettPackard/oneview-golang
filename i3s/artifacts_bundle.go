@@ -162,7 +162,7 @@ func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactsBu
 	return artifactsBundles, nil
 }
 
-func (c *I3SClient) CreateArtifactsBundle(artifactsBundle InputArtifactBundle) error {
+func (c *I3SClient) CreateArtifactsBundle(artifactsBundle InputArtifactsBundle) error {
 	log.Infof("Initializing creation of artifactsBundle for %s.", artifactsBundle.Name)
 	var (
 		uri = "/rest/artifact-bundles"
