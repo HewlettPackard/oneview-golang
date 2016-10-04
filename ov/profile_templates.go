@@ -130,18 +130,6 @@ func (c *OVClient) CreateProfileTemplate(serverProfileTemplate ServerProfile) er
 		return err
 	}
 
-	log.Debugf("Response New Server Profile Template %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
