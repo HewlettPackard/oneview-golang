@@ -10,72 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Test SessionLogin
-func TestSessionLogin(t *testing.T) {
-	var (
-		// d *OVTest
-		c *I3SClient
-		// env = os.Getenv("ONEVIEW_TEST_ENV") || "dev"
-	)
-	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA("dev")
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		data, err := c.SessionLogin()
-		log.Debugf("after SessionLogin: %s -> (err) %s", data.ID, err)
-
-		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
-		assert.NotEmpty(t, data.ID, fmt.Sprintf("SessionLogin is empty! something went wrong, err -> %s, data -> %+v\n", err, data))
-		assert.Equal(t, "none", c.APIKey)
-
-		c.APIKey = data.ID
-		err = c.SessionLogout()
-		assert.NoError(t, err, "SessionLogout threw error -> %s", err)
-		data, err = c.SessionLogin()
-		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
-	} else {
-		_, c = getTestDriverU("dev")
-		data, err := c.SessionLogin()
-		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
-		assert.Equal(t, "none", c.APIKey)
-	}
-}
-
-// Test SessionLogout
-func TestSessionLogout(t *testing.T) {
-	var (
-		//d *OVTest
-		c *I3SClient
-		//testSerial string
-	)
-	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
-		_, c = getTestDriverA("dev")
-		if c == nil {
-			t.Fatalf("Failed to execute getTestDriver() ")
-		}
-		//data, err := c.SessionLogin()
-		// this is needed so we can "copy" the session id to the ov client
-		err := c.RefreshLogin()
-		//log.Debugf(" login key -> %s, session data -> %+v", c.APIKey, data)
-		log.Debugf(" login key -> %s", c.APIKey)
-		assert.NoError(t, err, "SessionLogin threw error -> %s", err)
-		//assert.NotEmpty(t, data.ID, fmt.Sprintf("SessionLogin is empty! something went wrong, err -> %s, data -> %+v\n", err, data))
-		//assert.Equal(t, "none", c.APIKey)
-		err = c.SessionLogout()
-		assert.NoError(t, err, "SessionLogout threw error -> %s", err)
-		// test if we can perform an op after logout
-		//_, err = c.GetProfileBySN(testSerial)
-		//assert.Error(t, err, "SessionLogin threw error -> %s", err)
-	} else {
-		/*_, c = getTestDriverU("dev")
-		data, err := c.SessionLogin()
-		assert.Error(t,err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n",err, data))
-		assert.Equal(t, "none", c.APIKey)
-		*/
-	}
-}
-
 // Get the current idle timeout from the logged in session
 func TestGetIdleTimeout(t *testing.T) {
 	var (
@@ -87,7 +21,6 @@ func TestGetIdleTimeout(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		err := c.RefreshLogin()
 		log.Debugf(" login key -> %s", c.APIKey)
 		assert.NoError(t, err, "RefreshLogin threw error -> %s", err)
 

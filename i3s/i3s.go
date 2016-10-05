@@ -25,16 +25,13 @@ type I3SClient struct {
 }
 
 // new Client
-func (c *I3SClient) NewI3SClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int) *I3SClient {
+func (c *I3SClient) NewI3SClient(endpoint string, sslverify bool, apiversion int, apiKey string) *I3SClient {
 	return &I3SClient{
 		rest.Client{
-			User:       user,
-			Password:   password,
-			Domain:     domain,
 			Endpoint:   endpoint,
 			SSLVerify:  sslverify,
 			APIVersion: apiversion,
-			APIKey:     "none",
+			APIKey:     apiKey,
 		},
 	}
 }

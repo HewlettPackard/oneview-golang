@@ -30,7 +30,6 @@ type Client struct {
 	APIVersion int
 	SSLVerify  bool
 	Endpoint   string
-	AuthEndpoint string
 	Option     Options
 }
 

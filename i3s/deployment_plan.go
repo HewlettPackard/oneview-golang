@@ -93,8 +93,6 @@ func (c *I3SClient) GetDeploymentPlans(filter string, sort string) (DeploymentPl
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {
@@ -119,8 +117,7 @@ func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 		uri = "/rest/deployment-plans"
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
@@ -202,8 +199,7 @@ func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 		uri = deploymentPlan.URI.String()
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+	
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
