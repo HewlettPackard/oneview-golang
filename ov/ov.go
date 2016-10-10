@@ -22,7 +22,6 @@ import (
 	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 )
 
@@ -43,16 +42,6 @@ func (c *OVClient) NewOVClient(user string, password string, domain string, endp
 			APIVersion: apiversion,
 			APIKey:     "none",
 		},
-	}
-}
-
-func (c *OVClient) GetI3SClient(endpoint string) *I3SClient {
-	c.RefreshLogin()
-	return &I3SClient{
-		Endpoint: endpoint,
-		SSLVerify: c.SSLVerify,
-		APIVersion: c.apiversion,
-		APIKey: c.APIKey,
 	}
 }
 

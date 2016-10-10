@@ -85,8 +85,6 @@ func (c *I3SClient) GetOSVolumes(filter string, sort string) (OSVolumeList, erro
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {

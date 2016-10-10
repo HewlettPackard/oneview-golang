@@ -83,8 +83,6 @@ func (c *I3SClient) GetPlanScripts(filter string, sort string) (PlanScriptList, 
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {
@@ -109,8 +107,7 @@ func (c *I3SClient) CreatePlanScript(planScript PlanScript) error {
 		uri = "/rest/plan-scripts"
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
@@ -192,8 +189,7 @@ func (c *I3SClient) UpdatePlanScript(planScript PlanScript) error {
 		uri = planScript.URI.String()
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

@@ -17,7 +17,9 @@ limitations under the License.
 // Package i3s - Image Streamer 3.0 -
 package i3s
 
-import "github.com/HewlettPackard/oneview-golang/rest"
+import (
+    "github.com/HewlettPackard/oneview-golang/rest"
+)
 
 // I3SClient - wrapper class for i3s api's
 type I3SClient struct {

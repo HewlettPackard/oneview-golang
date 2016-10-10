@@ -90,8 +90,6 @@ func (c *I3SClient) GetOSBuildPlans(filter string, sort string) (OSBuildPlanList
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {
@@ -116,8 +114,7 @@ func (c *I3SClient) CreateOSBuildPlan(osBuildPlan OSBuildPlan) error {
 		uri = "/rest/build-plans"
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
@@ -199,8 +196,7 @@ func (c *I3SClient) UpdateOSBuildPlan(osBuildPlan OSBuildPlan) error {
 		uri = osBuildPlan.URI.String()
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

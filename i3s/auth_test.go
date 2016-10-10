@@ -1,7 +1,6 @@
 package i3s
 
 import (
-	"fmt"
 	"os"
 	"testing"
 	//"time"
@@ -22,13 +21,12 @@ func TestGetIdleTimeout(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		log.Debugf(" login key -> %s", c.APIKey)
-		assert.NoError(t, err, "RefreshLogin threw error -> %s", err)
-
+	
 		timeout, err := c.GetIdleTimeout()
+		assert.Error(t, err, "Timeout: %s", err)
 		assert.NoError(t, err, "GetIdleTimeout threw error -> %s", err)
 		log.Debugf(" idle timeout -> %d", timeout)
 	}
-
 }
 
 // Set idle timeout
@@ -43,11 +41,8 @@ func TestSetIdleTimeout(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		err := c.RefreshLogin()
-		log.Debugf(" login key -> %s", c.APIKey)
-		assert.NoError(t, err, "RefreshLogin threw error -> %s", err)
 
-		err = c.SetIdleTimeout(testtime)
+		err := c.SetIdleTimeout(testtime)
 		assert.NoError(t, err, "SetIdleTimeout threw error -> %s", err)
 
 		timeout, err := c.GetIdleTimeout()
@@ -55,7 +50,6 @@ func TestSetIdleTimeout(t *testing.T) {
 		assert.Equal(t, testtime, timeout, "Should get timeout equal, %s", timeout)
 		log.Debugf(" idle timeout -> %d", timeout)
 	}
-
 }
 
 /*
