@@ -469,6 +469,38 @@ func (c *ICSPClient) GetServers() (ServerList, error) {
 	return servers, nil
 }
 
+// GetServerByIP use the server ip to get the server
+func (c *ICSPClient) GetServerByIP(ip string) (Server, error) {
+	var (
+		servers ServerList
+		server  Server
+	)
+	servers, err := c.GetServers()
+	if err != nil {
+		return server, err
+	}
+	log.Debugf("GetServerByIP: server count: %d", servers.Count)
+	// grab the target
+	var srv Server
+	for _, randServer := range servers.Members {
+		server, err := c.GetServerByID(randServer.MID)
+		if err != nil {
+			return server, err
+		}
+		if strings.EqualFold(server.ILO.IPAddress, ip) {
+			log.Debugf("server ip: %v", &server.ILO.IPAddress)
+			srv = server
+			srv, err = srv.ReloadFull(c)
+			if err != nil {
+				return srv, err
+			}
+			break
+		}
+
+	}
+	return srv, nil
+}
+
 // GetServerByID - get a server from icsp - faster then getting all servers
 // and ranging over them
 func (c *ICSPClient) GetServerByID(mid string) (Server, error) {

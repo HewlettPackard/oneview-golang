@@ -123,22 +123,10 @@ func (c *OVClient) CreateProfileTemplate(serverProfileTemplate ServerProfile) er
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, serverProfileTemplate)
 	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, serverProfileTemplate)
+	_, err := c.RestAPICall(rest.POST, uri, serverProfileTemplate)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new server profile template request: %s", err)
-		return err
-	}
-
-	log.Debugf("Response New Server Profile Template %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
 		return err
 	}
 
