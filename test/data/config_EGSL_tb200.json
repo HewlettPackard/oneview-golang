@@ -268,7 +268,10 @@
       "Enabled": true,
       "Test_data": {
         "Name": "go plan script test",
-        "Type": "PlanScript"
+        "Type": "PlanScript",
+        "PlanType":  "General",
+        "Description": "go test plan script",
+        "Content": "test"
       }
     },
     {

@@ -199,7 +199,7 @@ func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 		uri = deploymentPlan.URI.String()
 		t   *Task
 	)
-	
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

@@ -248,7 +248,7 @@ func (c *I3SClient) UpdateArtifactsBundle(artifactsBundle ArtifactsBundle) error
 		uri = artifactsBundle.URI.String()
 		t   *Task
 	)
-	
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

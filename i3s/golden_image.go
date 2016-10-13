@@ -201,7 +201,7 @@ func (c *I3SClient) UpdateGoldenImage(goldenImage GoldenImage) error {
 		uri = goldenImage.URI.String()
 		t   *Task
 	)
-	
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

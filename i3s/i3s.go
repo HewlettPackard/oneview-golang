@@ -18,7 +18,7 @@ limitations under the License.
 package i3s
 
 import (
-    "github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/rest"
 )
 
 // I3SClient - wrapper class for i3s api's

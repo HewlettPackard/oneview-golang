@@ -21,7 +21,7 @@ func TestGetIdleTimeout(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		log.Debugf(" login key -> %s", c.APIKey)
-	
+
 		timeout, err := c.GetIdleTimeout()
 		assert.Error(t, err, "Timeout: %s", err)
 		assert.NoError(t, err, "GetIdleTimeout threw error -> %s", err)

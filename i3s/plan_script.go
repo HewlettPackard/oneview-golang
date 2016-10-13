@@ -105,32 +105,27 @@ func (c *I3SClient) CreatePlanScript(planScript PlanScript) error {
 	log.Infof("Initializing creation of plan script for %s.", planScript.Name)
 	var (
 		uri = "/rest/plan-scripts"
-		t   *Task
+		testPlanScript *PlanScript
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewTask(c)
-	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, planScript)
-	log.Debugf("task -> %+v", t)
+	
 	data, err := c.RestAPICall(rest.POST, uri, planScript)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting new plan script request: %s", err)
 		return err
 	}
 
 	log.Debugf("Response New Plan Script %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
+	if err := json.Unmarshal([]byte(data), &testPlanScript); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
 		return err
 	}
 
-	err = t.Wait()
-	if err != nil {
-		return err
+
+	if testPlanScript.URI == "" {
+		return fmt.Errorf("%+v", testPlanScript)
 	}
 
 	return nil
@@ -140,7 +135,6 @@ func (c *I3SClient) DeletePlanScript(name string) error {
 	var (
 		planScript PlanScript
 		err        error
-		t          *Task
 		uri        string
 	)
 
@@ -149,34 +143,17 @@ func (c *I3SClient) DeletePlanScript(name string) error {
 		return err
 	}
 	if planScript.Name != "" {
-		t = t.NewTask(c)
-		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", planScript.URI, planScript)
-		log.Debugf("task -> %+v", t)
 		uri = planScript.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete plan script request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
-
-		log.Debugf("Response delete plan script %s", data)
-		if err := json.Unmarshal([]byte(data), &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
-		err = t.Wait()
-		if err != nil {
-			return err
-		}
-		return nil
 	} else {
 		log.Infof("Plan script could not be found to delete, %s, skipping delete ...", name)
 	}

@@ -4,18 +4,18 @@ import (
 	"os"
 	"testing"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/testconfig"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
 
 type I3STest struct {
-	Tc     *testconfig.TestConfig
+	Tc       *testconfig.TestConfig
 	OVClient *ov.OVClient
-	Client *I3SClient
-	Env    string
+	Client   *I3SClient
+	Env      string
 }
 
 // get Environment
@@ -38,10 +38,11 @@ func getTestDriverA(env string) (*I3STest, *I3SClient) {
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.OVClient = &ov.OVClient{
 		rest.Client{
-			User:     os.Getenv("ONEVIEW_OV_USER"),
-			Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
-			Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
-			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			User:       os.Getenv("ONEVIEW_OV_USER"),
+			Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
+			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
+			Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			APIVersion: 300,
 			// ConfigDir:
 			SSLVerify: false,
 			APIKey:    "none",
