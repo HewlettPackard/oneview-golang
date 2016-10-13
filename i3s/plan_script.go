@@ -104,13 +104,12 @@ func (c *I3SClient) GetPlanScripts(filter string, sort string) (PlanScriptList, 
 func (c *I3SClient) CreatePlanScript(planScript PlanScript) error {
 	log.Infof("Initializing creation of plan script for %s.", planScript.Name)
 	var (
-		uri = "/rest/plan-scripts"
+		uri            = "/rest/plan-scripts"
 		testPlanScript *PlanScript
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	
 	data, err := c.RestAPICall(rest.POST, uri, planScript)
 	if err != nil {
 		log.Errorf("Error submitting new plan script request: %s", err)
@@ -122,7 +121,6 @@ func (c *I3SClient) CreatePlanScript(planScript PlanScript) error {
 		log.Errorf("Error with task un-marshal: %s", err)
 		return err
 	}
-
 
 	if testPlanScript.URI == "" {
 		return fmt.Errorf("%+v", testPlanScript)

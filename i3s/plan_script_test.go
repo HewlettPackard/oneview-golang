@@ -43,11 +43,11 @@ func TestCreatePlanScript(t *testing.T) {
 
 		if testPlanScript.URI.IsNil() {
 			testPlanScript = PlanScript{
-				Name: testName,
-				Type: d.Tc.GetTestData(d.Env, "Type").(string),
-				PlanType: d.Tc.GetTestData(d.Env, "PlanType").(string),
+				Name:        testName,
+				Type:        d.Tc.GetTestData(d.Env, "Type").(string),
+				PlanType:    d.Tc.GetTestData(d.Env, "PlanType").(string),
 				Description: d.Tc.GetTestData(d.Env, "Description").(string),
-				Content: d.Tc.GetTestData(d.Env, "Content").(string),
+				Content:     d.Tc.GetTestData(d.Env, "Content").(string),
 			}
 			err := c.CreatePlanScript(testPlanScript)
 			assert.NoError(t, err, "CreatePlanScript error -> %s", err)
