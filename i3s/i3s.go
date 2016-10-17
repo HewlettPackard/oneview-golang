@@ -17,7 +17,9 @@ limitations under the License.
 // Package i3s - Image Streamer 3.0 -
 package i3s
 
-import "github.com/HewlettPackard/oneview-golang/rest"
+import (
+	"github.com/HewlettPackard/oneview-golang/rest"
+)
 
 // I3SClient - wrapper class for i3s api's
 type I3SClient struct {
@@ -25,16 +27,13 @@ type I3SClient struct {
 }
 
 // new Client
-func (c *I3SClient) NewI3SClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int) *I3SClient {
+func (c *I3SClient) NewI3SClient(endpoint string, sslverify bool, apiversion int, apiKey string) *I3SClient {
 	return &I3SClient{
 		rest.Client{
-			User:       user,
-			Password:   password,
-			Domain:     domain,
 			Endpoint:   endpoint,
 			SSLVerify:  sslverify,
 			APIVersion: apiversion,
-			APIKey:     "none",
+			APIKey:     apiKey,
 		},
 	}
 }

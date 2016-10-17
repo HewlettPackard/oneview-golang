@@ -20,7 +20,6 @@ package i3s
 import (
 	"encoding/json"
 	"strconv"
-	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
@@ -55,83 +54,9 @@ type Session struct {
 	ID string `json:"sessionID,omitempty"`
 }
 
-// Auth structure
-type Auth struct {
-	UserName string `json:"userName,omitempty"`
-	Password string `json:"password,omitempty"`
-	Domain   string `json:"authLoginDomain,omitempty"`
-}
-
 // TimeOut structure
 type TimeOut struct {
 	IdleTimeout int64 `json:"idleTimeout"`
-}
-
-// RefreshLogin Refresh login authkey
-// Should make sure we have a valid APIKey
-func (c *I3SClient) RefreshLogin() error {
-	if c.APIKey == "" || len(strings.TrimSpace(c.APIKey)) == 0 || c.APIKey == "none" {
-		log.Debugf("Getting new session id")
-		s, err := c.SessionLogin()
-		if err != nil {
-			return err
-		}
-		c.APIKey = s.ID
-	}
-	// check it we are getting 404 Not Found from GetIdleTimeout, this means the Session-ID is no good
-	_, err := c.GetIdleTimeout()
-	if err != nil && strings.Contains(err.Error(), "404 Not Found") {
-		s, err := c.SessionLogin()
-		if err != nil {
-			return err
-		}
-		c.APIKey = s.ID
-	}
-	return nil
-}
-
-// SessionLogin Login to ImageStreamer and get a session ID
-// returns Session structure
-func (c *I3SClient) SessionLogin() (Session, error) {
-	var (
-		uri     = "/rest/login-sessions"
-		body    = Auth{UserName: c.User, Password: c.Password, Domain: c.Domain}
-		session Session
-	)
-
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-	data, err := c.RestAPICall(rest.POST, uri, body)
-	if err != nil {
-		return session, err
-	}
-
-	log.Debugf("SessionLogin %s", data)
-	if err := json.Unmarshal([]byte(data), &session); err != nil {
-		return session, err
-	}
-	// Update APIKey
-	return session, err
-}
-
-// SessionLogout Logout to ImageStreamer and get a session ID
-// returns Session structure
-func (c *I3SClient) SessionLogout() error {
-	var (
-		uri = "/rest/login-sessions"
-	)
-	log.Debugf("Calling logout for header -> %+v", c.GetAuthHeaderMap())
-	if c.APIKey == "none" {
-		log.Debugf("already logged out")
-		return nil
-	}
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-	_, err := c.RestAPICall(rest.DELETE, uri, nil)
-	if err != nil {
-		log.Debugf("Error from %s :-> %+v", uri, err)
-		return err
-	}
-	c.APIKey = "none"
-	return nil
 }
 
 // GetIdleTimeout gets the current timeout for the logged on session
