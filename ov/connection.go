@@ -29,6 +29,7 @@ type BootTarget struct {
 
 // BootOption -
 type BootOption struct {
+	BootOptionV3
 	Priority string       `json:"priority,omitempty"` // priority(const_string), indicates the boot priority for this device. PXE and Fibre Channel connections are treated separately; an Ethernet connection and a Fibre Channel connection can both be marked as Primary. The 'order' attribute controls ordering among the different device types.
 	Targets  []BootTarget `json:"targets,omitempty"`  // targets {BootTarget}
 }

@@ -62,6 +62,7 @@ type BiosOption struct {
 // ServerProfile - server profile object for ov
 type ServerProfile struct {
 	ServerProfilev200
+	ServerProfilev300
 	Affinity              string              `json:"affinity,omitempty"`         // "affinity": "Bay",
 	AssociatedServer      utils.Nstring       `json:"associatedServer,omitempty"` // "associatedServer": null,
 	Bios                  *BiosOption         `json:"bios,omitempty"`             // "bios": {	},
