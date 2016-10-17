@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 )
 
@@ -134,7 +135,7 @@ func (c *ICSPClient) ApplyDeploymentJobs(buildplans []string, bpdata *OSDPersona
 	var servers []Server
 	// lookup buildplan by name
 	for _, buildPlan := range buildplans {
-		bp, err := c.GetBuildPlanByName(buildPlan)
+		bp, err := c.GetBuildPlanByUri(utils.NewNstring(buildPlan))
 		if err != nil {
 			return jt, err
 		}

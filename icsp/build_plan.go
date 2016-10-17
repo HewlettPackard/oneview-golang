@@ -120,3 +120,19 @@ func (c *ICSPClient) GetBuildPlanByName(planName string) (OSDBuildPlan, error) {
 	}
 	return bldplan, nil
 }
+
+func (c *ICSPClient) GetBuildPlanByUri(uri utils.Nstring) (OSDBuildPlan, error) {
+
+	var bldplan OSDBuildPlan
+	// grab the target
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return bldplan, err
+	}
+	log.Debugf("GetBuildPlan %s", data)
+	if err := json.Unmarshal([]byte(data), &bldplan); err != nil {
+		return bldplan, err
+	}
+
+	return bldplan, nil
+}
