@@ -30,8 +30,8 @@ type LocalStorageEmbeddedControllerV4 struct {
 }
 
 type LogicalDriveV4 struct {
-	Name string `json:"name,omitempty"` // "name": "logical drive name",
-	SasLogicalJBODId int `json:"sasLogicalJBODId,omitempty"` // "sasLogicalJBODId": 1,
+	Name             string `json:"name,omitempty"`             // "name": "logical drive name",
+	SasLogicalJBODId int    `json:"sasLogicalJBODId,omitempty"` // "sasLogicalJBODId": 1,
 }
 
 type LogicalJbod struct {
