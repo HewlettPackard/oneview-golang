@@ -33,7 +33,7 @@ type LocalStorageOptions struct { // "localStorage": {
 	ManageLocalStorage bool           `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
 	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
 	Initialize         bool           `json:"initialize,omitempty"`         // 				"initialize": true
-} // 		},
+}
 
 // Clone local storage
 func (c LocalStorageOptions) Clone() LocalStorageOptions {
@@ -67,6 +67,7 @@ func (c StoragePath) Clone() StoragePath {
 
 // VolumeAttachment volume attachment
 type VolumeAttachment struct {
+	VolumeAttachmentV3
 	ID                             int           `json:"id,omitempty"`                             // id, The ID of the attached storage volume.
 	LUN                            string        `json:"lun,omitempty"`                            // lun, The logical unit number.
 	LUNType                        string        `json:"lunType,omitempty"`                        // lunType(required), The logical unit number type: Auto or Manual.

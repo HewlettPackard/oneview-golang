@@ -18,11 +18,7 @@ package ov
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"github.com/docker/machine/libmachine/log"
 )
 
 type BootOptionV3 struct {
@@ -49,4 +45,16 @@ type BootOptionV3 struct {
 type ServerProfilev300 struct {
 	IscsiInitiatorName  string `json:"iscsiInitiatorName,omitempty"` // "iscsiInitiatorName": "name of iscsi initiator name",
 	IscsiInitiatorNameType string `json:"iscsiInitiatorNameType,omitempty"` // "iscsiInitiatorNameType": "UserDefined",
+	OSDeploymentSettings OSDeploymentSettings `json:"osDeploymentSettings,omitempty"` // "osDeploymentSettings": {...},
+}
+
+type OSDeploymentSettings struct {
+	OSCustomAttributes []OSCustomAttribute `json:"osCustomAttributes,omitempty"` // "osCustomAttributes": [],
+	OSDeploymentPlanUri utils.Nstring `json:"osDeploymentPlanUri,omitempty"` // "osDeploymentPlanUri": nil,
+	OSVolumeUri utils.Nstring `json:"osVolumeUri,omitempty"` // "osVolumeUri": nil,
+}
+
+type OSCustomAttribute struct {
+	Name string `json:"name,omitempty"` // "name": "custom attribute 1",
+	Value string `json:"value,omitempty"` // "value": "custom attribute value"
 }
