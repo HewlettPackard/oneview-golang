@@ -95,8 +95,6 @@ func (c *I3SClient) GetGoldenImages(filter string, sort string) (GoldenImageList
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {
@@ -121,8 +119,7 @@ func (c *I3SClient) CreateGoldenImage(goldenImage GoldenImage) error {
 		uri = "/rest/golden-images"
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
@@ -204,8 +201,7 @@ func (c *I3SClient) UpdateGoldenImage(goldenImage GoldenImage) error {
 		uri = goldenImage.URI.String()
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

@@ -142,8 +142,6 @@ func (c *I3SClient) GetArtifactsBundles(filter string, sort string) (ArtifactsBu
 		q["sort"] = sort
 	}
 
-	// refresh login
-	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	// Setup query
 	if len(q) > 0 {
@@ -168,8 +166,7 @@ func (c *I3SClient) CreateArtifactsBundle(artifactsBundle InputArtifactsBundle) 
 		uri = "/rest/artifact-bundles"
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)
@@ -251,8 +248,7 @@ func (c *I3SClient) UpdateArtifactsBundle(artifactsBundle ArtifactsBundle) error
 		uri = artifactsBundle.URI.String()
 		t   *Task
 	)
-	// refresh login
-	c.RefreshLogin()
+
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t = t.NewTask(c)

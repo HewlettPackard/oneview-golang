@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/testconfig"
 	"github.com/docker/machine/libmachine/log"
@@ -11,9 +12,10 @@ import (
 )
 
 type I3STest struct {
-	Tc     *testconfig.TestConfig
-	Client *I3SClient
-	Env    string
+	Tc       *testconfig.TestConfig
+	OVClient *ov.OVClient
+	Client   *I3SClient
+	Env      string
 }
 
 // get Environment
@@ -34,17 +36,21 @@ func getTestDriverA(env string) (*I3STest, *I3SClient) {
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &I3SClient{
+	ot.OVClient = &ov.OVClient{
 		rest.Client{
-			User:     os.Getenv("ONEVIEW_I3S_USER"),
-			Password: os.Getenv("ONEVIEW_I3S_PASSWORD"),
-			Domain:   os.Getenv("ONEVIEW_I3S_DOMAIN"),
-			Endpoint: os.Getenv("ONEVIEW_I3S_ENDPOINT"),
+			User:       os.Getenv("ONEVIEW_OV_USER"),
+			Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
+			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
+			Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			APIVersion: 300,
 			// ConfigDir:
 			SSLVerify: false,
 			APIKey:    "none",
 		},
 	}
+	ot.OVClient.RefreshLogin()
+	ot.Client = ot.Client.NewI3SClient(os.Getenv("ONEVIEW_I3S_ENDPOINT"), ot.OVClient.SSLVerify, ot.OVClient.APIVersion, ot.OVClient.APIKey)
+
 	// TODO: implement ot.Client.RefreshVersion()
 	return ot, ot.Client
 }
@@ -58,9 +64,6 @@ func getTestDriverU(env string) (*I3STest, *I3SClient) {
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.Client = &I3SClient{
 		rest.Client{
-			User:       "foo",
-			Password:   "bar",
-			Domain:     "LOCAL",
 			Endpoint:   "https://i3stestcase",
 			SSLVerify:  false,
 			APIVersion: 300,
