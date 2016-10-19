@@ -25,11 +25,13 @@ import (
 
 // LocalStorageSettingsV3 -
 type LocalStorageSettingsV3 struct { // "localStorage": {
+	LocalStorageSettingsV4
 	Controllers []LocalStorageEmbeddedController `json:"controllers,omitempty"` //  The list of embedded local storage controllers.
 }
 
 // LocalStorageEmbeddedController -
 type LocalStorageEmbeddedController struct {
+	LocalStorageEmbeddedControllerV4
 	ImportConfiguration bool             `json:"importConfiguration,omitempty"` // importConfiguration Determines if the logical drives in the current configuration should be imported. Boolean
 	Initialize          bool             `json:"initialize,omitempty"`          // initialize Determines if the controller should be initialized before configuration. Boolean
 	LogicalDrives       []LogicalDriveV3 `json:"logicalDrives,omitempty"`       // LogicalDriveV3 The list of logical drives associated with the controller.
@@ -40,6 +42,7 @@ type LocalStorageEmbeddedController struct {
 
 // LogicalDriveV3 -
 type LogicalDriveV3 struct {
+	LogicalDriveV4
 	Bootable          bool   `json:"bootable,omitempty"`          // bootable Indicates if the logical drive is bootable or not. Boolean
 	DriveName         string `json:"driveName,omitempty"`         // driveName The name of the logical drive. string
 	DriveNumber       int    `json:"driveNumber,omitempty"`       // driveNumber The number assigned to the logical drive by HP SSA. This value is read-only and gets automatically populated once the logical drive is created. integer read only
