@@ -2,8 +2,8 @@ package icsp
 
 import (
 	"encoding/json"
-	"strings"
 	"regexp"
+	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -134,7 +134,7 @@ func (c *ICSPClient) ApplyDeploymentJobs(buildplans []string, bpdata *OSDPersona
 	var dj DeploymentJobs
 	var bplans []OSDBuildPlan
 	var servers []Server
-	
+
 	// lookup buildplan by name
 	for _, buildPlan := range buildplans {
 		match, _ := regexp.MatchString("^(/rest/)(.+)*", buildPlan)
@@ -151,7 +151,7 @@ func (c *ICSPClient) ApplyDeploymentJobs(buildplans []string, bpdata *OSDPersona
 				return jt, err
 			}
 			bplans = append(bplans, bp)
-		}		
+		}
 	}
 
 	servers = append(servers, s)
