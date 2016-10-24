@@ -131,11 +131,8 @@ func (c *ICSPClient) PostApplyDeploymentJobs(jt *JobTask, s Server, properties [
 
 	// apply os build plan customizations for netconfig
 	buildplans := make([]string, 1)
-	networkBP, err := c.GetBuildPlanByName("ProLiant SW - Post Install Network Personalization")
-	if err != nil {
-		return err
-	}
-	buildplans[0] = networkBP.URI.String()
+	buildplans[0] = "ProLiant SW - Post Install Network Personalization"
+
 	_, err = c.ApplyDeploymentJobs(buildplans, netconfig.GetPersonalityData(), s)
 	if err != nil {
 		return err
