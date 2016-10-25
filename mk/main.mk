@@ -3,7 +3,7 @@ GO_LDFLAGS := -X `go list ./version`.GitCommit=`git rev-parse --short HEAD`
 GO_GCFLAGS :=
 
 # Full package list
-PKGS := ./testconfig ./ov ./icsp ./i3s ./liboneview ./rest ./utils
+PKGS := ./testconfig ./test/ov ./test/i3s ./test/icsp ./liboneview ./rest ./utils
 
 # Resolving binary dependencies for specific targets
 GOLINT_BIN := $(GOPATH)/bin/golint
