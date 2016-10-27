@@ -62,7 +62,7 @@ type BiosOption struct {
 // ServerProfile - server profile object for ov
 type ServerProfile struct {
 	ServerProfilev200
-	ServerProfilev300
+	*ServerProfilev300
 	Affinity              string              `json:"affinity,omitempty"`         // "affinity": "Bay",
 	AssociatedServer      utils.Nstring       `json:"associatedServer,omitempty"` // "associatedServer": null,
 	Bios                  *BiosOption         `json:"bios,omitempty"`             // "bios": {	},
@@ -287,6 +287,9 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 	new_template.Name = name
 
 	t, err := c.SubmitNewProfile(new_template)
+	if err != nil {
+		return err
+	}
 	err = t.Wait()
 	if err != nil {
 		return err
