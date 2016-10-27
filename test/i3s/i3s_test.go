@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/testconfig"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -14,10 +14,10 @@ import (
 )
 
 type I3STest struct {
-	Tc     *testconfig.TestConfig
+	Tc       *testconfig.TestConfig
 	OVClient *ov.OVClient
-	Client *i3s.I3SClient
-	Env    string
+	Client   *i3s.I3SClient
+	Env      string
 }
 
 // get Environment
@@ -31,7 +31,7 @@ func (ot *I3STest) GetEnvironment(env string) {
 }
 
 // get a test driver for acceptance testing
-func getTestDriverA(env string) (*I3STest, *I3SClient) {
+func getTestDriverA(env string) (*I3STest, *i3s.I3SClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *I3STest
 	var tc *testconfig.TestConfig
@@ -40,10 +40,10 @@ func getTestDriverA(env string) (*I3STest, *I3SClient) {
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
 	ot.OVClient = &ov.OVClient{
 		rest.Client{
-			User:     os.Getenv("ONEVIEW_OV_USER"),
-			Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
-			Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
-			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			User:       os.Getenv("ONEVIEW_OV_USER"),
+			Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
+			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
+			Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
 			APIVersion: 300,
 			// ConfigDir:
 			SSLVerify: false,
@@ -58,13 +58,13 @@ func getTestDriverA(env string) (*I3STest, *I3SClient) {
 }
 
 // Unit test
-func getTestDriverU(env string) (*I3STest, *I3SClient) {
+func getTestDriverU(env string) (*I3STest, *i3s.I3SClient) {
 	var ot *I3STest
 	var tc *testconfig.TestConfig
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &I3SClient{
+	ot.Client = &i3s.I3SClient{
 		rest.Client{
 			Endpoint:   "https://i3stestcase",
 			SSLVerify:  false,
@@ -78,7 +78,7 @@ func getTestDriverU(env string) (*I3STest, *I3SClient) {
 // Test Getting New I3SClient
 func TestNewI3SClient(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	log.Debug("implements unit test for TestNewI3SClient")
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {

@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ import (
 func TestGetAPIVersion(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -37,7 +38,7 @@ func TestGetAPIVersion(t *testing.T) {
 func TestRefreshVersion(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()

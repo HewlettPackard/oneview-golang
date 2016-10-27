@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,12 +15,12 @@ import (
 func TestCreateProfileFromTemplate(t *testing.T) {
 	var (
 		d                *OVTest
-		c                *OVClient
+		c                *ov.OVClient
 		testHostName     string
 		testBladeSerial  string
 		testTemplateName string
-		testBlades       ServerHardwareList
-		testTemplate     ServerProfile
+		testBlades       ov.ServerHardwareList
+		testTemplate     ov.ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("dev")
@@ -66,12 +67,12 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 		assert.NoError(t, err, "CreateProfileFromTemplate call to GetServerHardware got error -> %s", err)
 
 		// power on the server, and leave it in that state
-		var pt *PowerTask
+		var pt *ov.PowerTask
 		log.Debugf("testBlade -> %+v", testBlade)
 		pt = pt.NewPowerTask(testBlade)
 		pt.Timeout = 46 // timeout is 20 sec
 		log.Info("------- Setting Power to On")
-		err = pt.PowerExecutor(P_ON)
+		err = pt.PowerExecutor(ov.P_ON)
 		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
 	}
 
@@ -81,7 +82,7 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 func TestGetProfileByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -110,7 +111,7 @@ func TestGetProfileByName(t *testing.T) {
 func TestGetConnectionByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -142,7 +143,7 @@ func TestGetConnectionByName(t *testing.T) {
 func TestGetProfileBySN(t *testing.T) {
 	var (
 		d          *OVTest
-		c          *OVClient
+		c          *ov.OVClient
 		testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -171,7 +172,7 @@ func TestGetProfileBySN(t *testing.T) {
 func TestGetProfiles(t *testing.T) {
 	var (
 		// d *OVTest
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("dev")
@@ -195,9 +196,9 @@ func TestGetProfiles(t *testing.T) {
 // should not delete a profile that doesn't exist
 func TestDeleteProfileNotFound(t *testing.T) {
 	var (
-		c               *OVClient
+		c               *ov.OVClient
 		testProfileName = "fake_profile_doesnt_exist"
-		testProfile     ServerProfile
+		testProfile     ov.ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("dev")
@@ -222,9 +223,9 @@ func TestDeleteProfileNotFound(t *testing.T) {
 func TestDeleteProfile(t *testing.T) {
 	var (
 		d               *OVTest
-		c               *OVClient
+		c               *ov.OVClient
 		testProfileName string
-		testProfile     ServerProfile
+		testProfile     ov.ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("dev")

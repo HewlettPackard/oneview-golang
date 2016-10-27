@@ -250,7 +250,6 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 		return t, err
 	}
 
-
 	log.Debugf("Response NewProfile %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
@@ -258,7 +257,6 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 		return t, err
 	}
 
-	
 	return t, err
 }
 

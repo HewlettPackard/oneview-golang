@@ -112,31 +112,14 @@ func (c *I3SClient) CreateOSBuildPlan(osBuildPlan OSBuildPlan) error {
 	log.Infof("Initializing creation of osBuildPlan for %s.", osBuildPlan.Name)
 	var (
 		uri = "/rest/build-plans"
-		t   *Task
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewTask(c)
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, osBuildPlan)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, osBuildPlan)
+	_, err := c.RestAPICall(rest.POST, uri, osBuildPlan)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting new os build plan request: %s", err)
-		return err
-	}
-
-	log.Debugf("Response New OSBuildPlan %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
 		return err
 	}
 
@@ -147,7 +130,6 @@ func (c *I3SClient) DeleteOSBuildPlan(name string) error {
 	var (
 		osBuildPlan OSBuildPlan
 		err         error
-		t           *Task
 		uri         string
 	)
 
@@ -156,33 +138,18 @@ func (c *I3SClient) DeleteOSBuildPlan(name string) error {
 		return err
 	}
 	if osBuildPlan.Name != "" {
-		t = t.NewTask(c)
-		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", osBuildPlan.URI, osBuildPlan)
-		log.Debugf("task -> %+v", t)
 		uri = osBuildPlan.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete os build plan request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
 
-		log.Debugf("Response delete os build plan %s", data)
-		if err := json.Unmarshal([]byte(data), &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
-		err = t.Wait()
-		if err != nil {
-			return err
-		}
 		return nil
 	} else {
 		log.Infof("OS Build Plan could not be found to delete, %s, skipping delete ...", name)

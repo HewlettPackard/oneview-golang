@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +14,7 @@ import (
 // Test SessionLogin
 func TestSessionLogin(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()
@@ -42,7 +43,7 @@ func TestSessionLogin(t *testing.T) {
 // Get the current idle timeout from the logged in session
 func TestGetIdleTimeout(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 		// d *ICSPTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -64,7 +65,7 @@ func TestGetIdleTimeout(t *testing.T) {
 // Set idle timeout
 func TestSetIdleTimeout(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 		// d *ICSPTest
 		testtime int64
 	)
@@ -92,7 +93,7 @@ func TestSetIdleTimeout(t *testing.T) {
 // Test for expired key and see if RefreshLogin can restore the key if we have a bad key
 func TestSessionExpiredKey(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 		d *ICSPTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -127,7 +128,7 @@ func TestSessionExpiredKey(t *testing.T) {
 func TestSessionLogout(t *testing.T) {
 	var (
 		//d *OVTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 		//testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {

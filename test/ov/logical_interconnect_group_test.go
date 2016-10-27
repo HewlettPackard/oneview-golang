@@ -2,7 +2,7 @@ package ov
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -13,7 +13,7 @@ func TestCreateLogicalInterconnectGroup(t *testing.T) {
 	var (
 		d                *OVTest
 		interconnectData *OVTest
-		c                *OVClient
+		c                *ov.OVClient
 		testName         string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -31,166 +31,166 @@ func TestCreateLogicalInterconnectGroup(t *testing.T) {
 		assert.NoError(t, err, "CreateLogicalInterconnectGroup get the LogicalInterconnectError error -> %s", err)
 
 		if testLogicalInterconnectGroup.URI.IsNil() {
+			/*
+				interconnectMapEntryTemplates := make([]ov.InterconnectMapEntryTemplate, 8)
+				for i := 0; i < 8; i++ {
+					locationEntry1 := ov.LocationEntry{
+						RelativeValue: i + 1,
+						Type:          "Bay",
+					}
+					locationEntry2 := ov.LocationEntry{
+						RelativeValue: i + 2,
+						Type:          "Enclosure",
+					}
+					locationEntries := make([]ov.LocationEntry, 2)
+					locationEntries[0] = locationEntry1
+					locationEntries[1] = locationEntry2
+					logicalLocation := ov.LogicalLocation{
+						LocationEntries: locationEntries,
+					}
 
-			interconnectMapEntryTemplates := make([]InterconnectMapEntryTemplate, 8)
-			for i := 0; i < 8; i++ {
-				locationEntry1 := LocationEntry{
-					RelativeValue: i + 1,
-					Type:          "Bay",
+					interconnectMapEntryTemplate := ov.InterconnectMapEntryTemplate{
+						LogicalLocation:              logicalLocation,
+						PermittedInterconnectTypeUri: utils.NewNstring(interconnectData.Tc.GetTestData(interconnectData.Env, "URI").(string)),
+					}
+					interconnectMapEntryTemplates[i] = interconnectMapEntryTemplate
 				}
-				locationEntry2 := LocationEntry{
-					RelativeValue: i + 2,
-					Type:          "Enclosure",
-				}
-				locationEntries := make([]LocationEntry, 2)
-				locationEntries[0] = locationEntry1
-				locationEntries[1] = locationEntry2
-				logicalLocation := LogicalLocation{
-					LocationEntries: locationEntries,
+				interconnectMapTemplate := ov.InterconnectMapTemplate{
+					InterconnectMapEntryTemplates: interconnectMapEntryTemplates,
 				}
 
-				interconnectMapEntryTemplate := InterconnectMapEntryTemplate{
-					LogicalLocation:              logicalLocation,
-					PermittedInterconnectTypeUri: utils.NewNstring(interconnectData.Tc.GetTestData(interconnectData.Env, "URI").(string)),
+				f := false
+				tr := true
+				ethernetSettings := ov.EthernetSettings{
+					Type: "EthernetInterconnectSettingsV3",
+					EnableFastMacCacheFailover: &f,
+					EnableIgmpSnooping:         &tr,
+					EnableRichTLV:              &tr,
+					MacRefreshInterval:         10,
+					IgmpIdleTimeoutInterval:    250,
 				}
-				interconnectMapEntryTemplates[i] = interconnectMapEntryTemplate
-			}
-			interconnectMapTemplate := InterconnectMapTemplate{
-				InterconnectMapEntryTemplates: interconnectMapEntryTemplates,
-			}
 
-			f := false
-			tr := true
-			ethernetSettings := EthernetSettings{
-				Type: "EthernetInterconnectSettingsV3",
-				EnableFastMacCacheFailover: &f,
-				EnableIgmpSnooping:         &tr,
-				EnableRichTLV:              &tr,
-				MacRefreshInterval:         10,
-				IgmpIdleTimeoutInterval:    250,
-			}
+				telemetryConfig := ov.TelemetryConfiguration{
+					Type:            "telemetry-configuration",
+					EnableTelemetry: &tr,
+					SampleCount:     12,
+					SampleInterval:  150,
+				}
 
-			telemetryConfig := TelemetryConfiguration{
-				Type:            "telemetry-configuration",
-				EnableTelemetry: &tr,
-				SampleCount:     12,
-				SampleInterval:  150,
-			}
+				snmpConfiguration := ov.SnmpConfiguration{
+					Type:          "snmp-configuration",
+					Enabled:       &f,
+					ReadCommunity: "test",
+					SystemContact: "sys contact",
+					SnmpAccess:    []string{"192.168.1.0/24"},
+				}
 
-			snmpConfiguration := SnmpConfiguration{
-				Type:          "snmp-configuration",
-				Enabled:       &f,
-				ReadCommunity: "test",
-				SystemContact: "sys contact",
-				SnmpAccess:    []string{"192.168.1.0/24"},
-			}
+				qosTrafficClassifiers := make([]ov.QosTrafficClassifier, 4)
+				qosTrafficClass := ov.QosTrafficClass{
+					BandwidthShare:   "10",
+					EgressDot1pValue: 5,
+					MaxBandwidth:     10,
+					RealTime:         &tr,
+					ClassName:        "RealTime",
+					Enabled:          &tr,
+				}
+				qosClassificationMap1 := ov.QosClassificationMap{
+					Dot1pClassMapping: []int{5, 6, 7},
+					DscpClassMapping:  []string{"DSCP 46, EF", "DSCP 40, CS5", "DSCP 48, CS6", "DSCP 56, CS7"},
+				}
+				qosTrafficClassifier := ov.QosTrafficClassifier{
+					QosTrafficClass:          qosTrafficClass,
+					QosClassificationMapping: &qosClassificationMap1,
+				}
+				qosTrafficClassifiers[0] = qosTrafficClassifier
 
-			qosTrafficClassifiers := make([]QosTrafficClassifier, 4)
-			qosTrafficClass := QosTrafficClass{
-				BandwidthShare:   "10",
-				EgressDot1pValue: 5,
-				MaxBandwidth:     10,
-				RealTime:         &tr,
-				ClassName:        "RealTime",
-				Enabled:          &tr,
-			}
-			qosClassificationMap1 := QosClassificationMap{
-				Dot1pClassMapping: []int{5, 6, 7},
-				DscpClassMapping:  []string{"DSCP 46, EF", "DSCP 40, CS5", "DSCP 48, CS6", "DSCP 56, CS7"},
-			}
-			qosTrafficClassifier := QosTrafficClassifier{
-				QosTrafficClass:          qosTrafficClass,
-				QosClassificationMapping: &qosClassificationMap1,
-			}
-			qosTrafficClassifiers[0] = qosTrafficClassifier
+				qosTrafficClass = ov.QosTrafficClass{
+					BandwidthShare:   "fcoe",
+					EgressDot1pValue: 3,
+					MaxBandwidth:     100,
+					RealTime:         &f,
+					ClassName:        "FCoE lossless",
+					Enabled:          &tr,
+				}
+				qosClassificationMap2 := ov.QosClassificationMap{
+					Dot1pClassMapping: []int{3},
+					DscpClassMapping:  []string{},
+				}
+				qosTrafficClassifier = ov.QosTrafficClassifier{
+					QosTrafficClass:          qosTrafficClass,
+					QosClassificationMapping: &qosClassificationMap2,
+				}
+				qosTrafficClassifiers[1] = qosTrafficClassifier
 
-			qosTrafficClass = QosTrafficClass{
-				BandwidthShare:   "fcoe",
-				EgressDot1pValue: 3,
-				MaxBandwidth:     100,
-				RealTime:         &f,
-				ClassName:        "FCoE lossless",
-				Enabled:          &tr,
-			}
-			qosClassificationMap2 := QosClassificationMap{
-				Dot1pClassMapping: []int{3},
-				DscpClassMapping:  []string{},
-			}
-			qosTrafficClassifier = QosTrafficClassifier{
-				QosTrafficClass:          qosTrafficClass,
-				QosClassificationMapping: &qosClassificationMap2,
-			}
-			qosTrafficClassifiers[1] = qosTrafficClassifier
+				qosTrafficClass = ov.QosTrafficClass{
+					BandwidthShare:   "65",
+					EgressDot1pValue: 0,
+					MaxBandwidth:     100,
+					RealTime:         &f,
+					ClassName:        "Best effort",
+					Enabled:          &tr,
+				}
+				qosClassificationMap3 := ov.QosClassificationMap{
+					Dot1pClassMapping: []int{1, 0},
+					DscpClassMapping:  []string{"DSCP 10, AF11", "DSCP 12, AF12", "DSCP 14, AF13", "DSCP 8, CS1", "DSCP 0, CS0"},
+				}
+				qosTrafficClassifier = ov.QosTrafficClassifier{
+					QosTrafficClass:          qosTrafficClass,
+					QosClassificationMapping: &qosClassificationMap3,
+				}
+				qosTrafficClassifiers[2] = qosTrafficClassifier
 
-			qosTrafficClass = QosTrafficClass{
-				BandwidthShare:   "65",
-				EgressDot1pValue: 0,
-				MaxBandwidth:     100,
-				RealTime:         &f,
-				ClassName:        "Best effort",
-				Enabled:          &tr,
-			}
-			qosClassificationMap3 := QosClassificationMap{
-				Dot1pClassMapping: []int{1, 0},
-				DscpClassMapping:  []string{"DSCP 10, AF11", "DSCP 12, AF12", "DSCP 14, AF13", "DSCP 8, CS1", "DSCP 0, CS0"},
-			}
-			qosTrafficClassifier = QosTrafficClassifier{
-				QosTrafficClass:          qosTrafficClass,
-				QosClassificationMapping: &qosClassificationMap3,
-			}
-			qosTrafficClassifiers[2] = qosTrafficClassifier
+				qosTrafficClass = ov.QosTrafficClass{
+					BandwidthShare:   "25",
+					EgressDot1pValue: 2,
+					MaxBandwidth:     100,
+					RealTime:         &f,
+					ClassName:        "Medium",
+					Enabled:          &tr,
+				}
+				qosClassificationMap4 := ov.QosClassificationMap{
+					Dot1pClassMapping: []int{4, 3, 2},
+					DscpClassMapping: []string{"DSCP 18, AF21",
+						"DSCP 20, AF22",
+						"DSCP 22, AF23",
+						"DSCP 26, AF31",
+						"DSCP 28, AF32",
+						"DSCP 30, AF33",
+						"DSCP 34, AF41",
+						"DSCP 36, AF42",
+						"DSCP 38, AF43",
+						"DSCP 16, CS2",
+						"DSCP 24, CS3",
+						"DSCP 32, CS4"},
+				}
+				qosTrafficClassifier = ov.QosTrafficClassifier{
+					QosTrafficClass:          qosTrafficClass,
+					QosClassificationMapping: &qosClassificationMap4,
+				}
+				qosTrafficClassifiers[3] = qosTrafficClassifier
 
-			qosTrafficClass = QosTrafficClass{
-				BandwidthShare:   "25",
-				EgressDot1pValue: 2,
-				MaxBandwidth:     100,
-				RealTime:         &f,
-				ClassName:        "Medium",
-				Enabled:          &tr,
-			}
-			qosClassificationMap4 := QosClassificationMap{
-				Dot1pClassMapping: []int{4, 3, 2},
-				DscpClassMapping: []string{"DSCP 18, AF21",
-					"DSCP 20, AF22",
-					"DSCP 22, AF23",
-					"DSCP 26, AF31",
-					"DSCP 28, AF32",
-					"DSCP 30, AF33",
-					"DSCP 34, AF41",
-					"DSCP 36, AF42",
-					"DSCP 38, AF43",
-					"DSCP 16, CS2",
-					"DSCP 24, CS3",
-					"DSCP 32, CS4"},
-			}
-			qosTrafficClassifier = QosTrafficClassifier{
-				QosTrafficClass:          qosTrafficClass,
-				QosClassificationMapping: &qosClassificationMap4,
-			}
-			qosTrafficClassifiers[3] = qosTrafficClassifier
+				activeQosConfig := ov.ActiveQosConfig{
+					Type:                       "QosConfiguration",
+					ConfigType:                 "CustomWithFCoE",
+					QosTrafficClassifiers:      qosTrafficClassifiers,
+					UplinkClassificationType:   "DOT1P",
+					DownlinkClassificationType: "DOT1P_AND_DSCP",
+				}
 
-			activeQosConfig := ActiveQosConfig{
-				Type:                       "QosConfiguration",
-				ConfigType:                 "CustomWithFCoE",
-				QosTrafficClassifiers:      qosTrafficClassifiers,
-				UplinkClassificationType:   "DOT1P",
-				DownlinkClassificationType: "DOT1P_AND_DSCP",
-			}
+				qosConfiguration := ov.QosConfiguration{
+					Type:            "qos-aggregated-configuration",
+					ActiveQosConfig: activeQosConfig,
+				}*/
 
-			qosConfiguration := QosConfiguration{
-				Type:            "qos-aggregated-configuration",
-				ActiveQosConfig: activeQosConfig,
-			}
-
-			testLogicalInterconnectGroup := LogicalInterconnectGroup{
-				Name:                    testName,
-				Type:                    d.Tc.GetTestData(d.Env, "Type").(string),
-				EnclosureType:           d.Tc.GetTestData(d.Env, "EnclosureType").(string),
-				InterconnectMapTemplate: &interconnectMapTemplate,
-				EthernetSettings:        &ethernetSettings,
-				TelemetryConfiguration:  &telemetryConfig,
-				SnmpConfiguration:       &snmpConfiguration,
-				QosConfiguration:        &qosConfiguration,
+			testLogicalInterconnectGroup := ov.LogicalInterconnectGroup{
+				Name:          testName,
+				Type:          d.Tc.GetTestData(d.Env, "Type").(string),
+				EnclosureType: d.Tc.GetTestData(d.Env, "EnclosureType").(string),
+				//InterconnectMapTemplate: &interconnectMapTemplate,
+				//EthernetSettings:        &ethernetSettings,
+				//TelemetryConfiguration:  &telemetryConfig,
+				//SnmpConfiguration:       &snmpConfiguration,
+				//QosConfiguration:        &qosConfiguration,
 			}
 
 			err := c.CreateLogicalInterconnectGroup(testLogicalInterconnectGroup)
@@ -207,7 +207,7 @@ func TestCreateLogicalInterconnectGroup(t *testing.T) {
 
 func TestGetLogicalInterconnectGroups(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_logical_interconnect_group")
@@ -230,7 +230,7 @@ func TestGetLogicalInterconnectGroups(t *testing.T) {
 func TestGetLogicalInterconnectGroupByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -258,9 +258,9 @@ func TestGetLogicalInterconnectGroupByName(t *testing.T) {
 
 func TestDeleteLogicalInterconnectGroupNotFound(t *testing.T) {
 	var (
-		c                            *OVClient
+		c                            *ov.OVClient
 		testName                     = "fake"
-		testLogicalInterconnectGroup LogicalInterconnectGroup
+		testLogicalInterconnectGroup ov.LogicalInterconnectGroup
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_logical_interconnect_group")
@@ -284,9 +284,9 @@ func TestDeleteLogicalInterconnectGroupNotFound(t *testing.T) {
 func TestDeleteLogicalInterconnectGroup(t *testing.T) {
 	var (
 		d                            *OVTest
-		c                            *OVClient
+		c                            *ov.OVClient
 		testName                     string
-		testLogicalInterconnectGroup LogicalInterconnectGroup
+		testLogicalInterconnectGroup ov.LogicalInterconnectGroup
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_logical_interconnect_group")

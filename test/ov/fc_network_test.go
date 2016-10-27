@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +13,7 @@ import (
 func TestCreateLogicalFCNetwork(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -28,13 +29,13 @@ func TestCreateLogicalFCNetwork(t *testing.T) {
 
 		if fcNetwork.URI.IsNil() {
 			falseVar := false
-			fcNetwork := FCNetwork{
+			fcNetwork := ov.FCNetwork{
 				AutoLoginRedistribution: falseVar,
 				Description:             "Test FC Network",
 				LinkStabilityTime:       30,
-				FabricType:              "fabrictype",
+				FabricType:              d.Tc.GetTestData(d.Env, "FabricType").(string),
 				Name:                    testName,
-				ConnectionTemplateUri: "http://auri.com/template",
+				Type:                    d.Tc.GetTestData(d.Env, "Type").(string),
 			}
 			err := c.CreateFCNetwork(fcNetwork)
 			assert.NoError(t, err, "CreateFCNetwork error -> %s", err)
@@ -54,7 +55,7 @@ func TestCreateLogicalFCNetwork(t *testing.T) {
 func TestGetFCNetworkByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 
@@ -85,7 +86,7 @@ func TestGetFCNetworkByName(t *testing.T) {
 
 func TestGetFCNetworks(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_fc_network")
@@ -109,16 +110,34 @@ func TestGetFCNetworks(t *testing.T) {
 	}
 
 	_, c = getTestDriverU("test_fc_network")
-	data, err := c.GetProfiles("", "")
+	data, err := c.GetFCNetworks("", "")
 	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 }
 
 func TestDeleteFCNetwork(t *testing.T) {
 	var (
-		c           *OVClient
-		testProfile ServerProfile
+		d         *OVTest
+		c         *ov.OVClient
+		testName  string
+		testFcNet ov.FCNetwork
 	)
-	_, c = getTestDriverU("test_fc_network")
-	err := c.DeleteProfile("footest")
-	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("test_fc_network")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+
+		err := c.DeleteFCNetwork(testName)
+		assert.NoError(t, err, "DeleteFcNetwork err-> %s", err)
+
+		testFcNet, err = c.GetFCNetworkByName(testName)
+		assert.NoError(t, err, "GetFcNetworkByName with deleted fc network-> %+v", err)
+		assert.Equal(t, "", testFcNet.Name, fmt.Sprintf("Problem getting fcnet name, %+v", testFcNet))
+	} else {
+		_, c = getTestDriverU("test_fc_network")
+		err := c.DeleteFCNetwork("footest")
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testFcNet))
+	}
+
 }

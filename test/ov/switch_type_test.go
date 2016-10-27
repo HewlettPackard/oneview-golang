@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -9,7 +10,7 @@ import (
 
 func TestGetSwitchTypes(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_switch_type")
@@ -32,7 +33,7 @@ func TestGetSwitchTypes(t *testing.T) {
 func TestGetSwitchTypeByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {

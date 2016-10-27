@@ -6,12 +6,13 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
 
-var n NetConfig
+var n icsp.NetConfig
 
 // GetNetConfigTestData - loads n with NetConfig
 func GetNetConfigTestData() error {
@@ -37,7 +38,7 @@ func TestNewNetConfig(t *testing.T) {
 	var emptyconfig utils.Nstring
 	emptyconfig.Nil()
 	// TODO: determine configuration options for network customization
-	n = NewNetConfig(emptyconfig, //s.HostName,
+	n = icsp.NewNetConfig(emptyconfig, //s.HostName,
 		emptyconfig, // workgroup utils.Nstring,
 		emptyconfig, // domain utils.Nstring,
 		emptyconfig, // winslist utils.Nstring,
@@ -57,7 +58,7 @@ func TestNewNetConfig(t *testing.T) {
 func TestNetConfigAddAllDHCP(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -87,7 +88,7 @@ func TestNetConfigAddAllDHCP(t *testing.T) {
 func TestToJSON(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -105,7 +106,7 @@ func TestToJSON(t *testing.T) {
 		var emptyconfig utils.Nstring
 		emptyconfig.Nil()
 		n.AddAllDHCP(s.Interfaces, false, emptyconfig)
-		data, err := n.toJSON()
+		data, err := n.ToJSON()
 		assert.NoError(t, err, "Should convert object to json, %s", err)
 		log.Infof("n JSON -> %s", data)
 		assert.True(t, len(data) > 0, "Should have some data")
@@ -116,7 +117,7 @@ func TestToJSON(t *testing.T) {
 func TestNetConfigSave(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()

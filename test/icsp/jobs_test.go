@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -13,7 +14,7 @@ import (
 func TestGetJobs(t *testing.T) {
 	var (
 		// d *OVTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()
@@ -25,7 +26,7 @@ func TestGetJobs(t *testing.T) {
 		if data.Total > 0 {
 			log.Debugf("data -> %+v", data.Members[0])
 			assert.Condition(t, func() bool { return len(data.Members[0].URI) > 0 }, "has no uri content")
-			data, err := c.GetJob(ODSUri{URI: data.Members[0].URI})
+			data, err := c.GetJob(icsp.ODSUri{URI: data.Members[0].URI})
 			assert.NoError(t, err, "GetJob threw error -> %s, %+v\n", err, data)
 		}
 	} else {

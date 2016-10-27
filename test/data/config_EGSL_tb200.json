@@ -202,8 +202,8 @@
       "Name": "test_interconnect_type",
       "Enabled": true,
       "Test_data": {
-        "Name": "HP VC FlexFabric-20/40 F8 Module",
-        "URI": "/rest/interconnect-types/e9e79d17-6a81-4365-8b6f-619bb5b81476"
+        "Name": "Enclosure-2, interconnect 1",
+        "URI": "/rest/interconnect-types/356f4c84-f6a4-4554-9eb9-e5bd9edd99df"
       }
     },
     {
@@ -251,7 +251,8 @@
       "Name": "test_os_build_plan",
       "Enabled": true,
       "Test_data": {
-        "Name": "go os build plan test",
+        "Name": "go os build plan test",        
+        "OEBuildPlanType": "Deploy",
         "Type": "OeBuildPlan"
       }
     },
@@ -278,7 +279,7 @@
       "Name": "test_os_volume",
       "Enabled": true,
       "Test_data": {
-        "Name": "go os volume"
+        "Name": "OSVolume-14"
       }
     },
     {

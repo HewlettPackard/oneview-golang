@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +13,7 @@ import (
 // TestGetProfiles
 func TestGetAllBuildPlans(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()
@@ -32,7 +33,7 @@ func TestGetAllBuildPlans(t *testing.T) {
 // TestGetProfiles
 func TestGetBuildPlanByName(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()

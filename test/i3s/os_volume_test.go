@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -26,7 +27,7 @@ import (
 func TestGetOSVolumeByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -54,7 +55,7 @@ func TestGetOSVolumeByName(t *testing.T) {
 
 func TestGetOSVolumes(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_os_volume")

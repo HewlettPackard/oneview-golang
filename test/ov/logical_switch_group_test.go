@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +13,7 @@ import (
 func TestCreateLogicalSwitchGroup(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -30,28 +31,28 @@ func TestCreateLogicalSwitchGroup(t *testing.T) {
 
 			switchMapData := d.Tc.GetTestData(d.Env, "SwitchMapTemplate").(map[string]interface{})
 
-			locationEntry := LocationEntry{
+			locationEntry := ov.LocationEntry{
 				RelativeValue: 1,
 				Type:          switchMapData["SwitchMapEntryTemplates"].([]interface{})[0].(map[string]interface{})["LogicalLocation"].(map[string]interface{})["LocationEntries"].([]interface{})[0].(map[string]interface{})["Type"].(string),
 			}
-			locationEntries := make([]LocationEntry, 1)
+			locationEntries := make([]ov.LocationEntry, 1)
 			locationEntries[0] = locationEntry
-			logicalLocation := LogicalLocation{
+			logicalLocation := ov.LogicalLocation{
 				LocationEntries: locationEntries,
 			}
 
-			switchMapEntry := SwitchMapEntry{
+			switchMapEntry := ov.SwitchMapEntry{
 				PermittedSwitchTypeUri: utils.NewNstring(switchMapData["SwitchMapEntryTemplates"].([]interface{})[0].(map[string]interface{})["PermittedSwitchTypeUri"].(string)),
 				LogicalLocation:        logicalLocation,
 			}
-			switchMapEntries := make([]SwitchMapEntry, 1)
+			switchMapEntries := make([]ov.SwitchMapEntry, 1)
 			switchMapEntries[0] = switchMapEntry
 
-			switchMapTemplate := SwitchMapTemplate{
+			switchMapTemplate := ov.SwitchMapTemplate{
 				SwitchMapEntryTemplates: switchMapEntries,
 			}
 			//log.Warnf("%s", switchMapData["SwitchMapEntryTemplates"].([]interface{})[0].(map[string]interface{})["LogicalLocation"].(map[string]interface{})["LocationEntries"].([]interface{})[0].(map[string]interface{})["RelativeValue"])
-			testLogicalSwitchGroup = LogicalSwitchGroup{
+			testLogicalSwitchGroup = ov.LogicalSwitchGroup{
 				Name:              testName,
 				Type:              d.Tc.GetTestData(d.Env, "Type").(string),
 				Category:          d.Tc.GetTestData(d.Env, "Category").(string),
@@ -76,7 +77,7 @@ func TestCreateLogicalSwitchGroup(t *testing.T) {
 
 func TestGetLogicalSwitchGroups(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_logical_switch_group")
@@ -99,7 +100,7 @@ func TestGetLogicalSwitchGroups(t *testing.T) {
 func TestGetLogicalSwitchGroupByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -127,9 +128,9 @@ func TestGetLogicalSwitchGroupByName(t *testing.T) {
 
 func TestDeleteLogicalSwitchGroupNotFound(t *testing.T) {
 	var (
-		c                      *OVClient
+		c                      *ov.OVClient
 		testName               = "fake"
-		testLogicalSwitchGroup LogicalSwitchGroup
+		testLogicalSwitchGroup ov.LogicalSwitchGroup
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_logical_switch_group")
@@ -153,9 +154,9 @@ func TestDeleteLogicalSwitchGroupNotFound(t *testing.T) {
 func TestDeleteLogicalSwitchGroup(t *testing.T) {
 	var (
 		d                      *OVTest
-		c                      *OVClient
+		c                      *ov.OVClient
 		testName               string
-		testLogicalSwitchGroup LogicalSwitchGroup
+		testLogicalSwitchGroup ov.LogicalSwitchGroup
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_logical_switch_group")

@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -27,7 +28,7 @@ import (
 func TestCreateDeploymentPlan(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -42,7 +43,7 @@ func TestCreateDeploymentPlan(t *testing.T) {
 		assert.NoError(t, err, "CreateDeploymentPlan get the DeploymentPlan error -> %s", err)
 
 		if testDeploymentPlan.URI.IsNil() {
-			testDeploymentPlan = DeploymentPlan{
+			testDeploymentPlan = i3s.DeploymentPlan{
 				Name: testName,
 				Type: d.Tc.GetTestData(d.Env, "Type").(string),
 			}
@@ -65,7 +66,7 @@ func TestCreateDeploymentPlan(t *testing.T) {
 func TestGetDeploymentPlanByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -93,7 +94,7 @@ func TestGetDeploymentPlanByName(t *testing.T) {
 
 func TestGetDeploymentPlans(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_deployment_plan")
@@ -115,9 +116,9 @@ func TestGetDeploymentPlans(t *testing.T) {
 
 func TestDeleteDeploymentPlanNotFound(t *testing.T) {
 	var (
-		c                  *I3SClient
+		c                  *i3s.I3SClient
 		testName           = "fake"
-		testDeploymentPlan DeploymentPlan
+		testDeploymentPlan i3s.DeploymentPlan
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_deployment_plan")
@@ -141,9 +142,9 @@ func TestDeleteDeploymentPlanNotFound(t *testing.T) {
 func TestDeleteDeploymentPlan(t *testing.T) {
 	var (
 		d                  *I3STest
-		c                  *I3SClient
+		c                  *i3s.I3SClient
 		testName           string
-		testDeploymentPlan DeploymentPlan
+		testDeploymentPlan i3s.DeploymentPlan
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_deployment_plan")

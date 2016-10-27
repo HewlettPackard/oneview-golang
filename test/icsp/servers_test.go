@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,7 +17,7 @@ import (
 func TestGetPublicIPV4(t *testing.T) {
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
+		c            *icsp.ICSPClient
 		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
@@ -47,12 +48,12 @@ func TestGetPublicIPV4(t *testing.T) {
 func TestGetInterfaceFromMac(t *testing.T) {
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
-		s            Server
+		c            *icsp.ICSPClient
+		s            icsp.Server
 		serialNumber string
 		macAddr      string
 		err          error
-		data         Interface
+		data         icsp.Interface
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetInterfaceFromMac")
@@ -96,8 +97,8 @@ func TestGetInterfaces(t *testing.T) {
 
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
-		s            Server
+		c            *icsp.ICSPClient
+		s            icsp.Server
 		serialNumber string
 		err          error
 	)
@@ -149,11 +150,11 @@ func TestGetInterfaces(t *testing.T) {
 func TestGetInterface(t *testing.T) {
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
-		s            Server
+		c            *icsp.ICSPClient
+		s            icsp.Server
 		serialNumber string
 		err          error
-		data         Interface
+		data         icsp.Interface
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestGetInterfaceName")
@@ -198,7 +199,7 @@ func TestGetInterface(t *testing.T) {
 func TestSaveServer(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestCreateServer")
@@ -224,7 +225,7 @@ func TestSaveServer(t *testing.T) {
 		assert.Equal(t, "docker", testValue2.Value, "Should return the saved custom attribute")
 	} else {
 		log.Debug("implements unit test for TestCreateServer")
-		var s Server
+		var s icsp.Server
 		_, c = getTestDriverU()
 		s, err := c.SaveServer(s)
 		assert.Error(t, err, "SaveServer threw error -> %s, %+v\n", err, s)
@@ -234,7 +235,7 @@ func TestSaveServer(t *testing.T) {
 // TestGetProfiles
 func TestGetServers(t *testing.T) {
 	var (
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA()
@@ -254,7 +255,7 @@ func TestGetServers(t *testing.T) {
 func TestGetServerByName(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -272,7 +273,7 @@ func TestGetServerByName(t *testing.T) {
 func TestGetServerByHostName(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -288,7 +289,7 @@ func TestGetServerByHostName(t *testing.T) {
 func TestGetServerBySerialNumber(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -311,7 +312,7 @@ func TestGetServerBySerialNumber(t *testing.T) {
 
 //TODO: implement test for delete
 func TestDeleteServer(t *testing.T) {
-	var c *ICSPClient
+	var c *icsp.ICSPClient
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		log.Debug("implements acceptance test for TestDeleteServer")
 		// check if the server exist
@@ -332,7 +333,7 @@ func TestDeleteServer(t *testing.T) {
 func TestIsServerManaged(t *testing.T) {
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
+		c            *icsp.ICSPClient
 		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
@@ -359,7 +360,7 @@ func TestIsServerManaged(t *testing.T) {
 func TestGetServerByID(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()

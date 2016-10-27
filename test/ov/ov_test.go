@@ -45,14 +45,14 @@ func (ot *OVTest) GetEnvironment(env string) {
 }
 
 // get a test driver for acceptance testing
-func getTestDriverA(env string) (*OVTest, *OVClient) {
+func getTestDriverA(env string) (*OVTest, *ov.OVClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *OVTest
 	var tc *testconfig.TestConfig
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &OVClient{
+	ot.Client = &ov.OVClient{
 		rest.Client{
 			User:     os.Getenv("ONEVIEW_OV_USER"),
 			Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
@@ -72,13 +72,13 @@ func getTestDriverA(env string) (*OVTest, *OVClient) {
 }
 
 // Unit test
-func getTestDriverU(env string) (*OVTest, *OVClient) {
+func getTestDriverU(env string) (*OVTest, *ov.OVClient) {
 	var ot *OVTest
 	var tc *testconfig.TestConfig
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &OVClient{
+	ot.Client = &ov.OVClient{
 		rest.Client{
 			User:       "foo",
 			Password:   "bar",

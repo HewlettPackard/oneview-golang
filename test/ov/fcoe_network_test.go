@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -11,7 +12,7 @@ import (
 func TestCreateFCoENetwork(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -26,7 +27,7 @@ func TestCreateFCoENetwork(t *testing.T) {
 		assert.NoError(t, err, "CreateFCoENetwork get the FCoENetwork error --> %s", err)
 
 		if testFcoeNet.URI.IsNil() {
-			testFcoeNet = FCoENetwork{
+			testFcoeNet = ov.FCoENetwork{
 				Name:   testName,
 				VlanId: 143,
 				Type:   d.Tc.GetTestData(d.Env, "Type").(string),
@@ -49,7 +50,7 @@ func TestCreateFCoENetwork(t *testing.T) {
 func TestGetFCoENetworkByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -78,7 +79,7 @@ func TestGetFCoENetworkByName(t *testing.T) {
 
 func TestGetFCoENetworks(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 
@@ -101,9 +102,9 @@ func TestGetFCoENetworks(t *testing.T) {
 
 func TestDeleteFCoENetworkNotFound(t *testing.T) {
 	var (
-		c           *OVClient
+		c           *ov.OVClient
 		testName    = "fake"
-		testFcoeNet FCoENetwork
+		testFcoeNet ov.FCoENetwork
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_fcoe_network")
@@ -127,9 +128,9 @@ func TestDeleteFCoENetworkNotFound(t *testing.T) {
 func TestDeleteFCoENetwork(t *testing.T) {
 	var (
 		d           *OVTest
-		c           *OVClient
+		c           *ov.OVClient
 		testName    string
-		testFcoeNet FCoENetwork
+		testFcoeNet ov.FCoENetwork
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_fcoe_network")

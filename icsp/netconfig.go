@@ -216,15 +216,15 @@ func (n *NetConfig) SetStaticInterface(
 	}
 }
 
-// toJSON - convert object to JSON string
-func (n *NetConfig) toJSON() (string, error) {
+// ToJSON - convert object to JSON string
+func (n *NetConfig) ToJSON() (string, error) {
 	data, err := json.Marshal(n)
 	return fmt.Sprintf("%s", bytes.NewBuffer(data)), err
 }
 
 // Save - save the netconfig to hpsa_netconfig
 func (n *NetConfig) Save(s Server) (Server, error) {
-	data, err := n.toJSON()
+	data, err := n.ToJSON()
 	if err != nil {
 		log.Errorf("Unable to save hpsa_netconfig for server, %s", err)
 		return s, err

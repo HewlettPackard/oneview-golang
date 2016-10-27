@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +13,7 @@ import (
 func TestGetValueItems(t *testing.T) {
 	var (
 		d *ICSPTest
-		s Server
+		s icsp.Server
 	)
 	d, _ = getTestDriverU()
 	jsonServerData := d.Tc.GetTestData(d.Env, "ServerJSONString").(string)
@@ -29,7 +30,7 @@ func TestGetValueItems(t *testing.T) {
 func TestGetValueItem(t *testing.T) {
 	var (
 		d *ICSPTest
-		s Server
+		s icsp.Server
 	)
 	d, _ = getTestDriverU()
 	jsonServerData := d.Tc.GetTestData(d.Env, "ServerJSONString").(string)
@@ -49,7 +50,7 @@ func TestGetValueItem(t *testing.T) {
 func TestSetValueItems(t *testing.T) {
 	var (
 		d *ICSPTest
-		s Server
+		s icsp.Server
 	)
 	d, _ = getTestDriverU()
 	jsonServerData := d.Tc.GetTestData(d.Env, "ServerJSONString").(string)
@@ -58,7 +59,7 @@ func TestSetValueItems(t *testing.T) {
 	assert.NoError(t, err, "Unmarshal Server threw error -> %s, %+v\n", err, jsonServerData)
 
 	// Try setting a ValueItem that doesn't exist
-	s.SetValueItems("foo", ValueItem{Scope: "server", Value: "bar"})
+	s.SetValueItems("foo", icsp.ValueItem{Scope: "server", Value: "bar"})
 	_, v := s.GetValueItem("foo", "server")
 	assert.Equal(t, "bar", v.Value, "Should find bar from key foo")
 
@@ -68,7 +69,7 @@ func TestSetValueItems(t *testing.T) {
 func TestSetCustomAttribute(t *testing.T) {
 	var (
 		d *ICSPTest
-		s Server
+		s icsp.Server
 	)
 	// unit test case
 	d, _ = getTestDriverU()

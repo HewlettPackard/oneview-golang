@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -11,7 +12,7 @@ import (
 func TestCreateEthernetNetwork(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -26,7 +27,7 @@ func TestCreateEthernetNetwork(t *testing.T) {
 		assert.NoError(t, err, "CreateEthernetNetwork get the EthernetNetwork error -> %s", err)
 
 		if testEthNet.URI.IsNil() {
-			testEthNet = EthernetNetwork{
+			testEthNet = ov.EthernetNetwork{
 				Name:                testName,
 				VlanId:              7,
 				Purpose:             d.Tc.GetTestData(d.Env, "Purpose").(string),
@@ -55,7 +56,7 @@ func TestCreateEthernetNetwork(t *testing.T) {
 func TestGetEthernetNetworkByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -83,7 +84,7 @@ func TestGetEthernetNetworkByName(t *testing.T) {
 
 func TestGetEthernetNetworks(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_ethernet_network")
@@ -105,9 +106,9 @@ func TestGetEthernetNetworks(t *testing.T) {
 
 func TestDeleteEthernetNetworkNotFound(t *testing.T) {
 	var (
-		c          *OVClient
+		c          *ov.OVClient
 		testName   = "fake"
-		testEthNet EthernetNetwork
+		testEthNet ov.EthernetNetwork
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_ethernet_network")
@@ -131,9 +132,9 @@ func TestDeleteEthernetNetworkNotFound(t *testing.T) {
 func TestDeleteEthernetNetwork(t *testing.T) {
 	var (
 		d          *OVTest
-		c          *OVClient
+		c          *ov.OVClient
 		testName   string
-		testEthNet EthernetNetwork
+		testEthNet ov.EthernetNetwork
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_ethernet_network")

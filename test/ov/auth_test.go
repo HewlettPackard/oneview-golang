@@ -6,6 +6,7 @@ import (
 	"testing"
 	//"time"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -14,7 +15,7 @@ import (
 func TestSessionLogin(t *testing.T) {
 	var (
 		// d *OVTest
-		c *OVClient
+		c *ov.OVClient
 		// env = os.Getenv("ONEVIEW_TEST_ENV") || "dev"
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -46,7 +47,7 @@ func TestSessionLogin(t *testing.T) {
 func TestSessionLogout(t *testing.T) {
 	var (
 		//d *OVTest
-		c *OVClient
+		c *ov.OVClient
 		//testSerial string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -79,7 +80,7 @@ func TestSessionLogout(t *testing.T) {
 // Get the current idle timeout from the logged in session
 func TestGetIdleTimeout(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 		// d *OVTest
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -101,7 +102,7 @@ func TestGetIdleTimeout(t *testing.T) {
 // Set idle timeout
 func TestSetIdleTimeout(t *testing.T) {
 	var (
-		c        *OVClient
+		c        *ov.OVClient
 		testtime int64
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {

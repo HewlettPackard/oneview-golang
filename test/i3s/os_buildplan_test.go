@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -27,7 +28,7 @@ import (
 func TestCreateOSBuildPlan(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -42,9 +43,9 @@ func TestCreateOSBuildPlan(t *testing.T) {
 		assert.NoError(t, err, "CreateOSBuildPlan get the OS BuildPlan error -> %s", err)
 
 		if testOSBuildPlan.URI.IsNil() {
-			testOSBuildPlan = OSBuildPlan{
-				Name: testName,
-				Type: d.Tc.GetTestData(d.Env, "Type").(string),
+			testOSBuildPlan = i3s.OSBuildPlan{
+				Name:            testName,
+				Type:            d.Tc.GetTestData(d.Env, "Type").(string),
 				OEBuildPlanType: d.Tc.GetTestData(d.Env, "OEBuildPlanType").(string),
 			}
 			err := c.CreateOSBuildPlan(testOSBuildPlan)
@@ -66,7 +67,7 @@ func TestCreateOSBuildPlan(t *testing.T) {
 func TestGetOSBuildPlanByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -94,7 +95,7 @@ func TestGetOSBuildPlanByName(t *testing.T) {
 
 func TestGetOSBuildPlans(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_os_build_plan")
@@ -116,9 +117,9 @@ func TestGetOSBuildPlans(t *testing.T) {
 
 func TestDeleteOSBuildPlanNotFound(t *testing.T) {
 	var (
-		c               *I3SClient
+		c               *i3s.I3SClient
 		testName        = "fake"
-		testOSBuildPlan OSBuildPlan
+		testOSBuildPlan i3s.OSBuildPlan
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_os_build_plan")
@@ -142,9 +143,9 @@ func TestDeleteOSBuildPlanNotFound(t *testing.T) {
 func TestDeleteOSBuildPlan(t *testing.T) {
 	var (
 		d               *I3STest
-		c               *I3SClient
+		c               *i3s.I3SClient
 		testName        string
-		testOSBuildPlan OSBuildPlan
+		testOSBuildPlan i3s.OSBuildPlan
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_os_build_plan")

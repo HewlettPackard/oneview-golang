@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ import (
 func TestServerHardware(t *testing.T) {
 	var (
 		d           *OVTest
-		c           *OVClient
+		c           *ov.OVClient
 		testData    utils.Nstring
 		expectsData string
 	)
@@ -37,7 +38,7 @@ func TestServerHardware(t *testing.T) {
 func TestGetAvailableHardware(t *testing.T) {
 	var (
 		d               *OVTest
-		c               *OVClient
+		c               *ov.OVClient
 		testHwType_URI  utils.Nstring
 		testHWGroup_URI utils.Nstring
 	)
@@ -63,7 +64,7 @@ func TestGetIloIPAddress(t *testing.T) {
 
 	var (
 		d           *OVTest
-		c           *OVClient
+		c           *ov.OVClient
 		testData    utils.Nstring
 		expectsData string
 	)

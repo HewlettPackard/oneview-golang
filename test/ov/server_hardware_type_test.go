@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -10,7 +11,7 @@ import (
 func TestGetServerHardwareTypeByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -38,7 +39,7 @@ func TestGetServerHardwareTypeByName(t *testing.T) {
 
 func TestGetServerHardwareTypes(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_server_hardware_type")

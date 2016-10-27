@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +13,7 @@ import (
 func TestCreateNetworkSet(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -29,7 +30,7 @@ func TestCreateNetworkSet(t *testing.T) {
 		networkUris := make([]utils.Nstring, 0)
 
 		if testNetSet.URI.IsNil() {
-			testNetSet = NetworkSet{
+			testNetSet = ov.NetworkSet{
 				Name:        testName,
 				Type:        d.Tc.GetTestData(d.Env, "Type").(string),
 				NetworkUris: networkUris,
@@ -53,7 +54,7 @@ func TestCreateNetworkSet(t *testing.T) {
 func TestGetNetworkSetByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -82,7 +83,7 @@ func TestGetNetworkSetByName(t *testing.T) {
 
 func TestGetNetworkSets(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_network_set")
@@ -104,9 +105,9 @@ func TestGetNetworkSets(t *testing.T) {
 
 func TestDeleteNetworkSetNotFound(t *testing.T) {
 	var (
-		c          *OVClient
+		c          *ov.OVClient
 		testName   = "fake"
-		testNetSet NetworkSet
+		testNetSet ov.NetworkSet
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_network_set")
@@ -130,9 +131,9 @@ func TestDeleteNetworkSetNotFound(t *testing.T) {
 func TestDeleteNetworkSet(t *testing.T) {
 	var (
 		d          *OVTest
-		c          *OVClient
+		c          *ov.OVClient
 		testName   string
-		testNetSet NetworkSet
+		testNetSet ov.NetworkSet
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_network_set")

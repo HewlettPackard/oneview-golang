@@ -51,14 +51,14 @@ func (ot *ICSPTest) GetEnvironment() {
 }
 
 // get a test driver for acceptance testing
-func getTestDriverA() (*ICSPTest, *ICSPClient) {
+func getTestDriverA() (*ICSPTest, *icsp.ICSPClient) {
 	// os.Setenv("DEBUG", "true")  // remove comment to debug logs
 	var ot *ICSPTest
 	var tc *testconfig.TestConfig
 	ot = &ICSPTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &ICSPClient{
+	ot.Client = &icsp.ICSPClient{
 		rest.Client{
 			User:     os.Getenv("ONEVIEW_ICSP_USER"),
 			Password: os.Getenv("ONEVIEW_ICSP_PASSWORD"),
@@ -75,13 +75,13 @@ func getTestDriverA() (*ICSPTest, *ICSPClient) {
 }
 
 // Unit test
-func getTestDriverU() (*ICSPTest, *ICSPClient) {
+func getTestDriverU() (*ICSPTest, *icsp.ICSPClient) {
 	var ot *ICSPTest
 	var tc *testconfig.TestConfig
 	ot = &ICSPTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &ICSPClient{
+	ot.Client = &icsp.ICSPClient{
 		rest.Client{
 			User:       "foo",
 			Password:   "bar",
@@ -101,7 +101,7 @@ func getTestDriverU() (*ICSPTest, *ICSPClient) {
 func TestCreateServer(t *testing.T) {
 	var (
 		d              *ICSPTest
-		c              *ICSPClient
+		c              *icsp.ICSPClient
 		user, pass, ip string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
@@ -154,7 +154,7 @@ func TestInterface(t *testing.T) {
 func TestPreApplyDeploymentJobs(t *testing.T) {
 	var (
 		d                     *ICSPTest
-		c                     *ICSPClient
+		c                     *icsp.ICSPClient
 		serialNumber, macAddr string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
@@ -188,7 +188,7 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 		// verify that the server attribute was saved by getting the server again and checking the value
 		_, testValue2 := s.GetValueItem("public_interface", "server")
 		// unmarshal the custom attribute
-		var inet *Interface
+		var inet *icsp.Interface
 		log.Debugf("public_interface value -> %+v", testValue2.Value)
 		assert.NotEqual(t, "", testValue2.Value,
 			fmt.Sprintf("public_interface for %s Should have a value", serialNumber))
@@ -211,7 +211,7 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 func TestApplyDeploymentJobs(t *testing.T) {
 	var (
 		d            *ICSPTest
-		c            *ICSPClient
+		c            *icsp.ICSPClient
 		serialNumber string
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
@@ -254,7 +254,7 @@ func TestApplyDeploymentJobs(t *testing.T) {
 		_, err = c.ApplyDeploymentJobs(osBuildPlans, nil, s)
 		assert.NoError(t, err, "ApplyDeploymentJobs threw error -> %s, %+v\n", err, news)
 	} else {
-		var s Server
+		var s icsp.Server
 		_, c = getTestDriverU()
 		log.Debug("implements unit test for ApplyDeploymentJobs")
 		testPlans := make([]string, 1)
@@ -269,7 +269,7 @@ func TestApplyDeploymentJobs(t *testing.T) {
 func TestPostApplyDeploymentJobs(t *testing.T) {
 	var (
 		d *ICSPTest
-		c *ICSPClient
+		c *icsp.ICSPClient
 	)
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA()
@@ -283,11 +283,11 @@ func TestPostApplyDeploymentJobs(t *testing.T) {
 		// (c *ICSPClient) GetJob(u ODSUri) (Job, error) {
 		// create a jt *JobTask object
 		// JobURI
-		var jt *JobTask
+		var jt *icsp.JobTask
 		var testURL utils.Nstring
 		testURL = "/rest/os-deployment-jobs/5350001"
-		jt = &JobTask{
-			JobURI: ODSUri{URI: testURL},
+		jt = &icsp.JobTask{
+			JobURI: icsp.ODSUri{URI: testURL},
 			Client: c,
 		}
 		var findprops []string
@@ -299,7 +299,7 @@ func TestPostApplyDeploymentJobs(t *testing.T) {
 
 // TestCustomServerAttributes test CustomServerAttributes
 func TestCustomServerAttributes(t *testing.T) {
-	var testServerAttributes *CustomServerAttributes
+	var testServerAttributes *icsp.CustomServerAttributes
 	testServerAttributes = testServerAttributes.New()
 	testServerAttributes.Set("ssh_user", "docker")
 	log.Infof("testServer -> %+v", testServerAttributes)

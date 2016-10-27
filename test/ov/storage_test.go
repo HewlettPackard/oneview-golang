@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/stretchr/testify/assert"
 )
 
 // test unmarshalling a json payload that has progress
 func TestSanStorageOptions(t *testing.T) {
 	var (
-		sanstorageoptions *SanStorageOptions
+		sanstorageoptions *ov.SanStorageOptions
 		testjsondata      = `{
             "hostOSType": "Windows 2012 / WS2012 R2",
             "manageSanStorage": true,

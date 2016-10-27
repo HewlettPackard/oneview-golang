@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -27,7 +28,7 @@ import (
 func TestCreateGoldenImage(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -42,7 +43,7 @@ func TestCreateGoldenImage(t *testing.T) {
 		assert.NoError(t, err, "CreateGoldenImage get the GoldenImage error -> %s", err)
 
 		if testGoldenImage.URI.IsNil() {
-			testGoldenImage = GoldenImage{
+			testGoldenImage = i3s.GoldenImage{
 				Name: testName,
 				Type: d.Tc.GetTestData(d.Env, "Type").(string),
 			}
@@ -65,7 +66,7 @@ func TestCreateGoldenImage(t *testing.T) {
 func TestGetGoldenImageByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -93,7 +94,7 @@ func TestGetGoldenImageByName(t *testing.T) {
 
 func TestGetGoldenImages(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_golden_image")
@@ -115,9 +116,9 @@ func TestGetGoldenImages(t *testing.T) {
 
 func TestDeleteGoldenImageNotFound(t *testing.T) {
 	var (
-		c               *I3SClient
+		c               *i3s.I3SClient
 		testName        = "fake"
-		testGoldenImage GoldenImage
+		testGoldenImage i3s.GoldenImage
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_golden_image")
@@ -141,9 +142,9 @@ func TestDeleteGoldenImageNotFound(t *testing.T) {
 func TestDeleteGoldenImage(t *testing.T) {
 	var (
 		d               *I3STest
-		c               *I3SClient
+		c               *i3s.I3SClient
 		testName        string
-		testGoldenImage GoldenImage
+		testGoldenImage i3s.GoldenImage
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_golden_image")

@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -12,7 +13,7 @@ import (
 func TestGetAPIVersion(t *testing.T) {
 	var (
 		d *OVTest
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("dev")
@@ -37,7 +38,7 @@ func TestGetAPIVersion(t *testing.T) {
 func TestRefreshVersion(t *testing.T) {
 	var (
 		d *OVTest
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("dev")

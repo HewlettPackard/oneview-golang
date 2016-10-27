@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +13,7 @@ import (
 func TestCreateProfileTemplate(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -27,7 +28,7 @@ func TestCreateProfileTemplate(t *testing.T) {
 		assert.NoError(t, err, "CreateServerProfileTemplate get the ServerProfileTemplate error -> %s", err)
 
 		if testServerProfileTemplate.URI.IsNil() {
-			testServerProfileTemplate = ServerProfile{
+			testServerProfileTemplate = ov.ServerProfile{
 				Name: testName,
 				Type: d.Tc.GetTestData(d.Env, "Type").(string),
 				ServerHardwareTypeURI: utils.NewNstring(d.Tc.GetTestData(d.Env, "ServerHardwareTypeUri").(string)),
@@ -54,7 +55,7 @@ func TestCreateProfileTemplate(t *testing.T) {
 func TestGetProfileTemplateByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testname string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -87,9 +88,9 @@ func TestGetProfileTemplateByName(t *testing.T) {
 
 func TestDeleteProfileTemplateNotFound(t *testing.T) {
 	var (
-		c                         *OVClient
+		c                         *ov.OVClient
 		testName                  = "fake"
-		testServerProfileTemplate ServerProfile
+		testServerProfileTemplate ov.ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_server_profile_template")
@@ -113,9 +114,9 @@ func TestDeleteProfileTemplateNotFound(t *testing.T) {
 func TestDeleteProfileTemplate(t *testing.T) {
 	var (
 		d                         *OVTest
-		c                         *OVClient
+		c                         *ov.OVClient
 		testName                  string
-		testServerProfileTemplate ServerProfile
+		testServerProfileTemplate ov.ServerProfile
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_server_profile_template")

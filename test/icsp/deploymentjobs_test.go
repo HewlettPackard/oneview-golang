@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +13,7 @@ import (
 func TestDeploymentJobs(t *testing.T) {
 	var (
 		d  *ICSPTest
-		dj *DeploymentJobs
+		dj *icsp.DeploymentJobs
 	)
 	d, _ = getTestDriverU()
 	jsonData := d.Tc.GetTestData(d.Env, "DeploymentJobsJSON").(string)
@@ -25,7 +26,7 @@ func TestDeploymentJobs(t *testing.T) {
 func TestPersonalizeServerData(t *testing.T) {
 	var (
 		d *ICSPTest
-		o *OSDPersonalizeServerDataV2
+		o *icsp.OSDPersonalizeServerDataV2
 	)
 	d, _ = getTestDriverU()
 	jsonData := d.Tc.GetTestData(d.Env, "OSDPersonalizeServerDataV2JSON").(string)
@@ -43,7 +44,7 @@ func TestPersonalizeServerData(t *testing.T) {
 func TestOSDPersonalityDataV2(t *testing.T) {
 	var (
 		d *ICSPTest
-		o *OSDNicDataV2
+		o *icsp.OSDNicDataV2
 	)
 	d, _ = getTestDriverU()
 	jsonData := d.Tc.GetTestData(d.Env, "OSDPersonalityDataV2JSON").(string)
@@ -56,7 +57,7 @@ func TestOSDPersonalityDataV2(t *testing.T) {
 func TestOSDNicDataV2(t *testing.T) {
 	var (
 		d *ICSPTest
-		o *OSDNicDataV2
+		o *icsp.OSDNicDataV2
 	)
 	d, _ = getTestDriverU()
 	jsonData := d.Tc.GetTestData(d.Env, "InterfaceJSON").(string)

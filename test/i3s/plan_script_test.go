@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -27,7 +28,7 @@ import (
 func TestCreatePlanScript(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -42,12 +43,12 @@ func TestCreatePlanScript(t *testing.T) {
 		assert.NoError(t, err, "CreatePlanScript get the PlanScript error -> %s", err)
 
 		if testPlanScript.URI.IsNil() {
-			testPlanScript = PlanScript{
-				Name: testName,
-				Type: d.Tc.GetTestData(d.Env, "Type").(string),
-				PlanType: d.Tc.GetTestData(d.Env, "PlanType").(string),
+			testPlanScript = i3s.PlanScript{
+				Name:        testName,
+				Type:        d.Tc.GetTestData(d.Env, "Type").(string),
+				PlanType:    d.Tc.GetTestData(d.Env, "PlanType").(string),
 				Description: d.Tc.GetTestData(d.Env, "Description").(string),
-				Content: d.Tc.GetTestData(d.Env, "Content").(string),
+				Content:     d.Tc.GetTestData(d.Env, "Content").(string),
 			}
 			err := c.CreatePlanScript(testPlanScript)
 			assert.NoError(t, err, "CreatePlanScript error -> %s", err)
@@ -69,7 +70,7 @@ func TestCreatePlanScript(t *testing.T) {
 func TestGetPlanScriptByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -97,7 +98,7 @@ func TestGetPlanScriptByName(t *testing.T) {
 
 func TestGetPlanScripts(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_plan_script")
@@ -119,9 +120,9 @@ func TestGetPlanScripts(t *testing.T) {
 
 func TestDeletePlanScriptNotFound(t *testing.T) {
 	var (
-		c              *I3SClient
+		c              *i3s.I3SClient
 		testName       = "fake"
-		testPlanScript PlanScript
+		testPlanScript i3s.PlanScript
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_plan_script")
@@ -145,9 +146,9 @@ func TestDeletePlanScriptNotFound(t *testing.T) {
 func TestDeletePlanScript(t *testing.T) {
 	var (
 		d              *I3STest
-		c              *I3SClient
+		c              *i3s.I3SClient
 		testName       string
-		testPlanScript PlanScript
+		testPlanScript i3s.PlanScript
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_plan_script")

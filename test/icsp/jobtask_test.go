@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/icsp"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +13,7 @@ import (
 func TestODSUri(t *testing.T) {
 	var (
 		d *ICSPTest
-		u ODSUri
+		u icsp.ODSUri
 	)
 	d, _ = getTestDriverU()
 	jsonJobURI := d.Tc.GetTestData(d.Env, "JobURIJSONString").(string)

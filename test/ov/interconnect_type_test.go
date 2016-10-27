@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -9,7 +10,7 @@ import (
 
 func TestGetInterconnectTypes(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_interconnect_type")
@@ -29,31 +30,33 @@ func TestGetInterconnectTypes(t *testing.T) {
 	}
 }
 
-func TestGetInterconnectTypeByName(t *testing.T) {
+/*
+func TestGetInterconnectTypeByURI(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
-		testName string
+		c        *ov.OVClient
+		testURI utils.Nstring
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_interconnect_type")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+		testURI = utils.NewNstring(d.Tc.GetTestData(d.Env, "URI").(string))
 
-		testInterconnectType, err := c.GetInterconnectTypeByName(testName)
-		assert.NoError(t, err, "GetInterconnectTypeByName thew an error -> %s", err)
-		assert.Equal(t, testName, testInterconnectType.Name)
+		testInterconnectType, err := c.GetInterconnectTypeByUri(testURI)
+		assert.Error(t, err, "GetInterconnectTypeByName thew an error -> %+v", testInterconnectType)
+		assert.Equal(t, testURI, testInterconnectType.URI)
 
 		testInterconnectType, err = c.GetInterconnectTypeByName("bad")
-		assert.NoError(t, err, "GetInterconnectTypeByName with fake name -> %s", err)
+		assert.NoError(t, err, "GetInterconnectTypeByURI with fake name -> %s", err)
 		assert.Equal(t, "", testInterconnectType.Name)
 
 	} else {
 		d, c = getTestDriverU("test_interconnect_type")
-		testName = d.Tc.GetTestData(d.Env, "Name").(string)
-		data, err := c.GetInterconnectTypeByName(testName)
+		testURI = utils.NewNstring(d.Tc.GetTestData(d.Env, "URI").(string))
+		data, err := c.GetInterconnectTypeByUri(testURI)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
+*/

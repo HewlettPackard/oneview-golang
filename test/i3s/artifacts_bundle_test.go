@@ -18,6 +18,7 @@ package i3s
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
 	"os"
@@ -27,7 +28,7 @@ import (
 func TestCreateArtifactsBundle(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -42,7 +43,7 @@ func TestCreateArtifactsBundle(t *testing.T) {
 		assert.NoError(t, err, "CreateArtifactsBundle get the ArtifactsBundle error -> %s", err)
 
 		if testArtifactsBundle.URI.IsNil() {
-			testInputArtifactsBundle := InputArtifactsBundle{
+			testInputArtifactsBundle := i3s.InputArtifactsBundle{
 				Name: testName,
 			}
 			err := c.CreateArtifactsBundle(testInputArtifactsBundle)
@@ -64,7 +65,7 @@ func TestCreateArtifactsBundle(t *testing.T) {
 func TestGetArtifactsBundleByName(t *testing.T) {
 	var (
 		d        *I3STest
-		c        *I3SClient
+		c        *i3s.I3SClient
 		testName string
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
@@ -92,7 +93,7 @@ func TestGetArtifactsBundleByName(t *testing.T) {
 
 func TestGetArtifactsBundles(t *testing.T) {
 	var (
-		c *I3SClient
+		c *i3s.I3SClient
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_artifacts_bundle")
@@ -114,9 +115,9 @@ func TestGetArtifactsBundles(t *testing.T) {
 
 func TestDeleteArtifactsBundleNotFound(t *testing.T) {
 	var (
-		c                   *I3SClient
+		c                   *i3s.I3SClient
 		testName            = "fake"
-		testArtifactsBundle ArtifactsBundle
+		testArtifactsBundle i3s.ArtifactsBundle
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_artifacts_bundle")
@@ -140,9 +141,9 @@ func TestDeleteArtifactsBundleNotFound(t *testing.T) {
 func TestDeleteArtifactsBundle(t *testing.T) {
 	var (
 		d                   *I3STest
-		c                   *I3SClient
+		c                   *i3s.I3SClient
 		testName            string
-		testArtifactsBundle ArtifactsBundle
+		testArtifactsBundle i3s.ArtifactsBundle
 	)
 	if os.Getenv("I3S_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_deployment_plan")

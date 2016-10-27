@@ -129,6 +129,9 @@ func (c *OVClient) DeleteFCNetwork(name string) error {
 	)
 
 	fcNet, err = c.GetFCNetworkByName(name)
+	if err != nil {
+		return err
+	}
 	if fcNet.Name != "" {
 		t = t.NewProfileTask(c)
 		t.ResetTask()

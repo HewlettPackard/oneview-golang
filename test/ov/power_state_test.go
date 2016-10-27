@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ import (
 func TestPowerState(t *testing.T) {
 	var (
 		d           *OVTest
-		c           *OVClient
+		c           *ov.OVClient
 		testData    utils.Nstring
 		expectsData string
 	)
@@ -29,24 +30,24 @@ func TestPowerState(t *testing.T) {
 		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
 		assert.Equal(t, expectsData, blade.SerialNumber.String())
 		// get a power state object
-		var pt *PowerTask
+		var pt *ov.PowerTask
 		pt = pt.NewPowerTask(blade)
 		pt.Timeout = 46 // timeout is 20 sec
 		assert.Equal(t, expectsData, pt.Blade.SerialNumber.String())
 
 		// Test the power state executor to off
 		log.Info("------- Setting Power to Off")
-		err = pt.PowerExecutor(P_OFF)
+		err = pt.PowerExecutor(ov.P_OFF)
 		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
 
 		// Test the power state executor to on
 		log.Info("------- Setting Power to On")
-		err = pt.PowerExecutor(P_ON)
+		err = pt.PowerExecutor(ov.P_ON)
 		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
 
 		// Test the power state executor to off and leave off
 		log.Info("------- Setting Power to Off")
-		err = pt.PowerExecutor(P_OFF)
+		err = pt.PowerExecutor(ov.P_OFF)
 		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
 
 	}

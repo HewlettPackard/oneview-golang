@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +13,7 @@ import (
 func TestCreateStorageVolume(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -28,10 +29,10 @@ func TestCreateStorageVolume(t *testing.T) {
 
 		pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
 
-		provParams := ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
+		provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
 
 		if testSVol.URI.IsNil() {
-			testSVol = StorageVolumeV3{
+			testSVol = ov.StorageVolumeV3{
 				Name:             testName,
 				StorageSystemUri: utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
 				Type:             d.Tc.GetTestData(d.Env, "Type").(string),
@@ -59,7 +60,7 @@ func TestCreateStorageVolume(t *testing.T) {
 func TestGetStorageVolumeByName(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
@@ -87,7 +88,7 @@ func TestGetStorageVolumeByName(t *testing.T) {
 
 func TestGetStorageVolumes(t *testing.T) {
 	var (
-		c *OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_storage_volume")
@@ -109,9 +110,9 @@ func TestGetStorageVolumes(t *testing.T) {
 
 func TestDeleteStorageVolumeNotFound(t *testing.T) {
 	var (
-		c        *OVClient
+		c        *ov.OVClient
 		testName = "fake"
-		testSVol StorageVolumeV3
+		testSVol ov.StorageVolumeV3
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_storage_volume")
@@ -135,9 +136,9 @@ func TestDeleteStorageVolumeNotFound(t *testing.T) {
 func TestDeleteStorageVolume(t *testing.T) {
 	var (
 		d        *OVTest
-		c        *OVClient
+		c        *ov.OVClient
 		testName string
-		testSVol StorageVolumeV3
+		testSVol ov.StorageVolumeV3
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_storage_volume")
