@@ -18,6 +18,7 @@ limitations under the License.
 package ov
 
 import (
+    "fmt"
 	"encoding/json"
 	"errors"
 	"net/url"
@@ -200,6 +201,22 @@ func (c *OVClient) GetServerHardware(uri utils.Nstring) (ServerHardware, error) 
 	}
 	hardware.Client = c
 	return hardware, nil
+}
+
+// get a server hardware with uri
+func (c *OVClient) GetServerHardwareByName(name string) (ServerHardware, error) {
+
+	var (
+		serverHardware ServerHardware
+	)
+
+    filters := []string{fmt.Sprintf("name matches '%s'", name)}
+	serverHardwareList, err := c.GetServerHardwareList(filters, "name:asc")
+	if serverHardwareList.Total > 0 {
+		return serverHardwareList.Members[0], err
+	} else {
+		return serverHardware, err
+	}
 }
 
 // get a server hardware with filters
