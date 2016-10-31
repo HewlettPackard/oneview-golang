@@ -1,14 +1,14 @@
 package ov
 
 import (
+	"fmt"
 	"os"
 	"testing"
-	"fmt"
 
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
-	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 // get server hardware test

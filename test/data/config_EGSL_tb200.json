@@ -290,6 +290,13 @@
       }
     },
     {
+      "Name": "test_os_deployment_plan",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "Docker RHEL Server 7.2 - v0.1"
+      }
+    },
+    {
       "Name": "test_artifacts_bundle",
       "Enabled": true,
       "Test_data": {

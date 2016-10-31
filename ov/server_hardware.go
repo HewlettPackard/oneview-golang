@@ -18,9 +18,9 @@ limitations under the License.
 package ov
 
 import (
-    "fmt"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -210,7 +210,7 @@ func (c *OVClient) GetServerHardwareByName(name string) (ServerHardware, error) 
 		serverHardware ServerHardware
 	)
 
-    filters := []string{fmt.Sprintf("name matches '%s'", name)}
+	filters := []string{fmt.Sprintf("name matches '%s'", name)}
 	serverHardwareList, err := c.GetServerHardwareList(filters, "name:asc")
 	if serverHardwareList.Total > 0 {
 		return serverHardwareList.Members[0], err
