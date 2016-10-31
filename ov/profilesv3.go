@@ -17,7 +17,9 @@ limitations under the License.
 package ov
 
 import (
+	"fmt"
 	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
 
 type BootOptionV3 struct {
@@ -56,4 +58,54 @@ type OSDeploymentSettings struct {
 type OSCustomAttribute struct {
 	Name  string `json:"name,omitempty"`  // "name": "custom attribute 1",
 	Value string `json:"value,omitempty"` // "value": "custom attribute value"
+}
+
+// create profile from template
+func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template ServerProfile, blade ServerHardware, osDeploymentPlan OSDeploymentPlan, deploymentSettings map[string]string) error {
+	log.Debugf("TEMPLATE : %+v\n", template)
+	var (
+		new_template ServerProfile
+		err          error
+	)
+
+	//GET on /rest/server-profile-templates/{id}new-profile
+	if c.IsProfileTemplates() {
+		log.Debugf("getting profile by URI %+v, v2", template.URI)
+		new_template, err = c.GetProfileByURI(template.URI)
+		if err != nil {
+			return err
+		}
+		new_template.Type = "ServerProfileV6"
+		new_template.ServerProfileTemplateURI = template.URI // create relationship
+		log.Debugf("new_template -> %+v", new_template)
+	} else {
+		return fmt.Errorf("Can't use v1 with image streamer.")
+	}
+
+	serverDeploymentAttributes := make([]OSCustomAttribute, len(osDeploymentPlan.AdditionalParameters))
+	for i := 0; i < len(osDeploymentPlan.AdditionalParameters); i++ {
+		customAttribute := &osDeploymentPlan.AdditionalParameters[i]
+		if val, ok := deploymentSettings[customAttribute.Name]; ok {
+			customAttribute.Value = val
+		}
+		serverDeploymentAttributes[i].Name = customAttribute.Name
+		serverDeploymentAttributes[i].Value = customAttribute.Value
+	}
+
+	new_template.ServerHardwareURI = blade.URI
+	new_template.ServerHardwareTypeURI = blade.ServerHardwareTypeURI
+	new_template.Description += " " + name
+	new_template.Name = name
+	new_template.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
+	new_template.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
+
+	t, err := c.SubmitNewProfile(new_template)
+	if err != nil {
+		return err
+	}
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
 }

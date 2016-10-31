@@ -1,6 +1,7 @@
 package ov
 
 import (
+	"fmt"
 	"os"
 	"testing"
 
@@ -31,6 +32,35 @@ func TestServerHardware(t *testing.T) {
 		// fmt.Printf("data.Connections -> %+v\n", data)
 		assert.Equal(t, expectsData, data.SerialNumber.String())
 
+	}
+}
+
+func TestGetServerHardwareByName(t *testing.T) {
+	var (
+		d        *OVTest
+		c        *ov.OVClient
+		testName string
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("test_server_hardware")
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+
+		testServerHardware, err := c.GetServerHardwareByName(testName)
+		assert.NoError(t, err, "GetServerHardwareByName thew an error -> %s", err)
+		assert.Equal(t, testName, testServerHardware.Name)
+
+		testServerHardware, err = c.GetServerHardwareByName("bad")
+		assert.NoError(t, err, "GetServerHardwareByName with fake name -> %s", err)
+		assert.Equal(t, "", testServerHardware.Name)
+
+	} else {
+		d, c = getTestDriverU("test_server_hardware")
+		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+		data, err := c.GetServerHardwareByName(testName)
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
 

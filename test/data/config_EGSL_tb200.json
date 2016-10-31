@@ -182,6 +182,13 @@
       }
     },
     {
+      "Name": "test_server_hardware",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "HOUEGSL-C7000-04, bay 5"
+      }
+    },
+    {
       "Name": "test_server_hardware_type",
       "Enabled": true,
       "Test_data": {
@@ -280,6 +287,13 @@
       "Enabled": true,
       "Test_data": {
         "Name": "OSVolume-14"
+      }
+    },
+    {
+      "Name": "test_os_deployment_plan",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "Docker RHEL Server 7.2 - v0.1"
       }
     },
     {
