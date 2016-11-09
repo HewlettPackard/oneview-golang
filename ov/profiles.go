@@ -377,3 +377,39 @@ func (c *OVClient) DeleteProfile(name string) error {
 	}
 	return nil
 }
+
+func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
+	log.Infof("Initializing update of server profile for %s.", p.Name)
+	var (
+		uri = p.URI.String()
+		t   *Task
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Debugf("REST : %s \n %+v\n", uri, p)
+	log.Debugf("task -> %+v", t)
+	data, err := c.RestAPICall(rest.PUT, uri, p)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error submitting update server profile request: %s", err)
+		return err
+	}
+
+	log.Debugf("Response update ServerProfile %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

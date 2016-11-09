@@ -186,6 +186,7 @@ func (c *OVClient) GetServerHardware(uri utils.Nstring) (ServerHardware, error) 
 
 	var hardware ServerHardware
 	// refresh login
+
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
@@ -213,6 +214,7 @@ func (c *OVClient) GetServerHardwareByName(name string) (ServerHardware, error) 
 	filters := []string{fmt.Sprintf("name matches '%s'", name)}
 	serverHardwareList, err := c.GetServerHardwareList(filters, "name:asc")
 	if serverHardwareList.Total > 0 {
+		serverHardwareList.Members[0].Client = c
 		return serverHardwareList.Members[0], err
 	} else {
 		return serverHardware, err

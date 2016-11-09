@@ -145,13 +145,19 @@ func (pt *PowerTask) SubmitPowerState(s PowerState) {
 		log.Errorf("Error getting current power state: %s", err)
 		return
 	}
+
 	if s != pt.State {
 		log.Infof("Powering %s server %s for %s.", s, pt.Blade.Name, pt.Blade.SerialNumber)
 		var (
-			body = PowerRequest{PowerState: s.String(), PowerControl: P_PRESSANDHOLD.String()}
+			body = PowerRequest{PowerState: s.String()}
 			uri  = strings.Join([]string{pt.Blade.URI.String(),
 				"/powerState"}, "")
 		)
+		if s.String() == "On" {
+			body.PowerControl = P_MOMPRESS.String()
+		} else {
+			body.PowerControl = P_PRESSANDHOLD.String()
+		}
 		log.Debugf("REST : %s \n %+v\n", uri, body)
 		log.Debugf("pt -> %+v", pt)
 		data, err := pt.Blade.Client.RestAPICall(rest.PUT, uri, body)

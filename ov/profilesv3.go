@@ -61,7 +61,7 @@ type OSCustomAttribute struct {
 }
 
 // create profile from template
-func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template ServerProfile, blade ServerHardware, osDeploymentPlan OSDeploymentPlan, deploymentSettings map[string]string) error {
+func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template ServerProfile, blade ServerHardware) error {
 	log.Debugf("TEMPLATE : %+v\n", template)
 	var (
 		new_template ServerProfile
@@ -82,22 +82,10 @@ func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template Server
 		return fmt.Errorf("Can't use v1 with image streamer.")
 	}
 
-	serverDeploymentAttributes := make([]OSCustomAttribute, len(osDeploymentPlan.AdditionalParameters))
-	for i := 0; i < len(osDeploymentPlan.AdditionalParameters); i++ {
-		customAttribute := &osDeploymentPlan.AdditionalParameters[i]
-		if val, ok := deploymentSettings[customAttribute.Name]; ok {
-			customAttribute.Value = val
-		}
-		serverDeploymentAttributes[i].Name = customAttribute.Name
-		serverDeploymentAttributes[i].Value = customAttribute.Value
-	}
-
 	new_template.ServerHardwareURI = blade.URI
 	new_template.ServerHardwareTypeURI = blade.ServerHardwareTypeURI
 	new_template.Description += " " + name
 	new_template.Name = name
-	new_template.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
-	new_template.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
 
 	t, err := c.SubmitNewProfile(new_template)
 	if err != nil {
@@ -107,5 +95,88 @@ func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template Server
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+// CustomizeServer - use customizeserver when working with creating a new server
+// server create if it's missing
+// server apply deployment job
+type CustomizeServer struct {
+	ProfileName            string            // name of server
+	OSDeploymentBuildPlan  string            // name of the OS build plan
+	OSDeploymentAttributes map[string]string // name value pairs for server custom attributes
+
+}
+
+// CustomizeServer - Customize Server
+func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
+	s, err := c.GetProfileByName(cs.ProfileName)
+	if err != nil || s.URI.IsNil() {
+		return fmt.Errorf("Server not found\n %+v", err)
+	}
+
+	blade, err := c.GetServerHardware(s.ServerHardwareURI)
+	if err != nil {
+		return err
+	}
+
+	osDeploymentPlan, err := c.GetOSDeploymentPlanByName(cs.OSDeploymentBuildPlan)
+	if err != nil || osDeploymentPlan.URI.IsNil() {
+		return fmt.Errorf("osDeploymentPlan not found: %s\n %+v", cs.OSDeploymentBuildPlan, err)
+	}
+
+	serverDeploymentAttributes := make([]OSCustomAttribute, len(osDeploymentPlan.AdditionalParameters))
+	for i := 0; i < len(osDeploymentPlan.AdditionalParameters); i++ {
+		customAttribute := &osDeploymentPlan.AdditionalParameters[i]
+		if val, ok := cs.OSDeploymentAttributes[customAttribute.Name]; ok {
+			customAttribute.Value = val
+		}
+		serverDeploymentAttributes[i].Name = customAttribute.Name
+		serverDeploymentAttributes[i].Value = customAttribute.Value
+	}
+
+	s.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
+	s.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
+
+	s.Connections = c.ManageI3SConnections(s.Connections)
+
+	err = c.UpdateServerProfile(s)
+	if err != nil {
+		return err
+	}
+
+	err = blade.PowerOn()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *OVClient) DeleteOSBuildPlanFromServer(profileName string) error {
+	s, err := c.GetProfileByName(profileName)
+	if err != nil || s.URI.IsNil() {
+		return fmt.Errorf("Server not found\n %+v", err)
+	}
+
+	blade, err := c.GetServerHardware(s.ServerHardwareURI)
+	if err != nil {
+		return err
+	}
+
+	err = blade.PowerOff()
+	if err != nil {
+		return err
+	}
+
+	s.OSDeploymentSettings.OSDeploymentPlanUri = utils.NewNstring("")
+	//s.OSDeploymentSettings.OSCustomAttributes = nil
+
+	err = c.UpdateServerProfile(s)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
