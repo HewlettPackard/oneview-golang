@@ -17,37 +17,78 @@ limitations under the License.
 // Package ov -
 package ov
 
+
 import (
-	"github.com/HewlettPackard/oneview-golang/utils"
+	//"github.com/HewlettPackard/oneview-golang/utils"
+	"fmt"
 )
 
-func (c *OVClient) ManageI3SConnections(connections []Connection) []Connection {
+func (c *OVClient) ManageI3SConnections(connections []Connection) ([]Connection, error) {
 
+	/*
+	deployNet, err := c.GetEthernetConnectionByName("deploy.net")
+	if err != nil || deployent.URI.IsNil(){
+		return connections, fmt.Errorf("Could not find deployment ethernet network name: deploy.net")
+	}*/
+
+	availablePortIds := []string{"Mezz 3:1-a", "Mezz 3:1-b", "Mezz 3:1-c", "Mezz 3:1-d",
+								  "Mezz 3:2-a", "Mezz 3:2-b", "Mezz 3:2-c", "Mezz 3:2-d"}
+	deployConnections := make([]Connection, 2)
+	for i := 0; i < len(connections); i++{
+		if(connections[i].Name == "Deployment Network A") {
+			deployConnections[0] = connections[i]
+		} else if (connections[i].Name == "Deployment Network B") {
+			deployConnections[1] = connections[i]
+		}
+		for j := 0; j < len(availablePortIds); j++ {
+			if connections[i].PortID == availablePortIds[j] {
+				availablePortIds = append(availablePortIds[:i], availablePortIds[i+1:]...)
+			}
+		}
+	}
+	return connections, fmt.Errorf("%+v", availablePortIds)
+	/*
+	if deployConnections[0] = nil {
+		boot1 := BootOption{
+			Priority: "Primary",
+		}
+		connection1 := Connection {
+			ID: 1,
+			Name: "Deployment Network A",
+			FunctionType: "Ethernet",
+			RequestedMbps: "2500",
+			NetworkURI: deployNet.URI,
+			Boot: boot1,
+			PortID: "Mezz 3:1-a",
+		}
+	}*/
+
+	/*
 	if len(connections) < 4 {
 		boot1 := BootOption{
 			Priority: "Primary",
 		}
-		connection1 := Connection{
-			ID:            1,
-			Name:          "Deployment Network A",
-			FunctionType:  "Ethernet",
+		connection1 := Connection {
+			ID: 1,
+			Name: "Deployment Network A",
+			FunctionType: "Ethernet",
 			RequestedMbps: "2500",
-			NetworkURI:    utils.NewNstring("/rest/ethernet-networks/8d4a7e7f-2c9d-4d79-be86-defd0dd5e8cf"),
-			Boot:          boot1,
-			PortID:        "Mezz 3:1-a",
+			NetworkURI: utils.NewNstring("/rest/ethernet-networks/8d4a7e7f-2c9d-4d79-be86-defd0dd5e8cf"),
+			Boot: boot1,
+			PortID: "Mezz 3:1-a",
 		}
 
 		boot2 := BootOption{
 			Priority: "Secondary",
 		}
-		connection2 := Connection{
-			ID:            2,
-			Name:          "Deployment Network B",
-			FunctionType:  "Ethernet",
+		connection2 := Connection {
+			ID: 2,
+			Name: "Deployment Network B",
+			FunctionType: "Ethernet",
 			RequestedMbps: "2500",
-			NetworkURI:    utils.NewNstring("/rest/ethernet-networks/8d4a7e7f-2c9d-4d79-be86-defd0dd5e8cf"),
-			Boot:          boot2,
-			PortID:        "Mezz 3:2-a",
+			NetworkURI: utils.NewNstring("/rest/ethernet-networks/8d4a7e7f-2c9d-4d79-be86-defd0dd5e8cf"),
+			Boot: boot2,
+			PortID: "Mezz 3:2-a",
 		}
 		connections = append(connections, connection1)
 		connections = append(connections, connection2)
@@ -56,8 +97,8 @@ func (c *OVClient) ManageI3SConnections(connections []Connection) []Connection {
 	} else {
 		connections[0].Boot.Priority = "Primary"
 		connections[1].Boot.Priority = "Secondary"
-	}
+	} */
 
-	return connections
+	return connections, nil
 
 }
