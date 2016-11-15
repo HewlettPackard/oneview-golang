@@ -50,6 +50,28 @@ type CustomAttribute struct {
 	Value         string `json:"value,omitempty"`         // "value": "attribute_value",
 }
 
+// get an os deployment plan with uri
+func (c *OVClient) GetOSDeploymentPlan(uri utils.Nstring) (OSDeploymentPlan, error) {
+
+	var osDeploymentPlan OSDeploymentPlan
+	// refresh login
+
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	// rest call
+	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+	if err != nil {
+		return osDeploymentPlan, err
+	}
+
+	log.Debugf("GetOSDeploymentPlan %s", data)
+	if err := json.Unmarshal([]byte(data), &osDeploymentPlan); err != nil {
+		return osDeploymentPlan, err
+	}
+	return osDeploymentPlan, nil
+}
+
 func (c *OVClient) GetOSDeploymentPlanByName(name string) (OSDeploymentPlan, error) {
 	var (
 		osdp OSDeploymentPlan
