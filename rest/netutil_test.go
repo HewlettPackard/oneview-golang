@@ -9,6 +9,8 @@ import (
 	"testing"
 )
 
+var empty = *Client{}
+
 func Test200Request(t *testing.T) {
 	response := "This is the response"
 
@@ -18,7 +20,7 @@ func Test200Request(t *testing.T) {
 	})
 	defer ts.Close()
 
-	c := (&Client{}).NewClient("", "", endpoint)
+	c := empty.NewClient("", "", endpoint)
 	res, err := c.RestAPICall(GET, path, nil)
 
 	if err != nil {
@@ -38,7 +40,7 @@ func Test404Request(t *testing.T) {
 	})
 	defer ts.Close()
 
-	c := (&Client{}).NewClient("", "", endpoint)
+	c := empty.NewClient("", "", endpoint)
 	res, err := c.RestAPICall(POST, path, nil)
 
 	if len(res) != 0 {
@@ -70,7 +72,7 @@ func TestHeaderAuthenticaiton(t *testing.T) {
 	})
 	defer ts.Close()
 
-	c := (&Client{}).NewClient("", "", endpoint)
+	c := empty.NewClient("", "", endpoint)
 
 	res, err := c.RestAPICall(GET, path, nil)
 
