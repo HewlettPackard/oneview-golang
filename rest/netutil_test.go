@@ -9,7 +9,7 @@ import (
 	"testing"
 )
 
-var empty = *Client{}
+var empty = &Client{}
 
 func Test200Request(t *testing.T) {
 	response := "This is the response"
