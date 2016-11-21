@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"time"
 
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -33,7 +32,7 @@ var (
 	}
 
 	// get a client
-	client = &http.Client{Transport: tr, Timeout: 5 * time.Minute}
+	client = &http.Client{Transport: tr}
 )
 
 // Options for REST call
