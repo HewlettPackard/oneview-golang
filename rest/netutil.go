@@ -8,10 +8,31 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"reflect"
 
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+)
+
+var (
+	codes = map[int]bool{
+		http.StatusOK:                  true,
+		http.StatusCreated:             true,
+		http.StatusAccepted:            true,
+		http.StatusNoContent:           true,
+		http.StatusBadRequest:          false,
+		http.StatusNotFound:            false,
+		http.StatusNotAcceptable:       false,
+		http.StatusConflict:            false,
+		http.StatusInternalServerError: false,
+	}
+
+	// TODO: this should have a real cert
+	tr = &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+
+	// get a client
+	client = &http.Client{Transport: tr}
 )
 
 // Options for REST call
@@ -35,24 +56,11 @@ type Client struct {
 
 // NewClient - get a new network client
 func (c *Client) NewClient(user, key, endpoint string) *Client {
-	var options Options
-	return &Client{User: user, APIKey: key, Endpoint: endpoint, Option: options}
+	return &Client{User: user, APIKey: key, Endpoint: endpoint, Option: Options{}}
 }
 
 // isOkStatus - check the return status of the response
 func (c *Client) isOkStatus(code int) bool {
-	codes := map[int]bool{
-		200: true,
-		201: true,
-		202: true,
-		204: true,
-		400: false,
-		404: false,
-		500: false,
-		409: false,
-		406: false,
-	}
-
 	return codes[code]
 }
 
@@ -69,9 +77,8 @@ func (c *Client) GetQueryString(u *url.URL) {
 	}
 	parameters := url.Values{}
 	for k, v := range c.Option.Query {
-		var r []string
-		if reflect.TypeOf(v) == reflect.TypeOf(r) {
-			for _, va := range v.([]string) {
+		if val, ok := v.([]string); ok {
+			for _, va := range val {
 				parameters.Add(k, va)
 			}
 		} else {
@@ -105,14 +112,6 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 
 	// Manage the query string
 	c.GetQueryString(Url)
-
-	// TODO: this should have a real cert
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-
-	// get a client
-	client := &http.Client{Transport: tr}
 
 	log.Debugf("*** url => %s", Url.String())
 	log.Debugf("*** method => %s", method.String())

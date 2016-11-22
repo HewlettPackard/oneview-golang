@@ -36,23 +36,21 @@ func (tc *TestConfig) IsGreaterEqual(source interface{}, target interface{}) boo
 func (tc *TestConfig) IsGreater(source interface{}, target interface{}) bool {
 	var a, b float64
 
-	switch ts := source.(type) {
+	switch source.(type) {
 	case int:
 		a = float64(source.(int))
 	case float64:
 		a = float64(source.(float64))
 	default:
-		_ = ts
 		return false
 	}
 
-	switch ts := target.(type) {
+	switch target.(type) {
 	case int:
 		b = float64(target.(int))
 	case float64:
 		b = float64(target.(float64))
 	default:
-		_ = ts
 		return false
 	}
 
@@ -62,23 +60,21 @@ func (tc *TestConfig) IsGreater(source interface{}, target interface{}) bool {
 // Equal determin numeric type and determine equality
 func (tc *TestConfig) Equal(source interface{}, target interface{}) bool {
 	var a, b float64
-	switch ts := source.(type) {
+	switch source.(type) {
 	case int:
 		a = float64(source.(int))
 	case float64:
 		a = float64(source.(float64))
 	default:
-		_ = ts
 		return false
 	}
 
-	switch ts := target.(type) {
+	switch target.(type) {
 	case int:
 		b = float64(target.(int))
 	case float64:
 		b = float64(target.(float64))
 	default:
-		_ = ts
 		return false
 	}
 
