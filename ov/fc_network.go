@@ -85,7 +85,7 @@ func (c *OVClient) CreateFCNetwork(fcNet FCNetwork) error {
 	log.Infof("Initializing creation of fc network for %s.", fcNet.Name)
 	var (
 		uri = "/rest/fc-networks"
-		t   = t.NewProfileTask(c)
+		t   = (&Task{}).NewProfileTask(c)
 	)
 	// refresh login
 	c.RefreshLogin()
