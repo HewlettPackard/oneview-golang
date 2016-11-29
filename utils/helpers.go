@@ -4,10 +4,7 @@ import "strings"
 
 // Sanatize ...
 func Sanatize(s string) string {
-	if strings.LastIndex(s, "/") > 0 {
-		s = strings.Trim(s, "/")
-	}
-	return s
+	return strings.TrimRight(s, "/")
 }
 
 // IsEmpty ...
