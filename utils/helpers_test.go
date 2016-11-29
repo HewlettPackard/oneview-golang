@@ -31,7 +31,7 @@ func TestEmpties(t *testing.T) {
 		if empty := IsEmpty(value); empty != expected {
 			t.Logf(
 				"String %q expected empty to be %q, got %q instead",
-				value, fmt.Sprintf("%s", expected), fmt.Sprintf("%s", empty),
+				value, fmt.Sprintf("%v", expected), fmt.Sprintf("%v", empty),
 			)
 			t.Fail()
 		}
