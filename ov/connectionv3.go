@@ -23,12 +23,13 @@ import (
 	"strings"
 )
 
-func (c *OVClient) ManageI3SConnections(connections []Connection) ([]Connection, error) {
+// ManageI3SConnections - setup connections for i3s deployment network
+func (c *OVClient) ManageI3SConnections(connections []Connection, netname string) ([]Connection, error) {
 
 	//Find the deploy net called deploy.net
-	deployNet, err := c.GetEthernetNetworkByName("deploy.net")
+	deployNet, err := c.GetEthernetNetworkByName(netname)
 	if err != nil || deployNet.URI.IsNil() {
-		return connections, fmt.Errorf("Could not find deployment ethernet network name: deploy.net")
+		return connections, fmt.Errorf("Could not find deployment ethernet network name: %s", netname)
 	}
 
 	//This section finds which PortIds we have available so we can apply new port ids to connections that have the boot PortIds(Which the boot connections need).
