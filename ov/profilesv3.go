@@ -18,6 +18,7 @@ package ov
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 )
@@ -106,7 +107,7 @@ type CustomizeServer struct {
 	ProfileName            string            // name of server
 	OSDeploymentBuildPlan  string            // name of the OS build plan
 	OSDeploymentAttributes map[string]string // name value pairs for server custom attributes
-
+	EthernetNetworkName    string            // deployment network name
 }
 
 // CustomizeServer - Customize Server
@@ -139,7 +140,7 @@ func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
 	s.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
 	s.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
 
-	s.Connections, err = c.ManageI3SConnections(s.Connections)
+	s.Connections, err = c.ManageI3SConnections(s.Connections, cs.EthernetNetworkName)
 	if err != nil {
 		return err
 	}
