@@ -316,6 +316,7 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	log.Debugf("REST : %s \n %+v\n", uri, logicalInterconnectGroup)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, logicalInterconnectGroup)
+
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new logical interconnect group request: %s", err)
@@ -406,6 +407,7 @@ func (c *OVClient) UpdateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	}
 
 	log.Debugf("Response update LogicalInterConnectGroup %s", data)
+
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
