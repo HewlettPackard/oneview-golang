@@ -58,16 +58,15 @@ func getTestDriverA() (*ICSPTest, *icsp.ICSPClient) {
 	ot = &ICSPTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &icsp.ICSPClient{
-		rest.Client{
-			User:     os.Getenv("ONEVIEW_ICSP_USER"),
-			Password: os.Getenv("ONEVIEW_ICSP_PASSWORD"),
-			Domain:   os.Getenv("ONEVIEW_ICSP_DOMAIN"),
-			Endpoint: os.Getenv("ONEVIEW_ICSP_ENDPOINT"),
-			// ConfigDir:
-			SSLVerify: false,
-			APIKey:    "none",
-		},
+	ot.Client = &icsp.ICSPClient{Client: rest.Client{
+		User:     os.Getenv("ONEVIEW_ICSP_USER"),
+		Password: os.Getenv("ONEVIEW_ICSP_PASSWORD"),
+		Domain:   os.Getenv("ONEVIEW_ICSP_DOMAIN"),
+		Endpoint: os.Getenv("ONEVIEW_ICSP_ENDPOINT"),
+		// ConfigDir:
+		SSLVerify: false,
+		APIKey:    "none",
+	},
 	}
 	ot.Client.RefreshVersion()
 	// fmt.Println("Setting up test with getTestDriverA")
@@ -81,16 +80,15 @@ func getTestDriverU() (*ICSPTest, *icsp.ICSPClient) {
 	ot = &ICSPTest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment()
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &icsp.ICSPClient{
-		rest.Client{
-			User:       "foo",
-			Password:   "bar",
-			Domain:     "LOCAL",
-			Endpoint:   "https://icsptestcase",
-			SSLVerify:  false,
-			APIVersion: 108,
-			APIKey:     "none",
-		},
+	ot.Client = &icsp.ICSPClient{Client: rest.Client{
+		User:       "foo",
+		Password:   "bar",
+		Domain:     "LOCAL",
+		Endpoint:   "https://icsptestcase",
+		SSLVerify:  false,
+		APIVersion: 108,
+		APIKey:     "none",
+	},
 	}
 	// fmt.Println("Setting up test with getTestDriverU")
 	return ot, ot.Client

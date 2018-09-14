@@ -38,17 +38,16 @@ func getTestDriverA(env string) (*I3STest, *i3s.I3SClient) {
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.OVClient = &ov.OVClient{
-		rest.Client{
-			User:       os.Getenv("ONEVIEW_OV_USER"),
-			Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
-			Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
-			Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
-			APIVersion: 300,
-			// ConfigDir:
-			SSLVerify: false,
-			APIKey:    "none",
-		},
+	ot.OVClient = &ov.OVClient{Client: rest.Client{
+		User:       os.Getenv("ONEVIEW_OV_USER"),
+		Password:   os.Getenv("ONEVIEW_OV_PASSWORD"),
+		Domain:     os.Getenv("ONEVIEW_OV_DOMAIN"),
+		Endpoint:   os.Getenv("ONEVIEW_OV_ENDPOINT"),
+		APIVersion: 300,
+		// ConfigDir:
+		SSLVerify: false,
+		APIKey:    "none",
+	},
 	}
 	ot.OVClient.RefreshLogin()
 	ot.Client = ot.Client.NewI3SClient(os.Getenv("ONEVIEW_I3S_ENDPOINT"), ot.OVClient.SSLVerify, ot.OVClient.APIVersion, ot.OVClient.APIKey)
@@ -64,13 +63,12 @@ func getTestDriverU(env string) (*I3STest, *i3s.I3SClient) {
 	ot = &I3STest{Tc: tc.NewTestConfig(), Env: "dev"}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &i3s.I3SClient{
-		rest.Client{
-			Endpoint:   "https://i3stestcase",
-			SSLVerify:  false,
-			APIVersion: 300,
-			APIKey:     "none",
-		},
+	ot.Client = &i3s.I3SClient{Client: rest.Client{
+		Endpoint:   "https://i3stestcase",
+		SSLVerify:  false,
+		APIVersion: 300,
+		APIKey:     "none",
+	},
 	}
 	return ot, ot.Client
 }
