@@ -52,16 +52,15 @@ func getTestDriverA(env string) (*OVTest, *ov.OVClient) {
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &ov.OVClient{
-		rest.Client{
-			User:     os.Getenv("ONEVIEW_OV_USER"),
-			Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
-			Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
-			Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
-			// ConfigDir:
-			SSLVerify: false,
-			APIKey:    "none",
-		},
+	ot.Client = &ov.OVClient{Client: rest.Client{
+		User:     os.Getenv("ONEVIEW_OV_USER"),
+		Password: os.Getenv("ONEVIEW_OV_PASSWORD"),
+		Domain:   os.Getenv("ONEVIEW_OV_DOMAIN"),
+		Endpoint: os.Getenv("ONEVIEW_OV_ENDPOINT"),
+		// ConfigDir:
+		SSLVerify: false,
+		APIKey:    "none",
+	},
 	}
 	err := ot.Client.RefreshVersion()
 	if err != nil {
@@ -78,16 +77,15 @@ func getTestDriverU(env string) (*OVTest, *ov.OVClient) {
 	ot = &OVTest{Tc: tc.NewTestConfig(), Env: env}
 	ot.GetEnvironment(env)
 	ot.Tc.GetTestingConfiguration(os.Getenv("ONEVIEW_TEST_DATA"))
-	ot.Client = &ov.OVClient{
-		rest.Client{
-			User:       "foo",
-			Password:   "bar",
-			Domain:     "LOCAL",
-			Endpoint:   "https://ovtestcase",
-			SSLVerify:  false,
-			APIVersion: 120,
-			APIKey:     "none",
-		},
+	ot.Client = &ov.OVClient{Client: rest.Client{
+		User:       "foo",
+		Password:   "bar",
+		Domain:     "LOCAL",
+		Endpoint:   "https://ovtestcase",
+		SSLVerify:  false,
+		APIVersion: 120,
+		APIKey:     "none",
+	},
 	}
 	// fmt.Println("Setting up test with getTestDriverU")
 	return ot, ot.Client

@@ -6,7 +6,7 @@ HPE OneView allows you to treat your physical infrastructure as code, and now
 you can integrate your favorite tools based in golang with HPE OneView.
 
 ## Build requirements
-We use docker to build and test, run this project on a system that has docker. 
+We use docker to build and test, run this project on a system that has docker.
 If you don't use docker, you will need to install and setup go-lang locally as
 well as any other make requirements.  You can use `USE_CONTAINER=false` environment
 setting for make to avoid using docker. Otherwise make sure to have these tools:
@@ -21,7 +21,7 @@ make test
 ```
 
 ### Without docker
-* Install golang 1.5 or better
+* Install golang 1.5 or higher(We recommend using Go 1.11)
 * Install go packages listed in .travis.yml
 ```
 USE_CONTAINER=false make test

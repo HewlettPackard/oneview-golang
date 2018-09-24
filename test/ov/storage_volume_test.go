@@ -33,9 +33,9 @@ func TestCreateStorageVolume(t *testing.T) {
 
 		if testSVol.URI.IsNil() {
 			testSVol = ov.StorageVolumeV3{
-				Name:             testName,
-				StorageSystemUri: utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
-				Type:             d.Tc.GetTestData(d.Env, "Type").(string),
+				Name:                   testName,
+				StorageSystemUri:       utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
+				Type:                   d.Tc.GetTestData(d.Env, "Type").(string),
 				ProvisioningParameters: provParams,
 			}
 
