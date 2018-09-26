@@ -115,11 +115,10 @@
 |     **Switch Types**                                                                                                                              |
 |<sub>/rest/switch-types</sub>                                                            | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/switch-types/{id}</sub>                                                       | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
-| **Tasks**                                                                                                                                     |
+|     **Tasks**                                                                                                                                     |
 |<sub>/rest/tasks</sub>                                                                   | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/tasks/{id}</sub>                                                              | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
-|
- **Version**                                                                                                                         |
+|     **Version**                                                                                                                                   |
 |<sub>/rest/version</sub>                                                                 | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |     **Volumes**                                                                                                                                   |
 |<sub>/rest/storage-volumes</sub>                                                         | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
