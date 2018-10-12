@@ -29,9 +29,7 @@ USE_CONTAINER=false make test
 
 ## Contributing
 
-Want to hack on oneview-golang? Please start with the [Contributing Guide](https://github.com/HewlettPackard/docker-machine-oneview/blob/master/CONTRIBUTING.md).
-
-This code base is primarily consumed and used by the docker-machine-oneview project.  We will follow contribution standards set by this project.
+We welcome your contributions to the HPE OneView golang SDK. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Hacking Guide
 
