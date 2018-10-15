@@ -55,7 +55,7 @@ func (c *OVClient) GetEnclosureGroupByName(name string) (EnclosureGroup, error) 
 	var (
 		enclosureGroup EnclosureGroup
 	)
-	enclosureGroups, err := c.GetEnclosureGroups("","",fmt.Sprintf("name matches '%s'", name), "name:asc","")
+	enclosureGroups, err := c.GetEnclosureGroups("", "", fmt.Sprintf("name matches '%s'", name), "name:asc", "")
 	if enclosureGroups.Total > 0 {
 		return enclosureGroups.Members[0], err
 	} else {
@@ -104,7 +104,7 @@ func (c *OVClient) GetEnclosureGroups(start string, count string, filter string,
 		q["count"] = count
 	}
 
-	if scopeUris !=  "" {
+	if scopeUris != "" {
 		q["scopeUris"] = scopeUris
 	}
 
@@ -225,25 +225,25 @@ func (c *OVClient) UpdateEnclosureGroup(enclosureGroup EnclosureGroup) error {
 	return nil
 }
 
-func (c *OVClient) GetConfigurationScript (uri utils.Nstring) (string, error) {
+func (c *OVClient) GetConfigurationScript(uri utils.Nstring) (string, error) {
 	var (
 		configuration_script string
-		main_uri = uri.String()
+		main_uri             = uri.String()
 	)
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	main_uri = main_uri + "/script"
 	script, err := c.RestAPICall(rest.GET, main_uri, nil)
 	if err != nil {
-		log.Errorf("Error in getting the configuration script: %s",err)
+		log.Errorf("Error in getting the configuration script: %s", err)
 		return "", err
 	}
 	configuration_script = string(script)
 	log.Debugf("ConfigurationScript %s", configuration_script)
-	return configuration_script,nil
+	return configuration_script, nil
 }
 
-func (c *OVClient) UpdateConfigurationScript (uri utils.Nstring, body string) (string, error) {
+func (c *OVClient) UpdateConfigurationScript(uri utils.Nstring, body string) (string, error) {
 	var (
 		main_uri = uri.String()
 	)
@@ -259,5 +259,5 @@ func (c *OVClient) UpdateConfigurationScript (uri utils.Nstring, body string) (s
 	}
 
 	log.Debugf("Response update Configuration Script %s", data)
-	return string(data),nil
+	return string(data), nil
 }
