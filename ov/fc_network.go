@@ -15,7 +15,7 @@ type FCNetwork struct {
 	FabricUri               utils.Nstring `json:"fabricUri,omitempty"`
 	ConnectionTemplateUri   utils.Nstring `json:"connectionTemplateUri,omitempty"`
 	ManagedSanURI           utils.Nstring `json:"managedSanUri,omitempty"`
-	LinkStabilityTime       int           `json:"linkStabilityTime,omitempty"`
+	LinkStabilityTime       int           `json:"linkStabilityTime"`
 	AutoLoginRedistribution bool          `json:"autoLoginRedistribution"`
 	Description             string        `json:"description,omitempty"`
 	Name                    string        `json:"name,omitempty"`
@@ -26,6 +26,8 @@ type FCNetwork struct {
 	ETAG                    string        `json:"eTag,omitempty"`
 	Modified                string        `json:"modified,omitempty"`
 	Created                 string        `json:"created,omitempty"`
+	ScopesUri								string        `json:"scopesUri,-"`
+	InitialScopeUris				[]string			`json:"initialScopeUris,omitempty"`
 }
 
 type FCNetworkList struct {
@@ -39,7 +41,7 @@ type FCNetworkList struct {
 }
 
 func (c *OVClient) GetFCNetworkByName(name string) (FCNetwork, error) {
-	fcNets, err := c.GetFCNetworks(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	fcNets, err := c.GetFCNetworks(fmt.Sprintf("name matches '%s'", name), "name:asc", "", "")
 	if fcNets.Total > 0 {
 		return fcNets.Members[0], err
 	}
@@ -47,7 +49,7 @@ func (c *OVClient) GetFCNetworkByName(name string) (FCNetwork, error) {
 	return FCNetwork{}, err
 }
 
-func (c *OVClient) GetFCNetworks(filter string, sort string) (FCNetworkList, error) {
+func (c *OVClient) GetFCNetworks(filter string, sort string, start string, count string) (FCNetworkList, error) {
 	var (
 		uri        = "/rest/fc-networks"
 		q          = make(map[string]interface{})
@@ -60,6 +62,14 @@ func (c *OVClient) GetFCNetworks(filter string, sort string) (FCNetworkList, err
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
 	}
 
 	// refresh login
@@ -175,8 +185,9 @@ func (c *OVClient) UpdateFcNetwork(fcNet FCNetwork) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
+
 	log.Debugf("REST : %s \n %+v\n", uri, fcNet)
-	log.Debugf("task -> %+v", t)
+	log.Debugf("task -> %+v", t)	
 	data, err := c.RestAPICall(rest.PUT, uri, fcNet)
 	if err != nil {
 		t.TaskIsDone = true
@@ -184,15 +195,10 @@ func (c *OVClient) UpdateFcNetwork(fcNet FCNetwork) error {
 		return err
 	}
 
-	log.Debugf("Response Update FCNetwork %s", data)
-	if err := json.Unmarshal(data, &t); err != nil {
+	log.Debugf("Response update FC Network %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
 		return err
 	}
 
