@@ -16,6 +16,7 @@ type EnclosureGroup struct {
 	ETAG                                string               `json:"eTag,omitempty"`                         // "eTag": "1441036118675/8",
 	EnclosureCount                      int                  `json:"enclosureCount,omitempty"`               // "enclosureCount": 1,
 	EnclosureTypeUri                    utils.Nstring        `json:"enclosureTypeUri,omitempty"`             // "enclosureTypeUri": "/rest/enclosures/e2f0031b-52bd-4223-9ac1-d91cb5219d548"
+	InitialScopeUris                    []utils.Nstring      `json:"initialScopeUris,omitempty"`             // "initialScopeUris":[]
 	InterconnectBayMappingCount         int                  `json:"interconnectBayMappingCount,omitempty"`  // "interconnectBayMappingCount": 8,
 	InterconnectBayMappings             []InterconnectBayMap `json:"interconnectBayMappings"`                // "interconnectBayMappings": [],
 	IpRangeUris                         []utils.Nstring      `json:"ipRangeUris,omitempty"`

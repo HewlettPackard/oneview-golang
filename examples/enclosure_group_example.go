@@ -25,8 +25,10 @@ func main() {
 	ibMappings := new([]ov.InterconnectBayMap)
 	interconnectBay1 := ov.InterconnectBayMap{1, utils.NewNstring("/rest/logical-interconnect-groups/65245305-c8e9-4b28-9bec-c5f697dfa1db")}
 	*ibMappings = append(*ibMappings, interconnectBay1)
+	initialScopeUris := new([]utils.Nstring)
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/63d1ca81-95b3-41f1-a1ee-f9e1bc2d635f"))
 
-	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings}
+	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris}
 
 	err := ovc.CreateEnclosureGroup(enclosureGroup)
 	if err != nil {
