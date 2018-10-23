@@ -3,7 +3,7 @@
 | Item | Meaning |
 | ------------------ | --------------------------------------------- |
 |  :white_check_mark: | Endpoint implemented in the GO SDK and tested for this API version :tada: |
-|  :heavy_multiplication_x:  | Endpoint considered as 'out-of-scope' for the GO SDK               |
+|  :heavy_multiplication_x:  | Endpoint considered as 'out-of-scope' for the GO SDK.              |
 |  :heavy_minus_sign: | Endpoint not available for this API Version |
 
 <br />
