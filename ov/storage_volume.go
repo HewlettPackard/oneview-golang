@@ -18,12 +18,20 @@ type StorageVolumeV3 struct {
 	Status                 string                 `json:"status,omitempty"`
 	Type                   string                 `json:"type,omitempty"`
 	URI                    utils.Nstring          `json:"uri,omitempty"`
-	Shareable              bool                   `json:"shareable,omitempty"`
+	DeviceVolumeName       string		      `json:"deviceVolumeName,omitempty"`
+	RequestingRefresh      bool		      `json:"requestingRefresh,omitempty"`
+	AllocatedCapacity      string		      `json:"allocatedCapacity,omitempty"`
+	InitialScopeUris       utils.Nstring	      `json:"initialScopeUris,omitempty"`
+	DeviceSpecificAttributesStoreVirtual  DeviceSpecificAttributesStoreVirtual `json:"deviceSpecificAttributes,omitempty"`
+	DeviceSpecificttributesStoreServ DeviceSpecificAttributesStoreServ `json:"deviceSpecificAttributes,omitempty"`
+	VolumeTemplateUri      utils.Nstring	      `json:"volumeTemplateUri,omitempty"`
+	IsShareable            bool                   `json:"isShareable,omitempty"`
 	StoragePoolUri         utils.Nstring          `json:"storagePoolUri,omitempty"`
 	StorageSystemUri       utils.Nstring          `json:"storageSystemUri,omitempty"`
-	ProvisionType          string                 `json:"provisionType,omitempty"`
 	ProvisionedCapacity    string                 `json:"provisionedCapacity,omitempty"`
-	ProvisioningParameters ProvisioningParameters `json:"provisioningParameters,omitempty"`
+	Properties	       Properties	      `json:"properties,omitempty"`
+	TemplateURI	       utils.Nstring	      `json:"templateURI,omitempty"`
+	IsPermanent	       bool		      `json:"isPermanent,omitempty"`
 	//	Wwn										string				`json:""`
 
 	/*
@@ -63,6 +71,27 @@ type ProvisioningParameters struct {
 	ProvisionType     string        `json:"provisionType,omitempty"`
 	RequestedCapacity string        `json:"requestedCapacity,omitempty"`
 	Shareable         bool          `json:"shareable,omitempty"`
+}
+
+type Properties struct {
+	Name			string		`json:"name,omitempty"`
+	Storagepool		utils.Nstring	`json:"storagePool,omitempty"`
+	Size			int		`json:"size,omitempty"`
+	ProvisioningType	string		`json:"provisioningType,omitempty"`
+}
+
+type DeviceSpecificAttributesStoreVirtual struct {
+	Transport		string		`json:"transport,omitempty"`
+	Iqn			string		`json:"iqn,omitempty"`
+	NumberOfReplicas        int		`json:,"numberOfReplicas,omitempty"`
+	DataProtectionLevel     string		`json:"dataProtectionLevel,omitempty"`
+	Id			int		`json:"id,omitempty"`
+	Uri			utils.Nstring	`json:"uri,omitempty"`
+}
+
+type DeviceSpecificAttributesStoreServ struct {
+	CopyState		string		`json:"copyState,omitempty"`
+	SnapshotPoolUri		utils.Nstring	`json:"snapshotPoolUri,omitempty"`
 }
 
 type StorageVolumesListV3 struct {
