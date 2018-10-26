@@ -1,41 +1,44 @@
 package main
+
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
 )
 
 func main() {
-  var (
-		ClientOV   *ov.OVClient
-		testName = "TestFCNetworkGOsdk"
+	var (
+		ClientOV    *ov.OVClient
+		testName    = "TestFCNetworkGOsdk"
 		new_fc_name = "RenamedFCNetwork"
-		falseVar = false
-)
+		falseVar    = false
+	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-  ovc := ClientOV.NewOVClient(
-  			os.Getenv("ONEVIEW_OV_USER"),
-  			os.Getenv("ONEVIEW_OV_PASSWORD"),
-  			os.Getenv("ONEVIEW_OV_DOMAIN"),
-  			os.Getenv("ONEVIEW_OV_ENDPOINT"),
-  			false,
-  			apiversion)
-
+	ovc := ClientOV.NewOVClient(
+		os.Getenv("ONEVIEW_OV_USER"),
+		os.Getenv("ONEVIEW_OV_PASSWORD"),
+		os.Getenv("ONEVIEW_OV_DOMAIN"),
+		os.Getenv("ONEVIEW_OV_ENDPOINT"),
+		false,
+		apiversion)
+	initialScopeUris := new([]utils.Nstring)
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/8a4e85fe-0725-482e-b232-4877b78fde18"))
 	fcNetwork := ov.FCNetwork{
-				AutoLoginRedistribution: falseVar,
-				Description:             "Test FC Network",
-				LinkStabilityTime:       30,
-				FabricType:							 "FabricAttach",
-				Name:                    testName,
-				Type:                    "fc-networkV4",
-				InitialScopeUris:     []string{"/rest/scopes/8a4e85fe-0725-482e-b232-4877b78fde18"},
-			}
+		AutoLoginRedistribution: falseVar,
+		Description:             "Test FC Network",
+		LinkStabilityTime:       30,
+		FabricType:              "FabricAttach",
+		Name:                    testName,
+		Type:                    "fc-networkV4",
+		InitialScopeUris:        *initialScopeUris,
+	}
 	fmt.Println(fcNetwork)
 	err := ovc.CreateFCNetwork(fcNetwork)
 	if err != nil {
 		fmt.Println("Fc Network Creation Failed: ", err)
-	}	else{
+	} else {
 		fmt.Println("Fc Network created successfully...")
 	}
 	sort := "name:desc"
@@ -61,9 +64,9 @@ func main() {
 	err = ovc.UpdateFcNetwork(fcNetwork2)
 	if err != nil {
 		panic(err)
-	}	else{
-	fmt.Println("FCNetwork has been updated with name: "+fcNetwork2.Name)
-}
+	} else {
+		fmt.Println("FCNetwork has been updated with name: " + fcNetwork2.Name)
+	}
 	err = ovc.DeleteFCNetwork(new_fc_name)
 	if err != nil {
 		panic(err)
