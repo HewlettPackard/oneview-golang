@@ -93,7 +93,7 @@ func TestGetFCNetworks(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		fcNetworks, err := c.GetFCNetworks("", "","","")
+		fcNetworks, err := c.GetFCNetworks("", "", "", "")
 		assert.NoError(t, err, "GetFCNetworks threw an error -> %s. %+v\n", err, fcNetworks)
 
 		fcNetworks, err = c.GetFCNetworks("", "name:asc", "", "")
