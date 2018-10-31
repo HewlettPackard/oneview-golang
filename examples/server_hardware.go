@@ -18,7 +18,7 @@ func main() {
 		false,
 		800)
 
-	println("Get server hardware list by name")	
+	fmt.Println("Get server hardware list by name")
 	serverName, _ := ovc.GetServerHardwareByName("0000A66101, bay 4")
 
 	fmt.Println("******************")
@@ -40,17 +40,17 @@ func main() {
 	ServerList, _ := ovc.GetServerHardwareList(filters, "name:ascending")
 	fmt.Println("Total server list :", ServerList.Total)
 
-	print("Get server-hardware whoes profiles are unassigned ")
+	fmt.Println("Get server-hardware whoes profiles are unassigned ")
 	fmt.Println("******************")
 	serverHarware, _ := ovc.GetAvailableHardware("/rest/server-hardware-types/9F529AA5-2021-4A10-93ED-DDC5BD80E949", "/rest/enclosure-groups/293e8efe-c6b1-4783-bf88-2d35a8e49071")
 	fmt.Println(serverHarware.Type)
 
-	print("Get power status of a server ")
+	fmt.Println("Get power status of a server ")
 	fmt.Println("******************")
 	powerState, _ := serverName.GetPowerState()
 	fmt.Println("Power state of the machine is ", powerState)
 
-	print("Get ilo ipaddress of a server ")
+	fmt.Println("Get ilo ipaddress of a server ")
 	fmt.Println("******************")
 	iloIpaddress := serverName.GetIloIPAddress()
 	fmt.Println("ilo ip address of an server is =", iloIpaddress)
