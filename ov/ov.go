@@ -41,7 +41,7 @@ func (c *OVClient) NewOVClient(user string, password string, domain string, endp
 			SSLVerify:  sslverify,
 			APIVersion: apiversion,
 			APIKey:     "none",
-			IfMatch:  ifmatch,
+			IfMatch:    ifmatch,
 		},
 	}
 }

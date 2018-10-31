@@ -12,29 +12,29 @@ import (
 // Please remove the omitempty option and use it as and when required.
 
 type StorageVolumeV3 struct {
-	Category               string                 `json:"category,omitempty"`
-	Created                string                 `json:"created,omitempty"`
-	Description            string                 `json:"description,omitempty"`
-	ETAG                   string                 `json:"eTag,omitempty"`
-	Name                   string                 `json:"name,omitempty"`
-	State                  string                 `json:"state,omitempty"`
-	Status                 string                 `json:"status,omitempty"`
-	Type                   string                 `json:"type,omitempty"`
-	URI                    utils.Nstring          `json:"uri,omitempty"`
-	DeviceVolumeName       string		      `json:"deviceVolumeName,omitempty"`
-	RequestingRefresh      bool		      `json:"requestingRefresh,omitempty"`
-	AllocatedCapacity      string		      `json:"allocatedCapacity,omitempty"`
-	InitialScopeUris       utils.Nstring	      `json:"initialScopeUris,omitempty"`
-	DeviceSpecificAttributes *DeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
-	VolumeTemplateUri      utils.Nstring	      `json:"volumeTemplateUri,omitempty"`
-	IsShareable            bool                   `json:"isShareable,omitempty"`
-	StoragePoolUri         utils.Nstring          `json:"storagePoolUri,omitempty"`
-	StorageSystemUri       utils.Nstring          `json:"storageSystemUri,omitempty"`
-	ProvisionedCapacity    string                 `json:"provisionedCapacity,omitempty"`
-	Properties	       *Properties	      `json:"properties,omitempty"`
-	TemplateURI	       utils.Nstring	      `json:"templateURI,omitempty"`
-	IsPermanent	       bool		      `json:"isPermanent,omitempty"`
-	ProvisioningTypeForUpdate string	      `json:"provisioningType,omitempty"`
+	Category                  string                    `json:"category,omitempty"`
+	Created                   string                    `json:"created,omitempty"`
+	Description               string                    `json:"description,omitempty"`
+	ETAG                      string                    `json:"eTag,omitempty"`
+	Name                      string                    `json:"name,omitempty"`
+	State                     string                    `json:"state,omitempty"`
+	Status                    string                    `json:"status,omitempty"`
+	Type                      string                    `json:"type,omitempty"`
+	URI                       utils.Nstring             `json:"uri,omitempty"`
+	DeviceVolumeName          string                    `json:"deviceVolumeName,omitempty"`
+	RequestingRefresh         bool                      `json:"requestingRefresh,omitempty"`
+	AllocatedCapacity         string                    `json:"allocatedCapacity,omitempty"`
+	InitialScopeUris          utils.Nstring             `json:"initialScopeUris,omitempty"`
+	DeviceSpecificAttributes  *DeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
+	VolumeTemplateUri         utils.Nstring             `json:"volumeTemplateUri,omitempty"`
+	IsShareable               bool                      `json:"isShareable,omitempty"`
+	StoragePoolUri            utils.Nstring             `json:"storagePoolUri,omitempty"`
+	StorageSystemUri          utils.Nstring             `json:"storageSystemUri,omitempty"`
+	ProvisionedCapacity       string                    `json:"provisionedCapacity,omitempty"`
+	Properties                *Properties               `json:"properties,omitempty"`
+	TemplateURI               utils.Nstring             `json:"templateURI,omitempty"`
+	IsPermanent               bool                      `json:"isPermanent,omitempty"`
+	ProvisioningTypeForUpdate string                    `json:"provisioningType,omitempty"`
 	//	Wwn										string				`json:""`
 
 	/*
@@ -77,21 +77,21 @@ type ProvisioningParameters struct {
 }
 
 type Properties struct {
-	Name			string		`json:"name,omitempty"`
-	Storagepool		utils.Nstring	`json:"storagePool,omitempty"`
-	Size			int		`json:"size,omitempty"`
-	ProvisioningType	string		`json:"provisioningType,omitempty"`
+	Name             string        `json:"name,omitempty"`
+	Storagepool      utils.Nstring `json:"storagePool,omitempty"`
+	Size             int           `json:"size,omitempty"`
+	ProvisioningType string        `json:"provisioningType,omitempty"`
 }
 
 type DeviceSpecificAttributes struct {
-	Transport               string          `json:"transport,omitempty"`
-        Iqn                     string          `json:"iqn,omitempty"`
-        NumberOfReplicas        int             `json:"numberOfReplicas,omitempty"`
-        DataProtectionLevel     string          `json:"dataProtectionLevel,omitempty"`
-        Id                      int             `json:"id,omitempty"`
-        Uri                     utils.Nstring   `json:"uri,omitempty"`
-	CopyState               string          `json:"copyState,omitempty"`
-        SnapshotPoolUri         utils.Nstring   `json:"snapshotPoolUri,omitempty"`
+	Transport           string        `json:"transport,omitempty"`
+	Iqn                 string        `json:"iqn,omitempty"`
+	NumberOfReplicas    int           `json:"numberOfReplicas,omitempty"`
+	DataProtectionLevel string        `json:"dataProtectionLevel,omitempty"`
+	Id                  int           `json:"id,omitempty"`
+	Uri                 utils.Nstring `json:"uri,omitempty"`
+	CopyState           string        `json:"copyState,omitempty"`
+	SnapshotPoolUri     utils.Nstring `json:"snapshotPoolUri,omitempty"`
 }
 
 type StorageVolumesListV3 struct {
@@ -165,7 +165,6 @@ func (c *OVClient) CreateStorageVolume(sVol StorageVolumeV3) error {
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, sVol)
 	log.Debugf("task -> %+v", t)
-
 
 	data, err := c.RestAPICall(rest.POST, uri, sVol)
 	if err != nil {
