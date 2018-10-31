@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	// "github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
 func main() {
 	var (
-		clientOV    *ov.OVClient
-		// eg_name     = "DemoEnclosure"
-		// new_eg_name = "RenamedEnclosure"
-		// script      = "#TEST COMMAND"
+		clientOV    		*ov.OVClient
+		enc_name    		= "EN1"
+		new_enclosure_name 	= "RenamedEnclosure"
+		path				= "/name"
+		op 					= "replace"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -20,19 +20,24 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		600)
 
-	// ibMappings := new([]ov.InterconnectBayMap)
-	// interconnectBay1 := ov.InterconnectBayMap{1, utils.NewNstring("/rest/logical-interconnect-groups/65245305-c8e9-4b28-9bec-c5f697dfa1db")}
-	// *ibMappings = append(*ibMappings, interconnectBay1)
+	enclosure_create_map := ov.EnclosureCreateMap{
+		EnclosureGroupUri 	: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
+		Hostname 			: os.Getenv("ENCLOSURE_HOSTNAME"),
+		Username 			: os.Getenv("ENCLOSURE_USERNAME"),
+		Password 			: os.Getenv("ENCLOSURE_PASSWORD"),
+		LicensingIntent 	: "OneView",
+		InitialScopeUris	: make([]string, 0),
+	}
 
-	// enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings}
+	fmt.Println("#----------------Create Enclosure---------------#")
 
-	// err := ovc.CreateEnclosureGroup(enclosureGroup)
-	// if err != nil {
-	// 	fmt.Println("Enclosure Group Creation Failed: ", err)
-	// }
-	// fmt.Println("Enclosure Group created successfully...")
+	err := ovc.CreateEnclosure(enclosure_create_map)
+	if err != nil {
+	 	fmt.Println("Enclosure Creation Failed: ", err)
+	}
+	fmt.Println("Enclosure created successfully...")
 
 	sort := ""
 
@@ -46,64 +51,38 @@ func main() {
 		fmt.Println(enc_list.Members[i].Name)
 	}
 
-	// if ovc.APIVersion > 500 {
-	// 	scope_uri := "'/rest/scopes/63d1ca81-95b3-41f1-a1ee-f9e1bc2d635f'"
-	// 	enc_grp_list1, err := ovc.GetEnclosureGroups("", "", "", "", scope_uri)
-	// 	if err != nil {
-	// 		fmt.Println("Error in getting EnclosureGroups by scope URIs:", err)
-	// 	}
-	// 	fmt.Println("#-----------Enclosure Groups based on Scope URIs----------#")
-	// 	for i := 0; i < len(enc_grp_list1.Members); i++ {
-	// 		fmt.Println(enc_grp_list1.Members[i].Name)
-	// 	}
-	// }
+	enclosure, err := ovc.GetEnclosureByName(enc_name)
+	if err != nil {
+	 	fmt.Println(err)
+	}
+	fmt.Println("#----------------Enclosure by Name----------------#")
+	fmt.Println(enclosure.Name)
 
-	// enc_grp, err := ovc.GetEnclosureGroupByName(eg_name)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// fmt.Println("#-------------Enclosure Group by name----------------#")
-	// fmt.Println(enc_grp)
+	uri := enclosure.URI
+	enclosure, err = ovc.GetEnclosurebyUri(uri)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("#----------------Enclosure by URI--------------#")
+	fmt.Println(enclosure.Name)
 
-	// uri := enc_grp.URI
-	// enc_grp, err = ovc.GetEnclosureGroupByUri(uri)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// fmt.Println("#----------------Enclosure Group by URI--------------#")
-	// fmt.Println(enc_grp)
+	err = ovc.UpdateEnclosure(op, path, new_enclosure_name, enclosure)
+	if err != nil {
+	 	panic(err)
+	}
 
-	// enc_grp.Name = new_eg_name
-	// err = ovc.UpdateEnclosureGroup(enc_grp)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	enc_list, err = ovc.GetEnclosures("", sort)
+	if err != nil {
+	 	fmt.Println(err)
+	}
+	fmt.Println("#----------------Enclosure List after Updating---------#")
+	for i := 0; i < len(enc_list.Members); i++ {
+	 	fmt.Println(enc_list.Members[i].Name)
+	}
 
-	// enc_grp_list, err = ovc.GetEnclosureGroups("", "", "", sort, "")
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// fmt.Println("#----------------EnclosureList after updating---------#")
-	// for i := 0; i < len(enc_grp_list.Members); i++ {
-	// 	fmt.Println(enc_grp_list.Members[i].Name)
-	// }
-
-	// update_script, err := ovc.UpdateConfigurationScript(enc_grp.URI, script)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("Update Configuration Script result:", update_script)
-
-	// conf_script, err := ovc.GetConfigurationScript(enc_grp.URI)
-	// if err != nil {
-	// 	fmt.Println("Error in getting configuration Script: ", err)
-	// }
-	// fmt.Println("Configuation Script: ", conf_script)
-
-	// fmt.Println(script)
-	// err = ovc.DeleteEnclosureGroup(new_eg_name)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// fmt.Println("Deleted EnclosureGroup successfully...")
+	err = ovc.DeleteEnclosure(new_enclosure_name)
+	if err != nil {
+	 	panic(err)
+	}
+	fmt.Println("Deleted Enclosure successfully...")
 }

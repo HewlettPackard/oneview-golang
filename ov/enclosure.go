@@ -1,7 +1,7 @@
 package ov
 
 import (
-	// "fmt"
+	"fmt"
 	"encoding/json"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -74,11 +74,6 @@ type DeviceBayMap struct {
     Type 							string 			`json:"type,omitempty"`					// "type": "DeviceBay",
     URI 							utils.Nstring 	`json:"uri,omitempty"`					// "uri": "/rest/enclosures/09USE62519EE/device-bays/1"
 }
-// type InterconnectBayMap struct {
-// 	InterconnectBay             int           `json:"interconnectBay,omitempty"`             // "interconnectBay": 0,
-// 	InterconnectUri  			utils.Nstring `json:"interconnectUri,omitempty"`			 // "interconnectUri": "/rest/interconnects/d8aecda2-8bb8-4198-bf84-790bb7b72a06",
-// 	LogicalInterconnectGroupUri utils.Nstring `json:"logicalInterconnectGroupUri,omitempty"` // "logicalInterconnectGroupUri": ""
-// }
 
 type OAMap struct {
     BayNumber 		int 				`json:"bayNumber"`					// "bayNumber": 1,
@@ -99,35 +94,54 @@ type Ipv6Addresses struct {
     Type        string 		`json:"type,omitempty"`		// "type": "NotSet"
 }
 
-// func (c *OVClient) GetEnclosureGroupByName(name string) (EnclosureGroup, error) {
-// 	var (
-// 		enclosureGroup EnclosureGroup
-// 	)
-// 	enclosureGroups, err := c.GetEnclosureGroups(fmt.Sprintf("name matches '%s'", name), "name:asc")
-// 	if enclosureGroups.Total > 0 {
-// 		return enclosureGroups.Members[0], err
-// 	} else {
-// 		return enclosureGroup, err
-// 	}
-// }
+type EnclosurePatchMap struct {
+	Op 		string 	`json:"op"`
+	Path 	string 	`json:"path"`
+	Value 	string 	`json:"value"`
+}
 
-// func (c *OVClient) GetEnclosureGroupByUri(uri utils.Nstring) (EnclosureGroup, error) {
-// 	var (
-// 		enclosureGroup EnclosureGroup
-// 	)
-// 	// refresh login
-// 	c.RefreshLogin()
-// 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-// 	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
-// 	if err != nil {
-// 		return enclosureGroup, err
-// 	}
-// 	log.Debugf("GetEnclosureGroup %s", data)
-// 	if err := json.Unmarshal([]byte(data), &enclosureGroup); err != nil {
-// 		return enclosureGroup, err
-// 	}
-// 	return enclosureGroup, nil
-// }
+type EnclosureCreateMap struct {
+	EnclosureGroupUri 		utils.Nstring 	`json:"enclosureGroupUri"`
+	Hostname 				string 			`json:"hostname"`
+	Username 				string 			`json:"username"`
+	Password 				string 			`json:"password"`
+	LicensingIntent 		string 			`json:"licensingIntent"`
+	ForceInstallFirmware 	bool 			`json:"forceInstallFirmware,omitempty"`
+	FirmwareBaselineUri 	string 			`json:"firmwareBaselineUri,omitempty"`
+	Force 					bool			`json:"force,omitempty"`
+	InitialScopeUris 		[]string 		`json:"initialScopeUris"`
+	UpdateFirmwareOn 		string 			`json:"updateFirmwareOn,omitempty"`
+}
+
+func (c *OVClient) GetEnclosureByName(name string) (Enclosure, error) {
+	var (
+		enclosure Enclosure
+	)
+	enclosures, err := c.GetEnclosures(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	if enclosures.Total > 0 {
+		return enclosures.Members[0], err
+	} else {
+ 		return enclosure, err
+	}
+}
+
+func (c *OVClient) GetEnclosurebyUri(uri utils.Nstring) (Enclosure, error) {
+ 	var (
+ 		enclosure Enclosure
+ 	)
+ 	// refresh login
+	c.RefreshLogin()
+ 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+ 	data, err := c.RestAPICall(rest.GET, uri.String(), nil)
+ 	if err != nil {
+ 		return enclosure, err
+ 	}
+ 	log.Debugf("GetEnclosure %s", data)
+ 	if err := json.Unmarshal([]byte(data), &enclosure); err != nil {
+ 		return enclosure, err
+ 	}
+ 	return enclosure, nil
+}
 
 func (c *OVClient) GetEnclosures(filter string, sort string) (EnclosureList, error) {
 	var (
@@ -163,99 +177,118 @@ func (c *OVClient) GetEnclosures(filter string, sort string) (EnclosureList, err
 	return enclosures, nil
 }
 
-// func (c *OVClient) CreateEnclosureGroup(eGroup EnclosureGroup) error {
-// 	log.Infof("Initializing creation of enclosure group for %s.", eGroup.Name)
-// 	var (
-// 		uri = "/rest/enclosure-groups"
-// 		t   *Task
-// 	)
+func (c *OVClient) CreateEnclosure(enclosure_create_map EnclosureCreateMap) error {
+ 	log.Debugf("Initializing creation of enclosure")
+ 	var (
+ 		uri = "/rest/enclosures"
+ 		t   *Task
+ 	)
 
-// 	// refresh login
-// 	c.RefreshLogin()
-// 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+ 	// refresh login
+ 	c.RefreshLogin()
+ 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-// 	t = t.NewProfileTask(c)
-// 	t.ResetTask()
-// 	data, err := c.RestAPICall(rest.POST, uri, eGroup)
-// 	if err != nil {
-// 		log.Errorf("Error submitting new enclosure group request: %s", err)
-// 		return err
-// 	}
+ 	t = t.NewProfileTask(c)
+ 	t.ResetTask()
+ 	t.ExpectedDuration = 30000
 
-// 	log.Debugf("Response New EnclosureGroup %s", data)
-// 	if err := json.Unmarshal([]byte(data), &t); err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error with task un-marshal: %s", err)
-// 		return err
-// 	}
+ 	data, err := c.RestAPICall(rest.POST, uri, enclosure_create_map)
+ 	if err != nil {
+ 		log.Errorf("Error submitting new enclosure request: %s", err)
+ 		return err
+ 	}
 
-// 	return nil
-// }
+    log.Debugf("Response New Enclosure %s", data)
+    if err := json.Unmarshal([]byte(data), &t); err != nil {
+        t.TaskIsDone = true
+        log.Errorf("Error with task un-marshal: %s", err)
+         return err
+    }
 
-// func (c *OVClient) DeleteEnclosureGroup(name string) error {
-// 	var (
-// 		enclosureGroup EnclosureGroup
-// 		err            error
-// 		t              *Task
-// 		uri            string
-// 	)
+    //err = t.Wait()
+    if err != nil {
+    //	return err
+    }
 
-// 	enclosureGroup, err = c.GetEnclosureGroupByName(name)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if enclosureGroup.Name != "" {
-// 		t = t.NewProfileTask(c)
-// 		t.ResetTask()
-// 		log.Debugf("REST : %s \n %+v\n", enclosureGroup.URI, enclosureGroup)
-// 		log.Debugf("task -> %+v", t)
-// 		uri = enclosureGroup.URI.String()
-// 		if uri == "" {
-// 			log.Warn("Unable to post delete, no uri found.")
-// 			t.TaskIsDone = true
-// 			return err
-// 		}
-// 		_, err := c.RestAPICall(rest.DELETE, uri, nil)
-// 		if err != nil {
-// 			log.Errorf("Error submitting delete enclosure group request: %s", err)
-// 			t.TaskIsDone = true
-// 			return err
-// 		}
+	return nil
+}
 
-// 		return nil
-// 	} else {
-// 		log.Infof("EnclosureGroup could not be found to delete, %s, skipping delete ...", name)
-// 	}
-// 	return nil
-// }
+func (c *OVClient) DeleteEnclosure(name string) error {
+ 	var (
+ 		enclosure 	Enclosure
+ 		err         error
+ 		t           *Task
+ 		uri         string
+ 	)
 
-// func (c *OVClient) UpdateEnclosureGroup(enclosureGroup EnclosureGroup) error {
-// 	log.Infof("Initializing update of enclosure group for %s.", enclosureGroup.Name)
-// 	var (
-// 		uri = enclosureGroup.URI.String()
-// 		t   *Task
-// 	)
-// 	// refresh login
-// 	c.RefreshLogin()
-// 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+ 	enclosure, err = c.GetEnclosureByName(name)
+ 	if err != nil {
+ 		return err
+ 	}
+ 	if enclosure.Name != "" {
+ 		t = t.NewProfileTask(c)
+ 		t.ResetTask()
+ 		log.Debugf("REST : %s \n %+v\n", enclosure.URI, enclosure)
+ 		log.Debugf("task -> %+v", t)
+ 		uri = enclosure.URI.String()
+ 		if uri == "" {
+ 			log.Warn("Unable to post delete, no uri found.")
+ 			t.TaskIsDone = true
+ 			return err
+ 		}
+ 		_, err := c.RestAPICall(rest.DELETE, uri, nil)
+ 		if err != nil {
+ 			log.Errorf("Error submitting delete enclosure request: %s", err)
+ 			t.TaskIsDone = true
+ 			return err
+ 		}
 
-// 	t = t.NewProfileTask(c)
-// 	t.ResetTask()
-// 	log.Debugf("REST : %s \n %+v\n", uri, enclosureGroup)
-// 	log.Debugf("task -> %+v", t)
-// 	data, err := c.RestAPICall(rest.PUT, uri, enclosureGroup)
-// 	if err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error submitting update enclosure group request: %s", err)
-// 		return err
-// 	}
+ 		return nil
+ 	} else {
+ 		log.Debugf("Enclosure could not be found to delete, %s, skipping delete ...", name)
+ 	}
+ 	return nil
+}
 
-// 	log.Debugf("Response update EnclosureGroup %s", data)
-// 	if err := json.Unmarshal([]byte(data), &t); err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error with task un-marshal: %s", err)
-// 		return err
-// 	}
+func (c *OVClient) UpdateEnclosure(op string, path string, value string, enclosure Enclosure) error {
+	log.Debugf("Initializing update of enclosure for %s.", enclosure.Name)
+ 	var (
+ 		uri 			= enclosure.URI.String()
+ 		t   			*Task
+ 		enc_pat_reqs	[1]EnclosurePatchMap
+ 	)
+ 	enc_pat_reqs[0] = EnclosurePatchMap{ 
+ 		Op 		: op,
+ 		Path 	: path,
+ 		Value 	: value,
+ 	}
 
-// 	return nil
-// }
+ 	// refresh login
+ 	c.RefreshLogin()
+ 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+ 	t = t.NewProfileTask(c)
+ 	t.ResetTask()
+ 	log.Debugf("REST : %s \n %+v\n", uri, enc_pat_reqs)
+ 	log.Debugf("task -> %+v", t)
+ 	data, err := c.RestAPICall(rest.PATCH, uri, enc_pat_reqs)
+ 	if err != nil {
+ 		t.TaskIsDone = true
+ 		log.Errorf("Error submitting update enclosure request: %s", err)
+ 		return err
+ 	}
+
+    log.Debugf("Response Update Enclosure %s", )
+    if err := json.Unmarshal([]byte(data), &t); err != nil {
+        t.TaskIsDone = true
+        log.Errorf("Error with task un-marshal: %s", err)
+         return err
+    }
+
+    err = t.Wait()
+    if err != nil {
+    	return err
+    }
+
+ 	return nil
+}
