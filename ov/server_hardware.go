@@ -125,7 +125,7 @@ func (h ServerHardware) GetIloIPAddress() string {
 	if h.Client.IsHardwareSchemaV2() {
 		if h.MpHostInfo != nil {
 			log.Debug("working on getting IloIPAddress from MpHostInfo using v2")
-	//		log.Infof("working on getting IloIPAddress from MpHostInfo using v2")
+			//		log.Infof("working on getting IloIPAddress from MpHostInfo using v2")
 
 			for _, MpIPObj := range h.MpHostInfo.MpIPAddress {
 				if len(MpIPObj.Address) > 0 &&
@@ -218,8 +218,8 @@ func (c *OVClient) GetServerHardwareByName(name string) (ServerHardware, error) 
 
 	if serverHardwareList.Total > 0 {
 		serverHardwareList.Members[0].Client = c
-//		fmt.Println(serverHardwareList.Members[0])
-//		log.Infof("SERVER HARDWARE LIST %S",serverHardwareList.Members[0])
+		//		fmt.Println(serverHardwareList.Members[0])
+		//		log.Infof("SERVER HARDWARE LIST %S",serverHardwareList.Members[0])
 		return serverHardwareList.Members[0], err
 
 	} else {
@@ -262,12 +262,12 @@ func (c *OVClient) GetServerHardwareList(filters []string, sort string) (ServerH
 	c.GetQueryString(Url)
 
 	//log.Infof("GetServerHardwareList %s", data)
-//	log.Infof("GetServerHardwareList %s", data.Members[0])
+	//	log.Infof("GetServerHardwareList %s", data.Members[0])
 
 	if err := json.Unmarshal([]byte(data), &serverlist); err != nil {
 		return serverlist, err
 	}
-//	log.Infof("INSIDE SOURCE FILE %s",serverlist.Members[0])
+	//	log.Infof("INSIDE SOURCE FILE %s",serverlist.Members[0])
 	return serverlist, nil
 }
 
