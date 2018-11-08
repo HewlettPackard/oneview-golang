@@ -39,7 +39,7 @@ func (c *OVClient) GetAuthHeaderMap() map[string]string {
 		"Content-Type":  "application/json; charset=utf-8",
 		"X-API-Version": strconv.Itoa(c.APIVersion),
 		"auth":          c.APIKey,
-		"If-Match":		 "*",
+		"If-Match":      "*",
 	}
 }
 

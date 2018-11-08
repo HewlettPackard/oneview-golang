@@ -8,11 +8,11 @@ import (
 
 func main() {
 	var (
-		clientOV    		*ov.OVClient
-		enc_name    		= "EN1"
-		new_enclosure_name 	= "RenamedEnclosure"
-		path				= "/name"
-		op 					= "replace"
+		clientOV           *ov.OVClient
+		enc_name           = "EN1"
+		new_enclosure_name = "RenamedEnclosure"
+		path               = "/name"
+		op                 = "replace"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -23,19 +23,19 @@ func main() {
 		600)
 
 	enclosure_create_map := ov.EnclosureCreateMap{
-		EnclosureGroupUri 	: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
-		Hostname 			: os.Getenv("ENCLOSURE_HOSTNAME"),
-		Username 			: os.Getenv("ENCLOSURE_USERNAME"),
-		Password 			: os.Getenv("ENCLOSURE_PASSWORD"),
-		LicensingIntent 	: "OneView",
-		InitialScopeUris	: make([]string, 0),
+		EnclosureGroupUri: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
+		Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
+		Username:          os.Getenv("ENCLOSURE_USERNAME"),
+		Password:          os.Getenv("ENCLOSURE_PASSWORD"),
+		LicensingIntent:   "OneView",
+		InitialScopeUris:  make([]string, 0),
 	}
 
 	fmt.Println("#----------------Create Enclosure---------------#")
 
 	err := ovc.CreateEnclosure(enclosure_create_map)
 	if err != nil {
-	 	fmt.Println("Enclosure Creation Failed: ", err)
+		fmt.Println("Enclosure Creation Failed: ", err)
 	}
 	fmt.Println("Enclosure created successfully...")
 
@@ -53,7 +53,7 @@ func main() {
 
 	enclosure, err := ovc.GetEnclosureByName(enc_name)
 	if err != nil {
-	 	fmt.Println(err)
+		fmt.Println(err)
 	}
 	fmt.Println("#----------------Enclosure by Name----------------#")
 	fmt.Println(enclosure.Name)
@@ -68,21 +68,21 @@ func main() {
 
 	err = ovc.UpdateEnclosure(op, path, new_enclosure_name, enclosure)
 	if err != nil {
-	 	panic(err)
+		panic(err)
 	}
 
 	enc_list, err = ovc.GetEnclosures("", sort)
 	if err != nil {
-	 	fmt.Println(err)
+		fmt.Println(err)
 	}
 	fmt.Println("#----------------Enclosure List after Updating---------#")
 	for i := 0; i < len(enc_list.Members); i++ {
-	 	fmt.Println(enc_list.Members[i].Name)
+		fmt.Println(enc_list.Members[i].Name)
 	}
 
 	err = ovc.DeleteEnclosure(new_enclosure_name)
 	if err != nil {
-	 	panic(err)
+		panic(err)
 	}
 	fmt.Println("Deleted Enclosure successfully...")
 }
