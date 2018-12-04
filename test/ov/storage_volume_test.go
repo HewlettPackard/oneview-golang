@@ -29,14 +29,14 @@ func TestCreateStorageVolume(t *testing.T) {
 
 		pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
 
-		provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
+		//provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
 
 		if testSVol.URI.IsNil() {
 			testSVol = ov.StorageVolumeV3{
-				Name:                   testName,
-				StorageSystemUri:       utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
-				Type:                   d.Tc.GetTestData(d.Env, "Type").(string),
-				ProvisioningParameters: provParams,
+				Name:             testName,
+				StorageSystemUri: utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
+				Type:             d.Tc.GetTestData(d.Env, "Type").(string),
+				//				ProvisioningParameters: provParams,
 			}
 
 			// not changed after this TODO: update to storage volume tests
