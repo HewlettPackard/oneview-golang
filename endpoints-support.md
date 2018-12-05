@@ -101,7 +101,7 @@
 |     **Server Hardware Types**                                                                                                                     |
 |<sub>/rest/server-hardware-types</sub>                                                   | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/server-hardware-types/{id}</sub>                                              | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   |
-|<sub>/rest/server-hardware-types/{id}</sub>                                              | PUT      | :heavy_minus_mark:   | :heavy_minus_mark:   | :heavy_minus_sign:         | :heavy_multiplication_x:   | :heavy_multiplication_x:   |
+|<sub>/rest/server-hardware-types/{id}</sub>                                              | PUT      | :heavy_minus_sign:   | :heavy_minus_sign:   | :heavy_minus_sign:   | :heavy_multiplication_x:   | :heavy_multiplication_x:   |
 |<sub>/rest/server-hardware-types/{id}</sub>                                              | DELETE   | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:   |
 |     **Server Profile Templates**                                                                                                                  |
 |<sub>/rest/server-profile-templates</sub>                                                | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
