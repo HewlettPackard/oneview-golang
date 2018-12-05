@@ -5,15 +5,15 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"reflect"
 )
 
 func main() {
 	var (
 		clientOV                  *ov.OVClient
 		server_hardware_type_name = "BL460c G7 1"
-		uri                       = "/rest/server-hardware-types/" + "70BDABAA-87D1-4A39-9270-047D08B5C447"
+		uri                       = "/rest/server-hardware-types/70BDABAA-87D1-4A39-9270-047D08B5C447"
 		sort                      = "name:desc"
-		//filter = "created equals '2018-01-24T16:24:14.330Z'"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -23,6 +23,8 @@ func main() {
 		false,
 		800)
 
+	fmt.Println("OV: ", reflect.TypeOf(ovc.Client.Method))
+	fmt.Println("OV: ", ovc.Client.Method)
 	fmt.Println("#-----------------------Server Hardware Type by name-------------------------#")
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
 	if err != nil {
