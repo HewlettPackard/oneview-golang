@@ -36,53 +36,59 @@ func main() {
 	err := ovc.CreateEnclosure(enclosure_create_map)
 	if err != nil {
 		fmt.Println("Enclosure Creation Failed: ", err)
+	} else {
+		fmt.Println("Enclosure created successfully...")
 	}
-	fmt.Println("Enclosure created successfully...")
 
 	sort := ""
 
 	enc_list, err := ovc.GetEnclosures("", sort)
 	if err != nil {
-		panic(err)
-	}
-	fmt.Println("#----------------Enclosure List---------------#")
+		fmt.Println("Enclosure Retrieval Failed: ", err)
+	} else {
+		fmt.Println("#----------------Enclosure List---------------#")
 
-	for i := 0; i < len(enc_list.Members); i++ {
-		fmt.Println(enc_list.Members[i].Name)
+		for i := 0; i < len(enc_list.Members); i++ {
+			fmt.Println(enc_list.Members[i].Name)
+		}
 	}
 
 	enclosure, err := ovc.GetEnclosureByName(enc_name)
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println("#----------------Enclosure by Name----------------#")
+		fmt.Println(enclosure.Name)
 	}
-	fmt.Println("#----------------Enclosure by Name----------------#")
-	fmt.Println(enclosure.Name)
 
 	uri := enclosure.URI
 	enclosure, err = ovc.GetEnclosurebyUri(uri)
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println("#----------------Enclosure by URI--------------#")
+		fmt.Println(enclosure.Name)
 	}
-	fmt.Println("#----------------Enclosure by URI--------------#")
-	fmt.Println(enclosure.Name)
 
 	err = ovc.UpdateEnclosure(op, path, new_enclosure_name, enclosure)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	enc_list, err = ovc.GetEnclosures("", sort)
 	if err != nil {
 		fmt.Println(err)
-	}
-	fmt.Println("#----------------Enclosure List after Updating---------#")
-	for i := 0; i < len(enc_list.Members); i++ {
-		fmt.Println(enc_list.Members[i].Name)
+	} else {
+		fmt.Println("#----------------Enclosure List after Updating---------#")
+		for i := 0; i < len(enc_list.Members); i++ {
+			fmt.Println(enc_list.Members[i].Name)
+		}
 	}
 
 	err = ovc.DeleteEnclosure(new_enclosure_name)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+	} else {
+		fmt.Println("Deleted Enclosure successfully...")
 	}
-	fmt.Println("Deleted Enclosure successfully...")
 }
