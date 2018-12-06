@@ -26,7 +26,7 @@ type FCNetwork struct {
 	ETAG                    string          `json:"eTag,omitempty"`
 	Modified                string          `json:"modified,omitempty"`
 	Created                 string          `json:"created,omitempty"`
-	ScopesUri								string          `json:"scopesUri,omitempty"`
+	ScopesUri               string          `json:"scopesUri,omitempty"`
 	ScopesUris              string          `json:"scopesUris,omitempty"`
 	InitialScopeUris        []utils.Nstring `json:"initialScopeUris,omitempty"` // "initialScopeUris":[]
 }
