@@ -23,8 +23,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
 		apiversion)
-	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/8a4e85fe-0725-482e-b232-4877b78fde18"))
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",
@@ -49,7 +48,7 @@ func main() {
 	}
 	fmt.Println("#---Get Fc Networks sorted by name in descending order----#")
 
-	for i := 0; i < len(fcNetworks.Members); i++ {
+	for i := range fcNetworks.Members {
 		fmt.Println(fcNetworks.Members[i].Name)
 	}
 
