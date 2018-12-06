@@ -46,15 +46,15 @@ func TestGetServerHardwareTypes(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		serverHardwareTypes, err := c.GetServerHardwareTypes("", "")
+		serverHardwareTypes, err := c.GetServerHardwareTypes(0, 0, "", "")
 		assert.NoError(t, err, "GetServerHardwareTypes threw error -> %s, %+v\n", err, serverHardwareTypes)
 
-		serverHardwareTypes, err = c.GetServerHardwareTypes("", "name:asc")
+		serverHardwareTypes, err = c.GetServerHardwareTypes(0, 0, "", "name:asc")
 		assert.NoError(t, err, "GetServerHardwareTypes name:asc error -> %s, %+v\n", err, serverHardwareTypes)
 
 	} else {
 		_, c = getTestDriverU("test_server_hardware_type")
-		data, err := c.GetServerHardwareTypes("", "")
+		data, err := c.GetServerHardwareTypes(0, 0, "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
