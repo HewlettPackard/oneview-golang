@@ -26,8 +26,9 @@ func TestCreateStorageVolume(t *testing.T) {
 
 		testSVol, err := c.GetStorageVolumeByName(testName)
 		assert.NoError(t, err, "CreateStorageVolume get the Storage Volume error -> %s", err)
-
-		//		pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
+		
+		//Provisoning Parameters commented as this attribute not available from API500 and onwards
+		//pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
 
 		//provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
 
