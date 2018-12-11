@@ -168,7 +168,7 @@ type TasksList struct {
 	Start       int           `json:"start,omitempty"`       // "start": 0,
 	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/tasks/7769cae0-b680-435b-9b87-9b864c81657"
 	Members     []Task        `json:"members,omitempty"`     // "members":[]
 }
 
