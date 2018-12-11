@@ -11,7 +11,7 @@ func main() {
 
 	var (
 		ClientOV       *ov.OVClient
-		new_name       = "TestVolume"
+		new_volume     = "TestVolume"
 		name_to_update = "UpdatedName"
 	)
 
