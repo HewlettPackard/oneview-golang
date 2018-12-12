@@ -27,16 +27,17 @@ func TestCreateStorageVolume(t *testing.T) {
 		testSVol, err := c.GetStorageVolumeByName(testName)
 		assert.NoError(t, err, "CreateStorageVolume get the Storage Volume error -> %s", err)
 
-		pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
+		//Provisoning Parameters commented as this attribute not available from API500 and onwards
+		//pMap := d.Tc.GetTestData(d.Env, "ProvisioningParameters").(map[string]interface{})
 
-		provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
+		//provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
 
 		if testSVol.URI.IsNil() {
 			testSVol = ov.StorageVolumeV3{
-				Name:                   testName,
-				StorageSystemUri:       utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
-				Type:                   d.Tc.GetTestData(d.Env, "Type").(string),
-				ProvisioningParameters: provParams,
+				Name:             testName,
+				StorageSystemUri: utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
+				Type:             d.Tc.GetTestData(d.Env, "Type").(string),
+				//				ProvisioningParameters: provParams,
 			}
 
 			// not changed after this TODO: update to storage volume tests
