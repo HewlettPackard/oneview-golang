@@ -9,19 +9,43 @@ import (
 )
 
 type StorageSystemV4 struct {
-	Hostname	       string                 `json:"hostname,omitempty"`
-	Username	       string		      `json:"username,omitempty"`
-	Password	       string		      `json:"password,omitempty"`
-	Category               string                 `json:"category,omitempty"`
-	ETAG                   string                 `json:"eTag,omitempty"`
-	Name                   string                 `json:"name,omitempty"`
-	State                  string                 `json:"state,omitempty"`
-	Status                 string                 `json:"status,omitempty"`
-	Type                   string                 `json:"type,omitempty"`
-	URI                    utils.Nstring          `json:"uri,omitempty"`
-	Family		       string                 `json:"family,omitempty"`
-	StoragePoolsUri        utils.Nstring          `json:"storagePoolsUri,omitempty"`
-	TotalCapacity	       utils.Nstring          `json:"TotalCapacity,omitempty"`
+	Hostname	       	 string                   `json:"hostname,omitempty"`
+	Username	       	 string		          `json:"username,omitempty"`
+	Password	         string		          `json:"password,omitempty"`
+	Category               	 string                   `json:"category,omitempty"`
+	ETAG                   	 string                   `json:"eTag,omitempty"`
+	Name                   	 string                   `json:"name,omitempty"`
+	State                  	 string                   `json:"state,omitempty"`
+	Status                 	 string                   `json:"status,omitempty"`
+	Type                   	 string                   `json:"type,omitempty"`
+	URI                    	 utils.Nstring            `json:"uri,omitempty"`
+	Family		       	 string                   `json:"family,omitempty"`
+	StoragePoolsUri        	 utils.Nstring            `json:"storagePoolsUri,omitempty"`
+	TotalCapacity	      	 string	                  `json:"totalCapacity,omitempty"`
+	Ports		      	 []Ports		  `json:"ports,omitempty"`
+	DeviceSpecificAttributes DeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
+}
+
+type Ports struct {
+	PortDeviceSpecificAttributes	 PortDeviceSpecificAttributes   `json:"deviceSpecificAttributes,omitempty"`
+	id				 string				`json:"id,omitempty"`
+	mode				 string				`json:"mode,omitempty"`
+}
+
+type DeviceSpecificAttributes struct {
+	Firmware	string		`json:"firmware,omitempty"`
+	Model		string		`json:"model,omitempty"`
+	ManagedPools	[]ManagedPools	`json:"managedPools,omitempty"`
+	ManagedDomain	string		`json:"managedDomain,omitempty"`
+}
+
+type ManagedPools struct {
+	Name		string		`json:"name,omitempty"`
+	Domain		string		`json:"domain,omitempty"`
+	DeviceType	string		`json:"deviceType,omitempty"`
+	FreeCapacity	string		`json:"freeCapacity,omitempty"`
+	RaidLevel	string		`json:"raidLevel,omitempty"`
+	Totalcapacity	string		`json:'totalCapacity,omitempty"`
 }
 
 type StorageSystemsListV4 struct {
