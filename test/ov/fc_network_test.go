@@ -93,10 +93,10 @@ func TestGetFCNetworks(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		fcNetworks, err := c.GetFCNetworks("", "")
+		fcNetworks, err := c.GetFCNetworks("", "", "", "")
 		assert.NoError(t, err, "GetFCNetworks threw an error -> %s. %+v\n", err, fcNetworks)
 
-		fcNetworks, err = c.GetFCNetworks("", "name:asc")
+		fcNetworks, err = c.GetFCNetworks("", "name:asc", "", "")
 		assert.NoError(t, err, "GetFCNetworks name:asc error -> %s. %+v\n", err, fcNetworks)
 
 	} else {
@@ -104,13 +104,13 @@ func TestGetFCNetworks(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetFCNetworks("", "")
+		data, err := c.GetFCNetworks("", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("All OK, no error, caught as expected: %s,%+v\n", err, data))
 
 	}
 
 	_, c = getTestDriverU("test_fc_network")
-	data, err := c.GetFCNetworks("", "")
+	data, err := c.GetFCNetworks("", "", "", "")
 	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 }
 
