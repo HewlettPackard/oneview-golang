@@ -10,7 +10,6 @@ import (
 
 type StorageSystemV4 struct {
 	Hostname	       string                 `json:"hostname,omitempty"`
-	Credentials            Credentials            `json:"credentials,omitempty"`
 	Username	       string		      `json:"username,omitempty"`
 	Password	       string		      `json:"password,omitempty"`
 	Category               string                 `json:"category,omitempty"`
@@ -23,11 +22,6 @@ type StorageSystemV4 struct {
 	Family		       string                 `json:"family,omitempty"`
 	StoragePoolsUri        utils.Nstring          `json:"storagePoolsUri,omitempty"`
 	TotalCapacity	       utils.Nstring          `json:"TotalCapacity,omitempty"`
-}
-
-type Credentials struct {
-	Password         string        `json:"password,omitempty"`
-	Username	 string        `json:"username,omitempty"`
 }
 
 type StorageSystemsListV4 struct {

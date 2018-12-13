@@ -71,8 +71,8 @@ func main() {
 	fmt.Println(system_by_name)
 
 	// Delete the created system
-	fmt.Println("\nDeleting the system with name : UpdatedName")
-	//err = ovc.DeleteStorageSystem(name_to_update)
+	fmt.Println("\nDeleting the system with name : ", name_to_update)
+	err = ovc.DeleteStorageSystem(name_to_update)
 	if err != nil {
 		fmt.Println("Delete Unsuccessful", err)
 	}
