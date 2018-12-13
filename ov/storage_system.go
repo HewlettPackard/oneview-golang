@@ -18,7 +18,7 @@ type StorageSystemV4 struct {
 	Status                 string                 `json:"status,omitempty"`
 	Type                   string                 `json:"type,omitempty"`
 	URI                    utils.Nstring          `json:"uri,omitempty"`
-	Family		       bool                   `json:"family,omitempty"`
+	Family		       string                 `json:"family,omitempty"`
 	StoragePoolsUri        utils.Nstring          `json:"storagePoolsUri,omitempty"`
 	TotalCapacity	       utils.Nstring          `json:"TotalCapacity,omitempty"`
 }
@@ -42,9 +42,9 @@ func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) 
 	var (
 		sSystem StorageSystemV4
 	)
-	sSystem, err := c.GetStorageSystems(fmt.Sprintf("name matches '%s'", name), "name:asc")
-	if sSystem.Total > 0 {
-		return sSystem.Members[0], err
+	sSystems, err := c.GetStorageSystems(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	if sSystems.Total > 0 {
+		return sSystems.Members[0], err
 	} else {
 		return sSystem, err
 	}
@@ -52,7 +52,7 @@ func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) 
 
 func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystemsListV4, error) {
 	var (
-		uri   = "/rest/storage-volumes"
+		uri   = "/rest/storage-systems"
 		q     map[string]interface{}
 		sSystem StorageSystemsListV4
 	)
@@ -88,7 +88,7 @@ func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystems
 func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 	log.Infof("Initializing creation of storage volume for %s.", sSystem.Name)
 	var (
-		uri = "/rest/storage-volumes"
+		uri = "/rest/storage-systems"
 		t   *Task
 	)
 	// refresh login
