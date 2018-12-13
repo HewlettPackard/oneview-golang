@@ -24,8 +24,8 @@ func main() {
 		500,
 		"*")
 
-	// Create storage volume with name <new_name>
-	properties := &ov.Properties{new_name, utils.NewNstring("/rest/storage-pools/AAA05D5E-BDB5-4FBB-8E65-A8D400A6A8AF"), 107374741824, "Thin"}
+	// Create storage volume with name <new_volume>
+	properties := &ov.Properties{new_volume, utils.NewNstring("/rest/storage-pools/AAA05D5E-BDB5-4FBB-8E65-A8D400A6A8AF"), 107374741824, "Thin"}
 
 	storageVolume := ov.StorageVolumeV3{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/c93ef008-d8f0-40a5-b2d1-a8d400a6a8b7"), Properties: properties, IsPermanent: false}
 
@@ -35,7 +35,7 @@ func main() {
 	}
 
 	// Update the given storage volume
-	update_vol, _ := ovc.GetStorageVolumeByName(new_name)
+	update_vol, _ := ovc.GetStorageVolumeByName(new_volume)
 
 	updated_storage_volume := ov.StorageVolumeV3{
 		ProvisioningTypeForUpdate: update_vol.ProvisioningTypeForUpdate,
