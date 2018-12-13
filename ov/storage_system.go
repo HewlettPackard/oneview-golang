@@ -11,6 +11,8 @@ import (
 type StorageSystemV4 struct {
 	Hostname	       string                 `json:"hostname,omitempty"`
 	Credentials            Credentials            `json:"credentials,omitempty"`
+	Username	       string		      `json:"username,omitempty"`
+	Password	       string		      `json:"password,omitempty"`
 	Category               string                 `json:"category,omitempty"`
 	ETAG                   string                 `json:"eTag,omitempty"`
 	Name                   string                 `json:"name,omitempty"`
