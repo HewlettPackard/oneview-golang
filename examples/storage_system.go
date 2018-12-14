@@ -11,7 +11,6 @@ func main() {
 	var (
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
-		//name_to_create = "ThreePAR-2"
 		//Variable to update the managedDomain
 		managed_domain = "TestDomain"
 	)
@@ -22,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		500,
+		800,
 		"*")
 
 	// Create storage system with name <new_system>
