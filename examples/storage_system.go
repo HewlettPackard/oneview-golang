@@ -9,10 +9,11 @@ import (
 func main() {
 
 	var (
-		ClientOV *ov.OVClient
-		//		new_system    = "TestSystem"
-		name_to_update  = "ThreePAR-1"
-		name_to_update1 = "ThreePAR-2"
+		ClientOV       *ov.OVClient
+		name_to_create = "ThreePAR-1"
+		//name_to_create = "ThreePAR-2"
+		//Variable to update the managedDomain
+		managed_domain = "TestDomain"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -33,13 +34,14 @@ func main() {
 	}
 
 	// Update the given storage system
-	update_system, _ := ovc.GetStorageSystemByName(name_to_update)
+	update_system, _ := ovc.GetStorageSystemByName(name_to_create)
 
+	//Managed domain is mandatory attribute for update
 	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
-	DeviceSpecificAttributesForUpdate.ManagedDomain = "TestDomain"
+	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 
 	updated_storage_system := ov.StorageSystemV4{
-		Name: name_to_update1,
+		Name: name_to_create,
 		StorageSystemDeviceSpecificAttributes: DeviceSpecificAttributesForUpdate,
 		URI:         update_system.URI,
 		ETAG:        update_system.ETAG,
@@ -67,13 +69,13 @@ func main() {
 	}
 
 	// Get system by name
-	fmt.Println("\nGetting details of system with name: ", name_to_update)
-	system_by_name, _ := ovc.GetStorageSystemByName(name_to_update)
+	fmt.Println("\nGetting details of system with name: ", name_to_create)
+	system_by_name, _ := ovc.GetStorageSystemByName(name_to_create)
 	fmt.Println(system_by_name)
 
 	// Delete the created system
-	fmt.Println("\nDeleting the system with name : ", name_to_update)
-	err = ovc.DeleteStorageSystem(name_to_update)
+	fmt.Println("\nDeleting the system with name : ", name_to_create)
+	err = ovc.DeleteStorageSystem(name_to_create)
 	if err != nil {
 		fmt.Println("Delete Unsuccessful", err)
 	}

@@ -129,7 +129,7 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Infof("REST : %s \n %+v\n", uri, sSystem)
+	log.Debugf("REST : %s \n %+v\n", uri, sSystem)
 	log.Debugf("task -> %+v", t)
 
 	data, err := c.RestAPICall(rest.POST, uri, sSystem)
@@ -139,7 +139,7 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 		return err
 	}
 
-	log.Infof("Response New StorageSystem %s", data)
+	log.Debugf("Response New StorageSystem %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
