@@ -70,6 +70,21 @@ type StorageSystemsListV4 struct {
 	Members     []StorageSystemV4 `json:"members,omitempty"`     // "members":[]
 }
 
+type ReachablePortsList struct {
+	Category    string           `json:"category,omitempty"`
+	Members     []ReachablePorts `json:"members,omitempty"`
+	Total       int              `json:"total,omitempty"`
+	Count       int              `json:"count,omitempty"`
+	Start       int              `json:"start,omitempty"`
+	PrevPageURI utils.Nstring    `json:"prevPageUri,omitempty"`
+	NextPageURI utils.Nstring    `json:"nextPageUri,omitempty"`
+	URI         utils.Nstring    `json:"uri,omitempty"`
+}
+
+type ReachablePorts struct {
+	ReachableNetworks utils.Nstring `json:"reachableNetworks,omitempty"`
+}
+
 func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) {
 	var (
 		sSystem StorageSystemV4
@@ -235,4 +250,24 @@ func (c *OVClient) UpdateStorageSystem(sSystem StorageSystemV4) error {
 	}
 
 	return nil
+}
+
+func (c *OVClient) GetReachablePorts(uri utils.Nstring) (ReachablePortsList, error) {
+	var (
+		reachable_ports ReachablePortsList
+		main_uri        = uri.String()
+	)
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	main_uri = main_uri + "/reachable-ports"
+	data, err := c.RestAPICall(rest.GET, main_uri, nil)
+	if err != nil {
+		log.Errorf("Error in getting reachable ports: %s", err)
+		return reachable_ports, err
+	}
+	log.Debugf("Reachable ports %s", data)
+	if err := json.Unmarshal([]byte(data), &reachable_ports); err != nil {
+		return reachable_ports, err
+	}
+	return reachable_ports, nil
 }
