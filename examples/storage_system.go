@@ -73,6 +73,11 @@ func main() {
 	system_by_name, _ := ovc.GetStorageSystemByName(name_to_create)
 	fmt.Println(system_by_name)
 
+	// Get reachable ports
+	fmt.Println("\n Getting rechable ports of:", name_to_create)
+	reachable_ports, _ := ovc.GetReachablePorts(system_by_name.URI)
+	fmt.Println(reachable_ports)
+
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name_to_create)
 	err = ovc.DeleteStorageSystem(name_to_create)
