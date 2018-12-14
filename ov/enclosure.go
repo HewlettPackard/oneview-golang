@@ -52,7 +52,7 @@ type EnclosureList struct {
 	Start       int           `json:"start,omitempty"`       // "start": 0,
 	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/enclosures?sort=name:asc"
 	Members     []Enclosure   `json:"members,omitempty"`     // "members":[]
 }
 
@@ -117,7 +117,7 @@ func (c *OVClient) GetEnclosureByName(name string) (Enclosure, error) {
 	var (
 		enclosure Enclosure
 	)
-	enclosures, err := c.GetEnclosures(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	enclosures, err := c.GetEnclosures("", "", fmt.Sprintf("name matches '%s'", name), "name:asc", "")
 	if enclosures.Total > 0 {
 		return enclosures.Members[0], err
 	} else {
@@ -143,7 +143,7 @@ func (c *OVClient) GetEnclosurebyUri(uri utils.Nstring) (Enclosure, error) {
 	return enclosure, nil
 }
 
-func (c *OVClient) GetEnclosures(filter string, sort string) (EnclosureList, error) {
+func (c *OVClient) GetEnclosures(start string, count string, filter string, sort string, scopeUris string) (EnclosureList, error) {
 	var (
 		uri        = "/rest/enclosures"
 		q          map[string]interface{}
@@ -156,6 +156,18 @@ func (c *OVClient) GetEnclosures(filter string, sort string) (EnclosureList, err
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
+	}
+
+	if scopeUris != "" {
+		q["scopeUris"] = scopeUris
 	}
 
 	// refresh login
@@ -205,9 +217,9 @@ func (c *OVClient) CreateEnclosure(enclosure_create_map EnclosureCreateMap) erro
 		return err
 	}
 
-	//err = t.Wait()
+	err = t.Wait()
 	if err != nil {
-		//	return err
+		return err
 	}
 
 	return nil

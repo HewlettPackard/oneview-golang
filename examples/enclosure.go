@@ -42,7 +42,7 @@ func main() {
 
 	sort := ""
 
-	enc_list, err := ovc.GetEnclosures("", sort)
+	enc_list, err := ovc.GetEnclosures("", "", "", sort, "")
 	if err != nil {
 		fmt.Println("Enclosure Retrieval Failed: ", err)
 	} else {
@@ -75,7 +75,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	enc_list, err = ovc.GetEnclosures("", sort)
+	enc_list, err = ovc.GetEnclosures("", "", "", sort, "")
 	if err != nil {
 		fmt.Println(err)
 	} else {
