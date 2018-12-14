@@ -9,43 +9,55 @@ import (
 )
 
 type StorageSystemV4 struct {
-	Hostname	       	 string                   `json:"hostname,omitempty"`
-	Username	       	 string		          `json:"username,omitempty"`
-	Password	         string		          `json:"password,omitempty"`
-	Category               	 string                   `json:"category,omitempty"`
-	ETAG                   	 string                   `json:"eTag,omitempty"`
-	Name                   	 string                   `json:"name,omitempty"`
-	State                  	 string                   `json:"state,omitempty"`
-	Status                 	 string                   `json:"status,omitempty"`
-	Type                   	 string                   `json:"type,omitempty"`
-	URI                    	 utils.Nstring            `json:"uri,omitempty"`
-	Family		       	 string                   `json:"family,omitempty"`
-	StoragePoolsUri        	 utils.Nstring            `json:"storagePoolsUri,omitempty"`
-	TotalCapacity	      	 string	                  `json:"totalCapacity,omitempty"`
-	Ports		      	 []Ports		  `json:"ports,omitempty"`
-	DeviceSpecificAttributes DeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
+	Hostname                              string                                 `json:"hostname,omitempty"`
+	Username                              string                                 `json:"username,omitempty"`
+	Password                              string                                 `json:"password,omitempty"`
+	Credentials                           *Credentials                           `json:"credentials,omitempty"`
+	Category                              string                                 `json:"category,omitempty"`
+	ETAG                                  string                                 `json:"eTag,omitempty"`
+	Name                                  string                                 `json:"name,omitempty"`
+	Description                           string                                 `json:"description,omitempty"`
+	State                                 string                                 `json:"state,omitempty"`
+	Status                                string                                 `json:"status,omitempty"`
+	Type                                  string                                 `json:"type,omitempty"`
+	URI                                   utils.Nstring                          `json:"uri,omitempty"`
+	Family                                string                                 `json:"family,omitempty"`
+	StoragePoolsUri                       utils.Nstring                          `json:"storagePoolsUri,omitempty"`
+	TotalCapacity                         string                                 `json:"totalCapacity,omitempty"`
+	Mode                                  string                                 `json:"mode,omitempty"`
+	Ports                                 []Ports                                `json:"ports,omitempty"`
+	StorageSystemDeviceSpecificAttributes *StorageSystemDeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
+}
+
+type Credentials struct {
+	Username string `json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 type Ports struct {
-	PortDeviceSpecificAttributes	 PortDeviceSpecificAttributes   `json:"deviceSpecificAttributes,omitempty"`
-	id				 string				`json:"id,omitempty"`
-	mode				 string				`json:"mode,omitempty"`
+	PortDeviceSpecificAttributes PortDeviceSpecificAttributes `json:"deviceSpecificAttributes,omitempty"`
+	Id                           string                       `json:"id,omitempty"`
+	Mode                         string                       `json:"mode,omitempty"`
 }
 
-type DeviceSpecificAttributes struct {
-	Firmware	string		`json:"firmware,omitempty"`
-	Model		string		`json:"model,omitempty"`
-	ManagedPools	[]ManagedPools	`json:"managedPools,omitempty"`
-	ManagedDomain	string		`json:"managedDomain,omitempty"`
+type PortDeviceSpecificAttributes struct {
+	PartnerPort string `json:"partnerport,omitempty"`
+}
+
+type StorageSystemDeviceSpecificAttributes struct {
+	Firmware      string         `json:"firmware,omitempty"`
+	Model         string         `json:"model,omitempty"`
+	ManagedPools  []ManagedPools `json:"managedPools,omitempty"`
+	ManagedDomain string         `json:"managedDomain,omitempty"`
 }
 
 type ManagedPools struct {
-	Name		string		`json:"name,omitempty"`
-	Domain		string		`json:"domain,omitempty"`
-	DeviceType	string		`json:"deviceType,omitempty"`
-	FreeCapacity	string		`json:"freeCapacity,omitempty"`
-	RaidLevel	string		`json:"raidLevel,omitempty"`
-	Totalcapacity	string		`json:'totalCapacity,omitempty"`
+	Name          string `json:"name,omitempty"`
+	Domain        string `json:"domain,omitempty"`
+	DeviceType    string `json:"deviceType,omitempty"`
+	FreeCapacity  string `json:"freeCapacity,omitempty"`
+	RaidLevel     string `json:"raidLevel,omitempty"`
+	Totalcapacity string `json:"totalCapacity,omitempty"`
 }
 
 type StorageSystemsListV4 struct {
@@ -72,8 +84,8 @@ func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) 
 
 func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystemsListV4, error) {
 	var (
-		uri   = "/rest/storage-systems"
-		q     map[string]interface{}
+		uri     = "/rest/storage-systems"
+		q       map[string]interface{}
 		sSystem StorageSystemsListV4
 	)
 	q = make(map[string]interface{})
@@ -117,8 +129,9 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, sSystem)
+	log.Infof("REST : %s \n %+v\n", uri, sSystem)
 	log.Debugf("task -> %+v", t)
+
 	data, err := c.RestAPICall(rest.POST, uri, sSystem)
 	if err != nil {
 		t.TaskIsDone = true
@@ -126,7 +139,7 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 		return err
 	}
 
-	log.Debugf("Response New StorageSystem %s", data)
+	log.Infof("Response New StorageSystem %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
@@ -144,9 +157,9 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 func (c *OVClient) DeleteStorageSystem(name string) error {
 	var (
 		sSystem StorageSystemV4
-		err  error
-		t    *Task
-		uri  string
+		err     error
+		t       *Task
+		uri     string
 	)
 
 	sSystem, err = c.GetStorageSystemByName(name)
