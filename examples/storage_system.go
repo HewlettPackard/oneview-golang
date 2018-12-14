@@ -11,8 +11,7 @@ func main() {
 	var (
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
-		//Variable to update the managedDomain
-		managed_domain = "TestDomain"
+		managed_domain = "TestDomain"  //Variable to update the managedDomain
 	)
 
 	ovc := ClientOV.NewOVClient(
