@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -22,28 +22,30 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
+
 		fmt.Println("#----------------Interconnect List---------------#")
 
 		for i := 0; i < len(interconnect_list.Members); i++ {
 			fmt.Println(interconnect_list.Members[i].Name)
 		}
-	}
 
-	interconnect, err := ovc.GetInterconnectByName(interconnect_list.Members[0].Name)
-	if err != nil {
-		fmt.Println(err)
-	}
-	} else {
-		fmt.Println("#-------------Interconnect by Name----------------#")
-		fmt.Println(interconnect.Name)
-
-		uri := interconnect.URI
-		interconnect, err = ovc.GetInterconnectByUri(uri)
+		interconnect, err := ovc.GetInterconnectByName(interconnect_list.Members[0].Name)
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fmt.Println("#----------------Interconnect by URI--------------#")
+
+			fmt.Println("#-------------Interconnect by Name----------------#")
 			fmt.Println(interconnect.Name)
+
+			uri := interconnect.URI
+			interconnect, err = ovc.GetInterconnectByUri(uri)
+			if err != nil {
+				fmt.Println(err)
+			} else {
+
+				fmt.Println("#----------------Interconnect by URI--------------#")
+				fmt.Println(interconnect.Name)
+			}
 		}
 	}
 }
