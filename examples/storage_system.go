@@ -10,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV       *ov.OVClient
-		name_to_create = "ThreePAR-1"
+		name_to_create = "Cluster-1"
 		managed_domain = "TestDomain" //Variable to update the managedDomain
 	)
 
@@ -20,17 +20,19 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		600,
 		"*")
 
 	// Create storage system with name <new_system>
-	storageSystem := ov.StorageSystemV4{Hostname: "172.18.11.11", Username: "dcs", Password: "dcs", Family: "StoreServ"}
+	storageSystem := ov.StorageSystemV4{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
 		fmt.Println("Could not create the system", err)
 	}
 
+	//The below example is to update a storeServ system.
+	//Please refer the API for fields to update a storeVirtual system.
 	// Update the given storage system
 	update_system, _ := ovc.GetStorageSystemByName(name_to_create)
 
