@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"os"
 )
 
 func main() {
 	var (
-		clientOV    *ov.OVClient
+		clientOV *ov.OVClient
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
