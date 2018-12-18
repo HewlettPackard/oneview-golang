@@ -20,11 +20,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600,
+		800,
 		"*")
 
 	// Create storage system with name <new_system>
-	storageSystem := ov.StorageSystemV4{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual"}
+	storageSystem := ov.StorageSystemV4{Hostname: "<hostname>", Username: "<username>", Password: "<password>", Family: "<family>"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
@@ -32,7 +32,8 @@ func main() {
 	}
 
 	//The below example is to update a storeServ system.
-	//Please refer the API for fields to update a storeVirtual system.
+	//Please refer the API reference for fields to update a storeVirtual system.
+
 	// Update the given storage system
 	update_system, _ := ovc.GetStorageSystemByName(name_to_create)
 
