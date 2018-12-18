@@ -22,8 +22,10 @@ func main() {
 		"*")
 
 	// Get all tasks present
+	sort := "name:desc"
+	count := "5"
 	fmt.Println("\nGetting all tasks present: \n")
-	task_list, err := ovc.GetTasks("", "", "", "")
+	task_list, err := ovc.GetTasks("", sort, count, "")
 	if err != nil {
 		fmt.Println("Error getting the storage volumes ", err)
 	}
