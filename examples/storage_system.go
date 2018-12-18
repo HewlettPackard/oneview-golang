@@ -36,7 +36,7 @@ func main() {
 
 	// Get the storage system to be updated
 	update_system, _ := ovc.GetStorageSystemByName(name_to_create)
-	
+
 	// Update the given storage system
 	//Managed domain is mandatory attribute for update
 	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
