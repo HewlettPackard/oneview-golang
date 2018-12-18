@@ -298,11 +298,11 @@ func (c *OVClient) GetTasks(filter string, sort string, count string, view strin
 	}
 
 	if view != "" {
-		q["view"] = sort
+		q["view"] = view
 	}
 
 	if count != "" {
-		q["count"] = sort
+		q["count"] = count
 	}
 
 	// refresh login
