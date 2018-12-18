@@ -23,7 +23,7 @@ func main() {
 		800,
 		"*")
 
-	// Create storage system with name <new_system>
+	// Create storage system
 	storageSystem := ov.StorageSystemV4{Hostname: "<hostname>", Username: "<username>", Password: "<password>", Family: "<family>"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
@@ -34,9 +34,10 @@ func main() {
 	//The below example is to update a storeServ system.
 	//Please refer the API reference for fields to update a storeVirtual system.
 
-	// Update the given storage system
+	// Get the storage system to be updated
 	update_system, _ := ovc.GetStorageSystemByName(name_to_create)
-
+	
+	// Update the given storage system
 	//Managed domain is mandatory attribute for update
 	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
 	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
@@ -58,7 +59,7 @@ func main() {
 	}
 
 	// Get All the systems present
-	fmt.Println("\nGetting all the storage systems present in the system: \n")
+	fmt.Println("\nGetting all the storage systems present in the appliance: \n")
 	sort := "name:desc"
 	system_list, err := ovc.GetStorageSystems("", sort)
 	if err != nil {
@@ -68,11 +69,6 @@ func main() {
 			fmt.Println(system_list.Members[i].Name)
 		}
 	}
-
-	// Get system by name
-	fmt.Println("\nGetting details of system with name: ", name_to_create)
-	system_by_name, _ := ovc.GetStorageSystemByName(name_to_create)
-	fmt.Println(system_by_name)
 
 	// Get reachable ports
 	fmt.Println("\n Getting rechable ports of:", name_to_create)
