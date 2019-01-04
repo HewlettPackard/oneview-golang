@@ -72,10 +72,10 @@ type LogicalLocation struct {
 	LocationEntries []LocationEntry `json:"locationEntries,omitempty"` // "locationEntries": {...}
 }
 
-type LocationEntry struct {
+/*type LocationEntry struct {
 	RelativeValue int    `json:"relativeValue,omitempty"` //"relativeValue": 2,
 	Type          string `json:"type,omitempty"`          //"type": "StackingMemberId",
-}
+}*/
 
 type QosConfiguration struct {
 	ActiveQosConfig          ActiveQosConfig           `json:"activeQosConfig,omitempty"`          //"activeQosConfig": {...},
@@ -208,18 +208,6 @@ type TelemetryConfiguration struct {
 	URI             utils.Nstring `json:"uri,omitempty"`             // "uri": null
 }
 
-type UplinkSet struct {
-	EthernetNetworkType    string                  `json:"ethernetNetworkType,omitempty"` // "ethernetNetworkType": "Tagged",
-	LacpTimer              string                  `json:"lacpTimer,omitempty"`           // "lacpTimer": "Long",
-	LogicalPortConfigInfos []LogicalPortConfigInfo `json:"logicalPortConfigInfos"`        // "logicalPortConfigInfos": {...},
-	Mode                   string                  `json:"mode,omitempty"`                // "mode": "Auto",
-	Name                   string                  `json:"name,omitempty"`                // "name": "Uplink 1",
-	NativeNetworkUri       utils.Nstring           `json:"nativeNetworkUri,omitempty"`    // "nativeNetworkUri": null,
-	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
-	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
-	PrimaryPort            *LogicalLocation        `json:"primaryPort,omitempty"`         // "primaryPort": {...},
-	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
-}
 
 type LogicalPortConfigInfo struct {
 	DesiredSpeed    string          `json:"desiredSpeed,omitempty"`    // "desiredSpeed": "Auto",

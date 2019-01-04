@@ -8,17 +8,49 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-type UplinkSet struct {
-	Name                           string           `json:"name"`                     // "name": "Uplink77",
-	LogicalInterconnectURI         utils.Nstring    `json:"logicalInterconnectUri"`   // "logicalInterconnectUri": "/rest/logical-interconnects/7769cae0-b680-435b-9b87-9b864c81657f",
-	NetworkURIs                    []utils.Nstring  `json:"networkUris"`              // "networkUris": "/rest/uplink-sets/e2f0031b-52bd-4223-9ac1-d91cb519d548",
-	FcNetworkURIs                  []utils.Nstring  `json:"[]"`                       // "fcNetworkUris": "[]",
-	FcoeNetworkURIs                []utils.Nstring  `json:"[]"`                       // "fcoeNetworkUris": "[]",
-	PortConfigInfos                string           `json:"[]"`                       // "portConfigInfos": "[]",
-	ConnectionMode                 string           `json:"connectionMode"`           // "connectionMode":"Auto",
-	NetworkType                    string           `json:"networkType"`              // "networkType":"Ethernet",
-	ManualLoginRedistributionState string           `json:"manualLoginRedistributionState"` //"manualLoginRedistributionState":"NotSupported"
+type Location struct {
+	LocationEntries []LocationEntry  `json:"LocationEntries,omitempty`    //"LocationEntries":{...},
 }
+
+type LocationEntry struct {
+	Value        int       `json:"value,omitempty"`          //"value":2
+	Type          string    `json:"type,omitempty"`            //"type":"StackingMemberId",
+
+}
+
+type PortConfigInfo struct {
+	DesiredSpeed string      `json:"desiredSpeed,omitempty"`   //"desiredSpeed":"Auto",
+	Location     Location    `json:"location"`                 //"location":"{...},
+}
+
+type UplinkSet struct {
+	Name                           string           `json:"name,omitempty"`                     // "name": "Uplink77",
+	LogicalInterconnectURI         utils.Nstring    `json:"logicalInterconnectUri,omitempty"`   // "logicalInterconnectUri": "/rest/logical-interconnects/7769cae0-b680-435b-9b87-9b864c81657f",
+	NetworkURIs                    []utils.Nstring  `json:"networkUris,omitempty"`              // "networkUris": "/rest/uplink-sets/e2f0031b-52bd-4223-9ac1-d91cb519d548",
+	FcNetworkURIs                  []utils.Nstring  `json:"fcNetworkUris,omitempty"`            // "fcNetworkUris": "[]",
+	FcoeNetworkURIs                []utils.Nstring  `json:"fcoeNetworkUris,omitempty"`          // "fcoeNetworkUris": "[]",
+	PortConfigInfos                []PortConfigInfo  `json:"portConfigInfo,omitempty"`         // "portConfigInfo": "[]",
+	ConnectionMode                 string           `json:"connectionMode,omitempty"`           // "connectionMode":"Auto",
+	NetworkType                    string           `json:"networkType,omitempty"`              // "networkType":"Ethernet",
+	EthernetNetworkType            string           `json:"ethernetNetworkType,omitempty"`      // "ethernetNetworkType":"Tagged",
+	ManualLoginRedistributionState string           `json:"manualLoginRedistributionState,omitempty"` //"manualLoginRedistributionState":"NotSupported"
+	URI                            utils.Nstring       `json:"uri,omitempty"`               // "uri": "/rest/uplink-sets/"e2f0031b-52bd-4223-9ac1-d91cb519d548",
+	Type                           string           `json:"type,omitempty"`                     // "type": "uplink-setV4",
+}
+
+/*type UplinkSet struct {
+	EthernetNetworkType    string                  `json:"ethernetNetworkType,omitempty"` // "ethernetNetworkType": "Tagged",
+	LacpTimer              string                  `json:"lacpTimer,omitempty"`           // "lacpTimer": "Long",
+	LogicalPortConfigInfos []LogicalPortConfigInfo `json:"logicalPortConfigInfos"`        // "logicalPortConfigInfos": {...},
+	Mode                   string                  `json:"mode,omitempty"`                // "mode": "Auto",
+	Name                   string                  `json:"name,omitempty"`                // "name": "Uplink 1",
+	NativeNetworkUri       utils.Nstring           `json:"nativeNetworkUri,omitempty"`    // "nativeNetworkUri": null,
+	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
+	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
+	PrimaryPort            *LogicalLocation        `json:"primaryPort,omitempty"`         // "primaryPort": {...},
+	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
+}*/
+
 
 type UplinkSetList struct {
 	Total             int                 `json:"total,omitempty"`             // "total": 1,
@@ -26,9 +58,13 @@ type UplinkSetList struct {
 	Start             int                 `json:"start,omitempty"`             // "start": 0,
 	PrevPageURI       utils.Nstring       `json:"prevPageUri,omitempty"`       // "prevPageUri": null,
 	NextPageURI       utils.Nstring       `json:"nextPageUri,omitempty"`       // "nextPageUri": null,
-	URI               utils.Nstring       `json:"uri,omitempty"`               // "uri": "/rest/uplink-sets?start=0&count=10"
+	URI               string       `json:"uri,omitempty"`               // "uri": "/rest/uplink-sets?start=0&count=10"
 	Members           []UplinkSet         `json:"members,omitempty"`           // "members":[]
 	Type              string              `json:"type,omitempty"`              // "type": "UplinkSetCollectionV4",
+	Category          string              `json:"category,omitempty"`         // "category": "logical-interconnects",
+	Created     string           `json:"created,omitempty"`     // "created": "2015-09-08T04:58:21.489Z",
+	ETAG        string           `json:"eTag,omitempty"`        // "eTag": "1441688301489",
+	Modified    string           `json:"modified,omitempty"`    // "modified": "2015-09-08T04:58:21.489Z",
 }
 
 func (c *OVClient) GetUplinkSetByName(name string) (UplinkSet, error) {
@@ -43,6 +79,41 @@ func (c *OVClient) GetUplinkSetByName(name string) (UplinkSet, error) {
 	}
 }
 
+
+
+func (c *OVClient) GetUplinkSets(filter string, sort string) (UplinkSetList, error) {
+	var (
+		uri               = "/rest/uplink-sets"
+		q                 map[string]interface{}
+		uplinkSets UplinkSetList
+	)
+	q = make(map[string]interface{})
+	if len(filter) > 0 {
+		q["filter"] = filter
+	}
+
+	if sort != "" {
+		q["sort"] = sort
+	}
+
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	// Setup query
+	if len(q) > 0 {
+		c.SetQueryString(q)
+	}
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return uplinkSets, err
+	}
+
+//	log.Infof("GetUplinkSets %s", data)
+	if err := json.Unmarshal([]byte(data), &uplinkSets); err != nil {
+		return uplinkSets, err
+	}
+	return uplinkSets, nil
+} /*
 func (c *OVClient) GetUplinkSets(filter string, sort string) (UplinkSetList, error) {
 	var (
 		uri              = "/rest/uplink-sets"
@@ -71,12 +142,12 @@ func (c *OVClient) GetUplinkSets(filter string, sort string) (UplinkSetList, err
 		return uplinkSets, err
 	}
 
-	log.Debugf("GetUplinkSets %s", data)
+	log.Infof("GetUplinkSets %s", data)
 	if err := json.Unmarshal([]byte(data), &uplinkSets); err != nil {
 		return uplinkSets, err
 	}
 	return uplinkSets, nil
-}
+}*/
 
 
 func (c *OVClient) GetUplinkSetById(id string) ([]string, error) {
@@ -100,8 +171,8 @@ func (c *OVClient) GetUplinkSetById(id string) ([]string, error) {
 	return *uplinkSetId, nil
 }
 
-func (c *OVClient) CreateUplinkSet(eNet UplinkSet) error {
-	log.Infoof("Initializing creation of uplink-set for %s.",upSet.Name)
+func (c *OVClient) CreateUplinkSet(upSet UplinkSet) error {
+	log.Infof("Initializing creation of uplink-set for %s.",upSet.Name)
 	var (
 		uri = "/rest/uplink-sets"
 		t   *Task
@@ -112,8 +183,8 @@ func (c *OVClient) CreateUplinkSet(eNet UplinkSet) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, upSet)
-	log.Debugf("task -> %+v", t)
+	log.Infof("REST : %s \n %+v\n", uri, upSet)
+	log.Infof("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, upSet)
 	if err != nil {
 		t.TaskIsDone = true
@@ -139,7 +210,7 @@ func (c *OVClient) CreateUplinkSet(eNet UplinkSet) error {
 
 func (c *OVClient) DeleteUplinkSet(name string) error {
 	var (
-		eNet UplinkSet 
+		upSet UplinkSet 
 		err  error
 		t    *Task
 		uri  string
@@ -152,7 +223,7 @@ func (c *OVClient) DeleteUplinkSet(name string) error {
 	if upSet.Name != "" {
 		t = t.NewProfileTask(c)
 		t.ResetTask()
-		log.Debugf("REST : %s \n %+v\n", upSet.URI, eNet)
+		log.Debugf("REST : %s \n %+v\n", upSet.URI, upSet)
 		log.Debugf("task -> %+v", t)
 		uri = upSet.URI.String()
 		if uri == "" {
@@ -187,7 +258,7 @@ func (c *OVClient) DeleteUplinkSet(name string) error {
 func (c *OVClient) UpdateUplinkSet(upSet UplinkSet) error {
 	log.Infof("Initializing update of uplink-set for %s.", upSet.Name)
 	var (
-		uri = eNet.URI.String()
+		uri = upSet.URI.String()
 		t   *Task
 	)
 	// refresh login

@@ -9,9 +9,9 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-		eth_name = "eth1"
-		new_name = "eth77"
-		upd_name = "eth88"
+		ethernet_network = "eth1"
+		ethernet_network_1 = "eth77"
+		ethernet_network_2 = "eth88"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -24,33 +24,43 @@ func main() {
 	fmt.Println(ovVer)
 
 	fmt.Println("#................... Ethernet Network by Name ...............#")
-	eth, _ := ovc.GetEthernetNetworkByName(eth_name)
-	fmt.Println(eth)
+	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
+	if err != nil {
+		fmt.Println(err)
+	}
+	else {
+		fmt.Println(ethernet_nw)
+	}
 
 	sort := "name:desc"
-	eth_list, err := ovc.GetEthernetNetworks("", sort)
+	ethernet_nw_list, err := ovc.GetEthernetNetworks("", sort)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
+	else {
 	fmt.Println("# ................... Ethernet Networks List .................#")
-	for i := 0; i < len(eth_list.Members); i++ {
-		fmt.Println(eth_list.Members[i].Name)
-	}
+	for i := 0; i < len(ethernet_nw_list.Members); i++ {
+		fmt.Println(ethernet_nw_list.Members[i].Name)
+	}}
 
-	eth_id := "02bbab66-4f23-4297-88fa-5420294ec552"
+	ethernet_nw_id := "02bbab66-4f23-4297-88fa-5420294ec552"
 	fmt.Println("#................... GetAssociatedProfiles ....................#")
-	eth_af, err := ovc.GetAssociatedProfile(eth_id)
+	ethernet_nw_ass_pfl, err := ovc.GetAssociatedProfile(ethernet_nw_id)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(eth_af)
+	else {
+	fmt.Println(ethernet_nw_ass_pfl)
+        }
 
 	fmt.Println("#................... GetAssociatedUplinkGroups ...............#")
-	eth_up, err := ovc.GetAssociatedUplinkGroup(eth_id)
+	ethernet_nw_uplinkgrps, err := ovc.GetAssociatedUplinkGroup(ethernet_nw_id)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(eth_up)
+	else {
+	fmt.Println(ethernet_nw_uplinkgrps)
+        }
 
 	bandwidth := ov.Bandwidth{MaximumBandwidth: 10000, TypicalBandwidth: 2000}
 
@@ -62,36 +72,44 @@ func main() {
 	if er != nil {
 		fmt.Println("............... Ethernet Network Creation Failed:", err)
 	}
+	else {
 	fmt.Println(".... Ethernet Network Created Success")
+        }
 
 	err = ovc.CreateBulkEthernetNetwork(bulkEthernetNetwork)
 	if err != nil {
 		fmt.Println("............. Bulk Ethernet Network Creation Failed:", err)
 	}
+	else {
 	fmt.Println(".... Bulk Ethernet Network Created Success")
+        }
 
-	bulk_list, err := ovc.GetEthernetNetworks("", sort)
-	for i := 0; i < len(bulk_list.Members); i++ {
-		fmt.Println(bulk_list.Members[i].Name)
+	bulk_ethernet_network_list, err := ovc.GetEthernetNetworks("", sort)
+	for i := 0; i < len(bulk_ethernet_network_list.Members); i++ {
+		fmt.Println(bulk_ethernet_network_list.Members[i].Name)
 	}
 
-	new_eth, _ := ovc.GetEthernetNetworkByName(new_name)
-	new_eth.Name = upd_name
-	err = ovc.UpdateEthernetNetwork(new_eth)
+	ethernet_nw, _ := ovc.GetEthernetNetworkByName(ethernet_network_1)
+	ethernet_nw.Name = ethernet_network_2
+	err = ovc.UpdateEthernetNetwork(ethernet_nw)
 	if err != nil {
 		panic(err)
 	}
+	else {
 	fmt.Println("#.................... Ethernet Network after Updating ...........#")
-	up_list, err := ovc.GetEthernetNetworks("", sort)
-	for i := 0; i < len(up_list.Members); i++ {
-		fmt.Println(up_list.Members[i].Name)
+	ethernet_nw_after_update, err := ovc.GetEthernetNetworks("", sort)
+	for i := 0; i < len(ethernet_nw_after_update.Members); i++ {
+		fmt.Println(ethernet_nw_after_update.Members[i].Name)
 	}
+        }
 
-	eth_del := "ppp"
-	err = ovc.DeleteEthernetNetwork(eth_del)
+	ethernet_network_3 := "ppp"
+	err = ovc.DeleteEthernetNetwork(ethernet_network_3)
 	if err != nil {
 		panic(err)
 	}
+	else {
 	fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
+        }
 
 }
