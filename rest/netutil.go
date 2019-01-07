@@ -113,8 +113,8 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	// Manage the query string
 	c.GetQueryString(Url)
 
-	log.Infof("*** url => %s", Url.String())
-	log.Infof("*** method => %s", method.String())
+	log.Debugf("*** url => %s", Url.String())
+	log.Debugf("*** method => %s", method.String())
 
 	// parse url
 	reqUrl, err := url.Parse(Url.String())
@@ -128,7 +128,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 		if err != nil {
 			return nil, err
 		}
-		log.Infof("*** options => %+v", bytes.NewBuffer(OptionsJSON))
+		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
 		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
 		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
@@ -145,7 +145,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	}
 	if proxyUrl != nil {
 		tr.Proxy = http.ProxyURL(proxyUrl)
-		log.Infof("*** proxy => %+v", tr.Proxy)
+		log.Debugf("*** proxy => %+v", tr.Proxy)
 	}
 
 	// build the auth headerU
@@ -175,12 +175,10 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	data, err := ioutil.ReadAll(resp.Body)
 
 	if !c.isOkStatus(resp.StatusCode) {
-		log.Info("...........................sam .....................")
 		type apiErr struct {
 			Err string `json:"details"`
 		}
 		var outErr apiErr
-		log.Infof("printing data.......",data)
 		json.Unmarshal(data, &outErr)
 		return nil, fmt.Errorf("Error in response: %s\n Response Status: %s", outErr.Err, resp.Status)
 	}
