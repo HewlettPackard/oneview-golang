@@ -29,8 +29,8 @@ func TestCreateProfileTemplate(t *testing.T) {
 
 		if testServerProfileTemplate.URI.IsNil() {
 			testServerProfileTemplate = ov.ServerProfile{
-				Name:                  testName,
-				Type:                  d.Tc.GetTestData(d.Env, "Type").(string),
+				Name: testName,
+				Type: d.Tc.GetTestData(d.Env, "Type").(string),
 				ServerHardwareTypeURI: utils.NewNstring(d.Tc.GetTestData(d.Env, "ServerHardwareTypeUri").(string)),
 				EnclosureGroupURI:     utils.NewNstring(d.Tc.GetTestData(d.Env, "EnclosureGroupUri").(string)),
 			}
