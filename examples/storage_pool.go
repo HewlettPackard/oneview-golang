@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -11,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV     *ov.OVClient
-		storage_pool = "CPG-SSD"
+		storage_pool = "<storage_pool>"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -20,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600,
+		800,
 		"*")
 
 	//Get storage pool by name to update
