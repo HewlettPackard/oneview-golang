@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
+	//"net/url"
 	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
@@ -245,15 +245,9 @@ func (c *OVClient) GetServerHardwareList(filters []string, sort string) (ServerH
 		c.SetQueryString(q)
 	}
 	data, err := c.RestAPICall(rest.GET, uri, nil)
-
-	// parse the url and setup any query strings
-	var Url *url.URL
-	Url, err = url.Parse(utils.Sanatize(c.Endpoint))
 	if err != nil {
 		return serverlist, err
 	}
-	Url.Path += uri
-	c.GetQueryString(Url)
 
 	log.Debugf("GetServerHardwareList %s", data)
 
