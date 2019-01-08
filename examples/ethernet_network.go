@@ -12,7 +12,7 @@ func main() {
 		ethernet_network   = "eth1"
 		ethernet_network_1 = "eth77"
 		ethernet_network_2 = "eth88"
-		ethernet_network_3 = "ppp"
+		ethernet_network_3 = "eth99"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),

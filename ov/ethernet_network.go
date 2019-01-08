@@ -34,9 +34,8 @@ type EthernetNetworkList struct {
 	Start       int               `json:"start,omitempty"`       // "start": 0,
 	PrevPageURI utils.Nstring     `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring     `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring     `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	URI         utils.Nstring     `json:"uri,omitempty"`         // "uri": "/rest/ethernet-networks?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
 	Members     []EthernetNetwork `json:"members,omitempty"`     // "members":[]
-	Type        string            `json:"type,omitempty"`        // "type": "bulk-ethernet-network",
 }
 
 type Bandwidth struct {
@@ -51,7 +50,7 @@ type BulkEthernetNetwork struct {
 	SmartLink      bool      `json:"smartLink"`      // "smartLink":false,
 	PrivateNetwork bool      `json:"privateNetwork"` // "privateNetwork":false,
 	Bandwidth      Bandwidth `json:"bandwidth"`      // "bandwidth":10000,2000
-	Type           string    `json:"type"`           // "type":"bulk-ethernet-networkV4",
+	Type           string    `json:"type"`           // "type":"bulk-ethernet-network",
 }
 
 func (c *OVClient) GetEthernetNetworkByName(name string) (EthernetNetwork, error) {
