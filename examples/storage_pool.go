@@ -27,6 +27,10 @@ func main() {
 	update_pool, _ := ovc.GetStoragePoolByName(storage_pool)
 
 	// Update the given storage pool
+	// This API can be used to manage/unmanage a storage pool, update storage pool attributes or to request a refresh of a storage pool.
+	// To manage/unmanage a storage pool, issue a PUT with the isManaged attribute set as true to manage or false to unmanage.
+	// Attempting to unmanage a StoreVirtual pool is not allowed and the attempt will return a task error.
+	// To request a refresh of a storage pool the user must set the "requestingRefresh" attribute to true. The user cannot perform any other attribute update to the storage pool while also requesting a refresh of the pool.
 	update_pool.IsManaged = true
 
 	err := ovc.UpdateStoragePool(update_pool)
