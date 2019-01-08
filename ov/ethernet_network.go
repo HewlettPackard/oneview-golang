@@ -106,7 +106,6 @@ func (c *OVClient) GetAssociatedProfile(id string) ([]string, error) {
 		serverProfiles = new([]string)
 	)
 	uri = uri + id + "/associatedProfiles"
-	fmt.Println(uri)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
