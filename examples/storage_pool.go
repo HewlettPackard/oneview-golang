@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-//	"github.com/HewlettPackard/oneview-golang/utils"
+	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
+		ClientOV     *ov.OVClient
 		storage_pool = "CPG-SSD"
 	)
 
@@ -25,21 +25,19 @@ func main() {
 
 	//Get storage pool by name to update
 	update_pool, _ := ovc.GetStoragePoolByName(storage_pool)
-	fmt.Println(update_pool.IsManaged)
+
 	// Update the given storage pool
-	update_pool.IsManaged = false
-	fmt.Println(update_pool.IsManaged)
+	update_pool.IsManaged = true
 
 	err := ovc.UpdateStoragePool(update_pool)
 	if err != nil {
 		fmt.Println("Could not update the pool", err)
 	}
 
-
 	// Get All the pools present
 	fmt.Println("\nGetting all the storage pools present in the system: \n")
 	sort := "name:desc"
-	pool_list, err := ovc.GetStoragePools("", sort)
+	pool_list, err := ovc.GetStoragePools("", sort, "", "")
 	if err != nil {
 		fmt.Println("Error Getting the storage pools ", err)
 	}
