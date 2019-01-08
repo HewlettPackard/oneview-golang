@@ -120,6 +120,10 @@
 |<sub>/rest/server-profiles</sub>                                                         | POST     | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |<sub>/rest/server-profiles</sub>                                                         | DELETE   | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 <sub>/rest/server-profiles</sub>                                                          | PUT      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
+|     **Storage Pools**                                                                                                                                   |
+|<sub>/rest/storage-pools</sub>                                                           | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | 
+|<sub>/rest/storage-pools/{id}</sub>                                                      | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
+|<sub>/rest/storage-pools/{id}</sub>                                                      | PUT      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |     **Switch Types**                                                                                                                              |
 |<sub>/rest/switch-types</sub>                                                            | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |<sub>/rest/switch-types/{id}</sub>                                                       | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
