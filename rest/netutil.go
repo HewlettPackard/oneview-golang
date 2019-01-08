@@ -51,6 +51,7 @@ type Client struct {
 	APIVersion int
 	SSLVerify  bool
 	Endpoint   string
+	IfMatch    string
 	Option     Options
 }
 
@@ -173,19 +174,23 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	// DEBUGGING WHILE WE WORK
 
 	data, err := ioutil.ReadAll(resp.Body)
-
 	if !c.isOkStatus(resp.StatusCode) {
 		type apiErr struct {
-			Err string `json:"details"`
+			Message string `json:"message"`
+			Details string `json:"details"`
 		}
 		var outErr apiErr
 		json.Unmarshal(data, &outErr)
-		return nil, fmt.Errorf("Error in response: %s\n Response Status: %s", outErr.Err, resp.Status)
+		return nil, fmt.Errorf("Error in response: %s\n Response Status: %s\n Response Details: %s", outErr.Message, resp.Status, outErr.Details)
 	}
 
 	if err != nil {
 		return nil, err
 	}
 
+	// Added the condition to accomodate the response where only the response header is returned.
+	if len(data) == 0 {
+		data = []byte(`{"URI":"` + resp.Header["Location"][0] + `"}`)
+	}
 	return data, nil
 }
