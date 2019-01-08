@@ -12,6 +12,7 @@ func main() {
 		ethernet_network   = "eth1"
 		ethernet_network_1 = "eth77"
 		ethernet_network_2 = "eth88"
+		ethernet_network_3 = "ppp"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -97,7 +98,6 @@ func main() {
 		}
 	}
 
-	ethernet_network_3 := "ppp"
 	err = ovc.DeleteEthernetNetwork(ethernet_network_3)
 	if err != nil {
 		fmt.Println(err)
