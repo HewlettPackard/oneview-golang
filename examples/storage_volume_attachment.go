@@ -9,7 +9,7 @@ import (
 func main() {
 
 	var (
-		ClientOV     *ov.OVClient
+		ClientOV    *ov.OVClient
 		name_to_get = "CPG-SSD"
 	)
 
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	// Get volume attachment by name
-        fmt.Println("\nGetting details of volume attachment with name: ", name_to_get)
-        volAttach_by_name, _ := ovc.GetStorageAttachmentByName(name_to_get)
-        fmt.Println(volAttach_by_name)
+	fmt.Println("\nGetting details of volume attachment with name: ", name_to_get)
+	volAttach_by_name, _ := ovc.GetStorageAttachmentByName(name_to_get)
+	fmt.Println(volAttach_by_name)
 }
