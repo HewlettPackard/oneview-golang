@@ -126,7 +126,6 @@ func (c *OVClient) GetAssociatedUplinkGroup(id string) ([]string, error) {
 		uplinkGroups = new([]string)
 	)
 	uri = uri + id + "/associatedUplinkGroups"
-	fmt.Println(uri)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
