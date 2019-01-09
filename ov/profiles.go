@@ -55,8 +55,14 @@ type BiosSettings struct {
 
 // BiosOption - bios options
 type BiosOption struct {
-	ManageBios         bool           `json:"manageBios,omitempty"`         // "manageBios": false,
+	ManageBios         	bool           `json:"manageBios,omitempty"`         // "manageBios": false,
 	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"` // "overriddenSettings": []
+}
+
+type ConnectionSettings struct {
+	ComplianceControl	string			`json:"complianceControl,omitempty"`		// "complianceControl": "Checked",
+	ManageConnections   bool            `json:"manageConnections,omitempty"`        // "manageConnections": false,
+	Connections         []Connection    `json:"connections,omitempty"`
 }
 
 // ServerProfile - server profile object for ov
@@ -70,6 +76,7 @@ type ServerProfile struct {
 	BootMode              BootModeOption      `json:"bootMode,omitempty"`         // "bootMode": {},
 	Category              string              `json:"category,omitempty"`         // "category": "server-profiles",
 	Connections           []Connection        `json:"connections,omitempty"`
+	ConnectionSettings    ConnectionSettings  `json:"connectionSettings,omitempty"`
 	Description           string              `json:"description,omitempty"`           // "description": "Docker Machine Bay 16",
 	Created               string              `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
 	ETAG                  string              `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8"
@@ -275,7 +282,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		if err != nil {
 			return err
 		}
-		new_template.Type = "ServerProfileV5"
+		new_template.Type = "ServerProfileV9"
 		new_template.ServerProfileTemplateURI = template.URI // create relationship
 		log.Debugf("new_template -> %+v", new_template)
 	} else {
@@ -285,6 +292,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 	new_template.ServerHardwareURI = blade.URI
 	new_template.Description += " " + name
 	new_template.Name = name
+	log.Infof("new_template -> %+v", new_template)
 
 	t, err := c.SubmitNewProfile(new_template)
 	if err != nil {
