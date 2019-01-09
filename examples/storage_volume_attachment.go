@@ -10,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV    *ov.OVClient
-		name_to_get = "CPG-SSD"
+		name_to_get = "<volume attachment name>"
 	)
 
 	ovc := ClientOV.NewOVClient(
