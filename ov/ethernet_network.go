@@ -26,6 +26,8 @@ type EthernetNetwork struct {
 	Type                  string        `json:"type,omitempty"`                  // "type": "ethernet-networkV3",
 	URI                   utils.Nstring `json:"uri,omitempty"`                   // "uri": "/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
 	VlanId                int           `json:"vlanId,omitempty"`                // "vlanId": 1,
+	ScopesUri             utils.Nstring `json:"scopesUri,omitempty"`             // "scopesUri":
+	InitialScopeUris      []utils.Nstring `json:"initialScopeUris,omitempty"`    // "initialScopUris": 
 }
 
 type EthernetNetworkList struct {
@@ -57,7 +59,7 @@ func (c *OVClient) GetEthernetNetworkByName(name string) (EthernetNetwork, error
 	var (
 		eNet EthernetNetwork
 	)
-	eNets, err := c.GetEthernetNetworks(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	eNets, err := c.GetEthernetNetworks("","",fmt.Sprintf("name matches '%s'", name), "name:asc")
 	if eNets.Total > 0 {
 		return eNets.Members[0], err
 	} else {
@@ -65,7 +67,8 @@ func (c *OVClient) GetEthernetNetworkByName(name string) (EthernetNetwork, error
 	}
 }
 
-func (c *OVClient) GetEthernetNetworks(filter string, sort string) (EthernetNetworkList, error) {
+
+func (c *OVClient) GetEthernetNetworks(start string, count string, filter string, sort string) (EthernetNetworkList, error) {
 	var (
 		uri              = "/rest/ethernet-networks"
 		q                map[string]interface{}
@@ -78,6 +81,14 @@ func (c *OVClient) GetEthernetNetworks(filter string, sort string) (EthernetNetw
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
 	}
 
 	// refresh login
