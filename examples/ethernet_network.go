@@ -20,7 +20,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		800,
+		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
 
@@ -33,7 +34,7 @@ func main() {
 	}
 
 	sort := "name:desc"
-	ethernet_nw_list, err := ovc.GetEthernetNetworks("", sort)
+	ethernet_nw_list, err := ovc.GetEthernetNetworks("", "", "", sort)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -80,21 +81,25 @@ func main() {
 		fmt.Println(".... Bulk Ethernet Network Created Success")
 	}
 
-	bulk_ethernet_network_list, err := ovc.GetEthernetNetworks("", sort)
+	bulk_ethernet_network_list, err := ovc.GetEthernetNetworks("", "", "", sort)
 	for i := 0; i < len(bulk_ethernet_network_list.Members); i++ {
 		fmt.Println(bulk_ethernet_network_list.Members[i].Name)
 	}
 
-	ethernet_nw, _ := ovc.GetEthernetNetworkByName(ethernet_network_1)
-	ethernet_nw.Name = ethernet_network_2
-	err = ovc.UpdateEthernetNetwork(ethernet_nw)
+	ethernet_ntw, _ := ovc.GetEthernetNetworkByName(ethernet_network_1)
+	ethernet_ntw.Name = ethernet_network_2
+	err = ovc.UpdateEthernetNetwork(ethernet_ntw)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#.................... Ethernet Network after Updating ...........#")
-		ethernet_nw_after_update, err := ovc.GetEthernetNetworks("", sort)
-		for i := 0; i < len(ethernet_nw_after_update.Members); i++ {
-			fmt.Println(ethernet_nw_after_update.Members[i].Name)
+		ethernet_nw_after_update, err := ovc.GetEthernetNetworks("", "", "", sort)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			for i := 0; i < len(ethernet_nw_after_update.Members); i++ {
+				fmt.Println(ethernet_nw_after_update.Members[i].Name)
+			}
 		}
 	}
 
