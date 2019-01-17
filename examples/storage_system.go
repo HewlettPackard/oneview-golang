@@ -43,14 +43,14 @@ func main() {
 	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 
 	updated_storage_system := ov.StorageSystemV4{
-		Name: name_to_create,
+		Name:                                  name_to_create,
 		StorageSystemDeviceSpecificAttributes: DeviceSpecificAttributesForUpdate,
-		URI:         update_system.URI,
-		ETAG:        update_system.ETAG,
-		Description: "empty",
-		Credentials: update_system.Credentials,
-		Hostname:    update_system.Hostname,
-		Ports:       update_system.Ports,
+		URI:                                   update_system.URI,
+		ETAG:                                  update_system.ETAG,
+		Description:                           "empty",
+		Credentials:                           update_system.Credentials,
+		Hostname:                              update_system.Hostname,
+		Ports:                                 update_system.Ports,
 	}
 
 	err = ovc.UpdateStorageSystem(updated_storage_system)
