@@ -141,6 +141,7 @@ func (s ServerProfile) Clone() ServerProfile {
 		SerialNumberType:   s.SerialNumberType,
 		Type:               s.Type,
 		WWNType:            s.WWNType,
+		URI:				s.URI,
 	}
 }
 
@@ -162,7 +163,7 @@ func (c *OVClient) GetProfileByName(name string) (ServerProfile, error) {
 	var (
 		profile ServerProfile
 	)
-	profiles, err := c.GetProfiles(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	profiles, err := c.GetProfiles("", "", fmt.Sprintf("name matches '%s'", name), "name:asc", "")
 	if profiles.Total > 0 {
 		return profiles.Members[0], err
 	} else {
@@ -175,7 +176,7 @@ func (c *OVClient) GetProfileBySN(serialnum string) (ServerProfile, error) {
 	var (
 		profile ServerProfile
 	)
-	profiles, err := c.GetProfiles(fmt.Sprintf("serialNumber matches '%s'", serialnum), "name:asc")
+	profiles, err := c.GetProfiles("", "", fmt.Sprintf("serialNumber matches '%s'", serialnum), "name:asc", "")
 	if profiles.Total > 0 {
 		return profiles.Members[0], err
 	} else {
@@ -184,19 +185,31 @@ func (c *OVClient) GetProfileBySN(serialnum string) (ServerProfile, error) {
 }
 
 // GetProfiles - get a server profiles
-func (c *OVClient) GetProfiles(filter string, sort string) (ServerProfileList, error) {
+func (c *OVClient) GetProfiles(start string, count string, filter string, sort string, scopeUris string) (ServerProfileList, error) {
 	var (
 		uri      = "/rest/server-profiles"
 		q        map[string]interface{}
 		profiles ServerProfileList
 	)
 	q = make(map[string]interface{})
-	if filter != "" {
+	if len(filter) > 0 {
 		q["filter"] = filter
 	}
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
+	}
+
+	if scopeUris != "" {
+		q["scopeUris"] = scopeUris
 	}
 
 	// refresh login
@@ -398,7 +411,7 @@ func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, p)
+	log.Infof("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, p)
 	if err != nil {

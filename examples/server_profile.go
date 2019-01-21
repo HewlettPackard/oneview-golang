@@ -9,9 +9,9 @@ import (
 func main() {
 	var (
 		clientOV            *ov.OVClient
-		spt_name 			= "Ansible_demo"
+		//spt_name 			= "new_test_go"
 		sp_name             = "test"
-//		sp_sn 	            = "VCGRE1S007"
+		sp_sn 	            = "VCGRE1S007"
 //		new_enclosure_name = "RenamedEnclosure"
 //		path               = "/name"
 //		op                 = "replace"
@@ -25,15 +25,15 @@ func main() {
 		800,
 		"*")
 
-//	server_profile_create_map := ov.ServerProfile{
-//		Type: 				"ServerProfileV9",
-//		Name: 				"test",
-//		ServerHardwareURI: 	""
-//	}
-	//server_hardware_map := ov.ServerHardware{}
-	templates, err := ovc.GetProfileTemplates(fmt.Sprintf("name matches '%s'", spt_name), "name:asc")
+	server_profile_create_map := ov.ServerProfile{
+		Type: 				"ServerProfileV9",
+		Name: 				"test",
+		ServerHardwareURI: 	""
+	}
+	server_hardware_map := ov.ServerHardware{}
+	templates, err := ovc.GetProfileTemplates("", "", fmt.Sprintf("name matches '%s'", spt_name), "name:asc", "")
 
-	blade, err := ovc.GetServerHardwareByName("SYN03_Frame1, bay 12")
+	blade, err := ovc.GetServerHardwareByName("SYN03_Frame1, bay 3")
 
 	err = ovc.CreateProfileFromTemplate(sp_name, templates.Members[0], blade)
 	if err != nil {
@@ -44,7 +44,7 @@ func main() {
 
     sort := ""
 
-    sp_list, err := ovc.GetProfiles("", sort)
+    sp_list, err := ovc.GetProfiles("", "", "", sort, "")
     if err != nil {
         fmt.Println("Server Profile Retrieval Failed: ", err)
     } else {
@@ -79,19 +79,47 @@ func main() {
         fmt.Println(sp.Name)
     }
 
-    task, err := ovc.SubmitDeleteProfile(sp_del)
-    if err != nil {
-        fmt.Println("Server Profile Delete Request Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile Delete---------------#")
-        fmt.Println("Task URI: ", task.URI)
+    sp_update_clone := ov.ServerProfile{
+        Name:                   "Renamed Server Profile",
+        URI:                    sp_del.URI,
+        Type:                   sp_del.Type,
+        ETAG:                   sp_del.ETAG,
+        Affinity:               sp_del.Affinity,
+        ServerHardwareTypeURI:  sp_del.ServerHardwareTypeURI,
+        EnclosureGroupURI:      sp_del.EnclosureGroupURI,
     }
 
-    err = ovc.DeleteProfile("test")
+    err = ovc.UpdateServerProfile(sp_update_clone)
     if err != nil {
-        fmt.Println("Server Profile Delete Failed: ", err)
+        fmt.Println("Server Profile Create Failed: ", err)
     } else {
-        fmt.Println("#----------------Server Profile Deleted---------------#")
+        fmt.Println("#----------------Server Profile Created---------------#")
     }
+
+    sp_list, err = ovc.GetProfiles("", "", "", sort, "")
+    if err != nil {
+        fmt.Println("Server Profile Retrieval Failed: ", err)
+    } else {
+        fmt.Println("#----------------Server Profile List---------------#")
+
+        for i := 0; i < len(sp_list.Members); i++ {
+            fmt.Println(sp_list.Members[i].Name)
+        }
+    }
+
+    // task, err := ovc.SubmitDeleteProfile(sp_del)
+    // if err != nil {
+    //     fmt.Println("Server Profile Delete Request Failed: ", err)
+    // } else {
+    //     fmt.Println("#----------------Server Profile Delete---------------#")
+    //     fmt.Println("Task URI: ", task.URI)
+    // }
+
+    // err = ovc.DeleteProfile("test2")
+    // if err != nil {
+    //     fmt.Println("Server Profile Delete Failed: ", err)
+    // } else {
+    //     fmt.Println("#----------------Server Profile Deleted---------------#")
+    // }
 
 }

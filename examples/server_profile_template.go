@@ -8,10 +8,10 @@ import (
 
 func main() {
     var (
-        clientOV            *ov.OVClient
-        spt_name            = "test"
-        eg_name             = "SYN03_EC"
-        server_hardware_type_name = "SY 480 Gen9 1"
+        clientOV                        *ov.OVClient
+        server_profile_template_name    = "Test SPT"
+        enclosure_group_name            = "SYN03_EC"
+        server_hardware_type_name       = "SY 480 Gen9 1"
     )
     ovc := clientOV.NewOVClient(
         os.Getenv("ONEVIEW_OV_USER"),
@@ -24,15 +24,15 @@ func main() {
 
     server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
 
-    enc_grp, err := ovc.GetEnclosureGroupByName(eg_name)
+    enc_grp, err := ovc.GetEnclosureGroupByName(enclosure_group_name)
 
     conn_settings := ov.ConnectionSettings{
-        ManageConnections:true,
+        ManageConnections: true,
     }
 
     server_profile_template := ov.ServerProfile{
         Type: "ServerProfileTemplateV5",
-        Name: "test",
+        Name: server_profile_template_name,
         EnclosureGroupURI: enc_grp.URI,
         ServerHardwareTypeURI: server_hardware_type.URI,
         ConnectionSettings: conn_settings,
@@ -45,9 +45,8 @@ func main() {
         fmt.Println("#----------------Server Profile Template Created---------------#")
     }
 
-    sort := ""
-
-    spt_list, err := ovc.GetProfileTemplates("", sort)
+    sort := "name:asc"
+    spt_list, err := ovc.GetProfileTemplates("", "", "", sort, "")
     if err != nil {
         fmt.Println("Server Profile Template Retrieval Failed: ", err)
     } else {
@@ -58,15 +57,34 @@ func main() {
         }
     }
 
-    sp_del, err := ovc.GetProfileTemplateByName(spt_name)
+    spt, err := ovc.GetProfileTemplateByName(server_profile_template_name)
     if err != nil {
         fmt.Println("Server Profile Template Retrieval By Name Failed: ", err)
     } else {
         fmt.Println("#----------------Server Profile Template by Name---------------#")
-        fmt.Println(sp_del.Name)
+        fmt.Println(spt.Name)
     }
 
-    err = ovc.DeleteProfileTemplate("test")
+    spt.Name = "Renamed Test SPT"
+    err = ovc.UpdateProfileTemplate(spt)
+    if err != nil {
+        fmt.Println("Server Profile Template Updation Failed: ", err)
+    } else {
+        fmt.Println("#----------------Server Profile Template Updated---------------#")
+    }
+
+    spt_list, err = ovc.GetProfileTemplates("", "", "", sort, "")
+    if err != nil {
+        fmt.Println("Server Profile Template Retrieval Failed: ", err)
+    } else {
+        fmt.Println("#----------------Server Profile Template List---------------#")
+
+        for i := 0; i < len(spt_list.Members); i++ {
+            fmt.Println(spt_list.Members[i].Name)
+        }
+    }
+
+    err = ovc.DeleteProfileTemplate(spt.Name)
     if err != nil {
         fmt.Println("Server Profile Template Delete Failed: ", err)
     } else {
