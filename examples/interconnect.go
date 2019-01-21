@@ -18,7 +18,8 @@ func main() {
 		false,
 		600)
 
-	interconnect_list, err := ovc.GetInterconnects("", "", "", "")
+	sort := "name:desc"
+	interconnect_list, err := ovc.GetInterconnects("", "", "", sort)
 	if err != nil {
 		fmt.Println(err)
 	} else {
