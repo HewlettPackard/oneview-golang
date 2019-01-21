@@ -16,8 +16,6 @@ func main() {
 		interconnectURI = "/rest/interconnects/aca6687f-1370-46cd-b832-7e3192dbddfd"
 		externalVlan    = "504"
 		tcId            = "1"
-		//li_name     = "SYN03_LE-SYN03_LIG"
-		//li_type   =   "logical-interconnectV5"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -26,8 +24,6 @@ func main() {
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
 		800)
-	ovVer, _ := ovc.GetAPIVersion()
-	fmt.Println(ovVer)
 
 	fmt.Println("....  Logical Interconnects Collection .....")
 	logicalInterconnectList, _ := ovc.GetLogicalInterconnects("", "0", "10")
