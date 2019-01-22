@@ -239,6 +239,39 @@ type LogicalInterconnectGroupList struct {
 	Members     []LogicalInterconnectGroup `json:"members,omitempty"`     // "members":[]
 }
 
+type LogicalInterconnectGroupDefaultSettings struct {
+	Type             string            `json:"type"`                       // "type": "InterconnectSettingsV4",
+	URI              utils.Nstring     `json:"uri,omitempty"`              // "uri": null,
+	Category         string            `json:"category,omitempty"`         // "category": null
+	ETAG             string            `json:"eTag,omitempty"`             //"eTag": null,
+	Created          string            `json:"created,omitempty"`          //"created": null,
+	Modified         string            `json:"modified,omitempty"`         //"modified": null,
+	EthernetSettings *EthernetSettings `json:"ethernetSettings,omitempty"` // "ethernetSettings": {...},
+	FcoeSettings     string            `json:"fcoeSettings,omitempty"`     // "fcoeSettings": null,
+	Description      string            `json:"description,omitempty"`      // "description": null,
+	State            string            `json:"state,omitempty"`            //  "state": null,
+	Status           string            `json:"status,omitempty"`           // "status": null,
+	Name             string            `json:"name,omitempty"`             // "name": null
+}
+
+func (c *OVClient) GetLogicalInterconnectGroupDefaultSettings() (LogicalInterconnectGroupDefaultSettings, error) {
+	var (
+		uri   = "/rest/logical-interconnect-groups/defaultSettings"
+		ligDS LogicalInterconnectGroupDefaultSettings
+	)
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return ligDS, err
+	}
+	log.Debugf("GetLogicalInterconnectGroup %s", data)
+	if err := json.Unmarshal([]byte(data), &ligDS); err != nil {
+		return ligDS, err
+	}
+	return ligDS, nil
+}
+
 func (c *OVClient) GetLogicalInterconnectGroupByName(name string) (LogicalInterconnectGroup, error) {
 	var (
 		logicalInterconnectGroup LogicalInterconnectGroup

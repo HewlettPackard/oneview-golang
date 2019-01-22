@@ -64,8 +64,8 @@ func main() {
 	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4", URI: "/ethernetSettings", Name: "defaultEthernetSwitchSettings", ID: "e2f5a9ac-8b0e-435c-8a3d-db00407fc7c7",
 		InterconnectType: "Ethernet", EnableIgmpSnooping: newFalse(), IgmpIdleTimeoutInterval: 260, EnableFastMacCacheFailover: newTrue(),
 		MacRefreshInterval: 5, EnableNetworkLoopProtection: newTrue(), EnablePauseFloodProtection: newTrue(), EnableRichTLV: newFalse()}
-	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: true, SampleCount: 12, SampleInterval: 300}
-	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration", Enabled: newFalse(), Category: "snmp-configuration", V3Enabled: true}
+	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: newTrue(), SampleCount: 12, SampleInterval: 300}
+	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration", Enabled: newFalse(), Category: "snmp-configuration", V3Enabled: newTrue()}
 	qosActiveConfig := ov.ActiveQosConfig{Type: "QosConfiguration", Category: "qos-aggregated-configuration", ConfigType: "Passthrough"}
 	qosConfig := ov.QosConfiguration{ActiveQosConfig: qosActiveConfig, Type: "qos-aggregated-configuration", Category: "qos-aggregated-configuration"}
 
@@ -88,6 +88,11 @@ func main() {
 	uri := lig.URI
 	lig_uri, _ := ovc.GetLogicalInterconnectGroupByUri(uri)
 	fmt.Println(lig_uri)
+
+	fmt.Println("...Listing Logical Interconnect Default Settings .. ")
+	lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
+	fmt.Println(lig_ds)
+
 	fmt.Println("... Updating LogicalInterconnectGroup ...")
 	fmt.Println("")
 	lig_uri.Name = new_lig_name
