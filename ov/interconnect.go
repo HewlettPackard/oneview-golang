@@ -9,7 +9,7 @@ import (
 )
 
 type Interconnect struct {
-	BaseWWN 					  string 			   `json:"baseWWN,omitempty"`                       // "baseWWN": "10:00:00:11:0A:06:08:69",
+	BaseWWN                       string               `json:"baseWWN,omitempty"`                       // "baseWWN": "10:00:00:11:0A:06:08:69",
 	Category                      string               `json:"category,omitempty"`                      // "category": "interconnects",
 	Created                       string               `json:"created,omitempty"`                       // "created": "2018-08-02T15:49:59.963Z",
 	Description                   string               `json:"description,omitempty"`                   // "description": null,
@@ -29,10 +29,10 @@ type Interconnect struct {
 	ETag                          string               `json:"eTag,omitempty"`                          // "eTag": "463bd328-ffc8-40ae-9603-6136fa9e6e58",
 	FirmwareVersion               string               `json:"firmwareVersion,omitempty"`               // "firmwareVersion": "1.3.0.1005",
 	HostName                      string               `json:"hostName,omitempty"`                      // "hostName": "VC4040F8-2TV5451754",
-	IcmLicences 				  IcmLicence 		   `json:"icmLicences,omitempty"`                   // "icmLicences": {},
+	IcmLicences                   IcmLicence           `json:"icmLicences,omitempty"`                   // "icmLicences": {},
 	IgmpIdleTimeoutInterval       int                  `json:"igmpIdleTimeoutInterval,omitempty"`       // "igmpIdleTimeoutInterval": 260,
 	IgmpSnoopingVlanIds           string               `json:"igmpSnoopingVlanIds,omitempty"`           // "igmpSnoopingVlanIds": "",
-	InitialScopeUris			  []string 			   `json:"initialScopeUris,omitempty"`           	// "initialScopeUris": [],
+	InitialScopeUris              []string             `json:"initialScopeUris,omitempty"`              // "initialScopeUris": [],
 	InterconnectIP                string               `json:"interconnectIP,omitempty"`                // "interconnectIP": "fe80::5eb9:1ff:fe47:f5d2",
 	InterconnectLocation          InterconnectLocation `json:"interconnectLocation,omitempty"`          // "interconnectLocation": {}
 	InterconnectMAC               string               `json:"interconnectMAC,omitempty"`               // "interconnectMAC": "5C:B9:01:47:F5:D2",
@@ -73,18 +73,18 @@ type Interconnect struct {
 }
 
 type IcmLicence struct {
-	Licence 	[]Licence 	`json:"licence,omitempty"` 	// "licence": []
+	Licence []Licence `json:"licence,omitempty"` // "licence": []
 }
 
 type Licence struct {
-	ConsumedCount 	int 	`json:"consumedCount,omitempty"`     // "consumedCount": 0,
-	LicenseType 	string 	`json:"licenseType,omitempty"`		 // "licenseType": "Synergy 8Gb FC Upgrade",
-	RequiredCount 	int 	`json:"requiredCount,omitempty"`     // "requiredCount": 0,
-	State 			string 	`json:"state,omitempty"`     		 // "state": "Yes",
+	ConsumedCount int    `json:"consumedCount,omitempty"` // "consumedCount": 0,
+	LicenseType   string `json:"licenseType,omitempty"`   // "licenseType": "Synergy 8Gb FC Upgrade",
+	RequiredCount int    `json:"requiredCount,omitempty"` // "requiredCount": 0,
+	State         string `json:"state,omitempty"`         // "state": "Yes",
 }
 type IpAddressList struct {
-	IpAddress     string 	`json:"ipAddress,omitempty"`     // "ipAddress": "10.50.4.125",
-	IpAddressType string 	`json:"ipAddressType,omitempty"` // "ipAddressType": "Ipv4Static"
+	IpAddress     string `json:"ipAddress,omitempty"`     // "ipAddress": "10.50.4.125",
+	IpAddressType string `json:"ipAddressType,omitempty"` // "ipAddressType": "Ipv4Static"
 }
 
 type Port struct {
