@@ -16,7 +16,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		800,
+		"*")
 
 	fmt.Println("Get server hardware list by name")
 	serverName, err := ovc.GetServerHardwareByName("0000A66101, bay 4")
@@ -34,28 +35,43 @@ func main() {
 
 	fmt.Println("******************")
 
-	ServerId, _ := ovc.GetServerHardware("/rest/server-hardware/30373737-3237-4D32-3230-313530314752")
-	fmt.Println(ServerId.URI)
+	ServerId, err := ovc.GetServerHardware("/rest/server-hardware/30373737-3237-4D32-3230-313530314752")
+	if err == nil {
+		fmt.Println(ServerId.URI)
+	} else {
+		fmt.Println("Failed to fetch server hardware : ", err)
+	}
 
 	fmt.Println("Get server-hardware list statistics specifying parameters")
 	fmt.Println("******************")
 
 	filters := []string{"name matches '0000A66101, bay 3'"}
-	ServerList, _ := ovc.GetServerHardwareList(filters, "name:ascending")
-	fmt.Println("Total server list :", ServerList.Total)
-
-	fmt.Println("Get server-hardware whoes profiles are unassigned ")
+	ServerList, err := ovc.GetServerHardwareList(filters, "name:ascending")
+	if err == nil {
+		fmt.Println("Total server list :", ServerList.Total)
+	} else {
+		fmt.Println("Failed to fetch server List : ", err)
+	}
+	fmt.Println("Get server-hardware whose profiles are unassigned ")
 	fmt.Println("******************")
-	serverHarware, _ := ovc.GetAvailableHardware("/rest/server-hardware-types/9F529AA5-2021-4A10-93ED-DDC5BD80E949", "/rest/enclosure-groups/293e8efe-c6b1-4783-bf88-2d35a8e49071")
-	fmt.Println(serverHarware.Type)
+	serverHarware, err := ovc.GetAvailableHardware("/rest/server-hardware-types/9F529AA5-2021-4A10-93ED-DDC5BD80E949", "/rest/enclosure-groups/293e8efe-c6b1-4783-bf88-2d35a8e49071")
+
+	if err == nil {
+		fmt.Println(serverHarware.Type)
+	} else {
+		fmt.Println("Failed to fetch server hardware by URI: ", err)
+	}
 
 	fmt.Println("Get power status of a server ")
 	fmt.Println("******************")
-	powerState, _ := serverName.GetPowerState()
-	fmt.Println("Power state of the machine is ", powerState)
+	powerState, err := serverName.GetPowerState()
+	if err == nil {
+		fmt.Println("Power state of the machine is ", powerState)
+	} else {
+		fmt.Println("Failed to fetch powerstate of the server: ", err)
+	}
 	//Trying to touggle power state of the server using put
 	if powerState.String() == "On" {
-
 		fmt.Println("Server is in powered on state ")
 		serverName.PowerOff()
 		powerState, _ := serverName.GetPowerState()
@@ -74,5 +90,4 @@ func main() {
 	fmt.Println("******************")
 	iloIpaddress := serverName.GetIloIPAddress()
 	fmt.Println("ilo ip address of an server is =", iloIpaddress)
-
 }
