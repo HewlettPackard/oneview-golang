@@ -88,16 +88,8 @@ func (c *OVClient) CreateProfileFromTemplateWithI3S(name string, template Server
 	new_template.Description += " " + name
 	new_template.Name = name
 
-	t, err := c.SubmitNewProfile(new_template)
-	if err != nil {
-		return err
-	}
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	err = c.SubmitNewProfile(new_template)
+	return err
 }
 
 // CustomizeServer - use customizeserver when working with creating a new server

@@ -253,12 +253,16 @@ func (c *OVClient) GetProfileByURI(uri utils.Nstring) (ServerProfile, error) {
 }
 
 // SubmitNewProfile - submit new profile template
-func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
+func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 	log.Infof("Initializing creation of server profile for %s.", p.Name)
 	var (
 		uri = "/rest/server-profiles"
-	// 	task = rest_api(:oneview, :post, '/rest/server-profiles', { 'body' => new_template_profile })
+		t *Task
 	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, p)
@@ -267,17 +271,22 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (t *Task, err error) {
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new profile request: %s", err)
-		return t, err
+		return err
 	}
 
-	log.Debugf("Response NewProfile %s", data)
+	log.Debugf("Response New Profile %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
-		return t, err
+		return err
 	}
 
-	return t, err
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // create profile from template
@@ -295,7 +304,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		if err != nil {
 			return err
 		}
-		new_template.Type = "ServerProfileV9"
+		new_template.Type = "ServerProfileV5"
 		new_template.ServerProfileTemplateURI = template.URI // create relationship
 		log.Debugf("new_template -> %+v", new_template)
 	} else {
@@ -305,17 +314,10 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 	new_template.ServerHardwareURI = blade.URI
 	new_template.Description += " " + name
 	new_template.Name = name
-	log.Infof("new_template -> %+v", new_template)
+	log.Debugf("new_template -> %+v", new_template)
 
-	t, err := c.SubmitNewProfile(new_template)
-	if err != nil {
-		return err
-	}
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-	return nil
+	err = c.SubmitNewProfile(new_template)
+	return err
 }
 
 // submit new profile template
@@ -411,7 +413,7 @@ func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Infof("REST : %s \n %+v\n", uri, p)
+	log.Debugf("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, p)
 	if err != nil {

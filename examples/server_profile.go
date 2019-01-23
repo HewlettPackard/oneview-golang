@@ -9,12 +9,9 @@ import (
 func main() {
 	var (
 		clientOV            *ov.OVClient
-		//spt_name 			= "new_test_go"
 		sp_name             = "test"
 		sp_sn 	            = "VCGRE1S007"
-//		new_enclosure_name = "RenamedEnclosure"
-//		path               = "/name"
-//		op                 = "replace"
+		new_sp_name         = "Renamed Server Profile"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -26,16 +23,12 @@ func main() {
 		"*")
 
 	server_profile_create_map := ov.ServerProfile{
-		Type: 				"ServerProfileV9",
-		Name: 				"test",
-		ServerHardwareURI: 	""
+	 	Type: 				"ServerProfileV9",
+	 	Name: 				sp_name,
+	 	ServerHardwareURI: 	"/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
 	}
-	server_hardware_map := ov.ServerHardware{}
-	templates, err := ovc.GetProfileTemplates("", "", fmt.Sprintf("name matches '%s'", spt_name), "name:asc", "")
 
-	blade, err := ovc.GetServerHardwareByName("SYN03_Frame1, bay 3")
-
-	err = ovc.CreateProfileFromTemplate(sp_name, templates.Members[0], blade)
+	err := ovc.SubmitNewProfile(server_profile_create_map)
 	if err != nil {
 		fmt.Println("Server Profile Create Failed: ", err)
 	} else {
@@ -55,23 +48,23 @@ func main() {
         }
     }
 
-    sp_del, err := ovc.GetProfileByName(sp_name)
+    sp1, err := ovc.GetProfileByName(sp_name)
     if err != nil {
         fmt.Println("Server Profile Retrieval By Name Failed: ", err)
     } else {
         fmt.Println("#----------------Server Profile by Name---------------#")
-        fmt.Println(sp_del.Name)
+        fmt.Println(sp1.Name)
     }
 
-    sp, err := ovc.GetProfileBySN(sp_sn)
+    sp2, err := ovc.GetProfileBySN(sp_sn)
     if err != nil {
         fmt.Println("Server Profile Retrieval By Serial Number Failed: ", err)
     } else {
         fmt.Println("#----------------Server Profile by Serial Number---------------#")
-        fmt.Println(sp.Name)
+        fmt.Println(sp2.Name)
     }
 
-    sp, err = ovc.GetProfileByURI(sp.URI)
+    sp, err := ovc.GetProfileByURI(sp2.URI)
     if err != nil {
         fmt.Println("Server Profile Retrieval By URI Failed: ", err)
     } else {
@@ -80,13 +73,13 @@ func main() {
     }
 
     sp_update_clone := ov.ServerProfile{
-        Name:                   "Renamed Server Profile",
-        URI:                    sp_del.URI,
-        Type:                   sp_del.Type,
-        ETAG:                   sp_del.ETAG,
-        Affinity:               sp_del.Affinity,
-        ServerHardwareTypeURI:  sp_del.ServerHardwareTypeURI,
-        EnclosureGroupURI:      sp_del.EnclosureGroupURI,
+        Name:                   new_sp_name,
+        URI:                    sp1.URI,
+        Type:                   sp1.Type,
+        ETAG:                   sp1.ETAG,
+        Affinity:               sp1.Affinity,
+        ServerHardwareTypeURI:  sp1.ServerHardwareTypeURI,
+        EnclosureGroupURI:      sp1.EnclosureGroupURI,
     }
 
     err = ovc.UpdateServerProfile(sp_update_clone)
@@ -107,19 +100,19 @@ func main() {
         }
     }
 
-    // task, err := ovc.SubmitDeleteProfile(sp_del)
-    // if err != nil {
-    //     fmt.Println("Server Profile Delete Request Failed: ", err)
-    // } else {
-    //     fmt.Println("#----------------Server Profile Delete---------------#")
-    //     fmt.Println("Task URI: ", task.URI)
-    // }
+    task, err := ovc.SubmitDeleteProfile(sp1)
+    if err != nil {
+        fmt.Println("Server Profile Delete Request Failed: ", err)
+    } else {
+        fmt.Println("#----------------Server Profile Delete---------------#")
+        fmt.Println("Task URI: ", task.URI)
+    }
 
-    // err = ovc.DeleteProfile("test2")
-    // if err != nil {
-    //     fmt.Println("Server Profile Delete Failed: ", err)
-    // } else {
-    //     fmt.Println("#----------------Server Profile Deleted---------------#")
-    // }
+    err = ovc.DeleteProfile(new_sp_name)
+    if err != nil {
+        fmt.Println("Server Profile Delete Failed: ", err)
+    } else {
+        fmt.Println("#----------------Server Profile Deleted---------------#")
+    }
 
 }
