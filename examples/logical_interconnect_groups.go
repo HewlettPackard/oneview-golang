@@ -28,14 +28,15 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		800,
+		"*")
 
-	fmt.Println("#..........Getting Logical Interconnect Collection.....")
+	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
 	sort := "name:desc"
 	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups("", sort)
 	fmt.Println(logicalInterconnectGroupList)
 
-	fmt.Println("#..........Creating Logical Interconnect .....#")
+	fmt.Println("#..........Creating Logical Interconnect Group.....#")
 	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
 	locationEntry_second := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
 	locationEntries1 := new([]ov.LocationEntry)
@@ -75,8 +76,7 @@ func main() {
 	er := ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroup)
 	if er != nil {
 		fmt.Println("........Logical Interconnect Group Creation failed:", er)
-	}
-	if er == nil {
+	} else {
 		fmt.Println(".....Logical Interconnect Group Creation Success....")
 	}
 
@@ -89,7 +89,11 @@ func main() {
 	lig_uri, _ := ovc.GetLogicalInterconnectGroupByUri(uri)
 	fmt.Println(lig_uri)
 
-	fmt.Println("...Listing Logical Interconnect Default Settings .. ")
+	fmt.Println("... Getting setting for the specified Logical Interconnect Group ....")
+	lig_s, _ := ovc.GetLogicalInterconnectGroupSettings(uri.String())
+	fmt.Println(lig_s)
+
+	fmt.Println("...Listing Logical Interconnect Group Default Settings .. ")
 	lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
 	fmt.Println(lig_ds)
 
@@ -99,16 +103,14 @@ func main() {
 	err := ovc.UpdateLogicalInterconnectGroup(lig_uri)
 	if err != nil {
 		panic(err)
-	}
-	if err == nil {
+	} else {
 		fmt.Println(".....Updated Logical Interconnect Group Successfully....")
 	}
 	fmt.Println("... Deleting LogicalInterconnectGroup ...")
 	del_err := ovc.DeleteLogicalInterconnectGroup(lig_uri.Name)
 	if del_err != nil {
 		panic(del_err)
-	}
-	if del_err == nil {
+	} else {
 		fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
 	}
 }

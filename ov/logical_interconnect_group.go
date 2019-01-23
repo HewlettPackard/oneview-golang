@@ -272,6 +272,24 @@ func (c *OVClient) GetLogicalInterconnectGroupDefaultSettings() (LogicalIntercon
 	return ligDS, nil
 }
 
+func (c *OVClient) GetLogicalInterconnectGroupSettings(uri string) (LogicalInterconnectGroupDefaultSettings, error) {
+	var (
+		ligDS LogicalInterconnectGroupDefaultSettings
+	)
+	uri = uri + "/settings"
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return ligDS, err
+	}
+	log.Debugf("GetLogicalInterconnectGroup %s", data)
+	if err := json.Unmarshal([]byte(data), &ligDS); err != nil {
+		return ligDS, err
+	}
+	return ligDS, nil
+}
+
 func (c *OVClient) GetLogicalInterconnectGroupByName(name string) (LogicalInterconnectGroup, error) {
 	var (
 		logicalInterconnectGroup LogicalInterconnectGroup
