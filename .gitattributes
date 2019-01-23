@@ -6,3 +6,5 @@
 *.go text
 *.mk text
 *.json
+
+*.png binary
