@@ -16,7 +16,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600)
+		800,
+		"*")
 
 	sort := "name:desc"
 	interconnect_list, err := ovc.GetInterconnects("", "", "", sort)
