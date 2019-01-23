@@ -9,9 +9,9 @@ import (
 func main() {
 	var (
 		ClientOV  *ov.OVClient
-		scp_name  = "scope-SD4"
-		new_scope = "scope-SD4"
-		upd_scope = "updated-SD4"
+		scp_name  = "updated-SD1"
+		new_scope = "new-scope"
+		upd_scope = "update-scope"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -39,7 +39,7 @@ func main() {
 		fmt.Println(scp_list.Members[i].Name)
 	}
 
-	scope := ov.Scope{Name: scp_name, Description: "Test from script", Type: "ScopeV3"}
+	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3"}
 
 	er := ovc.CreateScope(scope)
 	if er != nil {

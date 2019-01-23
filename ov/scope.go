@@ -9,13 +9,24 @@ import (
 )
 
 type Scope struct {
-	Description utils.Nstring `json:"description,omitempty"` // "description": "Scope 1",
-	//Modified              string        `json:"modified,omitempty"`              // "modified": "20150831T154835.250Z",
-	Name string `json:"name,omitempty"` // "name": "Ethernet Network 1",
-	//State                 string        `json:"state,omitempty"`                 // "state": "Normal",
-	//Status                string        `json:"status,omitempty"`                // "status": "Critical",
-	Type string        `json:"type,omitempty"` // "type": "scopesV3",
-	URI  utils.Nstring `json:"uri,omitempty"`  // "uri": "/rest/scopess/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	Description   utils.Nstring  `json:"description,omitempty"`   // "description": "Test from script",
+	Modified      string         `json:"modified,omitempty"`      // "modified": "2018-12-13T10:24:25.267Z",
+	Name          string         `json:"name,omitempty"`          // "name": "updated-SD3",
+	State         string         `json:"state,omitempty"`         // "state": "null",
+	Status        string         `json:"status,omitempty"`        // "status": "null",
+	Type          string         `json:"type,omitempty"`          // "type": "scopesV3",
+	URI           utils.Nstring  `json:"uri,omitempty"`           // "uri": "/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
+	ExtAttributes *ExtraAttributes `json:"extAttributes,omitempty"` //{}
+	ApplianceId   string         `json:"applianceId,omitempty"`   // "category": "scopes",
+	Category      string         `json:"category,omitempty"`      // "category": "scopes",
+	Created       string         `json:"created,omitempty"`       // "created": "2018-12-13T10:05:35.745Z",
+	ETAG          string         `json:"eTag,omitempty"`          // "eTag": "\"2018-12-13T10:24:25.267Z/2018-12-13T10:24:25.267Z\"",
+	OldUri        utils.Nstring  `json:"oldUri,omitempty"`        //"oldUri": "null",
+	ScopesUri     utils.Nstring  `json:"scopesUri,omitempty"`     //"scopesUri": "/rest/scopes/resources/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
+}
+
+type ExtraAttributes struct {
+	Type string `json:"type,omitempty"`
 }
 
 type ScopeList struct {
@@ -24,7 +35,7 @@ type ScopeList struct {
 	Start       int           `json:"start,omitempty"`       // "start": 0,
 	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/scopes"
 	Members     []Scope       `json:"members,omitempty"`     // "members":[]
 }
 
