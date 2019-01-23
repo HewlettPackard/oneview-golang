@@ -35,7 +35,7 @@ func main() {
 
 	fmt.Println("******************")
 
-	ServerId, err := ovc.GetServerHardware("/rest/server-hardware/30373737-3237-4D32-3230-313530314752")
+	ServerId, err := ovc.GetServerHardwareByUri("/rest/server-hardware/30373737-3237-4D32-3230-313530314752")
 	if err == nil {
 		fmt.Println(ServerId.URI)
 	} else {

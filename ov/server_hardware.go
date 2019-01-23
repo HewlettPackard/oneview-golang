@@ -182,7 +182,7 @@ func (s ServerHardware) GetPowerState() (PowerState, error) {
 }
 
 // get a server hardware with uri
-func (c *OVClient) GetServerHardware(uri utils.Nstring) (ServerHardware, error) {
+func (c *OVClient) GetServerHardwareByUri(uri utils.Nstring) (ServerHardware, error) {
 
 	var hardware ServerHardware
 	// refresh login

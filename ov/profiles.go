@@ -347,7 +347,7 @@ func (c *OVClient) DeleteProfile(name string) error {
 
 	if profile.Name != "" {
 		if profile.ServerHardwareURI != "" {
-			server, err = c.GetServerHardware(profile.ServerHardwareURI)
+			server, err = c.GetServerHardwareByUri(profile.ServerHardwareURI)
 			if err != nil {
 				log.Warnf("Problem getting server hardware, %s", err)
 			} else {
