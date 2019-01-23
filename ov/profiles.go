@@ -55,14 +55,14 @@ type BiosSettings struct {
 
 // BiosOption - bios options
 type BiosOption struct {
-	ManageBios         	bool           `json:"manageBios,omitempty"`         // "manageBios": false,
+	ManageBios         bool           `json:"manageBios,omitempty"`         // "manageBios": false,
 	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"` // "overriddenSettings": []
 }
 
 type ConnectionSettings struct {
-	ComplianceControl	string			`json:"complianceControl,omitempty"`		// "complianceControl": "Checked",
-	ManageConnections   bool            `json:"manageConnections,omitempty"`        // "manageConnections": false,
-	Connections         []Connection    `json:"connections,omitempty"`
+	ComplianceControl string       `json:"complianceControl,omitempty"` // "complianceControl": "Checked",
+	ManageConnections bool         `json:"manageConnections,omitempty"` // "manageConnections": false,
+	Connections       []Connection `json:"connections,omitempty"`
 }
 
 // ServerProfile - server profile object for ov
@@ -141,7 +141,7 @@ func (s ServerProfile) Clone() ServerProfile {
 		SerialNumberType:   s.SerialNumberType,
 		Type:               s.Type,
 		WWNType:            s.WWNType,
-		URI:				s.URI,
+		URI:                s.URI,
 	}
 }
 
@@ -257,7 +257,7 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 	log.Infof("Initializing creation of server profile for %s.", p.Name)
 	var (
 		uri = "/rest/server-profiles"
-		t *Task
+		t   *Task
 	)
 	// refresh login
 	c.RefreshLogin()

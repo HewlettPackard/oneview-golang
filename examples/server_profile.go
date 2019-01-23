@@ -8,10 +8,10 @@ import (
 
 func main() {
 	var (
-		clientOV            *ov.OVClient
-		sp_name             = "test"
-		sp_sn 	            = "VCGRE1S007"
-		new_sp_name         = "Renamed Server Profile"
+		clientOV    *ov.OVClient
+		sp_name     = "test"
+		sp_sn       = "VCGRE1S007"
+		new_sp_name = "Renamed Server Profile"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -23,9 +23,9 @@ func main() {
 		"*")
 
 	server_profile_create_map := ov.ServerProfile{
-	 	Type: 				"ServerProfileV9",
-	 	Name: 				sp_name,
-	 	ServerHardwareURI: 	"/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
+		Type:              "ServerProfileV9",
+		Name:              sp_name,
+		ServerHardwareURI: "/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
 	}
 
 	err := ovc.SubmitNewProfile(server_profile_create_map)
@@ -35,84 +35,84 @@ func main() {
 		fmt.Println("#----------------Server Profile Created---------------#")
 	}
 
-    sort := ""
+	sort := ""
 
-    sp_list, err := ovc.GetProfiles("", "", "", sort, "")
-    if err != nil {
-        fmt.Println("Server Profile Retrieval Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile List---------------#")
+	sp_list, err := ovc.GetProfiles("", "", "", sort, "")
+	if err != nil {
+		fmt.Println("Server Profile Retrieval Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile List---------------#")
 
-        for i := 0; i < len(sp_list.Members); i++ {
-            fmt.Println(sp_list.Members[i].Name)
-        }
-    }
+		for i := 0; i < len(sp_list.Members); i++ {
+			fmt.Println(sp_list.Members[i].Name)
+		}
+	}
 
-    sp1, err := ovc.GetProfileByName(sp_name)
-    if err != nil {
-        fmt.Println("Server Profile Retrieval By Name Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile by Name---------------#")
-        fmt.Println(sp1.Name)
-    }
+	sp1, err := ovc.GetProfileByName(sp_name)
+	if err != nil {
+		fmt.Println("Server Profile Retrieval By Name Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile by Name---------------#")
+		fmt.Println(sp1.Name)
+	}
 
-    sp2, err := ovc.GetProfileBySN(sp_sn)
-    if err != nil {
-        fmt.Println("Server Profile Retrieval By Serial Number Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile by Serial Number---------------#")
-        fmt.Println(sp2.Name)
-    }
+	sp2, err := ovc.GetProfileBySN(sp_sn)
+	if err != nil {
+		fmt.Println("Server Profile Retrieval By Serial Number Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile by Serial Number---------------#")
+		fmt.Println(sp2.Name)
+	}
 
-    sp, err := ovc.GetProfileByURI(sp2.URI)
-    if err != nil {
-        fmt.Println("Server Profile Retrieval By URI Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile by URI---------------#")
-        fmt.Println(sp.Name)
-    }
+	sp, err := ovc.GetProfileByURI(sp2.URI)
+	if err != nil {
+		fmt.Println("Server Profile Retrieval By URI Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile by URI---------------#")
+		fmt.Println(sp.Name)
+	}
 
-    sp_update_clone := ov.ServerProfile{
-        Name:                   new_sp_name,
-        URI:                    sp1.URI,
-        Type:                   sp1.Type,
-        ETAG:                   sp1.ETAG,
-        Affinity:               sp1.Affinity,
-        ServerHardwareTypeURI:  sp1.ServerHardwareTypeURI,
-        EnclosureGroupURI:      sp1.EnclosureGroupURI,
-    }
+	sp_update_clone := ov.ServerProfile{
+		Name:                  new_sp_name,
+		URI:                   sp1.URI,
+		Type:                  sp1.Type,
+		ETAG:                  sp1.ETAG,
+		Affinity:              sp1.Affinity,
+		ServerHardwareTypeURI: sp1.ServerHardwareTypeURI,
+		EnclosureGroupURI:     sp1.EnclosureGroupURI,
+	}
 
-    err = ovc.UpdateServerProfile(sp_update_clone)
-    if err != nil {
-        fmt.Println("Server Profile Create Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile Created---------------#")
-    }
+	err = ovc.UpdateServerProfile(sp_update_clone)
+	if err != nil {
+		fmt.Println("Server Profile Create Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile Created---------------#")
+	}
 
-    sp_list, err = ovc.GetProfiles("", "", "", sort, "")
-    if err != nil {
-        fmt.Println("Server Profile Retrieval Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile List---------------#")
+	sp_list, err = ovc.GetProfiles("", "", "", sort, "")
+	if err != nil {
+		fmt.Println("Server Profile Retrieval Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile List---------------#")
 
-        for i := 0; i < len(sp_list.Members); i++ {
-            fmt.Println(sp_list.Members[i].Name)
-        }
-    }
+		for i := 0; i < len(sp_list.Members); i++ {
+			fmt.Println(sp_list.Members[i].Name)
+		}
+	}
 
-    task, err := ovc.SubmitDeleteProfile(sp1)
-    if err != nil {
-        fmt.Println("Server Profile Delete Request Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile Delete---------------#")
-        fmt.Println("Task URI: ", task.URI)
-    }
+	task, err := ovc.SubmitDeleteProfile(sp1)
+	if err != nil {
+		fmt.Println("Server Profile Delete Request Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile Delete---------------#")
+		fmt.Println("Task URI: ", task.URI)
+	}
 
-    err = ovc.DeleteProfile(new_sp_name)
-    if err != nil {
-        fmt.Println("Server Profile Delete Failed: ", err)
-    } else {
-        fmt.Println("#----------------Server Profile Deleted---------------#")
-    }
+	err = ovc.DeleteProfile(new_sp_name)
+	if err != nil {
+		fmt.Println("Server Profile Delete Failed: ", err)
+	} else {
+		fmt.Println("#----------------Server Profile Deleted---------------#")
+	}
 
 }
