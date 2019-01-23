@@ -9,36 +9,37 @@ import (
 )
 
 type LogicalInterconnect struct {
-	Type                                 string                  `json:"type,omitempty"`                        //"type": "logical-interconnect",
-	URI                                  utils.Nstring           `json:"uri,omitempty"`                         //"uri": "/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d",
-	Category                             string                  `json:"category,omitempty"`                    //"category": "logical-interconnects",
-	Interconnects                        []utils.Nstring         `json:"interconnects,omitempty"`               //"interconnects": ["/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"],
-	ConsistencyStatus                    string                  `json:"consistencyStatus,omitempty"`           //"consistencyStatus": "NOT_CONSISTENT",
-	ConsistencyStatusVerificationEnabled bool                    `json:"category,omitempty"`                    //"consistencyStatusVerificationEnabled": true,
-	Created                              string                  `json:"created,omitempty"`                     //"created": "2018-08-07T22:48:07.640Z",
-	Modified                             string                  `json:"modified,omitempty"`                    //"modified": "2018-12-14T06:36:09.956Z",
-	Description                          utils.Nstring           `json:"description,omitempty"`                 //"description": null,
-	DomainUri                            utils.Nstring           `json:"domainUri"`                             //"domainUri": "/rest/domains/7b655ba0-11c1-4e9c-a191-672e1d0bbd8e",
-	ETAG                                 string                  `json:"eTag,omitempty"`                        //"eTag": "bedd16b1-1d27-4ecd-b483-407635de7431",
-	EnclosureType                        string                  `json:"enclosureType,omitempty"`               //"enclosureType": "SY12000",
-	InternalNetworkUris                  []utils.Nstring         `json:"internalNetworkUris,omitempty"`         //"internalNetworkUris": ["/rest/ethernet-networks/cbde97d0-c8f1-4aba-aa86-2b4e5d080401"],
-	FabricUri                            utils.Nstring           `json:"fabricUri,omitempty"`                   //"fabricUri": "/rest/fabrics/c2fc09bc-323f-40b4-8a7e-d99ca28df969",
-	QosConfiguration                     *QosConfiguration       `json:"qosConfiguration,omitempty"`            // "qosConfiguration": {},
-	IcmLicenses                          *IcmLicenses            `json:"icmLicenses,omitempty"`                 //"icmLicenses":{...},
-	EnclosureUris                        []utils.Nstring         `json:"enclosureUris,omitempty"`               //"enclosureUris": ["/rest/enclosures/013645CN759000AC"],
-	FusionDomainUri                      utils.Nstring           `json:"fusionDomainUri,omitempty"`             //"fusionDomainUri": "/rest/domains/7b655ba0-11c1-4e9c-a191-672e1d0bbd8e",
-	EthernetSettings                     *EthernetSettings       `json:"ethernetSettings,omitempty"`            //"ethernetSettings": {...},
-	LogicalInterconnectGroupUri          utils.Nstring           `json:"logicalInterconnectGroupUri,omitempty"` //"logicalInterconnectGroupUri": "/rest/logical-interconnect-groups/3de143b3-bf77-4944-aa31-18084676b664",
-	StackingHealth                       string                  `json:"stackingHealthomitempty"`               //"stackingHealth": "BiConnected",
-	InterconnectMap                      *InterconnectMap        `json:"interconnectMap,omitempty"`             //"interconnectMap": {...},
-	PortMonitor                          *PortMonitor            `json:"portMonitor,omitempty"`                 //"portMonitor": {...},
-	SnmpConfiguration                    *SnmpConfiguration      `json:"snmpConfiguration,omitempty"`           // "snmpConfiguration": {...},
-	TelemetryConfiguration               *TelemetryConfiguration `json:"telemetryConfiguration,omitempty"`      // "telemetryConfiguration": {...},
-	ScopeUri                             string                  `json:"ScopeUri,omitempty"`                    //"ScopeUri": null,
-	SecurityStandardMode                 string                  `json:"ScopeUri,omitempty"`                    //"securityStandardMode": null,
-	State                                string                  `json:"state,omitempty"`                       // "state": "Normal",
-	Status                               string                  `json:"status,omitempty"`                      // "status": "Critical",
-	Name                                 string                  `json:"name"`                                  // "name": "Logical Interconnect1",
+	Type                                 string                  `json:"type,omitempty"`                                 //"type": "logical-interconnect",
+	URI                                  utils.Nstring           `json:"uri,omitempty"`                                  //"uri": "/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d",
+	Category                             string                  `json:"category,omitempty"`                             //"category": "logical-interconnects",
+	Interconnects                        []utils.Nstring         `json:"interconnects,omitempty"`                        //"interconnects": ["/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"],
+	ConsistencyStatus                    string                  `json:"consistencyStatus,omitempty"`                    //"consistencyStatus": "NOT_CONSISTENT",
+	ConsistencyStatusVerificationEnabled bool                    `json:"consistencyStatusVerificationEnabled,omitempty"` //"consistencyStatusVerificationEnabled": true,
+	Created                              string                  `json:"created,omitempty"`                              //"created": "2018-08-07T22:48:07.640Z",
+	Modified                             string                  `json:"modified,omitempty"`                             //"modified": "2018-12-14T06:36:09.956Z",
+	Description                          utils.Nstring           `json:"description,omitempty"`                          //"description": null,
+	DomainUri                            utils.Nstring           `json:"domainUri"`                                      //"domainUri": "/rest/domains/7b655ba0-11c1-4e9c-a191-672e1d0bbd8e",
+	ETAG                                 string                  `json:"eTag,omitempty"`                                 //"eTag": "bedd16b1-1d27-4ecd-b483-407635de7431",
+	EnclosureType                        string                  `json:"enclosureType,omitempty"`                        //"enclosureType": "SY12000",
+	InternalNetworkUris                  []utils.Nstring         `json:"internalNetworkUris,omitempty"`                  //"internalNetworkUris": ["/rest/ethernet-networks/cbde97d0-c8f1-4aba-aa86-2b4e5d080401"],
+	FabricUri                            utils.Nstring           `json:"fabricUri,omitempty"`                            //"fabricUri": "/rest/fabrics/c2fc09bc-323f-40b4-8a7e-d99ca28df969",
+	QosConfiguration                     *QosConfiguration       `json:"qosConfiguration,omitempty"`                     // "qosConfiguration": {},
+	IcmLicenses                          *IcmLicenses            `json:"icmLicenses,omitempty"`                          //"icmLicenses":{...},
+	EnclosureUris                        []utils.Nstring         `json:"enclosureUris,omitempty"`                        //"enclosureUris": ["/rest/enclosures/013645CN759000AC"],
+	FusionDomainUri                      utils.Nstring           `json:"fusionDomainUri,omitempty"`                      //"fusionDomainUri": "/rest/domains/7b655ba0-11c1-4e9c-a191-672e1d0bbd8e",
+	EthernetSettings                     *EthernetSettings       `json:"ethernetSettings,omitempty"`                     //"ethernetSettings": {...},
+	LogicalInterconnectGroupUri          utils.Nstring           `json:"logicalInterconnectGroupUri,omitempty"`          //"logicalInterconnectGroupUri": "/rest/logical-interconnect-groups/3de143b3-bf77-4944-aa31-18084676b664",
+	StackingHealth                       string                  `json:"stackingHealth,omitempty"`                       //"stackingHealth": "BiConnected",
+	InitialScopeUris                     []string                `json:"initialScopeUris,omitempty"`                     //"InitialScopeUris": [],
+	InterconnectMap                      *InterconnectMap        `json:"interconnectMap,omitempty"`                      //"interconnectMap": {...},
+	PortMonitor                          *PortMonitor            `json:"portMonitor,omitempty"`                          //"portMonitor": {...},
+	SnmpConfiguration                    *SnmpConfiguration      `json:"snmpConfiguration,omitempty"`                    // "snmpConfiguration": {...},
+	TelemetryConfiguration               *TelemetryConfiguration `json:"telemetryConfiguration,omitempty"`               // "telemetryConfiguration": {...},
+	ScopeUri                             string                  `json:"ScopeUri,omitempty"`                             //"ScopeUri": null,
+	SecurityStandardMode                 string                  `json:"securityStandardMode,omitempty"`                 //"securityStandardMode": null,
+	State                                string                  `json:"state,omitempty"`                                // "state": "Normal",
+	Status                               string                  `json:"status,omitempty"`                               // "status": "Critical",
+	Name                                 string                  `json:"name"`                                           // "name": "Logical Interconnect1",
 
 }
 
@@ -59,7 +60,7 @@ type InterconnectMapEntries struct {
 	LogicalLocation              LogicalLocation `json:"logicalLocation,omitempty"`              //"logicalLocation":{...},
 	LogicalDownlinkUri           utils.Nstring   `json:"logicalDownlinkUri,omitempty"`           //"logicalDownlinkUri": "/rest/logical-downlinks/126ee6e0-db82-4fac-a4ce-c8ee423b77dc",
 	PermittedInterconnectTypeUri utils.Nstring   `json:"permittedInterconnectTypeUri,omitempty"` //"permittedInterconnectTypeUri": "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a",
-	IterconnectUri               utils.Nstring   `json:"interconnectUri,omitempty"`              //"interconnectUri": "/rest/interconnects/aca6687f-1370-46cd-b832-7e3192dbddfd",
+	InterconnectUri              utils.Nstring   `json:"interconnectUri,omitempty"`              //"interconnectUri": "/rest/interconnects/aca6687f-1370-46cd-b832-7e3192dbddfd",
 	EnclosureIndex               int             `json:"enclosureIndex,omitempty"`               //"enclosureIndex": 2
 }
 
@@ -114,19 +115,19 @@ type LogicalInterconnectList struct {
 	Members     []LogicalInterconnect `json:"members,omitempty"`     // "members":[]
 }
 type Firmware struct {
-	Command                 string                 `json:"command"`       //command": "Update",
-	FwBaseline              string                 `json:"fwBaseline"`    //"fwBaseline": "1.16",
-	SppUri                  utils.Nstring          `json:"sppUri"`        //"sppUri": "/rest/firmware-drivers/SPP_2018_06_20180709_for_HPE_Synergy_Z7550-96524",
-	SppName                 string                 `json:"sppName"`       //"sppName": "HPE Synergy Custom SPP 2018 06 19  2018 07 09 2018.07.09.00",
-	Interconnects           []FirmwareInterconnect `json:"interconnects"` //"interconnects":[]
-	State                   string                 `json:"interconnects"` // "state": "Activated",
-	Force                   bool                   `json:"interconnects"` //"force": false,
-	EthernetActivationType  string                 `json:"interconnects"` //"ethernetActivationType": "None",
-	EthernetActivationDelay int                    `json:"interconnects"` //"ethernetActivationDelay": 0,
-	FcActivationType        string                 `json:"interconnects"` //"fcActivationType": "None",
-	FcActivationDelay       int                    `json:"interconnects"` //"fcActivationDelay": 0,
-	ValidationType          string                 `json:"interconnects"` //"validationType": "None",
-	LogicalSwitchId         string                 `json:"interconnects"` //"logicalSwitchId": "d4468f89-4442-4324-9c01-624c7382db2d"
+	Command                 string                 `json:"command"`                           //command": "Update",
+	FwBaseline              string                 `json:"fwBaseline,omitempty"`              //"fwBaseline": "1.16",
+	SppUri                  utils.Nstring          `json:"sppUri"`                            //"sppUri": "/rest/firmware-drivers/SPP_2018_06_20180709_for_HPE_Synergy_Z7550-96524",
+	SppName                 string                 `json:"sppName,omitempty"`                 //"sppName": "HPE Synergy Custom SPP 2018 06 19  2018 07 09 2018.07.09.00",
+	Interconnects           []FirmwareInterconnect `json:"interconnects,omitempty"`           //"interconnects":[]
+	State                   string                 `json:"state,omitempty"`                   // "state": "Activated",
+	Force                   bool                   `json:"force,omitempty"`                   //"force": false,
+	EthernetActivationType  string                 `json:"ethernetActivationType,omitempty"`  //"ethernetActivationType": "None",
+	EthernetActivationDelay int                    `json:"ethernetActivationDelay,omitempty"` //"ethernetActivationDelay": 0,
+	FcActivationType        string                 `json:"fcActivationType,omitempty"`        //"fcActivationType": "None",
+	FcActivationDelay       int                    `json:"fcActivationDelay,omitempty"`       //"fcActivationDelay": 0,
+	ValidationType          string                 `json:"validationType,omitempty"`          //"validationType": "None",
+	LogicalSwitchId         string                 `json:"logicalSwitchId,omitempty"`         //"logicalSwitchId": "d4468f89-4442-4324-9c01-624c7382db2d"
 }
 
 type FirmwareInterconnect struct {
@@ -185,7 +186,7 @@ type InternalVlanAssociation struct {
 	Description            string `json:"description,omitempty"`            // "description": null,
 	State                  string `json:"state,omitempty"`                  // "state": null,
 	Status                 string `json:"status,omitempty"`                 // "status": null,
-	Name                   string `json:"status,omitempty"`                 // "name": null
+	Name                   string `json:"name,omitempty"`                   // "name": null
 }
 
 type LogicalInterconnectCompliance struct {
@@ -201,7 +202,7 @@ type LogicalInterconnectCompliance struct {
 	LogicalInterconnectUris []utils.Nstring `json:"logicalInterconnectUris,omitempty"` //"logicalInterconnectUris":["/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"]
 	State                   string          `json:"state,omitempty"`                   // "state": null,
 	Status                  string          `json:"status,omitempty"`                  // "status": null,
-	Name                    string          `json:"status,omitempty"`                  // "name": null
+	Name                    string          `json:"name,omitempty"`                    // "name": null
 
 }
 
@@ -391,7 +392,9 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformationByMacAddress(MacAd
 	var (
 		InterconnectFibDataEntry InterconnectFibDataEntry
 	)
-	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(fmt.Sprintf("macAddress='%s'", MacAddress), "", Id)
+	filter := make([]string, 1)
+	filter[0] = fmt.Sprintf("macAddress='%s'", MacAddress)
+	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(filter, Id)
 	if InterconnectFibData.Count > 0 {
 		return InterconnectFibData.Members[0], err
 	} else {
@@ -403,7 +406,9 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformationByInternalVlan(Int
 	var (
 		InterconnectFibDataEntry InterconnectFibDataEntry
 	)
-	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(fmt.Sprintf("internalVlan='%s'", InternalVlan), "", Id)
+	filter := make([]string, 1)
+	filter[0] = fmt.Sprintf("internalVlan='%s'", InternalVlan)
+	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(filter, Id)
 	if InterconnectFibData.Count > 0 {
 		return InterconnectFibData.Members[0], err
 	} else {
@@ -414,7 +419,10 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformationByInterconnectAndE
 	var (
 		InterconnectFibDataEntry InterconnectFibDataEntry
 	)
-	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(fmt.Sprintf("interconnectUri='%s'", InterconnectURI), fmt.Sprintf("externalVlan='%s'", ExternalVlan), Id)
+	filter := make([]string, 2)
+	filter[0] = fmt.Sprintf("interconnectUri='%s'", InterconnectURI)
+	filter[1] = fmt.Sprintf("externalVlan='%s'", ExternalVlan)
+	InterconnectFibData, err := c.GetLogicalInterconnectForwardingInformation(filter, Id)
 	if InterconnectFibData.Count > 0 {
 		return InterconnectFibData.Members[0], err
 	} else {
@@ -422,7 +430,7 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformationByInterconnectAndE
 	}
 }
 
-func (c *OVClient) GetLogicalInterconnectForwardingInformation(filter1 string, filter2 string, Id string) (InterconnectFibData, error) {
+func (c *OVClient) GetLogicalInterconnectForwardingInformation(filter []string, Id string) (InterconnectFibData, error) {
 	var (
 		uri                 = "/rest/logical-interconnects/"
 		q                   map[string]interface{}
@@ -430,21 +438,17 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformation(filter1 string, f
 	)
 	uri = uri + Id + "/forwarding-information-base"
 	q = make(map[string]interface{})
-	fmt.Println("q")
-	//if filter1 != ""{
+	//l int = len(filter)
+	//filter := make([]string, l)
+	q["filter"] = filter
+	//if filter2 != "" {
+	//	filter := make([]string, 2)
 	//	filter[0] = filter1
-	//filter = append(filter, filter1)
+	//	filter[1] = filter2
+	//	q["filter"] = filter
+	//} else if filter1 != "" {
+	//	q["filter"] = filter1
 	//}
-	if filter2 != "" {
-		filter := make([]string, 2)
-		filter[0] = filter1
-		filter[1] = filter2
-		q["filter"] = filter
-		//filter = append(filter, filter2)
-	} else if filter1 != "" {
-		q["filter"] = filter1
-	}
-	fmt.Println(q)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())

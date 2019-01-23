@@ -7,6 +7,15 @@ import (
 	"os"
 )
 
+func newTrue() *bool {
+	b := true
+	return &b
+}
+func newFalse() *bool {
+	b := false
+	return &b
+}
+
 func main() {
 	var (
 		clientOV        *ov.OVClient
@@ -50,7 +59,8 @@ func main() {
 	fmt.Println(snmpconfig)
 
 	fmt.Println("....  Logical Interconnect Forwarding Information.....")
-	fi, _ := ovc.GetLogicalInterconnectForwardingInformation("", "", id)
+	var filter []string
+	fi, _ := ovc.GetLogicalInterconnectForwardingInformation(filter, id)
 	fmt.Println(fi)
 
 	fmt.Println("....  Logical Interconnect Forwarding Information By Mac Address.....")
@@ -126,7 +136,7 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect SNMP Configuration.....")
-	liSNMPConfig := ov.SnmpConfiguration{Type: "snmp-configuration", Category: "snmp-configuration", V3Enabled: true}
+	liSNMPConfig := ov.SnmpConfiguration{Type: "snmp-configuration", Category: "snmp-configuration", V3Enabled: newTrue()}
 
 	err_snmp := ovc.UpdateLogicalInterconnectSNMPConfigurations(liSNMPConfig, id)
 	if err_snmp != nil {
@@ -148,7 +158,7 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect Telemetry  Configuration.....")
-	liTMConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: true, SampleInterval: 300, SampleCount: 12, Name: "name771327580-1533682118441"}
+	liTMConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: newTrue(), SampleInterval: 300, SampleCount: 12, Name: "name771327580-1533682118441"}
 
 	err_tm := ovc.UpdateLogicalInterconnectTelemetryConfigurations(liTMConfig, id, tcId)
 	if err_tm != nil {
