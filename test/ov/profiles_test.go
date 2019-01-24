@@ -63,8 +63,8 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 
 		// get the server hardware associated with that test profile
 		log.Debugf("testProfile -> %+v", testProfile)
-		testBlade, err := c.GetServerHardware(testProfile.ServerHardwareURI)
-		assert.NoError(t, err, "CreateProfileFromTemplate call to GetServerHardware got error -> %s", err)
+		testBlade, err := c.GetServerHardwareByUri(testProfile.ServerHardwareURI)
+		assert.NoError(t, err, "CreateProfileFromTemplate call to GetServerHardwareByUri got error -> %s", err)
 
 		// power on the server, and leave it in that state
 		var pt *ov.PowerTask
