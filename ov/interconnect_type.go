@@ -74,7 +74,7 @@ func (c *OVClient) GetInterconnectTypeByName(name string) (InterconnectType, err
 	var (
 		interconnectType InterconnectType
 	)
-	interconnectTypes, err := c.GetInterconnectTypes(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	interconnectTypes, err := c.GetInterconnectTypes("", "", fmt.Sprintf("name matches '%s'", name), "name:asc")
 	if interconnectTypes.Total > 0 {
 		return interconnectTypes.Members[0], err
 	} else {
@@ -100,7 +100,7 @@ func (c *OVClient) GetInterconnectTypeByUri(uri utils.Nstring) (InterconnectType
 	return interconnectType, nil
 }
 
-func (c *OVClient) GetInterconnectTypes(filter string, sort string) (InterconnectTypeList, error) {
+func (c *OVClient) GetInterconnectTypes(start string, count string, filter string, sort string) (InterconnectTypeList, error) {
 	var (
 		uri               = "/rest/interconnect-types"
 		q                 map[string]interface{}
@@ -113,6 +113,14 @@ func (c *OVClient) GetInterconnectTypes(filter string, sort string) (Interconnec
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
 	}
 
 	// refresh login

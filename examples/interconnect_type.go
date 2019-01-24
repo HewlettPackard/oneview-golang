@@ -21,8 +21,6 @@ func main() {
 		800,
 		"*")
 
-	ovVer, _ := ovc.GetAPIVersion()
-	fmt.Println(ovVer)
 	fmt.Println("#................... Interconnect Type by Name ...............#")
 	interconnect, err := ovc.GetInterconnectTypeByName(existing_interconnect)
 	if err != nil {
@@ -31,9 +29,9 @@ func main() {
 		fmt.Println(interconnect)
 	}
 
-	interconnect_type_uri := utils.NewNstring("rest/interconnect-types/ed8fbf3b-1962-4602-8eeb-6ef2f303a67f")
+	interconnect_type := utils.NewNstring("rest/interconnect-types/ed8fbf3b-1962-4602-8eeb-6ef2f303a67f")
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
-	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type_uri)
+	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type)
 	if err != nil {
 		panic(err)
 	} else {
@@ -41,7 +39,7 @@ func main() {
 	}
 
 	sort := "name:desc"
-	interconnect_type_list, err := ovc.GetInterconnectTypes("", sort)
+	interconnect_type_list, err := ovc.GetInterconnectTypes("","","",sort)
 	if err != nil {
 		panic(err)
 	} else {
