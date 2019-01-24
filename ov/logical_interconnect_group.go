@@ -47,14 +47,22 @@ type EthernetSettings struct {
 	EnableNetworkLoopProtection *bool         `json:"enableNetworkLoopProtection,omitempty"` // "enableNetworkLoopProtection": false,
 	EnablePauseFloodProtection  *bool         `json:"enablePauseFloodProtection,omitempty"`  // "enablePauseFloodProtection": false,
 	EnableRichTLV               *bool         `json:"enableRichTLV,omitempty"`               // "enableRichTLV": false,
+	EnableStormControl          *bool         `json:"enableStormControl,omitempty"`          // "enableStormControl": false,
+	EnableTaggedLldp            *bool         `json:"enableTaggedLldp,omitempty"`            // "enableTaggedLldp": false,
 	ID                          string        `json:"id,omitempty"`                          //"id": "0c398238-2d35-48eb-9eb5-7560d59f94b3",
 	IgmpIdleTimeoutInterval     int           `json:"igmpIdleTimeoutInterval,omitempty"`     // "igmpIdleTimeoutInterval": 260,
+	IgmpSnoopingVlanIds         string        `json:"igmpSnoopingVlanIds,omitempty"`         // "igmpSnoopingVlanIds": "",
+	LldpIpAddressMode           string        `json:"lldpIpAddressMode,omitempty"`           // "lldpIpAddressMode": "IPV4",
+	LldpIpv4Address             string        `json:"lldpIpv4Address,omitempty"`             // "lldpIpv4Address": "",
+	LldpIpv6Address             string        `json:"lldpIpv6Address,omitempty"`             //"lldpIpv6Address": "",
 	InterconnectType            string        `json:"interconnectType,omitempty"`            // "interconnectType": "Ethernet",
 	MacRefreshInterval          int           `json:"macRefreshInterval,omitempty"`          // "macRefreshInterval": 5,
 	Modified                    string        `json:"modified,omitempty"`                    // "modified": "20150831T154835.250Z",
 	Name                        string        `json:"name,omitempty"`                        // "name": "ethernetSettings 1",
 	State                       string        `json:"state,omitempty"`                       // "state": "Normal",
 	Status                      string        `json:"status,omitempty"`                      // "status": "Critical",
+	StormControlPollingInterval int           `json:"stormControlPollingInterval,omitempty"` //"stormControlPollingInterval": 10,
+	StormControlThreshold       int           `json:"stormControlThreshold,,omitempty"`      //"stormControlThreshold": 0,
 	Type                        string        `json:"type,omitempty"`                        // "EthernetInterconnectSettingsV3",
 	URI                         utils.Nstring `json:"uri,omitempty"`                         // "uri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86/ethernetSettings"
 }
@@ -176,6 +184,7 @@ type SnmpConfiguration struct {
 	Name             string            `json:"name,omitempty"`             // "name": "Snmp Config",
 	ReadCommunity    string            `json:"readCommunity,omitempty"`    // "readCommunity": "public",
 	SnmpAccess       []string          `json:"snmpAccess,omitempty"`       // "snmpAccess": [],
+	snmpUsers        []Snmpv3User      `json:"snmpUsers,omitempty"`        // "snmpUsers": []
 	State            string            `json:"state,omitempty"`            // "state": "Normal",
 	Status           string            `json:"status,omitempty"`           // "status": "Critical",
 	SystemContact    string            `json:"systemContact,omitempty"`    // "systemContact": "",
@@ -185,6 +194,20 @@ type SnmpConfiguration struct {
 	V3Enabled        *bool             `json:"v3Enabled,omitempty"`        // "v3Enabled": true
 }
 
+type Snmpv3User struct {
+	SnmpV3UserName    string             `json:"snmpV3UserName,omitempty"`    //"snmpV3UserName":"",
+	UserCredentials   []ExtentedProperty `json:"userCredentials,omitempty"`   //"UserCredentials":"",
+	V3AuthProtocol    string             `json:"v3AuthProtocol,omitempty"`    // "v3AuthProtocol":"",
+	V3PrivacyProtocol string             `json:"v3PrivacyProtocol,omitempty"` // "v3PrivacyProtocol":""
+}
+
+type ExtentedProperty struct {
+	PropertyName string `json:"propertyName"` //"propertyName":"",
+	Value        string `json:"value"`        //"value":"",
+	ValueFormat  string `json:"valueFormat"`  //"valueFormat":"",
+	ValueType    string `json:"valueType"`    //"valueType":"",
+
+}
 type TrapDestination struct {
 	CommunityString    string   `json:"communityString,omitempty"`    //"communityString": "public",
 	EnetTrapCategories []string `json:"enetTrapCategories,omitempty"` //"enetTrapCategories": ["PortStatus", "Other"],
@@ -216,6 +239,7 @@ type UplinkSets struct {
 	LacpTimer              string                  `json:"lacpTimer,omitempty"`           // "lacpTimer": "Long",
 	LogicalPortConfigInfos []LogicalPortConfigInfo `json:"logicalPortConfigInfos"`        // "logicalPortConfigInfos": {...},
 	Mode                   string                  `json:"mode,omitempty"`                // "mode": "Auto",
+	FcMode                 string                  `json:"fcMode,omitempty"`              //"fcMode": "NA",
 	Name                   string                  `json:"name,omitempty"`                // "name": "Uplink 1",
 	NativeNetworkUri       utils.Nstring           `json:"nativeNetworkUri,omitempty"`    // "nativeNetworkUri": null,
 	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
