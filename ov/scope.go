@@ -20,7 +20,7 @@ type Scope struct {
 	ApplianceId   string           `json:"applianceId,omitempty"`   // "category": "scopes",
 	Category      string           `json:"category,omitempty"`      // "category": "scopes",
 	Created       string           `json:"created,omitempty"`       // "created": "2018-12-13T10:05:35.745Z",
-	ETAG          string           `json:"eTag,omitempty"`          // "eTag": "\"2018-12-13T10:24:25.267Z/2018-12-13T10:24:25.267Z\"",
+	Etag          string           `json:"eTag,omitempty"`          // "eTag": "\"2018-12-13T10:24:25.267Z/2018-12-13T10:24:25.267Z\"",
 	OldUri        utils.Nstring    `json:"oldUri,omitempty"`        //"oldUri": "null",
 	ScopesUri     utils.Nstring    `json:"scopesUri,omitempty"`     //"scopesUri": "/rest/scopes/resources/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
 }
@@ -43,7 +43,7 @@ func (c *OVClient) GetScopeByName(name string) (Scope, error) {
 	var (
 		scp Scope
 	)
-	scps, err := c.GetScopes(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	scps, err := c.GetScopes("", fmt.Sprintf("name matches '%s'", name), "", "", "name:asc")
 	if scps.Total > 0 {
 		return scps.Members[0], err
 	} else {
@@ -51,7 +51,7 @@ func (c *OVClient) GetScopeByName(name string) (Scope, error) {
 	}
 }
 
-func (c *OVClient) GetScopes(query string, sort string) (ScopeList, error) {
+func (c *OVClient) GetScopes(count string, query string, start string, view string, sort string) (ScopeList, error) {
 	var (
 		uri    = "/rest/scopes"
 		q      map[string]interface{}
@@ -64,6 +64,18 @@ func (c *OVClient) GetScopes(query string, sort string) (ScopeList, error) {
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
+	}
+
+	if view != "" {
+		q["view"] = view
 	}
 
 	// refresh login

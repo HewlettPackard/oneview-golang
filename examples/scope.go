@@ -9,7 +9,7 @@ import (
 func main() {
 	var (
 		ClientOV  *ov.OVClient
-		scp_name  = "updated-SD1"
+		scp_name  = "updated-SD2"
 		new_scope = "new-scope"
 		upd_scope = "update-scope"
 	)
@@ -25,14 +25,14 @@ func main() {
 	fmt.Println("#................... Scope by Name ...............#")
 	scp, scperr := ovc.GetScopeByName(scp_name)
 	if scperr != nil {
-		panic(scperr)
+		fmt.Println(scperr)
 	}
 	fmt.Println(scp)
 
 	sort := "name:desc"
-	scp_list, err := ovc.GetScopes("", sort)
+	scp_list, err := ovc.GetScopes("", "", "", "", sort)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	fmt.Println("# ................... Scopes List .................#")
 	for i := 0; i < len(scp_list.Members); i++ {
@@ -50,7 +50,7 @@ func main() {
 
 	new_scp, err := ovc.GetScopeByName(new_scope)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	} else {
 		new_scp.Name = upd_scope
 		err = ovc.UpdateScope(new_scp)
@@ -62,7 +62,7 @@ func main() {
 			fmt.Println("#.................... Scope after Updating ...........#")
 		}
 	}
-	up_list, err := ovc.GetScopes("", sort)
+	up_list, err := ovc.GetScopes("", "", "", "", sort)
 	for i := 0; i < len(up_list.Members); i++ {
 		fmt.Println(up_list.Members[i].Name)
 	}
@@ -73,9 +73,9 @@ func main() {
 	} else {
 		fmt.Println("#...................... Deleted Scope Successfully .....#")
 	}
-	scp_list, err = ovc.GetScopes("", sort)
+	scp_list, err = ovc.GetScopes("", "", "", "", sort)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	fmt.Println("# ................... Scopes List .................#")
 	for i := 0; i < len(scp_list.Members); i++ {
