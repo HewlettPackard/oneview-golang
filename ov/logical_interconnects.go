@@ -3,6 +3,7 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -294,14 +295,25 @@ func (c *OVClient) GetLogicalInternalVlans(Id string) (InternalVlanAssociationCo
 	return internalVlans, nil
 }
 
-func (c *OVClient) GetLogicalQosAggregatedConfiguration(Id string) (QosConfiguration, error) {
+func (c *OVClient) GetLogicalQosAggregatedConfiguration(Id string, fields string, view string) (QosConfiguration, error) {
 	var (
 		uri              = "/rest/logical-interconnects/"
+		q		map[string]interface{}
 		qosConfiguration QosConfiguration
 	)
 	uri = uri + Id + "/qos-aggregated-configuration"
+	q = make(map[string]interface{})
+	if fields != ""{
+		q["fields"] = fields
+	}
+	if view != ""{
+		q["view"] = view
+	}
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	if len(q)>0{
+		c.SetQueryString(q)
+        }
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
 		return qosConfiguration, err
@@ -438,17 +450,7 @@ func (c *OVClient) GetLogicalInterconnectForwardingInformation(filter []string, 
 	)
 	uri = uri + Id + "/forwarding-information-base"
 	q = make(map[string]interface{})
-	//l int = len(filter)
-	//filter := make([]string, l)
 	q["filter"] = filter
-	//if filter2 != "" {
-	//	filter := make([]string, 2)
-	//	filter[0] = filter1
-	//	filter[1] = filter2
-	//	q["filter"] = filter
-	//} else if filter1 != "" {
-	//	q["filter"] = filter1
-	//}
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -500,16 +502,24 @@ func (c *OVClient) UpdateLogicalInterconnectConsistentState(liCompliance Logical
 	return nil
 
 }
-
 func (c *OVClient) UpdateLogicalInterconnectEthernetSettings(ethernetSetting EthernetSettings, Id string) error {
+	err_ethernet := c.UpdateLogicalInterconnectEthernetSettingsForce(ethernetSetting, Id, false)
+	return err_ethernet
+}
+
+func (c *OVClient) UpdateLogicalInterconnectEthernetSettingsForce(ethernetSetting EthernetSettings, Id string, force bool) error {
 	var (
 		uri = "/rest/logical-interconnects/"
+		q   map[string]interface{}
 		t   *Task
 	)
+	q = make(map[string]interface{})
+	q["force"] = strconv.FormatBool(force)
 	uri = uri + Id + "/ethernetSettings"
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	c.SetQueryString(q)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Infof("REST : %s \n %+v\n", uri, ethernetSetting)
@@ -537,14 +547,24 @@ func (c *OVClient) UpdateLogicalInterconnectEthernetSettings(ethernetSetting Eth
 }
 
 func (c *OVClient) UpdateLogicalInterconnectFirmware(firmware Firmware, Id string) error {
+        err_firmware := c.UpdateLogicalInterconnectFirmwareForce(firmware, Id, false)
+        return err_firmware
+}
+
+
+func (c *OVClient) UpdateLogicalInterconnectFirmwareForce(firmware Firmware, Id string, force bool) error {
 	var (
 		uri = "/rest/logical-interconnects/"
+		q  map[string]interface{}
 		t   *Task
 	)
 	uri = uri + Id + "/firmware"
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	q = make(map[string]interface{})
+	q["force"] = strconv.FormatBool(force)
+        c.SetQueryString(q)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Infof("REST : %s \n %+v\n", uri, firmware)
@@ -572,14 +592,24 @@ func (c *OVClient) UpdateLogicalInterconnectFirmware(firmware Firmware, Id strin
 }
 
 func (c *OVClient) UpdateLogicalInterconnectInternalNetworks(internalNetworks []utils.Nstring, Id string) error {
+        err_networks := c.UpdateLogicalInterconnectInternalNetworksForce(internalNetworks, Id, false)
+        return err_networks
+}
+
+
+func (c *OVClient) UpdateLogicalInterconnectInternalNetworksForce(internalNetworks []utils.Nstring, Id string, force bool) error {
 	var (
 		uri = "/rest/logical-interconnects/"
+		q  map[string]interface{}
 		t   *Task
 	)
 	uri = uri + Id + "/internalNetworks"
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	q = make(map[string]interface{})
+	q["force"] = strconv.FormatBool(force)
+        c.SetQueryString(q)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Infof("REST : %s \n %+v\n", uri, internalNetworks)

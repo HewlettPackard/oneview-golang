@@ -81,7 +81,7 @@ func main() {
 	fmt.Println(fi_internal_vlan)
 
 	fmt.Println("....  Logical Interconnect QOS Configuration.....")
-	fi_qos_config, _ := ovc.GetLogicalQosAggregatedConfiguration(id)
+	fi_qos_config, _ := ovc.GetLogicalQosAggregatedConfiguration(id, "", "expand")
 	fmt.Println(fi_qos_config)
 
 	fmt.Println("....  Logical Interconnect Unassigned Ports for Port Monitor.....")
@@ -99,24 +99,47 @@ func main() {
 	fmt.Println("....  Updating Logical Interconnect Consistent State.....")
 	var liUris []utils.Nstring
 	liUris = append(liUris, utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"))
-	liCompliance := ov.LogicalInterconnectCompliance{Type: "li-compliance", LogicalInterconnectUris: liUris, Description: ""}
+	liCompliance := ov.LogicalInterconnectCompliance{Type: "li-compliance",
+		LogicalInterconnectUris: liUris,
+		Description:             ""}
 	err_compliance := ovc.UpdateLogicalInterconnectConsistentState(liCompliance)
 	if err_compliance != nil {
 		fmt.Println("Could not update ConsistentState of Logical Interconnect", err_compliance)
 	}
 
-	fmt.Println("....  Updating Logical Interconnect EthernetSetting.....")
-	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4", InterconnectType: "Ethernet", URI: utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d/ethernetSettings"), ID: "d4468f89-4442-4324-9c01-624c7382db2d"}
+	fmt.Println("....  Updating Logical Interconnect EthernetSetting .....")
+	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
+		InterconnectType: "Ethernet",
+		URI:              utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d/ethernetSettings"),
+		ID:               "d4468f89-4442-4324-9c01-624c7382db2d"}
 	err_ethernet := ovc.UpdateLogicalInterconnectEthernetSettings(liEthernetSettings, id)
 	if err_ethernet != nil {
 		fmt.Println("Could not update Ethernet Settings of Logical Interconnect", err_ethernet)
 	}
 
+	fmt.Println("....  Updating Logical Interconnect EthernetSetting Force.....")
+	err_ethernet_force := ovc.UpdateLogicalInterconnectEthernetSettingsForce(liEthernetSettings, id, true)
+	if err_ethernet_force != nil {
+		fmt.Println("Could not update Ethernet Settings of Logical Interconnect", err_ethernet_force)
+	}
+
 	fmt.Println("....  Updating Logical Interconnect Firmware.....")
-	liFirmware := ov.Firmware{Command: "Update", EthernetActivationDelay: 5, EthernetActivationType: "Parallel", FcActivationDelay: 5, FcActivationType: "Parallel", Force: false, SppUri: utils.NewNstring("/rest/firmware-drivers/SPP_2018_06_20180709_for_HPE_Synergy_Z7550-96524")}
+	liFirmware := ov.Firmware{Command: "Update",
+		EthernetActivationDelay: 5,
+		EthernetActivationType:  "Parallel",
+		FcActivationDelay:       5,
+		FcActivationType:        "Parallel",
+		Force:                   false,
+		SppUri:                  utils.NewNstring("/rest/firmware-drivers/SPP_2018_06_20180709_for_HPE_Synergy_Z7550-96524")}
 	err_firmware := ovc.UpdateLogicalInterconnectFirmware(liFirmware, id)
 	if err_firmware != nil {
 		fmt.Println("Could not update Firmware of Logical Interconnect", err_firmware)
+	}
+
+	fmt.Println("....  Updating Logical Interconnect Firmware Force.....")
+	err_firmware_force := ovc.UpdateLogicalInterconnectFirmwareForce(liFirmware, id, true)
+	if err_firmware_force != nil {
+		fmt.Println("Could not update Firmware of Logical Interconnect", err_firmware_force)
 	}
 
 	fmt.Println("....  Updating Logical Interconnect InternalNetworks.....")
@@ -125,6 +148,11 @@ func main() {
 	err_networks := ovc.UpdateLogicalInterconnectInternalNetworks(internalNetworks, id)
 	if err_networks != nil {
 		fmt.Println("Could not update Internal Networks of Logical Interconnect", err_networks)
+	}
+	fmt.Println("....  Updating Logical Interconnect InternalNetworks Force.....")
+	err_networks_force := ovc.UpdateLogicalInterconnectInternalNetworksForce(internalNetworks, id, true)
+	if err_networks_force != nil {
+		fmt.Println("Could not update Internal Networks of Logical Interconnect", err_networks_force)
 	}
 
 	fmt.Println("....  Updating Logical Interconnect QOS Configuration.....")
