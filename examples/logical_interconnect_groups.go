@@ -33,7 +33,7 @@ func main() {
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
 	sort := "name:desc"
-	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups("", sort)
+	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups(10, "", "", sort, 0)
 	fmt.Println(logicalInterconnectGroupList)
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
@@ -50,8 +50,12 @@ func main() {
 
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
-	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1, PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a", EnclosureIndex: 1}
-	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2, PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a", EnclosureIndex: 1}
+	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a",
+		EnclosureIndex:               1}
+	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a",
+		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
 
@@ -62,17 +66,44 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4", URI: "/ethernetSettings", Name: "defaultEthernetSwitchSettings", ID: "e2f5a9ac-8b0e-435c-8a3d-db00407fc7c7",
-		InterconnectType: "Ethernet", EnableIgmpSnooping: newFalse(), IgmpIdleTimeoutInterval: 260, EnableFastMacCacheFailover: newTrue(),
-		MacRefreshInterval: 5, EnableNetworkLoopProtection: newTrue(), EnablePauseFloodProtection: newTrue(), EnableRichTLV: newFalse()}
-	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: newTrue(), SampleCount: 12, SampleInterval: 300}
-	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration", Enabled: newFalse(), Category: "snmp-configuration", V3Enabled: newTrue()}
-	qosActiveConfig := ov.ActiveQosConfig{Type: "QosConfiguration", Category: "qos-aggregated-configuration", ConfigType: "Passthrough"}
-	qosConfig := ov.QosConfiguration{ActiveQosConfig: qosActiveConfig, Type: "qos-aggregated-configuration", Category: "qos-aggregated-configuration"}
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
+		URI:                         "/ethernetSettings",
+		Name:                        "defaultEthernetSwitchSettings",
+		ID:                          "e2f5a9ac-8b0e-435c-8a3d-db00407fc7c7",
+		InterconnectType:            "Ethernet",
+		EnableIgmpSnooping:          newFalse(),
+		IgmpIdleTimeoutInterval:     260,
+		EnableFastMacCacheFailover:  newTrue(),
+		MacRefreshInterval:          5,
+		EnableNetworkLoopProtection: newTrue(),
+		EnablePauseFloodProtection:  newTrue(),
+		EnableRichTLV:               newFalse()}
+	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration",
+		EnableTelemetry: newTrue(),
+		SampleCount:     12,
+		SampleInterval:  300}
+	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration",
+		Enabled:   newFalse(),
+		Category:  "snmp-configuration",
+		V3Enabled: newTrue()}
+	qosActiveConfig := ov.ActiveQosConfig{Type: "QosConfiguration",
+		Category:   "qos-aggregated-configuration",
+		ConfigType: "Passthrough"}
+	qosConfig := ov.QosConfiguration{ActiveQosConfig: qosActiveConfig,
+		Type:     "qos-aggregated-configuration",
+		Category: "qos-aggregated-configuration"}
 
-	logicalInterconnectGroup := ov.LogicalInterconnectGroup{Type: lig_type, EthernetSettings: &ethernetSettings, Name: lig_name, TelemetryConfiguration: &telemetryConfig,
-		InterconnectMapTemplate: &interconnectMapTemplate, EnclosureType: "SY12000", EnclosureIndexes: enclosureIndexes,
-		InterconnectBaySet: 3, RedundancyType: "Redundant", SnmpConfiguration: &snmpConfig, QosConfiguration: &qosConfig}
+	logicalInterconnectGroup := ov.LogicalInterconnectGroup{Type: lig_type,
+		EthernetSettings:        &ethernetSettings,
+		Name:                    lig_name,
+		TelemetryConfiguration:  &telemetryConfig,
+		InterconnectMapTemplate: &interconnectMapTemplate,
+		EnclosureType:           "SY12000",
+		EnclosureIndexes:        enclosureIndexes,
+		InterconnectBaySet:      3,
+		RedundancyType:          "Redundant",
+		SnmpConfiguration:       &snmpConfig,
+		QosConfiguration:        &qosConfig}
 	er := ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroup)
 	if er != nil {
 		fmt.Println("........Logical Interconnect Group Creation failed:", er)

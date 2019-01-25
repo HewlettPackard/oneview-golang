@@ -3,10 +3,10 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
-
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"strconv"
 )
 
 type LogicalInterconnectGroup struct {
@@ -25,6 +25,11 @@ type LogicalInterconnectGroup struct {
 	Name                    string                   `json:"name"`                             // "name": "Logical Interconnect Group1",
 	QosConfiguration        *QosConfiguration        `json:"qosConfiguration,omitempty"`       // "qosConfiguration": {},
 	RedundancyType          string                   `json:"redundancyType,omitempty"`         // "redundancyType": "HighlyAvailable"
+	ScopeUri                string                   `json:"scopeUri,omitempty"`               // "scopeUri":""
+	NextPageUri             string                   `json:"NextPageUri,omitempty"`            // "NextPageUri":""
+	PrevPageUri             string                   `json:"prevPageUri,omitempty"`            // "PrevPageUri":""
+	Start                   int                      `json:"start,omitempty"`                  // "start":""
+	Total                   int                      `json:"total,omitempty"`                  // "total":""
 	SnmpConfiguration       *SnmpConfiguration       `json:"snmpConfiguration,omitempty"`      // "snmpConfiguration": {...}
 	StackingHealth          string                   `json:"stackingHealth,omitempty"`         //"stackingHealth": "Connected",
 	StackingMode            string                   `json:"stackingMode,omitempty"`           //"stackingMode": "Enclosure",
@@ -318,7 +323,7 @@ func (c *OVClient) GetLogicalInterconnectGroupByName(name string) (LogicalInterc
 	var (
 		logicalInterconnectGroup LogicalInterconnectGroup
 	)
-	logicalInterconnectGroups, err := c.GetLogicalInterconnectGroups(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	logicalInterconnectGroups, err := c.GetLogicalInterconnectGroups(0, fmt.Sprintf("name matches '%s'", name), "", "name:asc", 0)
 	if logicalInterconnectGroups.Total > 0 {
 		return logicalInterconnectGroups.Members[0], err
 	} else {
@@ -344,7 +349,7 @@ func (c *OVClient) GetLogicalInterconnectGroupByUri(uri utils.Nstring) (LogicalI
 	return lig, nil
 }
 
-func (c *OVClient) GetLogicalInterconnectGroups(filter string, sort string) (LogicalInterconnectGroupList, error) {
+func (c *OVClient) GetLogicalInterconnectGroups(count int, filter string, scopeUris string, sort string, start int) (LogicalInterconnectGroupList, error) {
 	var (
 		uri                       = "/rest/logical-interconnect-groups"
 		q                         map[string]interface{}
@@ -357,6 +362,15 @@ func (c *OVClient) GetLogicalInterconnectGroups(filter string, sort string) (Log
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+	if count != 0 {
+		q["count"] = strconv.Itoa(count)
+	}
+	if scopeUris != "" {
+		q["scopeUris"] = scopeUris
+	}
+	if start >= 0 {
+		q["start"] = strconv.Itoa(start)
 	}
 
 	// refresh login
