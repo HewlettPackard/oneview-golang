@@ -39,7 +39,7 @@ func main() {
 	}
 
 	sort := "name:desc"
-	interconnect_type_list, err := ovc.GetInterconnectTypes("","","",sort)
+	interconnect_type_list, err := ovc.GetInterconnectTypes("", "", "", sort)
 	if err != nil {
 		panic(err)
 	} else {
