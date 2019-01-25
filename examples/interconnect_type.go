@@ -33,7 +33,7 @@ func main() {
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
 	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	} else {
 		fmt.Println(int_uri)
 	}
@@ -41,7 +41,7 @@ func main() {
 	sort := "name:desc"
 	interconnect_type_list, err := ovc.GetInterconnectTypes("", "", "", sort)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	} else {
 		fmt.Println("# ................... Interconnect Type List .................#")
 		for i := 0; i < len(interconnect_type_list.Members); i++ {
