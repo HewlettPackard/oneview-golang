@@ -214,15 +214,15 @@ func TestGetLogicalInterconnectGroups(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		logicalInterconnectGroups, err := c.GetLogicalInterconnectGroups(0,"","","",0)
+		logicalInterconnectGroups, err := c.GetLogicalInterconnectGroups(0, "", "", "", 0)
 		assert.NoError(t, err, "GetLogicalInterconnectGroup threw error -> %s, %+v\n", err, logicalInterconnectGroups)
 
-		logicalInterconnectGroups, err = c.GetLogicalInterconnectGroups(0,"","", "name:asc",0)
+		logicalInterconnectGroups, err = c.GetLogicalInterconnectGroups(0, "", "", "name:asc", 0)
 		assert.NoError(t, err, "GetLogicalInterconnectGroup name:asc error -> %s, %+v\n", err, logicalInterconnectGroups)
 
 	} else {
 		_, c = getTestDriverU("test_logical_interconnect_group")
-		data, err := c.GetLogicalInterconnectGroups(0,"","", "",0)
+		data, err := c.GetLogicalInterconnectGroups(0, "", "", "", 0)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
