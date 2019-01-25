@@ -3,10 +3,10 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"strconv"
 )
 
 type LogicalInterconnect struct {
@@ -298,22 +298,22 @@ func (c *OVClient) GetLogicalInternalVlans(Id string) (InternalVlanAssociationCo
 func (c *OVClient) GetLogicalQosAggregatedConfiguration(Id string, fields string, view string) (QosConfiguration, error) {
 	var (
 		uri              = "/rest/logical-interconnects/"
-		q		map[string]interface{}
+		q                map[string]interface{}
 		qosConfiguration QosConfiguration
 	)
 	uri = uri + Id + "/qos-aggregated-configuration"
 	q = make(map[string]interface{})
-	if fields != ""{
+	if fields != "" {
 		q["fields"] = fields
 	}
-	if view != ""{
+	if view != "" {
 		q["view"] = view
 	}
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-	if len(q)>0{
+	if len(q) > 0 {
 		c.SetQueryString(q)
-        }
+	}
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
 		return qosConfiguration, err
@@ -547,15 +547,14 @@ func (c *OVClient) UpdateLogicalInterconnectEthernetSettingsForce(ethernetSettin
 }
 
 func (c *OVClient) UpdateLogicalInterconnectFirmware(firmware Firmware, Id string) error {
-        err_firmware := c.UpdateLogicalInterconnectFirmwareForce(firmware, Id, false)
-        return err_firmware
+	err_firmware := c.UpdateLogicalInterconnectFirmwareForce(firmware, Id, false)
+	return err_firmware
 }
-
 
 func (c *OVClient) UpdateLogicalInterconnectFirmwareForce(firmware Firmware, Id string, force bool) error {
 	var (
 		uri = "/rest/logical-interconnects/"
-		q  map[string]interface{}
+		q   map[string]interface{}
 		t   *Task
 	)
 	uri = uri + Id + "/firmware"
@@ -564,7 +563,7 @@ func (c *OVClient) UpdateLogicalInterconnectFirmwareForce(firmware Firmware, Id 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	q = make(map[string]interface{})
 	q["force"] = strconv.FormatBool(force)
-        c.SetQueryString(q)
+	c.SetQueryString(q)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Infof("REST : %s \n %+v\n", uri, firmware)
@@ -592,15 +591,14 @@ func (c *OVClient) UpdateLogicalInterconnectFirmwareForce(firmware Firmware, Id 
 }
 
 func (c *OVClient) UpdateLogicalInterconnectInternalNetworks(internalNetworks []utils.Nstring, Id string) error {
-        err_networks := c.UpdateLogicalInterconnectInternalNetworksForce(internalNetworks, Id, false)
-        return err_networks
+	err_networks := c.UpdateLogicalInterconnectInternalNetworksForce(internalNetworks, Id, false)
+	return err_networks
 }
-
 
 func (c *OVClient) UpdateLogicalInterconnectInternalNetworksForce(internalNetworks []utils.Nstring, Id string, force bool) error {
 	var (
 		uri = "/rest/logical-interconnects/"
-		q  map[string]interface{}
+		q   map[string]interface{}
 		t   *Task
 	)
 	uri = uri + Id + "/internalNetworks"
@@ -609,7 +607,7 @@ func (c *OVClient) UpdateLogicalInterconnectInternalNetworksForce(internalNetwor
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	q = make(map[string]interface{})
 	q["force"] = strconv.FormatBool(force)
-        c.SetQueryString(q)
+	c.SetQueryString(q)
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Infof("REST : %s \n %+v\n", uri, internalNetworks)
