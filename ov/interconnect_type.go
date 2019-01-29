@@ -20,10 +20,12 @@ type InterconnectType struct {
 	MinimumFirmwareVersion   string                 `json:"minimumFirmwareVersion,omitempty"`   // "minimumFirmwareVersion": "2.0.0",
 	Modified                 string                 `json:"modified,omitempty"`                 // "modified": "20150831T154835.250Z",
 	Name                     utils.Nstring          `json:"name,omitempty"`                     // "name": null,
+	OtherFamilyMembers       []OtherFamilyMember    `json:"otherFamilyMembers,omitempty"`       // "otherFamilyMembers":"[]",
 	PartNumber               string                 `json:"partNumber,omitempty"`               // "partNumber": "572018-B21",
 	PortInfos                []PortInfo             `json:"portInfos,omitempty"`                // "portInfos": {...},
 	State                    string                 `json:"state,omitempty"`                    // "state": "Normal",
 	Status                   string                 `json:"status,omitempty"`                   // "status": "Critical",
+	TaaCompliant             bool                   `json:"taaCompliant"`                       // "taaCompliant": true,
 	Type                     string                 `json:"type,omitempty"`                     // "type": "interconnect-typeV3",
 	UnsupportedCapabilities  []string               `json:"unsupportedCapabilities,omitempty"`  // "unsupportedCapabilities": [],
 	URI                      utils.Nstring          `json:"uri,omitempty"`                      // "uri": "/rest/interconnect-types/9d31081c-e010-4005-bf0b-e64b0ca04af5"
@@ -49,6 +51,12 @@ type DownlinkPortCapability struct {
 type InterconnectCapability struct {
 	Capabilities       []string `json:"capabilities,omitempty"`       // "capabilities": ["Ethernet"],
 	MaxBandwidthInGbps int      `json:"maxBandwidthInGbps,omitempty"` // "maxBandwidthInGbps": 10,
+}
+
+type OtherFamilyMember struct {
+	ModelName    string `json:"modelName,omitempty"`    // "modelName":"",
+	PartNumber   string `json:"partNumber,omitempty"`   // "partNumber":"",
+	TaaCompliant bool   `json:"taaCompliant,omitempty"` // "taaCompliant": true,
 }
 
 type PortInfo struct {
