@@ -21,7 +21,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		800,
+		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
 
@@ -34,7 +35,7 @@ func main() {
 	}
 
 	sort := "name:desc"
-	uplinkset_list, err := ovc.GetUplinkSets("", sort)
+	uplinkset_list, err := ovc.GetUplinkSets("", "", "", sort)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -51,7 +52,17 @@ func main() {
 	fcoeNetworkUris := make([]utils.Nstring, 0)
 	portConfigInfos := make([]ov.PortConfigInfos, 0)
 
-	uplinkSet := ov.UplinkSet{Name: "upset77", LogicalInterconnectURI: utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"), NetworkURIs: *networkUris, FcNetworkURIs: fcNetworkUris, FcoeNetworkURIs: fcoeNetworkUris, PortConfigInfos: portConfigInfos, ConnectionMode: "Auto", NetworkType: "Ethernet", EthernetNetworkType: "Tagged", Type: "uplink-setV4", ManualLoginRedistributionState: "NotSupported"}
+	uplinkSet := ov.UplinkSet{Name: "upset77",
+		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"),
+		NetworkURIs:                    *networkUris,
+		FcNetworkURIs:                  fcNetworkUris,
+		FcoeNetworkURIs:                fcoeNetworkUris,
+		PortConfigInfos:                portConfigInfos,
+		ConnectionMode:                 "Auto",
+		NetworkType:                    "Ethernet",
+		EthernetNetworkType:            "Tagged",
+		Type:                           "uplink-setV4",
+		ManualLoginRedistributionState: "NotSupported"}
 
 	er := ovc.CreateUplinkSet(uplinkSet)
 	if er != nil {
@@ -69,7 +80,7 @@ func main() {
 		fmt.Println(err1)
 	} else {
 		fmt.Println("#.................... Uplink-Set after Updating ...........#")
-		uplinkset_after_update, ere := ovc.GetUplinkSets("", sort)
+		uplinkset_after_update, ere := ovc.GetUplinkSets("", "", "", sort)
 		if ere != nil {
 			fmt.Println(ere)
 		} else {

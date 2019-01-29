@@ -26,7 +26,7 @@ type PortConfigInfos struct {
 type UplinkSet struct {
 	Name                           string            `json:"name,omitempty"`                           // "name": "Uplink77",
 	LogicalInterconnectURI         utils.Nstring     `json:"logicalInterconnectUri,omitempty"`         // "logicalInterconnectUri": "/rest/logical-interconnects/7769cae0-b680-435b-9b87-9b864c81657f",
-	NetworkURIs                    []utils.Nstring   `json:"networkUris,omitempty"`                    // "networkUris": "/rest/uplink-sets/e2f0031b-52bd-4223-9ac1-d91cb519d548",
+	NetworkURIs                    []utils.Nstring   `json:"networkUris,omitempty"`                    // "networkUris": "/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548",
 	FcNetworkURIs                  []utils.Nstring   `json:"fcNetworkUris"`                            // "fcNetworkUris": "[]",
 	FcoeNetworkURIs                []utils.Nstring   `json:"fcoeNetworkUris"`                          // "fcoeNetworkUris": "[]",
 	PortConfigInfos                []PortConfigInfos `json:"portConfigInfos"`                          // "portConfigInfos": "[]",
@@ -52,7 +52,7 @@ func (c *OVClient) GetUplinkSetByName(name string) (UplinkSet, error) {
 	var (
 		upSet UplinkSet
 	)
-	upSets, err := c.GetUplinkSets(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	upSets, err := c.GetUplinkSets("", "", fmt.Sprintf("name matches '%s'", name), "name:asc")
 	if upSets.Total > 0 {
 		return upSets.Members[0], err
 	} else {
@@ -60,7 +60,7 @@ func (c *OVClient) GetUplinkSetByName(name string) (UplinkSet, error) {
 	}
 }
 
-func (c *OVClient) GetUplinkSets(filter string, sort string) (UplinkSetList, error) {
+func (c *OVClient) GetUplinkSets(start string, count string, filter string, sort string) (UplinkSetList, error) {
 	var (
 		uri        = "/rest/uplink-sets"
 		q          map[string]interface{}
@@ -73,6 +73,15 @@ func (c *OVClient) GetUplinkSets(filter string, sort string) (UplinkSetList, err
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+
+	}
+
+	if count != "" {
+		q["count"] = count
 	}
 
 	// refresh login
@@ -100,7 +109,6 @@ func (c *OVClient) GetUplinkSetById(id string) ([]string, error) {
 		uplinkSetId = new([]string)
 	)
 	uri = uri + id
-	fmt.Println(uri)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -108,7 +116,6 @@ func (c *OVClient) GetUplinkSetById(id string) ([]string, error) {
 	if err != nil {
 		return *uplinkSetId, err
 	}
-	log.Infof("GetUplinkSetId %s", data)
 	if err := json.Unmarshal([]byte(data), uplinkSetId); err != nil {
 		return *uplinkSetId, err
 	}
@@ -127,8 +134,7 @@ func (c *OVClient) CreateUplinkSet(upSet UplinkSet) error {
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Infof("REST : %s \n %+v\n", uri, upSet)
-	//log.Infof("%s",json.Marshal(*upSet))
+	log.Debugf("REST : %s \n %+v\n", uri, upSet)
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, upSet)
 	if err != nil {
@@ -137,7 +143,6 @@ func (c *OVClient) CreateUplinkSet(upSet UplinkSet) error {
 		return err
 	}
 
-	log.Infof("Response New Uplink Set %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
