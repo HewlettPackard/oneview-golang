@@ -23,6 +23,11 @@ type PortConfigInfos struct {
 	Location     Location `json:"location"`               //"location":"{...},
 }
 
+type ExpectedNeighbor struct {
+	RemoteChassisId string `json:"remoteChassisId,omitempty"` //"remoteChassisId":"",
+	RemotePortId    string `json:"remotePortId,omitempty"`    //"remotePortId":"",
+}
+
 type UplinkSet struct {
 	Name                           string            `json:"name,omitempty"`                           // "name": "Uplink77",
 	LogicalInterconnectURI         utils.Nstring     `json:"logicalInterconnectUri,omitempty"`         // "logicalInterconnectUri": "/rest/logical-interconnects/7769cae0-b680-435b-9b87-9b864c81657f",
@@ -36,6 +41,20 @@ type UplinkSet struct {
 	ManualLoginRedistributionState string            `json:"manualLoginRedistributionState,omitempty"` //"manualLoginRedistributionState":"NotSupported"
 	URI                            utils.Nstring     `json:"uri,omitempty"`                            // "uri": "/rest/uplink-sets/"e2f0031b-52bd-4223-9ac1-d91cb519d548",
 	Type                           string            `json:"type,omitempty"`                           // "type": "uplink-setV4",
+	Category                       string            `json:"category,omitempty"`                       //"category":"uplink-sets",
+	Created                        string            `json:"created,omitempty"`                        //"created":"20150831T154835.250Z",
+	Description                    utils.Nstring     `json:"description,omitempty"`                    // "description": "Uplink-set 1",
+	Etag                           string            `json:"eTag,omitempty"`                           // "eTag": "1441036118675/8",
+	Modified                       string            `json:"modified,omitempty"`                       // "modified": "20150831T154835.250Z",
+	LacpTimer                      string            `json:"lacpTimer,omitempty"`                      // "lacpTimer": "Long",
+	FcMode                         string            `json:"mode,omitempty"`                           // "mode": "TRUNK",
+	ExpectedNeighbor               *ExpectedNeighbor `json:"expectedNeighbor,omitempty"`               //"expectedNeighbor": ""
+	NativeNetworkUri               utils.Nstring     `json:"nativeNetworkUri,omitempty"`               // "nativeNetworkUri": null,
+	PrimaryPortLocation            *Location         `json:"primaryPort,omitempty"`                    // "primaryPort": {...},
+	Reachability                   string            `json:"reachability,omitempty"`                   // "reachability": "Reachable",
+	State                          string            `json:"state,omitempty"`                          // "state": "Normal",
+	Status                         string            `json:"status,omitempty"`                         // "status": "Critical",
+
 }
 
 type UplinkSetList struct {
