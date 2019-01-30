@@ -64,16 +64,14 @@
 |     **Interconnect Types**                                                                                                                        |
 |<sub>/rest/interconnect-types</sub>                                                      | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |<sub>/rest/interconnect-types/{id}</sub>                                                 | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
-|     **Logical Interconnect Groups**                                                                                                               |
-
+|     **Logical Interconnect Groups**                                                                                                             |
 |<sub>/rest/logical-interconnect-groups</sub>                                             | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: | :white_check_mark:   |
 |<sub>/rest/logical-interconnect-groups</sub>                                             | POST     | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: | :white_check_mark:   |
 |<sub>/rest/logical-interconnect-groups/{id}</sub>                                        | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: | :white_check_mark:   |
-|<sub>/rest/logical-interconnect-groups/defaultSettings</sub>                                        | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: | :white_check_mark:   |
+|<sub>/rest/logical-interconnect-groups/defaultSettings</sub>                             | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: | :white_check_mark:   |
 |<sub>/rest/logical-interconnect-groups/{id}</sub>                                        | PUT      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: |  :white_check_mark:   |
 |<sub>/rest/logical-interconnect-groups/{id}</sub>                                        | PATCH    | :heavy_minus_sign:   | :heavy_minus_sign:   | :heavy_multiplication_x:   |  :heavy_minus_sign: |  :heavy_minus_sign:  |
 |<sub>/rest/logical-interconnect-groups/{id}</sub>                                        | DELETE   | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |  :heavy_multiplication_x: |  :white_check_mark:   |
-
 |     **Logical Interconnects**                                                                                                               |
 |<sub>/rest/logical-interconnects</sub>                                                   | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:         | :heavy_multiplication_x:   | :white_check_mark:   |
 |<sub>/rest/logical-interconnects/compliance</sub>                                        | PUT      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:         | :heavy_multiplication_x:   | :white_check_mark:   |
@@ -101,7 +99,6 @@
 |<sub>/rest/logical-interconnects/{lsId}/port-monitor</sub>                                | PUT      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:         | :heavy_multiplication_x:   | :white_check_mark:   |
 |<sub>/rest/logical-interconnects/{lsId}/telemetry-configurations/{tcId}</sub>             | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:         | :heavy_multiplication_x:   | :white_check_mark:   |
 |<sub>/rest/logical-interconnects/{lsId}/telemetry-configurations/{tcId}</sub>             | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :heavy_multiplication_x:         | :heavy_multiplication_x:   | :white_check_mark:   |
-
 |     **Logical Switch Groups**                                                                                                                     |
 |<sub>/rest/logical-switch-groups</sub>                                                   | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |<sub>/rest/logical-switch-groups</sub>                                                   |POST      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
