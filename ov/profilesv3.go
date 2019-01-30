@@ -117,7 +117,7 @@ func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
 		return fmt.Errorf("Server not found\n %+v", err)
 	}
 
-	blade, err := c.GetServerHardware(s.ServerHardwareURI)
+	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
 	if err != nil {
 		return err
 	}
@@ -164,7 +164,7 @@ func (c *OVClient) DeleteOSBuildPlanFromServer(profileName string) error {
 		return fmt.Errorf("Server not found\n %+v", err)
 	}
 
-	blade, err := c.GetServerHardware(s.ServerHardwareURI)
+	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
 	if err != nil {
 		return err
 	}

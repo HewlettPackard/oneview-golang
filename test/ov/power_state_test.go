@@ -26,8 +26,8 @@ func TestPowerState(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		// get a blade object
-		blade, err := c.GetServerHardware(testData)
-		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
+		blade, err := c.GetServerHardwareByUri(testData)
+		assert.NoError(t, err, "GetServerHardwareByUri threw error -> %s", err)
 		assert.Equal(t, expectsData, blade.SerialNumber.String())
 		// get a power state object
 		var pt *ov.PowerTask

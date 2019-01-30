@@ -20,7 +20,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800)
+		800,
+		"*")
 
 	ibMappings := new([]ov.InterconnectBayMap)
 	interconnectBay1 := ov.InterconnectBayMap{1, utils.NewNstring("/rest/logical-interconnect-groups/65245305-c8e9-4b28-9bec-c5f697dfa1db")}
