@@ -132,7 +132,6 @@
 |<sub>/rest/storage-systems</sub>                                                         | POST     | :heavy_minus_sign:   | :heavy_minus_sign:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/storage-systems</sub>                                                         | DELETE   | :heavy_minus_sign:   | :heavy_minus_sign:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 <sub>/rest/storage-systems/{id}</sub>                                                     | PUT      | :heavy_minus_sign:   | :heavy_minus_sign:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
->>>>>>> 4e7a40fe7e77cf0ebc9941c6f10e583aba873901
 |     **Switch Types**                                                                                                                              |
 |<sub>/rest/switch-types</sub>                                                            | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |<sub>/rest/switch-types/{id}</sub>                                                       | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
