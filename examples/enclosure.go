@@ -10,9 +10,6 @@ func main() {
 	var (
 		clientOV           *ov.OVClient
 		enc_name           = "EN1"
-		new_enclosure_name = "RenamedEnclosure"
-		path               = "/name"
-		op                 = "replace"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -20,10 +17,10 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600,
+		800,
 		"*")
 
-	enclosure_create_map := ov.EnclosureCreateMap{
+	/*enclosure_create_map := ov.EnclosureCreateMap{
 		EnclosureGroupUri: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
 		Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
 		Username:          os.Getenv("ENCLOSURE_USERNAME"),
@@ -39,7 +36,7 @@ func main() {
 		fmt.Println("Enclosure Creation Failed: ", err)
 	} else {
 		fmt.Println("Enclosure created successfully...")
-	}
+	}*/
 
 	sort := ""
 
@@ -71,7 +68,7 @@ func main() {
 		fmt.Println(enclosure.Name)
 	}
 
-	err = ovc.UpdateEnclosure(op, path, new_enclosure_name, enclosure)
+	/*err = ovc.UpdateEnclosure(op, path, new_enclosure_name, enclosure)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -91,5 +88,5 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("Deleted Enclosure successfully...")
-	}
+	}*/
 }
