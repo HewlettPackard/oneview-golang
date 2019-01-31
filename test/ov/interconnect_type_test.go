@@ -17,15 +17,15 @@ func TestGetInterconnectTypes(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		interconnectTypes, err := c.GetInterconnectTypes("", "")
+		interconnectTypes, err := c.GetInterconnectTypes("", "", "", "")
 		assert.NoError(t, err, "GetInterconnectTypes threw error -> %s, %+v\n", err, interconnectTypes)
 
-		interconnectTypes, err = c.GetInterconnectTypes("", "name:asc")
+		interconnectTypes, err = c.GetInterconnectTypes("", "", "", "name:asc")
 		assert.NoError(t, err, "GetInterconnectTypes name:asc error -> %s, %+v\n", err, interconnectTypes)
 
 	} else {
 		_, c = getTestDriverU("test_interconnect_type")
-		data, err := c.GetInterconnectTypes("", "")
+		data, err := c.GetInterconnectTypes("", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
