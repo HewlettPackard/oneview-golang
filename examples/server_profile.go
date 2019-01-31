@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -22,10 +23,14 @@ func main() {
 		800,
 		"*")
 
+	initialScopeUris := new([]utils.Nstring)
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
+
 	server_profile_create_map := ov.ServerProfile{
 		Type:              "ServerProfileV9",
 		Name:              sp_name,
 		ServerHardwareURI: "/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
+		InitialScopeUris:  *initialScopeUris,
 	}
 
 	err := ovc.SubmitNewProfile(server_profile_create_map)

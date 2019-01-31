@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -29,6 +30,8 @@ func main() {
 	conn_settings := ov.ConnectionSettings{
 		ManageConnections: true,
 	}
+	initialScopeUris := new([]utils.Nstring)
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
 
 	server_profile_template := ov.ServerProfile{
 		Type:                  "ServerProfileTemplateV5",
@@ -36,6 +39,7 @@ func main() {
 		EnclosureGroupURI:     enc_grp.URI,
 		ServerHardwareTypeURI: server_hardware_type.URI,
 		ConnectionSettings:    conn_settings,
+		InitialScopeUris:      *initialScopeUris,
 	}
 
 	err = ovc.CreateProfileTemplate(server_profile_template)
