@@ -91,15 +91,15 @@ func TestGetEthernetNetworks(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		ethernetNetworks, err := c.GetEthernetNetworks("", "")
+		ethernetNetworks, err := c.GetEthernetNetworks("", "", "", "")
 		assert.NoError(t, err, "GetEthernetNetworks threw error -> %s, %+v\n", err, ethernetNetworks)
 
-		ethernetNetworks, err = c.GetEthernetNetworks("", "name:asc")
+		ethernetNetworks, err = c.GetEthernetNetworks("", "", "", "name:asc")
 		assert.NoError(t, err, "GetEthernetNetworks name:asc error -> %s, %+v\n", err, ethernetNetworks)
 
 	} else {
 		_, c = getTestDriverU("test_ethernet_network")
-		data, err := c.GetEthernetNetworks("", "")
+		data, err := c.GetEthernetNetworks("", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }

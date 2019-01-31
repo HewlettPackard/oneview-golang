@@ -26,9 +26,9 @@ func TestServerHardware(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetServerHardware(testData)
+		data, err := c.GetServerHardwareByUri(testData)
 		log.Debugf("%+v", data)
-		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
+		assert.NoError(t, err, "GetServerHardwareByUri threw error -> %s", err)
 		// fmt.Printf("data.Connections -> %+v\n", data)
 		assert.Equal(t, expectsData, data.SerialNumber.String())
 
@@ -105,8 +105,8 @@ func TestGetIloIPAddress(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		s, err := c.GetServerHardware(testData)
-		assert.NoError(t, err, "GetServerHardware threw error -> %s", err)
+		s, err := c.GetServerHardwareByUri(testData)
+		assert.NoError(t, err, "GetServerHardwareByUri threw error -> %s", err)
 		ip := s.GetIloIPAddress()
 		log.Debugf("server -> %+v", s)
 		log.Debugf("ip -> %+v", ip)

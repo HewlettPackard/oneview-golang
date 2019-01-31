@@ -22,7 +22,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		apiversion)
+		apiversion,
+		"*")
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
