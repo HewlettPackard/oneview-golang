@@ -29,7 +29,7 @@ func main() {
 	initialScopeUris := new([]utils.Nstring)
 	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/63d1ca81-95b3-41f1-a1ee-f9e1bc2d635f"))
 
-	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris}
+	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "DHCP"}
 
 	err := ovc.CreateEnclosureGroup(enclosureGroup)
 	if err != nil {

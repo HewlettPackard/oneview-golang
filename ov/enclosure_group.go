@@ -9,6 +9,7 @@ import (
 )
 
 type EnclosureGroup struct {
+	AmbientTemperatureMode              string               `json:"ambientTemperatureMode,omitempty"`       // "ambientTemperatureMode": "Standard"
 	AssociatedLogicalInterconnectGroups []string             `json:"associatedInterconnectGroups,omitempty"` // "associatedInterconnectGorups": [],
 	Category                            string               `json:"category,omitempty"`                     // "category": "enclosure-groups",
 	Created                             string               `json:"created,omitempty"`                      // "created": "20150831T154835.250Z",
@@ -19,9 +20,11 @@ type EnclosureGroup struct {
 	InitialScopeUris                    []utils.Nstring      `json:"initialScopeUris,omitempty"`             // "initialScopeUris":[]
 	InterconnectBayMappingCount         int                  `json:"interconnectBayMappingCount,omitempty"`  // "interconnectBayMappingCount": 8,
 	InterconnectBayMappings             []InterconnectBayMap `json:"interconnectBayMappings"`                // "interconnectBayMappings": [],
+	IpAddressingMode                    string               `json:"ipAddressingMode,omitempty"`             // "ipAddressingMode": "DHCP"
 	IpRangeUris                         []utils.Nstring      `json:"ipRangeUris,omitempty"`
 	Modified                            string               `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
 	Name                                string               `json:"name,omitempty"`             // "name": "Enclosure Group 1",
+	OsDeploymentSettings                OsDeploymentSetting  `json:"name,omitempty"`             // "osDeploymentSetting": {},
 	PortMappingCount                    int                  `json:"portMappingCount,omitempty"` // "portMappingCount": 1,
 	PortMappings                        []PortMap            `json:"portMappings,omitempty"`     // "portMappings": [],
 	PowerMode                           string               `json:"powerMode,omitempty"`        // "powerMode": RedundantPowerFeed,
@@ -43,6 +46,7 @@ type EnclosureGroupList struct {
 }
 
 type InterconnectBayMap struct {
+	EnclosureIndex              int           `json:"enclosureIndex,omitempty"`              // "enclosureIndex": 0,
 	InterconnectBay             int           `json:"interconnectBay,omitempty"`             // "interconnectBay": 0,
 	LogicalInterconnectGroupUri utils.Nstring `json:"logicalInterconnectGroupUri,omitempty"` // "logicalInterconnectGroupUri": "",
 }
@@ -50,6 +54,16 @@ type InterconnectBayMap struct {
 type PortMap struct {
 	InterconnectBay int `json:"interconnectBay,omitempty"` // "interconnectBay": 1,
 	MidplanePort    int `json:"midplanePort,omitempty"`    // "midplanePort": 1,
+}
+
+type OsDeploymentSetting struct {
+	DeploymentModeSettings DeploymentModeSetting `json:"deploymentModeSettings,omitempty"` // "deploymentModeSettings": {},
+	ManageOSDeployment     bool                  `json:"manageOSDeployment,omitempty"`     // "manageOSDeployment": false,
+}
+
+type DeploymentModeSetting struct {
+	DeploymentMode       string `json:"deploymentMode,omitempty"`       // "deploymentMode": "None",
+	DeploymentNetworkUri string `json:"deploymentNetworkUri,omitempty"` // "deploymentNetworkUri": null,
 }
 
 func (c *OVClient) GetEnclosureGroupByName(name string) (EnclosureGroup, error) {
