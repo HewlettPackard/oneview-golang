@@ -92,7 +92,7 @@ type ServerProfile struct {
 	Modified              string              `json:"modified,omitempty"`              // "modified": "20150902T175611.657Z",
 	Name                  string              `json:"name,omitempty"`                  // "name": "Server_Profile_scs79",
 	SanStorage            SanStorageOptions   `json:"sanStorage,omitempty"`            // "sanStorage": {},
-	ScopesUri 			  string 			  `json:"scopesUri,omitempty"`             // "scopesUri": "/rest/scopes/resources/rest/server-profiles/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
+	ScopesUri             string              `json:"scopesUri,omitempty"`             // "scopesUri": "/rest/scopes/resources/rest/server-profiles/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
 	SerialNumber          utils.Nstring       `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
 	SerialNumberType      string              `json:"serialNumberType,omitempty"`      // "serialNumberType": "Physical",
 	ServerHardwareTypeURI utils.Nstring       `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
