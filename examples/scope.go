@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -38,8 +39,9 @@ func main() {
 	for i := 0; i < len(scp_list.Members); i++ {
 		fmt.Println(scp_list.Members[i].Name)
 	}
-
-	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3"}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2")}
+	addedResourceUris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/6d0f7c41-9d1d-4de4-92ef-21a15bb0e8d0")}
+	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3", InitialScopeUris: *initialScopeUris, AddedResourceUris: *addedResourceUris}
 
 	er := ovc.CreateScope(scope)
 	if er != nil {

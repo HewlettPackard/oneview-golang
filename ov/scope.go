@@ -9,20 +9,23 @@ import (
 )
 
 type Scope struct {
-	Description   utils.Nstring    `json:"description,omitempty"`   // "description": "Test from script",
-	Modified      string           `json:"modified,omitempty"`      // "modified": "2018-12-13T10:24:25.267Z",
-	Name          string           `json:"name,omitempty"`          // "name": "updated-SD3",
-	State         string           `json:"state,omitempty"`         // "state": "null",
-	Status        string           `json:"status,omitempty"`        // "status": "null",
-	Type          string           `json:"type,omitempty"`          // "type": "scopesV3",
-	URI           utils.Nstring    `json:"uri,omitempty"`           // "uri": "/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
-	ExtAttributes *ExtraAttributes `json:"extAttributes,omitempty"` //{}
-	ApplianceId   string           `json:"applianceId,omitempty"`   // "category": "scopes",
-	Category      string           `json:"category,omitempty"`      // "category": "scopes",
-	Created       string           `json:"created,omitempty"`       // "created": "2018-12-13T10:05:35.745Z",
-	Etag          string           `json:"eTag,omitempty"`          // "eTag": "\"2018-12-13T10:24:25.267Z/2018-12-13T10:24:25.267Z\"",
-	OldUri        utils.Nstring    `json:"oldUri,omitempty"`        //"oldUri": "null",
-	ScopesUri     utils.Nstring    `json:"scopesUri,omitempty"`     //"scopesUri": "/rest/scopes/resources/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
+	Description         utils.Nstring    `json:"description,omitempty"`         // "description": "Test from script",
+	Modified            string           `json:"modified,omitempty"`            // "modified": "2018-12-13T10:24:25.267Z",
+	Name                string           `json:"name,omitempty"`                // "name": "updated-SD3",
+	State               string           `json:"state,omitempty"`               // "state": "null",
+	Status              string           `json:"status,omitempty"`              // "status": "null",
+	Type                string           `json:"type,omitempty"`                // "type": "scopesV3",
+	URI                 utils.Nstring    `json:"uri,omitempty"`                 // "uri": "/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
+	ExtAttributes       *ExtraAttributes `json:"extAttributes,omitempty"`       //{}
+	ApplianceId         string           `json:"applianceId,omitempty"`         // "category": "scopes",
+	Category            string           `json:"category,omitempty"`            // "category": "scopes",
+	Created             string           `json:"created,omitempty"`             // "created": "2018-12-13T10:05:35.745Z",
+	Etag                string           `json:"eTag,omitempty"`                // "eTag": "\"2018-12-13T10:24:25.267Z/2018-12-13T10:24:25.267Z\"",
+	OldUri              utils.Nstring    `json:"oldUri,omitempty"`              //"oldUri": "null",
+	ScopesUri           utils.Nstring    `json:"scopesUri,omitempty"`           //"scopesUri": "/rest/scopes/resources/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2"
+	InitialScopeUris    []utils.Nstring  `json:"initialScopeUris,omitempty"`    //"initialScopeUris": "/rest/scopes/b2b2e974-743c-11e4-b50b-e7f3da28b112"
+	AddedResourceUris   []utils.Nstring  `json:"addedResourceUris,omitempty"`   //"addedResourceUris": "/rest/ethernet-networks/6d0f7c41-9d1d-4de4-92ef-21a15bb0e8d0"
+	RemovedResourceUris []utils.Nstring  `json:"removedResourceUris,omitempty"` //"removedResourceUris":"/rest/ethernet-networks/6d0f7c41-9d1d-4de4-92ef-21a15bb0e8d0"
 }
 
 type ExtraAttributes struct {
