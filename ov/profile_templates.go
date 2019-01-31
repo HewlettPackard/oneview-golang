@@ -139,6 +139,7 @@ func (c *OVClient) CreateProfileTemplate(serverProfileTemplate ServerProfile) er
 	data, err := c.RestAPICall(rest.POST, uri, serverProfileTemplate)
 
 	if err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error submitting new server profile template request: %s", err)
 		return err
 	}
