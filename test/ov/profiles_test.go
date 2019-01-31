@@ -179,15 +179,15 @@ func TestGetProfiles(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetProfiles("", "")
+		data, err := c.GetProfiles("", "", "", "", "")
 		assert.NoError(t, err, "GetProfiles threw error -> %s, %+v\n", err, data)
 
-		data, err = c.GetProfiles("", "name:asc")
+		data, err = c.GetProfiles("", "", "", "name:asc", "")
 		assert.NoError(t, err, "GetProfiles name:asc error -> %s, %+v", err, data)
 
 	} else {
 		_, c = getTestDriverU("dev")
-		data, err := c.GetProfiles("", "")
+		data, err := c.GetProfiles("", "", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
