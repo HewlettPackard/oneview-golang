@@ -29,7 +29,7 @@ type Interconnect struct {
 	ETag                          string               `json:"eTag,omitempty"`                          // "eTag": "463bd328-ffc8-40ae-9603-6136fa9e6e58",
 	FirmwareVersion               string               `json:"firmwareVersion,omitempty"`               // "firmwareVersion": "1.3.0.1005",
 	HostName                      string               `json:"hostName,omitempty"`                      // "hostName": "VC4040F8-2TV5451754",
-	IcmLicences                   IcmLicence           `json:"icmLicences,omitempty"`                   // "icmLicences": {},
+	IcmLicenses                   IcmLicenses           `json:"icmLicenses,omitempty"`                   // "icmLicenses": {},
 	IgmpIdleTimeoutInterval       int                  `json:"igmpIdleTimeoutInterval,omitempty"`       // "igmpIdleTimeoutInterval": 260,
 	IgmpSnoopingVlanIds           string               `json:"igmpSnoopingVlanIds,omitempty"`           // "igmpSnoopingVlanIds": "",
 	InitialScopeUris              []string             `json:"initialScopeUris,omitempty"`              // "initialScopeUris": [],
@@ -54,6 +54,8 @@ type Interconnect struct {
 	Ports                         []Port               `json:"ports,omitempty"`                         // "ports": [],
 	PowerState                    string               `json:"powerState"`                              // "powerState": "On",
 	ProductName                   string               `json:"productName,omitempty"`                   // "productName": "Virtual Connect SE 40Gb F8 Module for Synergy"
+	QosConfiguration              QosConfiguration     `json:"qosConfiguration,omitempty"`              // "qosConfiguration": {},
+	RemoteSupport                 RemoteSupport        `json:"remoteSupport,omitempty"`                 // "remoteSupport": {},
 	Roles                         []string             `json:"roles,omitempty"`                         // "roles": []
 	ScopesUri                     utils.Nstring        `json:"scopesUri,omitempty"`                     // "scopesUri": "/rest/scopes/resources/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3",
 	SerialNumber                  string               `json:"serialNumber,omitempty"`                  // "serialNumber": "2TV5451754",
@@ -72,16 +74,6 @@ type Interconnect struct {
 	URI                           utils.Nstring        `json:"uri,omitempty"`                           // "uri": "/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3"
 }
 
-type IcmLicence struct {
-	Licence []Licence `json:"licence,omitempty"` // "licence": []
-}
-
-type Licence struct {
-	ConsumedCount int    `json:"consumedCount,omitempty"` // "consumedCount": 0,
-	LicenseType   string `json:"licenseType,omitempty"`   // "licenseType": "Synergy 8Gb FC Upgrade",
-	RequiredCount int    `json:"requiredCount,omitempty"` // "requiredCount": 0,
-	State         string `json:"state,omitempty"`         // "state": "Yes",
-}
 type IpAddressList struct {
 	IpAddress     string `json:"ipAddress,omitempty"`     // "ipAddress": "10.50.4.125",
 	IpAddressType string `json:"ipAddressType,omitempty"` // "ipAddressType": "Ipv4Static"
@@ -139,6 +131,21 @@ type SubPort struct {
 	PortNumber       int    `json:"portNumber"`
 	PortStatus       string `json:"portStatus"`
 	PortStatusReason string `json:"portStatusReason"`
+}
+
+type RemoteSupport struct {
+	RemoteSupportUri           string          `json:"remoteSupportUri,omitempty"`           // "remoteSupportUri": "/rest/support/interconnects/2b322628-e5a9-4843-b184-08345e7140c3",
+	SupportDataCollectionState string          `json:"supportDataCollectionState,omitempty"` // "supportDataCollectionState": ,
+	SupportDataCollectionType  string          `json:"supportDataCollectionType,omitempty"`  // "supportDataCollectionType": ,
+	SupportDataCollectionsUri  string          `json:"supportDataCollectionsUri,omitempty"`  // "supportDataCollectionsUri": "/rest/support/data-collections?deviceID=2b322628-e5a9-4843-b184-08345e7140c3&category=interconnects",
+	SupportSettings            SupportSettings `json:"supportSettings,omitempty"`            // "supportSettings": {},
+	SupportState               string          `json:"supportState,omitempty"`               // "supportState": "Disabled",
+}
+
+type SupportSettings struct {
+	Destination         string `json:"destination,omitempty"`         // "destination": "",
+	SupportCurrentState string `json:"supportCurrentState,omitempty"` // "supportCurrentState": "Unknown",
+
 }
 
 type Neighbor struct {
