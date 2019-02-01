@@ -29,7 +29,7 @@ type Interconnect struct {
 	ETag                          string               `json:"eTag,omitempty"`                          // "eTag": "463bd328-ffc8-40ae-9603-6136fa9e6e58",
 	FirmwareVersion               string               `json:"firmwareVersion,omitempty"`               // "firmwareVersion": "1.3.0.1005",
 	HostName                      string               `json:"hostName,omitempty"`                      // "hostName": "VC4040F8-2TV5451754",
-	IcmLicenses                   IcmLicenses           `json:"icmLicenses,omitempty"`                   // "icmLicenses": {},
+	IcmLicenses                   IcmLicenses          `json:"icmLicenses,omitempty"`                   // "icmLicenses": {},
 	IgmpIdleTimeoutInterval       int                  `json:"igmpIdleTimeoutInterval,omitempty"`       // "igmpIdleTimeoutInterval": 260,
 	IgmpSnoopingVlanIds           string               `json:"igmpSnoopingVlanIds,omitempty"`           // "igmpSnoopingVlanIds": "",
 	InitialScopeUris              []string             `json:"initialScopeUris,omitempty"`              // "initialScopeUris": [],
