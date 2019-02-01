@@ -22,17 +22,17 @@ type EnclosureGroup struct {
 	InterconnectBayMappings             []InterconnectBayMap `json:"interconnectBayMappings"`                // "interconnectBayMappings": [],
 	IpAddressingMode                    string               `json:"ipAddressingMode,omitempty"`             // "ipAddressingMode": "DHCP"
 	IpRangeUris                         []utils.Nstring      `json:"ipRangeUris,omitempty"`
-	Modified                            string               `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
-	Name                                string               `json:"name,omitempty"`             // "name": "Enclosure Group 1",
-	OsDeploymentSettings                OsDeploymentSetting  `json:"name,omitempty"`             // "osDeploymentSetting": {},
-	PortMappingCount                    int                  `json:"portMappingCount,omitempty"` // "portMappingCount": 1,
-	PortMappings                        []PortMap            `json:"portMappings,omitempty"`     // "portMappings": [],
-	PowerMode                           string               `json:"powerMode,omitempty"`        // "powerMode": RedundantPowerFeed,
-	StackingMode                        string               `json:"stackingMode,omitempty"`     // "stackingMode": "Enclosure"
-	State                               string               `json:"state,omitempty"`            // "state": "Normal",
-	Status                              string               `json:"status,omitempty"`           // "status": "Critical",
-	Type                                string               `json:"type,omitempty"`             // "type": "EnclosureGroupV200",
-	URI                                 utils.Nstring        `json:"uri,omitempty"`              // "uri": "/rest/enclosure-groups/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	Modified                            string               `json:"modified,omitempty"`             // "modified": "20150831T154835.250Z",
+	Name                                string               `json:"name,omitempty"`                 // "name": "Enclosure Group 1",
+	OsDeploymentSettings                *OsDeploymentSetting `json:"osDeploymentSettings,omitempty"` // "osDeploymentSetting": {},
+	PortMappingCount                    int                  `json:"portMappingCount,omitempty"`     // "portMappingCount": 1,
+	PortMappings                        []PortMap            `json:"portMappings,omitempty"`         // "portMappings": [],
+	PowerMode                           string               `json:"powerMode,omitempty"`            // "powerMode": RedundantPowerFeed,
+	StackingMode                        string               `json:"stackingMode,omitempty"`         // "stackingMode": "Enclosure"
+	State                               string               `json:"state,omitempty"`                // "state": "Normal",
+	Status                              string               `json:"status,omitempty"`               // "status": "Critical",
+	Type                                string               `json:"type,omitempty"`                 // "type": "EnclosureGroupV200",
+	URI                                 utils.Nstring        `json:"uri,omitempty"`                  // "uri": "/rest/enclosure-groups/e2f0031b-52bd-4223-9ac1-d91cb519d548"
 }
 
 type EnclosureGroupList struct {
