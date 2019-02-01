@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Officially adopted Semantic Versioning for the SDK
 - Added endpoints-support.md to track the supported and tested endpoints for the different HPE OneView REST APIs
 
-### Bug fixes & Enhancements
+#### Bug fixes & Enhancements:
 -	[#139] (https://github.com/HewlettPackard/oneview-golang/issues/139) fix examples due to change in the ov.go file for creating a NewOVClient
 -	[#119] (https://github.com/HewlettPackard/oneview-golang/issues/119) Server Profile Template support for API 500+
 -	[#111] (https://github.com/HewlettPackard/oneview-golang/issues/111) Travis build failed related to golint dependency
@@ -76,7 +76,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 #### Bug fixes & Enhancements:
   - [#61] (https://github.com/HewlettPackard/oneview-golang/issues/61) Issues when running make test target locally
-	- [#40] (https://github.com/HewlettPackard/oneview-golang/issues/40) refresh login should check if the current session id is good
+  - [#40] (https://github.com/HewlettPackard/oneview-golang/issues/40) refresh login should check if the current session id is good
 
 ### Oneview Features supported
 - Ethernet network    
