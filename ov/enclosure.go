@@ -34,7 +34,7 @@ type Enclosure struct {
 	FwBaselineName                            string                `json:"fwBaselineName,omitempty"`                            // "fwBaselineName": null,
 	FwBaselineUri                             utils.Nstring         `json:"fwBaselineUri,omitempty"`                             // "fwBaselineUri": null,
 	InterconnectBayCount                      int                   `json:"interconnectBayCount,omitempty"`                      // "interconnectBayCount": 8,
-	InterconnectBays                          []InterconnectBayMap  `json:"interconnectBays"`                                    // "interconnectBays": [],
+	InterconnectBays                          []InterconnectBay     `json:"interconnectBays"`                                    // "interconnectBays": [],
 	InterconnectBayWatts                      int                   `json:"interconnectBayWatts,omitempty"`                      // "interconnectBayWatts": 8,
 	IsFwManaged                               bool                  `json:"isFwManaged"`                                         // "isFwManaged": false,
 	LicensingIntent                           string                `json:"licensingIntent,omitempty"`                           // "licensingIntent": "OneView",
@@ -153,12 +153,31 @@ type FanBay struct {
 	Status          string `json:"status,omitempty"`          // "status": ""
 }
 
+type InterconnectBay struct {
+	BayNumber              int         `json:"bayNumber,omitempty"`              // "bayNumber": 1,
+	BayPowerState          string      `json:"bayPowerState,omitempty"`          // "bayPowerState": "Unknown",
+	ChangeState            string      `json:"changeState,omitempty"`            // "changeState": "None",
+	ContainedRisResources  []string    `json:"containedRisResources,omitempty"`  // "containedRisResources": ["/rest/v1/Interconnect/1"],
+	Empty                  bool        `json:"empty,omitempty"`                  // "empty": false,
+	EnclosureUri           string      `json:"enclosureUri,omitempty"`           // "enclosureUri": "/rest/enclosures/013645CN759000AD",
+	InterconnectBayType    string      `json:"interconnectBayType,omitempty"`    // "interconnectBayType": "SY12000InterconnectBay",
+	InterconnectModel      string      `json:"interconnectModel,omitempty"`      // "interconnectModel": "Synergy 12Gb SAS Connection Module",
+	InterconnectReady      bool        `json:"interconnectReady,omitempty"`      // "interconnectReady": true,
+	InterconnectUri        string      `json:"interconnectUri,omitempty"`        // "interconnectUri": "/rest/sas-interconnects/TWT546W04N",
+	Ipv4Setting            Ipv4Setting `json:"ipv4Setting,omitempty"`            // "ipv4Setting": {},
+	LogicalInterconnectUri string      `json:"logicalInterconnectUri,omitempty"` // "logicalInterconnectUri": "/rest/sas-logical-interconnects/23868fa4-b773-4fea-a1ab-44c0d30b2d50",
+	OriginOfCondition      string      `json:"originOfCondition,omitempty"`      // "originOfCondition": "/rest/v1/InterconnectManager/1",
+	PartNumber             string      `json:"partNumber,omitempty"`             // "partNumber": "755985-B21",
+	PowerAllocationWatts   int         `json:"powerAllocationWatts,omitempty"`   // "powerAllocationWatts": 32,
+	SerialConsole          bool        `json:"serialConsole,omitempty"`          // "serialConsole": true,
+	SerialNumber           string      `json:"serialNumber,omitempty"`           // "serialNumber": "TWT546W04N",
+}
+
 type Ipv4Setting struct {
 	IpAddress         string `json:"ipAddress,omitempty"`         // "ipAddress": "",
 	IpAssignmentState string `json:"ipAssignmentState,omitempty"` // "ipAssignmentState": "",
 	IpRangeUri        string `json:"ipRangeUri,omitempty"`        // "ipRangeUri": "",
 	Mode              string `json:"mode,omitempty"`              // "mode": "",
-
 }
 
 type ManagerBay struct {
