@@ -28,6 +28,7 @@ type EnclosureGroup struct {
 	PortMappingCount                    int                  `json:"portMappingCount,omitempty"`     // "portMappingCount": 1,
 	PortMappings                        []PortMap            `json:"portMappings,omitempty"`         // "portMappings": [],
 	PowerMode                           string               `json:"powerMode,omitempty"`            // "powerMode": RedundantPowerFeed,
+	ScopesUri                           utils.Nstring        `json:"scopesUri,omitempty"`            // "ScopesUri": "/rest/scopes/resources/rest/enclosure-groups/2b322628-e5a9-4843-b184-08345e7140c3",
 	StackingMode                        string               `json:"stackingMode,omitempty"`         // "stackingMode": "Enclosure"
 	State                               string               `json:"state,omitempty"`                // "state": "Normal",
 	Status                              string               `json:"status,omitempty"`               // "status": "Critical",

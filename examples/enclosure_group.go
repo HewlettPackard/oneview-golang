@@ -12,7 +12,7 @@ func main() {
 		clientOV    *ov.OVClient
 		eg_name     = "DemoEnclosureGroup"
 		new_eg_name = "RenamedEnclosureGroup"
-		//script      = "#TEST COMMAND"
+		script      = "#TEST COMMAND"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
