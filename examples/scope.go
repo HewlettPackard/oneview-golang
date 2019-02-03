@@ -9,10 +9,11 @@ import (
 
 func main() {
 	var (
-		ClientOV  *ov.OVClient
-		scp_name  = "updated-SD2"
-		new_scope = "new-scope"
-		upd_scope = "update-scope"
+		ClientOV    *ov.OVClient
+		scp_name    = "updated-SD2"
+		new_scope   = "new-scope"
+		upd_scope   = "update-scope"
+		eth_network = "Enet1"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -39,8 +40,13 @@ func main() {
 	for i := 0; i < len(scp_list.Members); i++ {
 		fmt.Println(scp_list.Members[i].Name)
 	}
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7f658031-c942-4336-be7a-67957cf20ba2")}
-	addedResourceUris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/6d0f7c41-9d1d-4de4-92ef-21a15bb0e8d0")}
+	eth_uri, err := ovc.GetEthernetNetworkByName(eth_network)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	initialScopeUris := &[]utils.Nstring{(scp.URI)}
+	addedResourceUris := &[]utils.Nstring{(eth_uri.URI)}
 	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3", InitialScopeUris: *initialScopeUris, AddedResourceUris: *addedResourceUris}
 
 	er := ovc.CreateScope(scope)
