@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		ClientOV           *ov.OVClient
-		logical_enclosure   = "SYN03_LE"
+		logical_enclosure   = "log_enc_66"
 		logical_enclosure_1 = "log_enclosure77"
 		logical_enclosure_2 = "log_enclosure88"
 		logical_enclosure_3 = "log_enclosure88"
@@ -23,8 +23,6 @@ func main() {
 		false,
 		800,
 		"")
-	ovVer, _ := ovc.GetAPIVersion()
-	fmt.Println(ovVer)
 
 	fmt.Println("#................... Logical Enclosure by Name ...............#")
 	log_en, err := ovc.GetLogicalEnclosureByName(logical_enclosure)
@@ -47,13 +45,13 @@ func main() {
 
 	enclosureUris := new([]utils.Nstring) 
 
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/013645CN759000AC"))
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/013645CN759000AD"))
-
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: "log_enclosure77",
 		EnclosureUris: *enclosureUris, 
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/0f2a3f46-36ad-4c8f-9e88-763c062855d3")}
+		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/e48e8024-5e35-48ea-9bb9-0e4b3c69fb91")}
 
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
@@ -62,7 +60,6 @@ func main() {
 	} else {
 		fmt.Println(".... Logical Enclosure Created Success")
 	}
-
 
 	log_enc, _ := ovc.GetLogicalEnclosureByName(logical_enclosure_1)
 	log_enc.Name = logical_enclosure_2
