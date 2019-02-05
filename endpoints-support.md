@@ -65,7 +65,7 @@
 |<sub>/rest/interconnect-types</sub>                                                      | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  |
 |<sub>/rest/interconnect-types/{id}</sub>                                                 | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  |
 |     **Logical Enclosures**                                                                                                               |
-|<sub>/rest/logical-enclosures</sub>                                             | GET      | :white_check_mark:   | :white_check_mark:   | white_check_mark:  | :white_check_mark:  | :white_check_mark:  |
+|<sub>/rest/logical-enclosures</sub>                                             | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  | :white_check_mark:  |
 |<sub>/rest/logical-enclosures</sub>                                             | POST     | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  |
 |<sub>/rest/logical-enclosures/{id}</sub>                                        | GET      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  |
 |<sub>/rest/logical-enclosures/{id}</sub>                                        | PUT      | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:  | :white_check_mark:  |
