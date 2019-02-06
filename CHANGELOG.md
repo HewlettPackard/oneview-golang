@@ -14,11 +14,11 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added endpoints-support.md to track the supported and tested endpoints for the different HPE OneView REST APIs
 
 #### Bug fixes & Enhancements:
--	[#139] (https://github.com/HewlettPackard/oneview-golang/issues/139) fix examples due to change in the ov.go file for creating a NewOVClient
--	[#119] (https://github.com/HewlettPackard/oneview-golang/issues/119) Server Profile Template support for API 500+
--	[#111] (https://github.com/HewlettPackard/oneview-golang/issues/111) Travis build failed related to golint dependency
+- [#139] (https://github.com/HewlettPackard/oneview-golang/issues/139) fix examples due to change in the ov.go file for creating a NewOVClient
+- [#119] (https://github.com/HewlettPackard/oneview-golang/issues/119) Server Profile Template support for API 500+
+- [#111] (https://github.com/HewlettPackard/oneview-golang/issues/111) Travis build failed related to golint dependency
 - [#108] (https://github.com/HewlettPackard/oneview-golang/issues/108) Add change log file to keep a track of each version
--	[#106] (https://github.com/HewlettPackard/oneview-golang/issues/106) Building DockerImage fails with the current Go version
+- [#106] (https://github.com/HewlettPackard/oneview-golang/issues/106) Building DockerImage fails with the current Go version
 
 ### Oneview Features supported
 - Enclosure    
@@ -26,32 +26,32 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet network
 - FC network       
 - Interconnect
--	Interconnect type
--	Logical enclosure
+- Interconnect type
+- Logical enclosure
 - Logical interconnect
-- Logical interconnect group           
--	Scope
+- Logical interconnect group
+- Scope
 - Server profile
 - Server profile template
--	Storage pool
--	Storage system
--	Storage volume attachment
+- Storage pool
+- Storage system
+- Storage volume attachment
 - Server hardware
 - Server hardware type
--	Task
--	Uplink set
--	Volume
+- Task
+- Uplink set
+- Volume
 
 # [v0.8.2] (2017-03-09)
 ### Notes
   This version of the SDK supports Image streamer with versions 2.00.00 or higher, using the OneView Rest API version 300.
 ### Major changes:
-	Improvements and refactoring.
+  Improvements and refactoring.
 
 ### Oneview Features supported
 - Artifacts Bundle
 - Deployment plan
--	Enclosure Group
+- Enclosure Group
 - Golden image
 - OS Build Plan
 - OS Deployment plan
@@ -85,11 +85,11 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Logical interconnect group
 - Logical switch
 - Logical switch group
--	Network Set    
+- Network Set
 - Server hardware
 - Server profile
 - Server profile template
 - Storage
--	Switch Type
--	Task
--	Version
+- Switch Type
+- Task
+- Version
