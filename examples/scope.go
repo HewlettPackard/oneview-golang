@@ -3,15 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
 func main() {
 	var (
-		ClientOV  *ov.OVClient
-		scp_name  = "updated-SD2"
-		new_scope = "new-scope"
-		upd_scope = "update-scope"
+		ClientOV    *ov.OVClient
+		scp_name    = "updated-SD2"
+		new_scope   = "new-scope"
+		upd_scope   = "update-scope"
+		eth_network = "Enet1"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -38,8 +40,14 @@ func main() {
 	for i := 0; i < len(scp_list.Members); i++ {
 		fmt.Println(scp_list.Members[i].Name)
 	}
+	eth_uri, err := ovc.GetEthernetNetworkByName(eth_network)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3"}
+	initialScopeUris := &[]utils.Nstring{(scp.URI)}
+	addedResourceUris := &[]utils.Nstring{(eth_uri.URI)}
+	scope := ov.Scope{Name: new_scope, Description: "Test from script", Type: "ScopeV3", InitialScopeUris: *initialScopeUris, AddedResourceUris: *addedResourceUris}
 
 	er := ovc.CreateScope(scope)
 	if er != nil {
