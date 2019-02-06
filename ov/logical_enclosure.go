@@ -9,91 +9,88 @@ import (
 )
 
 type LogicalEnclosure struct {
-	AmbientTemperatureMode string    `json:"ambientTemperatureMode,omitempty"` // "ambientTemperatureMode": "Standard",
-	Category              string     `json:"category,omitempty"`              // "category": "logical-enclosures",
-	Created               string     `json:"created,omitempty"`               // "created": "20150831T154835.250Z",
-	DeleteFailed          bool       `json:"deleteFailed,omitempty"`          // "deleteFailed": true,
-	DeploymentManagerSettings *DeploymentManagerSettings  `json:"deploymentManagerSettings,omitempty"`  // "deploymentManagerSettings": "",
-	Description       utils.Nstring   `json:"description,omitempty"`           // "description": "Logical Enclosure 1",
-	Etag                  string          `json:"eTag,omitempty"`                  // "eTag": "1441036118675/8",
-	EnclosureGroupUri      utils.Nstring   `json:"enclosureGroupUri,omitempty"`     // "enclosureGroupUri": "/rest/enclosure-groups/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",
-	EnclosureUris         []utils.Nstring `json:"enclosureUris,omitempty"`      	// "enclosureUris":""
-	Enclosures   	      map[string]Enclosures    `json:"enclosures,omitempty"`             // "enclosures":"[]",
-	Firmware              *LogicalEnclosureFirmware       `json:"firmware,omitempty"`                // "firmware":"",
-	IpAddressingMode	string	      `json:"ipAddressingMode,omitempty"`	 // "ipAddressingMode":"DHCP",
- 	Ipv4Ranges            []Ipv4Ranges    `json:"ipv4Ranges,omitempty"`            //"ipv4Ranges":"[]"
-	LogicalInterconnectUris []utils.Nstring `json:"logicalInterconnectUris,omitempty"` //"logicalInterconnectUris":"[]",
-	Modified              string          `json:"modified,omitempty"`           // "modified": "20150831T154835.25Z",
-	Name                  string          `json:"name,omitempty"`               // "name": "Ethernet Network 1",
-	PowerMode             string          `json:"powerMode,omitempty"`          // "powerMode": "RedundantPowerFeed",
-	ScalingState          string          `json:"scalingState,omitempty"`          // "scalingState": "Growing",
-	ScopesUri             utils.Nstring   `json:"scopesUri,omitempty"`             // "scopesUri":
-	State                 string          `json:"state,omitempty"`                 // "state": "Creating",
-	Status                string          `json:"status,omitempty"`                // "status": "Critical",
-	Type                  string          `json:"type,omitempty"`                  // "type": "LogicalEnclosureV4",
-	URI                   utils.Nstring   `json:"uri,omitempty"`                   // "uri": "/rest/logical-enclosures/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	AmbientTemperatureMode    string                     `json:"ambientTemperatureMode,omitempty"`    // "ambientTemperatureMode": "Standard",
+	Category                  string                     `json:"category,omitempty"`                  // "category": "logical-enclosures",
+	Created                   string                     `json:"created,omitempty"`                   // "created": "20150831T154835.250Z",
+	DeleteFailed              bool                       `json:"deleteFailed,omitempty"`              // "deleteFailed": true,
+	DeploymentManagerSettings *DeploymentManagerSettings `json:"deploymentManagerSettings,omitempty"` // "deploymentManagerSettings": "",
+	Description               utils.Nstring              `json:"description,omitempty"`               // "description": "Logical Enclosure 1",
+	Etag                      string                     `json:"eTag,omitempty"`                      // "eTag": "1441036118675/8",
+	EnclosureGroupUri         utils.Nstring              `json:"enclosureGroupUri,omitempty"`         // "enclosureGroupUri": "/rest/enclosure-groups/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",
+	EnclosureUris             []utils.Nstring            `json:"enclosureUris,omitempty"`             // "enclosureUris":""
+	Enclosures                map[string]Enclosures      `json:"enclosures,omitempty"`                // "enclosures":"[]",
+	Firmware                  *LogicalEnclosureFirmware  `json:"firmware,omitempty"`                  // "firmware":"",
+	IpAddressingMode          string                     `json:"ipAddressingMode,omitempty"`          // "ipAddressingMode":"DHCP",
+	Ipv4Ranges                []Ipv4Ranges               `json:"ipv4Ranges,omitempty"`                //"ipv4Ranges":"[]"
+	LogicalInterconnectUris   []utils.Nstring            `json:"logicalInterconnectUris,omitempty"`   //"logicalInterconnectUris":"[]",
+	Modified                  string                     `json:"modified,omitempty"`                  // "modified": "20150831T154835.25Z",
+	Name                      string                     `json:"name,omitempty"`                      // "name": "Ethernet Network 1",
+	PowerMode                 string                     `json:"powerMode,omitempty"`                 // "powerMode": "RedundantPowerFeed",
+	ScalingState              string                     `json:"scalingState,omitempty"`              // "scalingState": "Growing",
+	ScopesUri                 utils.Nstring              `json:"scopesUri,omitempty"`                 // "scopesUri":
+	State                     string                     `json:"state,omitempty"`                     // "state": "Creating",
+	Status                    string                     `json:"status,omitempty"`                    // "status": "Critical",
+	Type                      string                     `json:"type,omitempty"`                      // "type": "LogicalEnclosureV4",
+	URI                       utils.Nstring              `json:"uri,omitempty"`                       // "uri": "/rest/logical-enclosures/e2f0031b-52bd-4223-9ac1-d91cb519d548"
 
 }
 
 type LogicalEnclosureList struct {
-	Total       int               `json:"total,omitempty"`       // "total": 1,
-	Count       int               `json:"count,omitempty"`       // "count": 1,
-	Start       int               `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring     `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring     `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring     `json:"uri,omitempty"`         // "uri": "/rest/ethernet-networks?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
+	Total       int                `json:"total,omitempty"`       // "total": 1,
+	Count       int                `json:"count,omitempty"`       // "count": 1,
+	Start       int                `json:"start,omitempty"`       // "start": 0,
+	PrevPageURI utils.Nstring      `json:"prevPageUri,omitempty"` // "prevPageUri": null,
+	NextPageURI utils.Nstring      `json:"nextPageUri,omitempty"` // "nextPageUri": null,
+	URI         utils.Nstring      `json:"uri,omitempty"`         // "uri": "/rest/ethernet-networks?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
 	Members     []LogicalEnclosure `json:"members,omitempty"`     // "members":[]
 }
 
 type DeploymentModeSettings struct {
-	DeploymentMode         string   	`json:"deploymentMode,omitempty"`           //"deploymentMode":"None"
-	DeploymentNetworkUri   utils.Nstring 	`json:"deploymentNetworkUri,omitempty"` 	//"deploymentNetworkUri":"/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	DeploymentMode       string        `json:"deploymentMode,omitempty"`       //"deploymentMode":"None"
+	DeploymentNetworkUri utils.Nstring `json:"deploymentNetworkUri,omitempty"` //"deploymentNetworkUri":"/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
 }
 
 type LE_OsDeploymentSettings struct {
 	DeploymentModeSettings *DeploymentModeSettings `json:"deploymentModeSettings,omitempty"`
-	ManageOSDeployment bool `json:"manageOSDeployment,omitempty"`
+	ManageOSDeployment     bool                    `json:"manageOSDeployment,omitempty"`
 }
 
 type DeploymentManagerSettings struct {
-	DeploymentClusterUri  utils.Nstring          `json:"deploymentClusterUri,omitempty"`	//"deploymentClusterUri":""
+	DeploymentClusterUri utils.Nstring            `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
 	OsDeploymentSettings *LE_OsDeploymentSettings `json:"osDeploymentSettings,omitempty"` //"OsdeploymentSettings":""
 }
 
 type Enclosures struct {
-	EnclosureUri 	utils.Nstring	 `json:"enclosureUri,omitempty"`		//"enclosureUri":"",
-	InterconnectBays   []InterconnectBays   `json:"interconnectBays,omitempty"`    //"interconnectBays":"[]",
+	EnclosureUri     utils.Nstring      `json:"enclosureUri,omitempty"`     //"enclosureUri":"",
+	InterconnectBays []InterconnectBays `json:"interconnectBays,omitempty"` //"interconnectBays":"[]",
 }
 
 type InterconnectBays struct {
-	BayNumber	int		 	`json:"bayNumber,omitempty"`         //"bayNumber":"3",
-	LicenseIntents 	*LicenseIntents  	`json:"licenseIntents,omitempty"`    //"licenseIntent":"",
+	BayNumber      int             `json:"bayNumber,omitempty"`      //"bayNumber":"3",
+	LicenseIntents *LicenseIntents `json:"licenseIntents,omitempty"` //"licenseIntent":"",
 }
 
 type LicenseIntents struct {
-	FCUpgrade	string 	`json:"FCUpgrade,omitempty"`	//"FCUpgrade":"Automatic",
+	FCUpgrade string `json:"FCUpgrade,omitempty"` //"FCUpgrade":"Automatic",
 }
 
 type Ipv4Ranges struct {
-	DnsServers    []string      `json:"dnsServers,omitempty"`		//"dnsServers":"",
-	Domain        string             `json:"domain,omitempty"`		 //"domain":"",
-	Gateway       string            `json:"gateway,omitempty"`    		 //"gateway":"",
-	IpRangeUri    utils.Nstring	`json:"ipRangeUri,omitempty"`		//"ipRangeUri":"",
-	Name          string		`json:"name,omitempty"`			//"name":"",
-	SubnetMask    string		`json:"subnetMask,omitempty"`		//"subnetMask":""
+	DnsServers []string      `json:"dnsServers,omitempty"` //"dnsServers":"",
+	Domain     string        `json:"domain,omitempty"`     //"domain":"",
+	Gateway    string        `json:"gateway,omitempty"`    //"gateway":"",
+	IpRangeUri utils.Nstring `json:"ipRangeUri,omitempty"` //"ipRangeUri":"",
+	Name       string        `json:"name,omitempty"`       //"name":"",
+	SubnetMask string        `json:"subnetMask,omitempty"` //"subnetMask":""
 }
-
 
 type LogicalEnclosureFirmware struct {
-	FirmwareBaselineUri  	        	utils.Nstring  `json:"firmwareBaselineUri,omitempty"`   //"firmwareBaselineUri":"",
-	FirmwareUpdateOn   	  	 	string          `json:"firmwareUpdateOn,omitempty"`      //"firmwareUpdateOn":"EnclosureOnly",
-	ForceInstallFirmware 			bool            `json:"forceInstallFirmware,omitempty"`  //"forceInstallFirmware":true,
-	LogicalInterconnectUpdateMode  	        string          `json:"logicalInterconnectUpdateMode,omitempty"` //"logicalInterconnectUpdateMode":"Parallel",
-	UpdateFirmwareOnUnmanagedInterconnect 	 bool            `json:"updateFirmwareOnUnmanagedInterconnect,omitempty"` //"updateFirmwareOnUnmanagedInterconnect":true,
-	ValidateIfLIFirmwareUpdateIsNonDisruptive   bool          `json:"validateIfLIFirmwareUpdateIsNonDisruptive,omitempty"` //"validateIfLIFirmwareUpdateIsNonDisruptive":false,
+	FirmwareBaselineUri                       utils.Nstring `json:"firmwareBaselineUri,omitempty"`                       //"firmwareBaselineUri":"",
+	FirmwareUpdateOn                          string        `json:"firmwareUpdateOn,omitempty"`                          //"firmwareUpdateOn":"EnclosureOnly",
+	ForceInstallFirmware                      bool          `json:"forceInstallFirmware,omitempty"`                      //"forceInstallFirmware":true,
+	LogicalInterconnectUpdateMode             string        `json:"logicalInterconnectUpdateMode,omitempty"`             //"logicalInterconnectUpdateMode":"Parallel",
+	UpdateFirmwareOnUnmanagedInterconnect     bool          `json:"updateFirmwareOnUnmanagedInterconnect,omitempty"`     //"updateFirmwareOnUnmanagedInterconnect":true,
+	ValidateIfLIFirmwareUpdateIsNonDisruptive bool          `json:"validateIfLIFirmwareUpdateIsNonDisruptive,omitempty"` //"validateIfLIFirmwareUpdateIsNonDisruptive":false,
 }
-
-
 
 func (c *OVClient) GetLogicalEnclosureByName(name string) (LogicalEnclosure, error) {
 	var (
@@ -109,8 +106,8 @@ func (c *OVClient) GetLogicalEnclosureByName(name string) (LogicalEnclosure, err
 
 func (c *OVClient) GetLogicalEnclosures(start string, count string, filter string, scopeUris string, sort string) (LogicalEnclosureList, error) {
 	var (
-		uri              = "/rest/logical-enclosures"
-		q                map[string]interface{}
+		uri               = "/rest/logical-enclosures"
+		q                 map[string]interface{}
 		logicalEnclosures LogicalEnclosureList
 	)
 	q = make(map[string]interface{})
@@ -154,7 +151,6 @@ func (c *OVClient) GetLogicalEnclosures(start string, count string, filter strin
 	return logicalEnclosures, nil
 }
 
-
 func (c *OVClient) CreateLogicalEnclosure(logEn LogicalEnclosure) error {
 	log.Infof("Initializing creation of logical enclosure for %s.", logEn.Name)
 	var (
@@ -191,13 +187,12 @@ func (c *OVClient) CreateLogicalEnclosure(logEn LogicalEnclosure) error {
 	return nil
 }
 
-
 func (c *OVClient) DeleteLogicalEnclosure(name string) error {
 	var (
 		logEn LogicalEnclosure
-		err  error
-		t    *Task
-		uri  string
+		err   error
+		t     *Task
+		uri   string
 	)
 
 	logEn, err = c.GetLogicalEnclosureByName(name)
