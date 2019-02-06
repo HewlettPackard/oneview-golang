@@ -29,7 +29,7 @@ type Interconnect struct {
 	ETag                          string               `json:"eTag,omitempty"`                          // "eTag": "463bd328-ffc8-40ae-9603-6136fa9e6e58",
 	FirmwareVersion               string               `json:"firmwareVersion,omitempty"`               // "firmwareVersion": "1.3.0.1005",
 	HostName                      string               `json:"hostName,omitempty"`                      // "hostName": "VC4040F8-2TV5451754",
-	IcmLicences                   IcmLicence           `json:"icmLicences,omitempty"`                   // "icmLicences": {},
+	IcmLicenses                   IcmLicenses          `json:"icmLicenses,omitempty"`                   // "icmLicenses": {},
 	IgmpIdleTimeoutInterval       int                  `json:"igmpIdleTimeoutInterval,omitempty"`       // "igmpIdleTimeoutInterval": 260,
 	IgmpSnoopingVlanIds           string               `json:"igmpSnoopingVlanIds,omitempty"`           // "igmpSnoopingVlanIds": "",
 	InitialScopeUris              []string             `json:"initialScopeUris,omitempty"`              // "initialScopeUris": [],
@@ -54,9 +54,12 @@ type Interconnect struct {
 	Ports                         []Port               `json:"ports,omitempty"`                         // "ports": [],
 	PowerState                    string               `json:"powerState"`                              // "powerState": "On",
 	ProductName                   string               `json:"productName,omitempty"`                   // "productName": "Virtual Connect SE 40Gb F8 Module for Synergy"
+	QosConfiguration              QosConfiguration     `json:"qosConfiguration,omitempty"`              // "qosConfiguration": {},
+	RemoteSupport                 RemoteSupport        `json:"remoteSupport,omitempty"`                 // "remoteSupport": {},
 	Roles                         []string             `json:"roles,omitempty"`                         // "roles": []
 	ScopesUri                     utils.Nstring        `json:"scopesUri,omitempty"`                     // "scopesUri": "/rest/scopes/resources/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3",
 	SerialNumber                  string               `json:"serialNumber,omitempty"`                  // "serialNumber": "2TV5451754",
+	SnmpConfiguration             SnmpConfiguration    `json:"snmpConfiguration,omitempty"`             // "snmpConfiguration": {},
 	SparePartNumber               string               `json:"sparePartNumber,omitempty"`               // "sparePartNumber": "813174-001",
 	StackingDomainId              int                  `json:"stackingDomainId,omitempty"`              // "stackingDomainId": 3,
 	StackingDomainRole            string               `json:"stackingDomainRole,omitempty"`            // "stackingDomainRole": "Master",
@@ -72,58 +75,71 @@ type Interconnect struct {
 	URI                           utils.Nstring        `json:"uri,omitempty"`                           // "uri": "/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3"
 }
 
-type IcmLicence struct {
-	Licence []Licence `json:"licence,omitempty"` // "licence": []
-}
-
-type Licence struct {
-	ConsumedCount int    `json:"consumedCount,omitempty"` // "consumedCount": 0,
-	LicenseType   string `json:"licenseType,omitempty"`   // "licenseType": "Synergy 8Gb FC Upgrade",
-	RequiredCount int    `json:"requiredCount,omitempty"` // "requiredCount": 0,
-	State         string `json:"state,omitempty"`         // "state": "Yes",
-}
 type IpAddressList struct {
 	IpAddress     string `json:"ipAddress,omitempty"`     // "ipAddress": "10.50.4.125",
 	IpAddressType string `json:"ipAddressType,omitempty"` // "ipAddressType": "Ipv4Static"
 }
 
 type Port struct {
-	AssociatedUplinkSetUri    utils.Nstring `json:"associatedUplinkSetUri,omitempty"`    // "associatedUplinkSetUri": "/rest/uplink-sets/34d55132-fbb8-4ebc-aa3e-8164180ce845",
-	Available                 bool          `json:"available,omitempty"`                 // "available": true,
-	BayNumber                 int           `json:"bayNumber,omitempty"`                 // "bayNumber": 3,
-	Capability                []string      `json:"capability,omitempty"`                // "capability": [],
-	Category                  string        `json:"category,omitempty"`                  // "category": "ports",
-	ConfigPortTypes           []string      `json:"configPortTypes,omitempty"`           // "configPortTypes": [],
-	ConnectorType             string        `json:"connectorType,omitempty"`             // "connectorType": "QSFP+CR4",
-	Created                   string        `json:"created,omitempty"`                   // "created": null,
-	Description               string        `json:"description,omitempty"`               // "description": null,
-	Enabled                   bool          `json:"enabled,omitempty"`                   // "enabled": true,
-	ETag                      string        `json:"eTag,omitempty"`                      // "eTag": null,
-	InterconnectName          string        `json:"interconnectName,omitempty"`          // "interconnectName": "SYN03_Frame1, interconnect 3",
-	LagId                     int           `json:"lagId,omitempty"`                     // "lagId": 2,
-	LagStates                 []string      `json:"lagStates,omitempty"`                 // "lagStates": [],
-	Modified                  string        `json:"modified,omitempty"`                  // "modified": null,
-	Name                      string        `json:"name,omitempty"`                      // "name": "Q3",
-	Neighbor                  Neighbor      `json:"neighbor,omitempty"`                  // "neighbor": {},
-	OperationalSpeed          string        `json:"operationalSpeed,omitempty"`          // "operationalSpeed": "Speed40G",
-	PairedPortName            string        `json:"pairedPortName,omitempty"`            // "pairedPortName": null,
-	PortHealthStatus          string        `json:"portHealthStatus,omitempty"`          // "portHealthStatus": "Normal",
-	PortId                    string        `json:"portId,omitempty"`                    // "portId": "2b322628-e5a9-4843-b184-08345e7140c3:Q3",
-	PortMonitorConfigInfo     string        `json:"portMonitorConfigInfo,omitempty"`     // "portMonitorConfigInfo": "NotMonitored",
-	PortName                  string        `json:"portName,omitempty"`                  // "portName": "Q3",
-	PortRunningCapabilityType string        `json:"portRunningCapabilityType,omitempty"` // "portRunningCapabilityType": null,
-	PortSplitMode             string        `json:"portSplitMode,omitempty"`             // "portSplitMode": "Unsplit",
-	PortStatus                string        `json:"portStatus,omitempty"`                // "portStatus": "Linked",
-	PortStatusReason          string        `json:"portStatusReason,omitempty"`          // "portStatusReason": "Active",
-	PortType                  string        `json:"portType,omitempty"`                  // "portType": "Uplink",
-	PortTypeExtended          string        `json:"portTypeExtended,omitempty"`          // "portTypeExtended": "External",
-	State                     string        `json:"state,omitempty"`                     // "state": null,
-	Status                    string        `json:"status,omitempty"`                    // "status": "OK",
-	SubPorts                  []SubPort     `json:"subports,omitempty"`                  // "subports": null,
-	Type                      string        `json:"type,omitempty"`                      // "type": "port",
-	URI                       utils.Nstring `json:"uri,omitempty"`                       // "uri": "/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3/ports/2b322628-e5a9-4843-b184-08345e7140c3:Q3",
-	VendorSpecificPortName    string        `json:"vendorSpecificPortName,omitempty"`    // "vendorSpecificPortName": null,
-	Vlans                     string        `json:"vlans,omitempty"`                     // "vlans": null
+	AssociatedUplinkSetUri    utils.Nstring    `json:"associatedUplinkSetUri,omitempty"`    // "associatedUplinkSetUri": "/rest/uplink-sets/34d55132-fbb8-4ebc-aa3e-8164180ce845",
+	Available                 bool             `json:"available,omitempty"`                 // "available": true,
+	BayNumber                 int              `json:"bayNumber,omitempty"`                 // "bayNumber": 3,
+	Capability                []string         `json:"capability,omitempty"`                // "capability": [],
+	Category                  string           `json:"category,omitempty"`                  // "category": "ports",
+	ConfigPortTypes           []string         `json:"configPortTypes,omitempty"`           // "configPortTypes": [],
+	ConnectorType             string           `json:"connectorType,omitempty"`             // "connectorType": "QSFP+CR4",
+	Created                   string           `json:"created,omitempty"`                   // "created": null,
+	DcbxInfo                  DcbxInfo         `json:"dcbxInfo,omitempty"`                  // "dcbxInfo": {},
+	Description               string           `json:"description,omitempty"`               // "description": null,
+	Enabled                   bool             `json:"enabled,omitempty"`                   // "enabled": true,
+	ETag                      string           `json:"eTag,omitempty"`                      // "eTag": null,
+	FcPortProperties          FcPortProperties `json:"fcPortProperties,omitempty"`          // fcPortProperties: {}
+	InterconnectName          string           `json:"interconnectName,omitempty"`          // "interconnectName": "SYN03_Frame1, interconnect 3",
+	LagId                     int              `json:"lagId,omitempty"`                     // "lagId": 2,
+	LagStates                 []string         `json:"lagStates,omitempty"`                 // "lagStates": [],
+	Modified                  string           `json:"modified,omitempty"`                  // "modified": null,
+	Name                      string           `json:"name,omitempty"`                      // "name": "Q3",
+	Neighbor                  Neighbor         `json:"neighbor,omitempty"`                  // "neighbor": {},
+	OperationalSpeed          string           `json:"operationalSpeed,omitempty"`          // "operationalSpeed": "Speed40G",
+	PairedPortName            string           `json:"pairedPortName,omitempty"`            // "pairedPortName": null,
+	PortHealthStatus          string           `json:"portHealthStatus,omitempty"`          // "portHealthStatus": "Normal",
+	PortId                    string           `json:"portId,omitempty"`                    // "portId": "2b322628-e5a9-4843-b184-08345e7140c3:Q3",
+	PortMonitorConfigInfo     string           `json:"portMonitorConfigInfo,omitempty"`     // "portMonitorConfigInfo": "NotMonitored",
+	PortName                  string           `json:"portName,omitempty"`                  // "portName": "Q3",
+	PortRunningCapabilityType string           `json:"portRunningCapabilityType,omitempty"` // "portRunningCapabilityType": null,
+	PortSplitMode             string           `json:"portSplitMode,omitempty"`             // "portSplitMode": "Unsplit",
+	PortStatus                string           `json:"portStatus,omitempty"`                // "portStatus": "Linked",
+	PortStatusReason          string           `json:"portStatusReason,omitempty"`          // "portStatusReason": "Active",
+	PortType                  string           `json:"portType,omitempty"`                  // "portType": "Uplink",
+	PortTypeExtended          string           `json:"portTypeExtended,omitempty"`          // "portTypeExtended": "External",
+	State                     string           `json:"state,omitempty"`                     // "state": null,
+	Status                    string           `json:"status,omitempty"`                    // "status": "OK",
+	SubPorts                  []SubPort        `json:"subports,omitempty"`                  // "subports": null,
+	Type                      string           `json:"type,omitempty"`                      // "type": "port",
+	URI                       utils.Nstring    `json:"uri,omitempty"`                       // "uri": "/rest/interconnects/2b322628-e5a9-4843-b184-08345e7140c3/ports/2b322628-e5a9-4843-b184-08345e7140c3:Q3",
+	VendorSpecificPortName    string           `json:"vendorSpecificPortName,omitempty"`    // "vendorSpecificPortName": null,
+	Vlans                     string           `json:"vlans,omitempty"`                     // "vlans": null
+}
+
+type DcbxInfo struct {
+	DcbxApReason  string `json:"dcbxApReason,omitempty"`  // "dcbxApReason": "Disabled",
+	DcbxPfcReason string `json:"dcbxPfcReason,omitempty"` // "dcbxPfcReason": "Disabled",
+	DcbxPgReason  string `json:"dcbxPgReason,omitempty"`  // "dcbxPgReason": "Disabled",
+	DcbxStatus    string `json:"dcbxStatus,omitempty"`    // "dcbxStatus": "NotApplicable",
+}
+
+type FcPortProperties struct {
+	FcfMac                        string   `json:"fcfMac,omitempty"`                        // "fcfMac": "",
+	Logins                        string   `json:"logins,omitempty"`                        // "logins": "",
+	LoginsCount                   int      `json:"loginsCount,omitempty"`                   // "loginsCount": 0,
+	NeighborInterconnectName      string   `json:"neighborInterconnectName,omitempty"`      // "neighborInterconnectName": "",
+	OpOnline                      bool     `json:"opOnline,omitempty"`                      // "opOnline": false,
+	OpOnlineReason                string   `json:"opOnlineReason,omitempty"`                // "opOnlineReason": "",
+	PrincipleInterconnectName     string   `json:"principleInterconnectName,omitempty"`     // "principleInterconnectName": "",
+	PrincipleInterconnectNameList []string `json:"principleInterconnectNameList,omitempty"` // "principleInterconnectNameList": [],
+	TrunkMaster                   string   `json:"trunkMaster,omitempty"`                   // "trunkMaster": "",
+	WWNN                          string   `json:"wwnn,omitempty"`                          // "wwnn": "",
+	WWPN                          string   `json:"wwpn,omitempty"`                          // "wwpn": "",
 }
 
 type InterconnectLocation struct {
@@ -139,6 +155,21 @@ type SubPort struct {
 	PortNumber       int    `json:"portNumber"`
 	PortStatus       string `json:"portStatus"`
 	PortStatusReason string `json:"portStatusReason"`
+}
+
+type RemoteSupport struct {
+	RemoteSupportUri           string          `json:"remoteSupportUri,omitempty"`           // "remoteSupportUri": "/rest/support/interconnects/2b322628-e5a9-4843-b184-08345e7140c3",
+	SupportDataCollectionState string          `json:"supportDataCollectionState,omitempty"` // "supportDataCollectionState": ,
+	SupportDataCollectionType  string          `json:"supportDataCollectionType,omitempty"`  // "supportDataCollectionType": ,
+	SupportDataCollectionsUri  string          `json:"supportDataCollectionsUri,omitempty"`  // "supportDataCollectionsUri": "/rest/support/data-collections?deviceID=2b322628-e5a9-4843-b184-08345e7140c3&category=interconnects",
+	SupportSettings            SupportSettings `json:"supportSettings,omitempty"`            // "supportSettings": {},
+	SupportState               string          `json:"supportState,omitempty"`               // "supportState": "Disabled",
+}
+
+type SupportSettings struct {
+	Destination         string `json:"destination,omitempty"`         // "destination": "",
+	SupportCurrentState string `json:"supportCurrentState,omitempty"` // "supportCurrentState": "Unknown",
+
 }
 
 type Neighbor struct {
