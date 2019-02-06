@@ -50,14 +50,14 @@ type DeploymentModeSettings struct {
 	DeploymentNetworkUri utils.Nstring `json:"deploymentNetworkUri,omitempty"` //"deploymentNetworkUri":"/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
 }
 
-type LE_OsDeploymentSettings struct {
+type LeOsDeploymentSettings struct {
 	DeploymentModeSettings *DeploymentModeSettings `json:"deploymentModeSettings,omitempty"`
 	ManageOSDeployment     bool                    `json:"manageOSDeployment,omitempty"`
 }
 
 type DeploymentManagerSettings struct {
 	DeploymentClusterUri utils.Nstring            `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
-	OsDeploymentSettings *LE_OsDeploymentSettings `json:"osDeploymentSettings,omitempty"` //"OsdeploymentSettings":""
+	OsDeploymentSettings *LeOsDeploymentSettings `json:"osDeploymentSettings,omitempty"` //"OsdeploymentSettings":""
 }
 
 type Enclosures struct {
