@@ -56,7 +56,7 @@ type LeOsDeploymentSettings struct {
 }
 
 type DeploymentManagerSettings struct {
-	DeploymentClusterUri utils.Nstring            `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
+	DeploymentClusterUri utils.Nstring           `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
 	OsDeploymentSettings *LeOsDeploymentSettings `json:"osDeploymentSettings,omitempty"` //"OsdeploymentSettings":""
 }
 
@@ -104,7 +104,7 @@ func (c *OVClient) GetLogicalEnclosureByName(name string) (LogicalEnclosure, err
 	}
 }
 
-func (c *OVClient) GetLogicalEnclosures(start string, count string, filter string, scopeUris string, sort string) (LogicalEnclosureList, error) {
+func (c *OVClient) GetLogicalEnclosures(start string, count string, filter string, scopeUris utils.Nstring, sort string) (LogicalEnclosureList, error) {
 	var (
 		uri               = "/rest/logical-enclosures"
 		q                 map[string]interface{}
