@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var (
-		ClientOV           *ov.OVClient
+		ClientOV            *ov.OVClient
 		logical_enclosure   = "log_enc_66"
 		logical_enclosure_1 = "log_enclosure77"
 		logical_enclosure_2 = "log_enclosure88"
@@ -43,16 +43,15 @@ func main() {
 		}
 	}
 
-	enclosureUris := new([]utils.Nstring) 
+	enclosureUris := new([]utils.Nstring)
 
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: "log_enclosure77",
-		EnclosureUris: *enclosureUris, 
+		EnclosureUris:     *enclosureUris,
 		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/e48e8024-5e35-48ea-9bb9-0e4b3c69fb91")}
-
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {
