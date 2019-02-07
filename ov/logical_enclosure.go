@@ -56,7 +56,7 @@ type LeOsDeploymentSettings struct {
 }
 
 type DeploymentManagerSettings struct {
-	DeploymentClusterUri utils.Nstring            `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
+	DeploymentClusterUri utils.Nstring           `json:"deploymentClusterUri,omitempty"` //"deploymentClusterUri":""
 	OsDeploymentSettings *LeOsDeploymentSettings `json:"osDeploymentSettings,omitempty"` //"OsdeploymentSettings":""
 }
 
