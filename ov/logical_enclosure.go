@@ -96,7 +96,8 @@ func (c *OVClient) GetLogicalEnclosureByName(name string) (LogicalEnclosure, err
 	var (
 		logEn LogicalEnclosure
 	)
-	logEns, err := c.GetLogicalEnclosures("", "", fmt.Sprintf("name matches '%s'", name), "", "name:asc")
+	scopeUris := []string{}
+	logEns, err := c.GetLogicalEnclosures("", "", fmt.Sprintf("name matches '%s'", name), scopeUris, "name:asc")
 	if logEns.Total > 0 {
 		return logEns.Members[0], err
 	} else {
@@ -104,7 +105,7 @@ func (c *OVClient) GetLogicalEnclosureByName(name string) (LogicalEnclosure, err
 	}
 }
 
-func (c *OVClient) GetLogicalEnclosures(start string, count string, filter string, scopeUris utils.Nstring, sort string) (LogicalEnclosureList, error) {
+func (c *OVClient) GetLogicalEnclosures(start string, count string, filter string, scopeUris []string, sort string) (LogicalEnclosureList, error) {
 	var (
 		uri               = "/rest/logical-enclosures"
 		q                 map[string]interface{}
@@ -127,7 +128,7 @@ func (c *OVClient) GetLogicalEnclosures(start string, count string, filter strin
 		q["count"] = count
 	}
 
-	if scopeUris != "" {
+	if len(scopeUris) != 0 {
 		q["scopeUris"] = scopeUris
 	}
 
