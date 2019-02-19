@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v1.0.1] (UNRELEASED)
+### Notes
+  Minor Bug Fixes
+
+#### Bug fixes & Enhancements:
+- [#153] (https://github.com/HewlettPackard/oneview-golang/issues/153) change in the enclosure.go file for editing  wrong fields
+
 # [v1.0.0] (2019-02-07)
 ### Notes
   Major release which extends support to OneView appliances with versions 4.10, using the OneView Rest API version 800.
