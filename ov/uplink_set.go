@@ -19,10 +19,10 @@ type LocationEntries struct {
 }
 
 type PortConfigInfos struct {
-	DesiredSpeed string   `json:"desiredSpeed,omitempty"` //"desiredSpeed":"Auto",
-        ExpectedNeighbor *ExpectedNeighbor `json:"expectedNeighbor"`  //"expectedNeighbor":"",
-	Location     Location `json:"location"`               //"location":"{...},
-	PortUri      string   `json:"portUri"`                //"portUri:"",
+	DesiredSpeed     string            `json:"desiredSpeed,omitempty"` //"desiredSpeed":"Auto",
+	ExpectedNeighbor *ExpectedNeighbor `json:"expectedNeighbor"`       //"expectedNeighbor":"",
+	Location         Location          `json:"location"`               //"location":"{...},
+	PortUri          string            `json:"portUri"`                //"portUri:"",
 }
 
 type ExpectedNeighbor struct {
