@@ -3,8 +3,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.1.0] (UNRELEASED)
 ### Notes
-  Minor Bug Fixes
-  Added New Enpoint support for Server Hardware
+ - Minor Bug Fixes
+ - New Endpoint support for Server Hardware (firmware)
 
 #### Bug fixes & Enhancements:
 - [#153] (https://github.com/HewlettPackard/oneview-golang/issues/153) change in the enclosure.go file for editing  wrong fields
