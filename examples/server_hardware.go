@@ -30,6 +30,18 @@ func main() {
 		fmt.Println(serverName.Model)
 		fmt.Println(serverName.URI)
 		fmt.Println(serverName.UUID)
+
+		fmt.Println("******************")
+		fmt.Println("Server hardware IloIPAddress ")
+		fmt.Println(serverName.GetIloIPAddress())
+
+		fmt.Println("******************")
+		fmt.Println("Server hardware MpIPAddresses ")
+		if ovc.IsHardwareSchemaV2() {
+			for i := 0; i < len(serverName.MpHostInfo.MpIPAddresses); i++ {
+				fmt.Println(serverName.MpHostInfo.MpIPAddresses[i].Address)
+			}
+		}
 	}
 	fmt.Println("Get server hardware list by url")
 
