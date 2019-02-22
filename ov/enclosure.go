@@ -158,7 +158,7 @@ type InterconnectBay struct {
 	ChangeState            string        `json:"changeState,omitempty"`            // "changeState": "None",
 	Empty                  bool          `json:"empty,omitempty"`                  // "empty": false,
 	EnclosureUri           utils.Nstring `json:"enclosureUri,omitempty"`           // "enclosureUri": "/rest/enclosures/013645CN759000AD",
-	InterconnectBayType    string        `json:"interconnectBayType,omit:wqempty"` // "interconnectBayType": "SY12000InterconnectBay",
+	InterconnectBayType    string        `json:"interconnectBayType,omitempty"`    // "interconnectBayType": "SY12000InterconnectBay",
 	InterconnectModel      string        `json:"interconnectModel,omitempty"`      // "interconnectModel": "Synergy 12Gb SAS Connection Module",
 	InterconnectReady      bool          `json:"interconnectReady,omitempty"`      // "interconnectReady": true,
 	InterconnectUri        utils.Nstring `json:"interconnectUri,omitempty"`        // "interconnectUri": "/rest/sas-interconnects/TWT546W04N",
