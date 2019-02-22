@@ -123,7 +123,7 @@ func (h ServerHardware) GetIloIPAddress() string {
 	if h.Client.IsHardwareSchemaV2() {
 		if h.MpHostInfo != nil {
 			log.Debug("working on getting IloIPAddress from MpHostInfo using v2")
-			for _, MpIPObj := range h.MpHostInfo.MpIPAddress {
+			for _, MpIPObj := range h.MpHostInfo.MpIPAddresses {
 				if len(MpIPObj.Address) > 0 &&
 					(MpDHCP.Equal(MpIPObj.Type) ||
 						MpStatic.Equal(MpIPObj.Type) ||
