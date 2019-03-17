@@ -32,7 +32,7 @@ func (tc *TestConfig) NewTestConfig() *TestConfig {
 		Cases: []TestCases{}}
 }
 
-// UnMarshall json to data
+// UnMarshallTestingConfig json to data
 func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
 	tc.Cases = []TestCases{}
 	if err := json.Unmarshal(json_data, &tc); err != nil {
@@ -41,7 +41,7 @@ func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
 	}
 }
 
-// get config for testing
+// GetTestingConfiguration gets config for testing
 // Examples
 // cv := tc.GetExpectsData("TestGetAPIVersion", "CurrentVersion")
 // log.Infof("tc test_data -> %s\n", tc.EqualFaceI(cv, 120))

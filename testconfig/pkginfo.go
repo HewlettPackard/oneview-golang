@@ -25,7 +25,7 @@ func (i PackageInfo) ConvertOsPath(s string) string {
 	return s
 }
 
-// check if a dir exist
+// DirExists checks if a dir exist
 func (i PackageInfo) DirExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -37,7 +37,7 @@ func (i PackageInfo) DirExists(path string) (bool, error) {
 	return true, err
 }
 
-// Get the location of a package dir
+// GetPackageRootDir gets the location of a package dir
 // mostly useful for test cases
 func (i PackageInfo) GetPackageRootDir(package_path string) (exist bool, path string) {
 	for _, s := range strings.Split(os.Getenv("GOPATH"), string(os.PathListSeparator)) {
