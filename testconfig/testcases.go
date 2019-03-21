@@ -94,7 +94,7 @@ func (tc *TestConfig) EqualFaceS(is interface{}, s string) bool {
 	return string(is.(string)) == string(s)
 }
 
-// Get a test case by name
+// GetTestCases gets a test case by name
 func (tc *TestConfig) GetTestCases(tc_name string) (t TestCases) {
 	for _, t := range tc.Cases {
 		if t.Name == tc_name {
@@ -104,7 +104,7 @@ func (tc *TestConfig) GetTestCases(tc_name string) (t TestCases) {
 	return t
 }
 
-// is test case enabled? defaults are always true
+// IsTestEnabled is test case enabled? defaults are always true
 func (tc *TestConfig) IsTestEnabled(tc_name string) bool {
 	if t := tc.GetTestCases(tc_name); t.Name == tc_name {
 		return t.Enabled
@@ -117,7 +117,7 @@ func (tc *TestConfig) IsTestEnabled(tc_name string) bool {
 	return true
 }
 
-// get expects data, returns interface because the data type is unknown
+// GetExpectsData gets expects data, returns interface because the data type is unknown
 // use tc Equal arguments for type comparison, conversions
 // or assert the type
 func (tc *TestConfig) GetExpectsData(tc_name string, k string) interface{} {
@@ -134,7 +134,7 @@ func (tc *TestConfig) GetExpectsData(tc_name string, k string) interface{} {
 	return nil
 }
 
-// get test data
+// GetTestData gets test data
 func (tc *TestConfig) GetTestData(tc_name string, k string) interface{} {
 	if t := tc.GetTestCases(tc_name); t.TestData[k] != nil {
 		log.Debugf("GetTestData(%s, %s) found -> %s", tc_name, k, t.TestData[k])
