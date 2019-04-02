@@ -85,6 +85,7 @@ type InterconnectMapEntryTemplate struct {
 
 type LogicalLocation struct {
 	LocationEntries []LocationEntry `json:"locationEntries,omitempty"` // "locationEntries": {...}
+	
 }
 
 type LocationEntry struct {
