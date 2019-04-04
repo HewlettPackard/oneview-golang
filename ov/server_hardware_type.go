@@ -72,11 +72,11 @@ type BiosSetting struct {
 type StorageCapability struct {
 	ControllerModes            []string `json:"controllerModes,omitempty"`            // "controllerModes":{}
 	DriveTechnologies          []string `json:"driveTechnologies,omitempty"`          // "driveTechnologies":{}
-	DriveWriteCacheSupported   boolean  `json:"driveWriteCacheSupported,omitempty"`   // "driveWriteCacheSupported":false
+	DriveWriteCacheSupported   bool     `json:"driveWriteCacheSupported,omitempty"`   // "driveWriteCacheSupported":false
 	MaximumDrives              int      `json:"maximumDrives,omitempty"`              // "maximumDrives":5
-	NvmeBackplaneCapable       boolean  `json:"nvmeBackplaneCapable,omitempty"`       // "nvmeBackplaneCapable":true
+	NvmeBackplaneCapable       bool     `json:"nvmeBackplaneCapable,omitempty"`       // "nvmeBackplaneCapable":true
 	RaidLevels                 []string `json:"raidLevels,omitempty"`                 // "raidLevels":{}
-	StandupControllerSupported boolean  `json:"standupControllerSupported,omitempty"` // "standupControllerSupported,":false
+	StandupControllerSupported bool     `json:"standupControllerSupported,omitempty"` // "standupControllerSupported,":false
 }
 type ServerHardwareType struct {
 	Adapters            []Adapter          `json:"adapters,omitempty"`            // "adapters": {},
