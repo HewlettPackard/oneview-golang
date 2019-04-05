@@ -17,7 +17,7 @@ type VirtualPort struct {
 type SHTPort struct {
 	Mapping               int           `json:"mapping,omitempty"`               // "mapping": 3
 	MaxSpeedMbps          int           `json:"maxSpeedMbps,omitempty"`          // "maxSpeedMbps":3553
-	maxVFsSupported       int           `json:"maxVFsSupported,omitempty"`       // "maxVFsSupported": 23
+	MaxVFsSupported       int           `json:"maxVFsSupported,omitempty"`       // "maxVFsSupported": 23
 	Number                int           `json:"number,omitempty"`                // "number": 1
 	PhysicalFunctionCount int           `json:"physicalFunctionCount,omitempty"` // "physicalFunctionCount": 4
 	SupportedFcGbps       []string      `json:"supportedFcGbps,omitempty"`       // "supportedFcGbps": ""
@@ -34,6 +34,7 @@ type Adapter struct {
 	Model           string    `json:"model,omitempty"`           // "model": ""
 	Ports           []SHTPort `json:"ports,omitempty"`           // "ports": {}
 	Slot            int       `json:"slot,omitempty"`            // "slot": 3
+	StorageCapabilities *StorageCapability `json:"storageCapabilities,omitempty"` // "storageCapabilities":{..,},
 }
 
 type Dependency struct {
