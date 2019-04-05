@@ -25,15 +25,15 @@ type SHTPort struct {
 	VirtualPort           []VirtualPort `json:"virtualPorts,omitempty"`          // "virtualPorts": {}
 }
 type Adapter struct {
-	Capabilities    []string    `json:"capabilities,omitempty"`    // "capabilities": {}
-	DeviceNumber    int         `json:"deviceNumber,omitempty"`    // "deviceNumber": 123
-	DeviceType      string      `json:"deviceType,omitempty"`      // "deviceType":"Ethernet"
-	Location        string      `json:"location,omitempty"`        // "location": "Mezz"
-	MaxVFsSupported int         `json:"maxVFsSupported,omitempty"` // "maxVFsSupported": 256
-	MinVFsIncrement int         `json:"minVFsIncrement,omitempty"` // "minVFsIncrement": 8
-	Model           string      `json:"model,omitempty"`           // "model": ""
-	Ports           []SHTPort   `json:"ports,omitempty"`           // "ports": {}
-	Slot            int         `json:"slot,omitempty"`            // "slot": 3
+	Capabilities    []string  `json:"capabilities,omitempty"`    // "capabilities": {}
+	DeviceNumber    int       `json:"deviceNumber,omitempty"`    // "deviceNumber": 123
+	DeviceType      string    `json:"deviceType,omitempty"`      // "deviceType":"Ethernet"
+	Location        string    `json:"location,omitempty"`        // "location": "Mezz"
+	MaxVFsSupported int       `json:"maxVFsSupported,omitempty"` // "maxVFsSupported": 256
+	MinVFsIncrement int       `json:"minVFsIncrement,omitempty"` // "minVFsIncrement": 8
+	Model           string    `json:"model,omitempty"`           // "model": ""
+	Ports           []SHTPort `json:"ports,omitempty"`           // "ports": {}
+	Slot            int       `json:"slot,omitempty"`            // "slot": 3
 }
 
 type Dependency struct {
