@@ -42,6 +42,23 @@ func main() {
 
 	sort := ""
 
+	spt, err := ovc.GetProfileTemplateByName("go_test")
+	if err != nil {
+		fmt.Println("Server Profile Template Retrieval By Name Failed: ", err)
+	} else {
+		serverName, err := ovc.GetServerHardwareByName("DL980p Gen8 1 (new name)")
+		if err != nil {
+			fmt.Println("Failed to fetch server hardware name: ", err)
+		} else {
+			err = ovc.CreateProfileFromTemplate(sp_name, spt, serverName)
+			if err != nil {
+				fmt.Println("Server Profile Create Failed: ", err)
+			} else {
+				fmt.Println("#----------------Server Profile Created---------------#")
+			}
+		}
+	}
+
 	sp_list, err := ovc.GetProfiles("", "", "", sort, "")
 	if err != nil {
 		fmt.Println("Server Profile Retrieval Failed: ", err)
