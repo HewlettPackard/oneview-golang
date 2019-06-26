@@ -511,8 +511,44 @@ func (c *OVClient) UpdateLogicalInterconnectConsistentState(liCompliance Logical
 		return err
 	}
 	return nil
+}
+
+func (c *OVClient) UpdateLogicalInterconnectConsistentStateById(liCompliance LogicalInterconnectCompliance, Id string) error {
+	var (
+		uri = "/rest/logical-interconnects"
+		t   *Task
+	)
+
+	uri = uri + Id + "/compliance"
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Infof("REST : %s \n %+v\n", uri, liCompliance)
+	log.Infof("task -> %+v", t)
+	data, err := c.RestAPICall(rest.PUT, uri, liCompliance)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error updating logicalInterConnectCompliance request: %s", err)
+		return err
+	}
+
+	log.Debugf("Response update LogicalInterConnectCompliance %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
 
 }
+
 func (c *OVClient) UpdateLogicalInterconnectEthernetSettings(ethernetSetting EthernetSettings, Id string) error {
 	err_ethernet := c.UpdateLogicalInterconnectEthernetSettingsForce(ethernetSetting, Id, false)
 	return err_ethernet
