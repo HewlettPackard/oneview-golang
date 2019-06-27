@@ -513,7 +513,7 @@ func (c *OVClient) UpdateLogicalInterconnectConsistentState(liCompliance Logical
 	return nil
 }
 
-func (c *OVClient) UpdateLogicalInterconnectConsistentStateById(liCompliance LogicalInterconnectCompliance, Id string) error {
+func (c *OVClient) UpdateLogicalInterconnectConsistentStateById(Id string) error {
 	var (
 		uri = "/rest/logical-interconnects"
 		t   *Task
@@ -525,9 +525,9 @@ func (c *OVClient) UpdateLogicalInterconnectConsistentStateById(liCompliance Log
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	log.Infof("REST : %s \n %+v\n", uri, liCompliance)
+	log.Infof("REST : %s \n %+v\n", uri, nil)
 	log.Infof("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, liCompliance)
+	data, err := c.RestAPICall(rest.PUT, uri, nil)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error updating logicalInterConnectCompliance request: %s", err)
