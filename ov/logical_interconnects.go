@@ -225,7 +225,6 @@ func (c *OVClient) GetLogicalInterconnectById(Id string) (LogicalInterconnect, e
 	)
 	uri += Id
 	logicalInterconnect, err := c.GetLogicalInterconnectByUri(uri)
-	fmt.Println(logicalInterconnect)
 
 	return logicalInterconnect, err
 }
@@ -515,7 +514,7 @@ func (c *OVClient) UpdateLogicalInterconnectConsistentState(liCompliance Logical
 
 func (c *OVClient) UpdateLogicalInterconnectConsistentStateById(Id string) error {
 	var (
-		uri = "/rest/logical-interconnects"
+		uri = "/rest/logical-interconnects/"
 		t   *Task
 	)
 
@@ -881,8 +880,6 @@ func (c *OVClient) GetLogicalInterconnects(sort string, start string, count stri
 		logicalInterconnectList LogicalInterconnectList
 	)
 	q = make(map[string]interface{})
-	fmt.Println("q")
-	fmt.Println(q)
 	if sort != "" {
 		q["sort"] = sort
 	}
@@ -893,7 +890,6 @@ func (c *OVClient) GetLogicalInterconnects(sort string, start string, count stri
 		q["count"] = count
 	}
 
-	fmt.Println(q)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())

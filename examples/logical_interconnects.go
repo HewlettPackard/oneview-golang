@@ -107,6 +107,12 @@ func main() {
 		fmt.Println("Could not update ConsistentState of Logical Interconnect", err_compliance)
 	}
 
+	fmt.Println(".... Updating Logical Interconnect Consistent State by ID ....")
+	err_update_compliance := ovc.UpdateLogicalInterconnectConsistentStateById(id)
+	if err_update_compliance != nil {
+		fmt.Println("Could not update ConsistentState of Logical Interconnect", err_update_compliance)
+	}
+
 	fmt.Println("....  Updating Logical Interconnect EthernetSetting .....")
 	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
 		InterconnectType: "Ethernet",
