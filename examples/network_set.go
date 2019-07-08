@@ -53,7 +53,7 @@ func main() {
 		NativeNetworkUri:      "",
 		NetworkUris:           *networkUris,
 		ConnectionTemplateUri: "",
-		Type: "network-setV4",
+		Type:                  "network-setV4",
 	}
 	err = ovc.CreateNetworkSet(NetworkSet)
 	if err != nil {
