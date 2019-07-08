@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var (
-		ClientOV *ov.OVClient
+		ClientOV     *ov.OVClient
 		networkset   = "networkset"
 		networkset_2 = "updatednetworkset"
 		networkset_3 = "creatednetworkset"
@@ -27,15 +27,14 @@ func main() {
 
 	fmt.Println("#...................NetworkSet by Name ...............#")
 	net_set, err := ovc.GetNetworkSetByName(networkset)
-	 if err != nil {
-		        fmt.Println(err)
+	if err != nil {
+		fmt.Println(err)
 	} else {
-	        fmt.Println(net_set)
+		fmt.Println(net_set)
 	}
 
-
 	sort := "name:desc"
-	networkset_list,err := ovc.GetNetworkSets("",sort)
+	networkset_list, err := ovc.GetNetworkSets("", sort)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -44,18 +43,18 @@ func main() {
 			fmt.Println(networkset_list.Members[i].Name)
 		}
 	}
-	
+
 	networkUris := new([]utils.Nstring)
 	//append all your network and fc network uri to networkUris
-	*networkUris = append(*networkUris,utils.NewNstring("/rest/ethernet-networks/58064275-de05-40a1-b8cf-5098f84fcaea"))
-	*networkUris = append(*networkUris,utils.NewNstring("/rest/ethernet-networks/662f05ee-32e5-43c0-bf74-1d7574c55b44"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58064275-de05-40a1-b8cf-5098f84fcaea"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/662f05ee-32e5-43c0-bf74-1d7574c55b44"))
 
-	NetworkSet := ov.NetworkSet{	Name : networkset_3, 
-					NativeNetworkUri : "" ,
-					NetworkUris : *networkUris,
-					ConnectionTemplateUri: "" ,
-					Type: "network-setV4",
-				}
+	NetworkSet := ov.NetworkSet{Name: networkset_3,
+		NativeNetworkUri:      "",
+		NetworkUris:           *networkUris,
+		ConnectionTemplateUri: "",
+		Type: "network-setV4",
+	}
 	err = ovc.CreateNetworkSet(NetworkSet)
 	if err != nil {
 		fmt.Println("............... NetworkSet Creation Failed:", err)
@@ -70,7 +69,7 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#.................... NetworkSet after Updating ...........#")
-		networksets_after_update, err := ovc.GetNetworkSets( "", sort)
+		networksets_after_update, err := ovc.GetNetworkSets("", sort)
 		if err != nil {
 			fmt.Println(err)
 		} else {
