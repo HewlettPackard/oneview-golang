@@ -121,7 +121,7 @@
 |<sub>/rest/logical-switches/{id}/refresh</sub>                                           |PUT       | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |
 |     **Network Sets**                                                                                                                              |
 |<sub>/rest/network-sets</sub>                                                            | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |:heavy_multiplication_x:   | :white_check_mark:   |
-|<sub>/rest/network-sets</sub>                                                            | POST     | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :white_check_mark:        | :white_check_mark:   |
+|<sub>/rest/network-sets</sub>                                                            | POST     | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |:heavy_multiplication_x:   | :white_check_mark:   |
 |<sub>/rest/network-sets/withoutEthernet</sub>                                            | GET      | :heavy_minus_sign:   | :heavy_minus_sign:   | :heavy_multiplication_x:   |:heavy_multiplication_x:   |:heavy_multiplication_x:   |
 |<sub>/rest/network-sets/{id}</sub>                                                       | GET      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |:heavy_multiplication_x:   |:heavy_multiplication_x:   |
 |<sub>/rest/network-sets/{id}</sub>                                                       | PUT      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   |:heavy_multiplication_x:   | :white_check_mark:   |
