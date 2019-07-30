@@ -43,14 +43,14 @@ func main() {
 	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 
 	updated_storage_system := ov.StorageSystemV4{
-		Name:                                  name_to_create,
+		Name: name_to_create,
 		StorageSystemDeviceSpecificAttributes: DeviceSpecificAttributesForUpdate,
-		URI:                                   update_system.URI,
-		ETAG:                                  update_system.ETAG,
-		Description:                           "Updated the storage system",
-		Credentials:                           update_system.Credentials,
-		Hostname:                              update_system.Hostname,
-		Ports:                                 update_system.Ports,
+		URI:         update_system.URI,
+		ETAG:        update_system.ETAG,
+		Description: "Updated the storage system",
+		Credentials: update_system.Credentials,
+		Hostname:    update_system.Hostname,
+		Ports:       update_system.Ports,
 	}
 
 	err = ovc.UpdateStorageSystem(updated_storage_system)
@@ -76,9 +76,9 @@ func main() {
 	fmt.Println(reachable_ports)
 
 	// Get volume sets
-        fmt.Println("\n Getting volume sets of:", name_to_create)
-        volume_sets, _ := ovc.GetVolumeSets(update_system.URI)
-        fmt.Println(volume_sets)
+	fmt.Println("\n Getting volume sets of:", name_to_create)
+	volume_sets, _ := ovc.GetVolumeSets(update_system.URI)
+	fmt.Println(volume_sets)
 
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name_to_create)
