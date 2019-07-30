@@ -21,7 +21,7 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-type StorageSystemV4 struct {
+type StorageSystem struct {
 	Hostname                              string                                 `json:"hostname,omitempty"`
 	Username                              string                                 `json:"username,omitempty"`
 	Password                              string                                 `json:"password,omitempty"`
@@ -91,14 +91,14 @@ type ManagedPools struct {
 	Totalcapacity string `json:"totalCapacity,omitempty"`
 }
 
-type StorageSystemsListV4 struct {
-	Total       int               `json:"total,omitempty"`       // "total": 1,
-	Count       int               `json:"count,omitempty"`       // "count": 1,
-	Start       int               `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring     `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring     `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring     `json:"uri,omitempty"`         // "uri": "/rest/storage-systems"
-	Members     []StorageSystemV4 `json:"members,omitempty"`     // "members":[]
+type StorageSystemsList struct {
+	Total       int             `json:"total,omitempty"`       // "total": 1,
+	Count       int             `json:"count,omitempty"`       // "count": 1,
+	Start       int             `json:"start,omitempty"`       // "start": 0,
+	PrevPageURI utils.Nstring   `json:"prevPageUri,omitempty"` // "prevPageUri": null,
+	NextPageURI utils.Nstring   `json:"nextPageUri,omitempty"` // "nextPageUri": null,
+	URI         utils.Nstring   `json:"uri,omitempty"`         // "uri": "/rest/storage-systems"
+	Members     []StorageSystem `json:"members,omitempty"`     // "members":[]
 }
 
 type ReachablePortsList struct {
@@ -133,9 +133,9 @@ type VolumeSet struct {
 	State        string   `json:"state,omitempty"`
 }
 
-func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) {
+func (c *OVClient) GetStorageSystemByName(name string) (StorageSystem, error) {
 	var (
-		sSystem StorageSystemV4
+		sSystem StorageSystem
 	)
 	sSystems, err := c.GetStorageSystems(fmt.Sprintf("name matches '%s'", name), "name:asc")
 	if sSystems.Total > 0 {
@@ -145,11 +145,11 @@ func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) 
 	}
 }
 
-func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystemsListV4, error) {
+func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystemsList, error) {
 	var (
 		uri     = "/rest/storage-systems"
 		q       map[string]interface{}
-		sSystem StorageSystemsListV4
+		sSystem StorageSystemsList
 	)
 	q = make(map[string]interface{})
 	if len(filter) > 0 {
@@ -180,7 +180,7 @@ func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystems
 	return sSystem, nil
 }
 
-func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
+func (c *OVClient) CreateStorageSystem(sSystem StorageSystem) error {
 	log.Infof("Initializing creation of storage volume for %s.", sSystem.Name)
 	var (
 		uri = "/rest/storage-systems"
@@ -219,7 +219,7 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystemV4) error {
 
 func (c *OVClient) DeleteStorageSystem(name string) error {
 	var (
-		sSystem StorageSystemV4
+		sSystem StorageSystem
 		err     error
 		t       *Task
 		uri     string
@@ -264,7 +264,7 @@ func (c *OVClient) DeleteStorageSystem(name string) error {
 	return nil
 }
 
-func (c *OVClient) UpdateStorageSystem(sSystem StorageSystemV4) error {
+func (c *OVClient) UpdateStorageSystem(sSystem StorageSystem) error {
 	log.Infof("Initializing update of storage volume for %s.", sSystem.Name)
 	var (
 		uri = sSystem.URI.String()

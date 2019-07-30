@@ -24,7 +24,7 @@ func main() {
 		"*")
 
 	// Create storage system
-	storageSystem := ov.StorageSystemV4{Hostname: "<hostname>", Username: "<username>", Password: "<password>", Family: "<family>", Description: "<description>"}
+	storageSystem := ov.StorageSystem{Hostname: "<hostname>", Username: "<username>", Password: "<password>", Family: "<family>", Description: "<description>"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
@@ -42,7 +42,7 @@ func main() {
 	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
 	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 
-	updated_storage_system := ov.StorageSystemV4{
+	updated_storage_system := ov.StorageSystem{
 		Name: name_to_create,
 		StorageSystemDeviceSpecificAttributes: DeviceSpecificAttributesForUpdate,
 		URI:         update_system.URI,
@@ -73,12 +73,12 @@ func main() {
 	// Get reachable ports
 	fmt.Println("\n Getting rechable ports of:", name_to_create)
 	reachable_ports, _ := ovc.GetReachablePorts(update_system.URI)
-	fmt.Println(reachable_ports)
+	fmt.Println(reachable_ports.Members)
 
 	// Get volume sets
 	fmt.Println("\n Getting volume sets of:", name_to_create)
 	volume_sets, _ := ovc.GetVolumeSets(update_system.URI)
-	fmt.Println(volume_sets)
+	fmt.Println(volume_sets.Members)
 
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name_to_create)
