@@ -15,7 +15,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - [#153] (https://github.com/HewlettPackard/oneview-golang/issues/153) change in the enclosure.go file for editing  wrong fields
 
 ### Oneview Features supported
-- Storage pool
 - Storge system
 
 # [v1.0.0] (2019-02-07)
