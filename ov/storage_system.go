@@ -58,10 +58,28 @@ type PortDeviceSpecificAttributes struct {
 }
 
 type StorageSystemDeviceSpecificAttributes struct {
-	Firmware      string         `json:"firmware,omitempty"`
-	Model         string         `json:"model,omitempty"`
-	ManagedPools  []ManagedPools `json:"managedPools,omitempty"`
-	ManagedDomain string         `json:"managedDomain,omitempty"`
+	Firmware                  string                `json:"firmware,omitempty"`
+	Model                     string                `json:"model,omitempty"`
+	ManagedPools              []ManagedPools        `json:"managedPools,omitempty"`
+	ManagedDomain             string                `json:"managedDomain,omitempty"`
+	DefaultEncryptionCipher   string                `json:"defaultEncryptionCipher,omitempty"`
+	IsDefaultEncryptionForced bool                  `json:"isDefaultEncryptionForced,omitempty"`
+	PerformancePolicies       []PerformancePolicies `json:"performancePolicies,omitempty"`
+	ProtectionTemplates       []ProtectionTemplates `json:"protectionTemplates,omitempty"`
+	SoftwareVersion           string                `json:"softwareVersion,omitempty"`
+}
+
+type PerformancePolicies struct {
+	ApplicationCategory string `json:"applicationCategory,omitempty"`
+	BlockSize           int    `json:",blockSize,omitempty"`
+	Name                string `json:"name,omitempty"`
+	IsCompressed        bool   `json:"isCompressed,omitempty"`
+	SpacePolicy         string `json:"spacePolicy,omitempty"`
+}
+
+type ProtectionTemplates struct {
+	AppSync string `json:"appSync,omitempty"`
+	Name    string `json:"name,omitempty"`
 }
 
 type ManagedPools struct {
@@ -96,6 +114,23 @@ type ReachablePortsList struct {
 
 type ReachablePorts struct {
 	ReachableNetworks utils.Nstring `json:"reachableNetworks,omitempty"`
+}
+
+type VolumeSetList struct {
+	Category    string        `json:"category,omitempty"`
+	Members     []VolumeSet   `json:"members,omitempty"`
+	Total       int           `json:"total,omitempty"`
+	Count       int           `json:"count,omitempty"`
+	Start       int           `json:"start,omitempty"`
+	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"`
+	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"`
+	URI         utils.Nstring `json:"uri,omitempty"`
+}
+
+type VolumeSet struct {
+	TotalVolumes int      `json:"totalVolumes,omitempty"`
+	VolumeURIs   []string `json:"volumeUris,omitempty"`
+	State        string   `json:"state,omitempty"`
 }
 
 func (c *OVClient) GetStorageSystemByName(name string) (StorageSystemV4, error) {
@@ -283,4 +318,24 @@ func (c *OVClient) GetReachablePorts(uri utils.Nstring) (ReachablePortsList, err
 		return reachable_ports, err
 	}
 	return reachable_ports, nil
+}
+
+func (c *OVClient) GetVolumeSets(uri utils.Nstring) (VolumeSetList, error) {
+	var (
+		volume_sets VolumeSetList
+		main_uri    = uri.String()
+	)
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	main_uri = main_uri + "/storage-volume-sets"
+	data, err := c.RestAPICall(rest.GET, main_uri, nil)
+	if err != nil {
+		log.Errorf("Error in getting volume sets: %s", err)
+		return volume_sets, err
+	}
+	log.Debugf("Volume Sets %s", data)
+	if err := json.Unmarshal([]byte(data), &volume_sets); err != nil {
+		return volume_sets, err
+	}
+	return volume_sets, nil
 }
