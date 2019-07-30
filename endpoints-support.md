@@ -18,8 +18,8 @@
 
 ## HPE OneView
 
-| Endpoints                                                                       | Verb     | V200 | V300 | V500 |V600 |V800
-| --------------------------------------------------------------------------------------- | -------- | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: |
+| Endpoints                                                                       | Verb     | V200 | V300 | V500 |V600 |V800 | V1000 |
+| --------------------------------------------------------------------------------------- | -------- | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: |
 |     **Enclosures**                                                                                                                                |
 |<sub>/rest/enclosures</sub>                                                              | GET      | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/enclosures</sub>                                                              | POST     | :heavy_multiplication_x:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
@@ -168,9 +168,9 @@
 |<sub>/rest/server-profiles</sub>                                                         | DELETE   | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   |
 <sub>/rest/server-profiles</sub>                                                          | PUT      | :white_check_mark:   | :white_check_mark:   | :heavy_multiplication_x:   | :white_check_mark:   | :white_check_mark:   |
 |     **Storage Pools**                                                                                                                                   |
-|<sub>/rest/storage-pools</sub>                                                           | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | 
-|<sub>/rest/storage-pools/{id}</sub>                                                      | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
-|<sub>/rest/storage-pools/{id}</sub>                                                      | PUT      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
+|<sub>/rest/storage-pools</sub>                                                           | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | 
+|<sub>/rest/storage-pools/{id}</sub>                                                      | GET      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
+|<sub>/rest/storage-pools/{id}</sub>                                                      | PUT      | :heavy_multiplication_x: | :heavy_multiplication_x: | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |     **Storage Systems**                                                                                                                           |
 |<sub>/rest/storage-systems</sub>                                                         | GET      | :heavy_minus_sign:   | :heavy_minus_sign:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
 |<sub>/rest/storage-systems/{id}</sub>                                                    | GET      | :heavy_minus_sign:   | :heavy_minus_sign:   | :white_check_mark:   | :white_check_mark:   | :white_check_mark:   |
