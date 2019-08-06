@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -12,7 +13,6 @@ func main() {
 		ethernet_network   = "eth1"
 		ethernet_network_1 = "eth77"
 		ethernet_network_2 = "eth88"
-		ethernet_network_3 = "eth99"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -24,7 +24,7 @@ func main() {
 		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
-
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/2cb74c0a-ec49-43eb-9d35-2c305900a8c3")}
 	fmt.Println("#................... Ethernet Network by Name ...............#")
 	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
 	if err != nil {
@@ -63,7 +63,7 @@ func main() {
 
 	bandwidth := ov.Bandwidth{MaximumBandwidth: 10000, TypicalBandwidth: 2000}
 
-	ethernetNetwork := ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4"}
+	ethernetNetwork := ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
 
 	bulkEthernetNetwork := ov.BulkEthernetNetwork{VlanIdRange: "2-4", Purpose: "General", NamePrefix: "Test_eth", SmartLink: false, PrivateNetwork: false, Bandwidth: bandwidth, Type: "bulk-ethernet-networkV1"}
 
@@ -103,7 +103,7 @@ func main() {
 		}
 	}
 
-	err = ovc.DeleteEthernetNetwork(ethernet_network_3)
+	err = ovc.DeleteEthernetNetwork(ethernet_network_2)
 	if err != nil {
 		fmt.Println(err)
 	} else {
