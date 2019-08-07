@@ -86,7 +86,7 @@ type Properties struct {
 	IsDeduplicated      bool          `json:"isDeduplicated,omitempty"`
 	IsEncrypted         bool          `json:"isEncrypted,omitempty"`
 	IsPinned            bool          `json:"isPinned,omitempty"`
-	isCompressed        bool          `json:"IsCompressed,omitempty"`
+	IsCompressed        bool          `json:"isCompressed,omitempty"`
 	DataProtectionLevel string        `json:"dataProtectionLevel,omitempty"`
 }
 
@@ -101,7 +101,7 @@ type DeviceSpecificAttributes struct {
 	IsEncrypted                   bool          `json:"isEncrypted,omitempty"`
 	IsPinned                      bool          `json:"isPinned,omitempty"`
 	PreviouslyDeduplicated        bool          `json:"previouslyDeduplicated,omitempty"`
-	isCompressed                  bool          `json:"IsCompressed,omitempty"`
+	IsCompressed                  bool          `json:"isCompressed,omitempty"`
 	Transport                     string        `json:"transport,omitempty"`
 	Iqn                           string        `json:"iqn,omitempty"`
 	NumberOfReplicas              int           `json:"numberOfReplicas,omitempty"`
