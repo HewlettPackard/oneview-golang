@@ -130,10 +130,14 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 			return nil, err
 		}
 		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
+		ioutil.WriteFile("jsons.json", OptionsJSON,0644)
 		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
 		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
 	}
+
+	file,_ := json.MarshalIndent(options, "", " ")
+        ioutil.WriteFile("2inut.json",file,0644)
 
 	if err != nil {
 		return nil, fmt.Errorf("Error with request: %v - %q", Url, err)
@@ -173,6 +177,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 	log.Debugf("ERROR  --> %+v\n", err)
 	// DEBUGGING WHILE WE WORK
 
+
 	data, err := ioutil.ReadAll(resp.Body)
 	if !c.isOkStatus(resp.StatusCode) {
 		type apiErr struct {
@@ -190,7 +195,108 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 
 	// Added the condition to accomodate the response where only the response header is returned.
 	if len(data) == 0 {
-		data = []byte(`{"URI":"` + resp.Header["Location"][0] + `"}`)
+		if resp.Header["Location"] != nil {
+			data = []byte(`{"URI":"` + resp.Header["Location"][0] + `"}`)
+		}
 	}
 	return data, nil
+}
+
+// I3SRestAPICall - general rest method caller
+func (c *Client) I3SRestAPICall(method Method, path string, options interface{}) ([]byte, error, bool) {
+	log.Debugf("I3SRestAPICall %s - %s%s", method, utils.Sanatize(c.Endpoint), path)
+
+	var (
+		Url *url.URL
+		err error
+		req *http.Request
+	)
+
+	Url, err = url.Parse(utils.Sanatize(c.Endpoint))
+	if err != nil {
+		return nil, err, false
+	}
+	Url.Path += path
+
+	// Manage the query string
+	c.GetQueryString(Url)
+
+	log.Debugf("*** url => %s", Url.String())
+	log.Debugf("*** method => %s", method.String())
+
+	// parse url
+	reqUrl, err := url.Parse(Url.String())
+	if err != nil {
+		return nil, fmt.Errorf("Error with request: %v - %q", Url, err), false
+	}
+
+	// handle options
+	if options != nil {
+		OptionsJSON, err := json.Marshal(options)
+		if err != nil {
+			return nil, err, false
+		}
+
+		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
+	} else {
+		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("Error with request: %v - %q", Url, err), false
+	}
+
+	// setup proxy
+	proxyUrl, err := http.ProxyFromEnvironment(req)
+	if err != nil {
+		return nil, fmt.Errorf("Error with proxy: %v - %q", proxyUrl, err), false
+	}
+	if proxyUrl != nil {
+		tr.Proxy = http.ProxyURL(proxyUrl)
+		log.Debugf("*** proxy => %+v", tr.Proxy)
+	}
+
+	// build the auth headerU
+	for k, v := range c.Option.Headers {
+		log.Debugf("Headers -> %s -> %+v\n", k, v)
+		req.Header.Add(k, v)
+	}
+
+	// req.SetBasicAuth(c.User, c.APIKey)
+	req.Method = fmt.Sprintf("%s", method.String())
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err, false
+	}
+	defer resp.Body.Close()
+
+	// TODO: CLeanup Later
+	// DEBUGGING WHILE WE WORK
+	// DEBUGGING WHILE WE WORK
+	// fmt.Printf("METHOD --> %+v\n",method)
+	log.Debugf("REQ    --> %+v\n", req)
+	log.Debugf("RESP   --> %+v\n", resp)
+	log.Debugf("ERROR  --> %+v\n", err)
+	// DEBUGGING WHILE WE WORK
+
+	data, err := ioutil.ReadAll(resp.Body)
+	if !c.isOkStatus(resp.StatusCode) {
+		type apiErr struct {
+			Message string `json:"message"`
+			Details string `json:"details"`
+		}
+		var outErr apiErr
+		json.Unmarshal(data, &outErr)
+		return nil, fmt.Errorf("Error in response: %s\n Response Status: %s\n Response Details: %s", outErr.Message, resp.Status, outErr.Details), false
+	}
+
+	if err != nil {
+		return nil, err, false
+	}
+
+	if resp.StatusCode == 204 {
+		return data, nil, true
+	}
+	return data, nil, false
 }

@@ -28,14 +28,14 @@ type DeploymentPlan struct {
 	Category         string            `json:"category,omitempty"`         // "category": "oe-deployment-plan",
 	Created          string            `json:"created,omitempty"`          // "created": "20150831T154835.250Z",
 	CustomAttributes []CustomAttribute `json:"customAttributes,omitempty"` // "customAttributes": [],
-	Description      string            `json:"description,omitempty"`      // "description": "Deployment Plan 1",
+	Description      utils.Nstring     `json:"description,omitempty"`      // "description": "Deployment Plan 1",
 	ETAG             string            `json:"eTag,omitempty"`             // "eTag": "1441036118675/8",
-	GoldenImageUri   utils.Nstring     `json:"goldenImageUri,omitempty"`   // "goldenImageUri": "",
-	HPProvided       bool              `json:"hpProvided,omitempty"`       // "hpProvided": false,
+	GoldenImageUri   utils.Nstring     `json:"goldenImageURI,omitempty"`   // "goldenImageUri": "",
+	HPProvided       bool              `json:"hpProvided"`       // "hpProvided": false,
 	ID               string            `json:"id,omitempty"`               // "id": "1",
 	Modified         string            `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
 	Name             string            `json:"name,omitempty"`             // "name": "Deployment Plan 1",
-	OEBuildPlanURI   utils.Nstring     `json:"oeBuildPlanUri,omitempty"`   // "oeBuildPlanUri": "/rest/build-plans/4f907ab5-7133-4081-bb5a-4a6dea398046",
+	OEBuildPlanURI   utils.Nstring     `json:"oeBuildPlanURI,omitempty"`   // "oeBuildPlanUri": "/rest/build-plans/4f907ab5-7133-4081-bb5a-4a6dea398046",
 	State            string            `json:"state,omitempty"`            // "state": "Normal",
 	Status           string            `json:"status,omitempty"`           // "status": "Critical",
 	Type             string            `json:"type,omitempty"`             // "type": "OEDeploymentPlan",
@@ -67,7 +67,7 @@ func (c *I3SClient) GetDeploymentPlanByName(name string) (DeploymentPlan, error)
 	var (
 		depPlan DeploymentPlan
 	)
-	depPlans, err := c.GetDeploymentPlans(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	depPlans, err := c.GetDeploymentPlans("", fmt.Sprintf("name matches '%s'", name), "", "name:asc", "")
 	if err != nil {
 		return depPlan, err
 	}
@@ -78,19 +78,31 @@ func (c *I3SClient) GetDeploymentPlanByName(name string) (DeploymentPlan, error)
 	}
 }
 
-func (c *I3SClient) GetDeploymentPlans(filter string, sort string) (DeploymentPlanList, error) {
+func (c *I3SClient) GetDeploymentPlans(count string, filter string, query string, sort string, start string) (DeploymentPlanList, error) {
 	var (
 		uri             = "/rest/deployment-plans"
 		q               map[string]interface{}
 		deploymentPlans DeploymentPlanList
 	)
 	q = make(map[string]interface{})
+	if len(count) > 0 {
+		q["count"] = count
+	}
+
 	if len(filter) > 0 {
 		q["filter"] = filter
 	}
 
+	if len(query) > 0 {
+		q["query"] = query
+	}
+
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if len(start) > 0 {
+		q["start"] = start
 	}
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -99,7 +111,7 @@ func (c *I3SClient) GetDeploymentPlans(filter string, sort string) (DeploymentPl
 		c.SetQueryString(q)
 	}
 
-	data, err := c.RestAPICall(rest.GET, uri, nil)
+	data, err,_ := c.I3SRestAPICall(rest.GET, uri, nil)
 	if err != nil {
 		return deploymentPlans, err
 	}
@@ -112,10 +124,11 @@ func (c *I3SClient) GetDeploymentPlans(filter string, sort string) (DeploymentPl
 }
 
 func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
+
 	log.Infof("Initializing creation of deploymentPlan for %s.", deploymentPlan.Name)
 	var (
 		uri = "/rest/deployment-plans"
-		t   *Task
+		t    *Task
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -124,7 +137,7 @@ func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
 	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, deploymentPlan)
+	data, err,_ := c.I3SRestAPICall(rest.POST, uri, deploymentPlan)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new deployment plan request: %s", err)
@@ -162,21 +175,26 @@ func (c *I3SClient) DeleteDeploymentPlan(name string) error {
 		t = t.NewTask(c)
 		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", deploymentPlan.URI, deploymentPlan)
-		log.Debugf("task -> %+v", t)
+		log.Infof("task -> %+v", t)
 		uri = deploymentPlan.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
 			t.TaskIsDone = true
 			return err
 		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		data, err, flag := c.I3SRestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete deployment plan request: %s", err)
 			t.TaskIsDone = true
 			return err
 		}
 
-		log.Debugf("Response delete deployment plan %s", data)
+		log.Infof("Response delete deployment plan %s", data)
+		if  len(data) == 0 && flag {
+			t.TaskIsDone = true
+			log.Info("Deletion done successfully...")
+			return nil
+		}
 		if err := json.Unmarshal([]byte(data), &t); err != nil {
 			t.TaskIsDone = true
 			log.Errorf("Error with task un-marshal: %s", err)
@@ -206,7 +224,7 @@ func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
 	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, deploymentPlan)
+	data, err,_ := c.I3SRestAPICall(rest.PUT, uri, deploymentPlan)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting update deployment plan request: %s", err)
