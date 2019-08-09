@@ -18,7 +18,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet Network
 - FC Network
 - Scope
+- Storage pool
+- Storage system
 - Storage volume
+- Storage volume attachment
 
 # [v1.0.0] (2019-02-07)
 ### Notes
