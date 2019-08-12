@@ -130,14 +130,10 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 			return nil, err
 		}
 		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
-		ioutil.WriteFile("jsons.json", OptionsJSON, 0644)
 		req, err = http.NewRequest(method.String(), reqUrl.String(), bytes.NewBuffer(OptionsJSON))
 	} else {
 		req, err = http.NewRequest(method.String(), reqUrl.String(), nil)
 	}
-
-	file, _ := json.MarshalIndent(options, "", " ")
-	ioutil.WriteFile("2inut.json", file, 0644)
 
 	if err != nil {
 		return nil, fmt.Errorf("Error with request: %v - %q", Url, err)
