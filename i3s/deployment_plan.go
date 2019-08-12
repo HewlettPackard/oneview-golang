@@ -111,7 +111,7 @@ func (c *I3SClient) GetDeploymentPlans(count string, filter string, query string
 		c.SetQueryString(q)
 	}
 
-	data, err,_ := c.I3SRestAPICall(rest.GET, uri, nil)
+	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
 		return deploymentPlans, err
 	}
@@ -128,31 +128,14 @@ func (c *I3SClient) CreateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	log.Infof("Initializing creation of deploymentPlan for %s.", deploymentPlan.Name)
 	var (
 		uri = "/rest/deployment-plans"
-		t    *Task
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewTask(c)
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
-	log.Debugf("task -> %+v", t)
-	data, err,_ := c.I3SRestAPICall(rest.POST, uri, deploymentPlan)
+	_, err := c.RestAPICall(rest.POST, uri, deploymentPlan)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting new deployment plan request: %s", err)
-		return err
-	}
-
-	log.Debugf("Response New DeploymentPlan %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
 		return err
 	}
 
@@ -163,7 +146,6 @@ func (c *I3SClient) DeleteDeploymentPlan(name string) error {
 	var (
 		deploymentPlan DeploymentPlan
 		err            error
-		t              *Task
 		uri            string
 	)
 
@@ -172,38 +154,18 @@ func (c *I3SClient) DeleteDeploymentPlan(name string) error {
 		return err
 	}
 	if deploymentPlan.Name != "" {
-		t = t.NewTask(c)
-		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", deploymentPlan.URI, deploymentPlan)
-		log.Infof("task -> %+v", t)
 		uri = deploymentPlan.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
-		data, err, flag := c.I3SRestAPICall(rest.DELETE, uri, nil)
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete deployment plan request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
 
-		log.Infof("Response delete deployment plan %s", data)
-		if  len(data) == 0 && flag {
-			t.TaskIsDone = true
-			log.Info("Deletion done successfully...")
-			return nil
-		}
-		if err := json.Unmarshal([]byte(data), &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
-		err = t.Wait()
-		if err != nil {
-			return err
-		}
 		return nil
 	} else {
 		log.Infof("DeploymentPlan could not be found to delete, %s, skipping delete ...", name)
@@ -215,31 +177,14 @@ func (c *I3SClient) UpdateDeploymentPlan(deploymentPlan DeploymentPlan) error {
 	log.Infof("Initializing update of deployment plan for %s.", deploymentPlan.Name)
 	var (
 		uri = deploymentPlan.URI.String()
-		t   *Task
 	)
 
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewTask(c)
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, deploymentPlan)
-	log.Debugf("task -> %+v", t)
-	data, err,_ := c.I3SRestAPICall(rest.PUT, uri, deploymentPlan)
+	_, err := c.RestAPICall(rest.PUT, uri, deploymentPlan)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting update deployment plan request: %s", err)
-		return err
-	}
-
-	log.Debugf("Response update DeploymentPlan %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
 		return err
 	}
 
