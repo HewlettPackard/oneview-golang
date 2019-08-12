@@ -109,7 +109,7 @@ func TestGetDeploymentPlans(t *testing.T) {
 
 	} else {
 		_, c = getTestDriverU("test_deployment_plan")
-		data, err := c.GetDeploymentPlans("", "", "", "")
+		data, err := c.GetDeploymentPlans("", "", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
