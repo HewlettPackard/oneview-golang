@@ -19,8 +19,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet Network
 - FC Network
 - Interconnect type
+- Scope
 - Storage pool
-- Storge system
+- Storage system
 - Storage volume
 - Storage volume attachment
 
