@@ -31,7 +31,7 @@ type DeploymentPlan struct {
 	Description      utils.Nstring     `json:"description,omitempty"`      // "description": "Deployment Plan 1",
 	ETAG             string            `json:"eTag,omitempty"`             // "eTag": "1441036118675/8",
 	GoldenImageUri   utils.Nstring     `json:"goldenImageURI,omitempty"`   // "goldenImageUri": "",
-	HPProvided       bool              `json:"hpProvided"`       // "hpProvided": false,
+	HPProvided       bool              `json:"hpProvided"`                 // "hpProvided": false,
 	ID               string            `json:"id,omitempty"`               // "id": "1",
 	Modified         string            `json:"modified,omitempty"`         // "modified": "20150831T154835.250Z",
 	Name             string            `json:"name,omitempty"`             // "name": "Deployment Plan 1",
