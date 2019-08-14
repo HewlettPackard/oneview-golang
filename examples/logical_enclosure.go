@@ -34,12 +34,12 @@ func main() {
 
 	// Update From Group
 	/*
-	err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
-	}
+		err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+		}
 	*/
 	fmt.Println("#................... Create Logical Enclosure ...............#")
 	scope1, err := ovc.GetScopeByName(scope_name)
