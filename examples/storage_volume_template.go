@@ -168,11 +168,12 @@ func main() {
 		fmt.Println("Volume Template created successfully", storageVolumeTemplate.Name)
 	}
 
-	// Update the given storage volume
+	// Get the volume template by name
 	update_vol_template, _ := ovc.GetStorageVolumeTemplateByName(name_to_create)
 	update_vol_template.Name = name_to_update
 	update_vol_template.Description = "Updating description"
-
+	
+	// Update the previously created storage volume template
 	err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
 	if err != nil {
 		fmt.Println("Could not update the volume template", err)
@@ -192,12 +193,7 @@ func main() {
 		fmt.Println(vol_temp_list.Members[i].Name)
 	}
 
-	/*	// Get volume by name
-		fmt.Println("\nGetting details of volume with name: ", name_to_update)
-		vol_by_name, _ := ovc.GetStorageVolumeTemplateByName(name_to_update)
-		fmt.Println(vol_by_name.URI)
-	*/
-	// Delete the created volume
+	// Delete the created volume template
 	fmt.Println("\nDeleting the volume with name : ", name_to_update)
 	err = ovc.DeleteStorageVolumeTemplate(name_to_update)
 	if err != nil {
