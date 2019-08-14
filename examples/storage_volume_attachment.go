@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600,
+		1000,
 		"*")
 
 	// Get All the attachments present
@@ -30,7 +30,7 @@ func main() {
 		fmt.Println("Error Getting the storage attachments ", err)
 	}
 	for i := 0; i < len(attachment_list.Members); i++ {
-		fmt.Println(attachment_list.Members[i].Name)
+		fmt.Println(attachment_list.Members[i].URI)
 	}
 
 	// Get volume attachment by name

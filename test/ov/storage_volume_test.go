@@ -33,7 +33,7 @@ func TestCreateStorageVolume(t *testing.T) {
 		//provParams := ov.ProvisioningParameters{StoragePoolUri: utils.NewNstring(pMap["storagePoolUri"].(string)), RequestedCapacity: pMap["requestedCapacity"].(string), ProvisionType: pMap["provisionType"].(string), Shareable: pMap["shareable"].(bool)}
 
 		if testSVol.URI.IsNil() {
-			testSVol = ov.StorageVolumeV3{
+			testSVol = ov.StorageVolume{
 				Name:             testName,
 				StorageSystemUri: utils.NewNstring(d.Tc.GetTestData(d.Env, "StorageSystemUri").(string)),
 				Type:             d.Tc.GetTestData(d.Env, "Type").(string),
@@ -113,7 +113,7 @@ func TestDeleteStorageVolumeNotFound(t *testing.T) {
 	var (
 		c        *ov.OVClient
 		testName = "fake"
-		testSVol ov.StorageVolumeV3
+		testSVol ov.StorageVolume
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		_, c = getTestDriverA("test_storage_volume")
@@ -139,7 +139,7 @@ func TestDeleteStorageVolume(t *testing.T) {
 		d        *OVTest
 		c        *ov.OVClient
 		testName string
-		testSVol ov.StorageVolumeV3
+		testSVol ov.StorageVolume
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_storage_volume")
