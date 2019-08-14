@@ -172,7 +172,7 @@ func main() {
 	update_vol_template, _ := ovc.GetStorageVolumeTemplateByName(name_to_create)
 	update_vol_template.Name = name_to_update
 	update_vol_template.Description = "Updating description"
-	
+
 	// Update the previously created storage volume template
 	err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
 	if err != nil {
