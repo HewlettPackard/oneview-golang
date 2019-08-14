@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"time"
 )
 
 func main() {
 
 	var (
-		ClientOV *ov.OVClient
-		//		new_volume     = "TestVolume"
-		name_to_update = "voltempl1"
+		ClientOV       *ov.OVClient
+		name_to_create = "VolumeTemplateExample"
+		name_to_update = "VolumeTemplateExample- updated"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -28,7 +28,7 @@ func main() {
 		Required:    true,
 		Type:        "string",
 		Title:       "Volume name",
-		Description: "Volume Name",
+		Description: "A volume name between 1 and 100 characters",
 		Maxlength:   100,
 		Minlength:   1,
 		Meta: ov.Meta{
@@ -39,8 +39,8 @@ func main() {
 	storage_pool_properties := ov.TemplatePropertyDatatypeStruct{
 		Required:    true,
 		Type:        "string",
-		Title:       "Storage pool",
-		Description: " ",
+		Title:       "Storage Pool",
+		Description: "StoragePoolURI the volume should be added to",
 		Default:     "/rest/storage-pools/F693B0B6-AD80-40C0-935D-AA99009ED046",
 		Meta: ov.Meta{
 			Locked:       false,
@@ -56,7 +56,7 @@ func main() {
 		Title:       "Capacity",
 		Default:     1073741824,
 		Minimum:     4194304,
-		Description: " ",
+		Description: "Capacity of the volume in bytes",
 		Meta: ov.Meta{
 			Locked:       false,
 			SemanticType: "capacity",
@@ -75,7 +75,7 @@ func main() {
 		},
 		Title:       "Data Protection Level",
 		Default:     "NetworkRaid10Mirror2Way",
-		Description: " ",
+		Description: "Indicates the number and configuration of data copies in the Storage Pool",
 		Meta: ov.Meta{
 			Locked:       false,
 			SemanticType: "device-dataProtectionLevel",
@@ -85,8 +85,8 @@ func main() {
 	template_version_properties := ov.TemplatePropertyDatatypeStruct{
 		Required:    true,
 		Type:        "string",
-		Title:       "template version",
-		Description: "version of the template",
+		Title:       "Template version",
+		Description: "Version of the template",
 		Default:     "1.1",
 		Meta: ov.Meta{
 			Locked: true,
@@ -97,8 +97,8 @@ func main() {
 		Required:    false,
 		Type:        "string",
 		Title:       "Description",
-		Description: " ",
-		Default:     " ",
+		Description: "A description for the volume",
+		Default:     "A description for the volume",
 		Maxlength:   2000,
 		Minlength:   1,
 		Meta: ov.Meta{
@@ -110,7 +110,7 @@ func main() {
 		Required:    false,
 		Title:       "Provisioning Type",
 		Type:        "string",
-		Description: " ",
+		Description: "The provisioning type for the volume",
 		Default:     "Thin",
 		Enum:        []string{"Thin", "Full"},
 		Meta: ov.Meta{
@@ -125,10 +125,10 @@ func main() {
 			Locked: true,
 		},
 		Type:        "boolean",
-		Description: " ",
+		Description: "",
 		Default:     true,
 		Required:    false,
-		Title:       "Adaptive optimization",
+		Title:       "Adaptive Optimization",
 	}
 
 	is_shareable_properties := ov.TemplatePropertyDatatypeStructBool{
@@ -136,10 +136,10 @@ func main() {
 			Locked: true,
 		},
 		Type:        "boolean",
-		Description: " ",
+		Description: "The shareability of the volume",
 		Default:     true,
 		Required:    false,
-		Title:       "IsShareable",
+		Title:       "Is Shareable",
 	}
 
 	Properties := ov.TemplateProperties{
@@ -156,37 +156,31 @@ func main() {
 
 	storageVolumeTemplate := ov.StorageVolumeTemplate{
 		TemplateProperties: Properties,
-		Name:               "VolumeTemplateExample",
+		Name:               name_to_create,
 		Description:        "Volume template Example",
 		RootTemplateUri:    "/rest/storage-volume-templates/533c5b9e-26c3-4c2e-af4c-aa99009ed20e",
 	}
 
 	err := ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
 	if err != nil {
-		fmt.Println("Could not create the volume", err)
+		fmt.Println("Could not create the volume Template", err)
+	} else {
+		fmt.Println("Volume Template created successfully", storageVolumeTemplate.Name)
 	}
 
-	/*
-		// Update the given storage volume
-		update_vol, _ := ovc.GetStorageVolumeByName(new_volume)
+	// Update the given storage volume
+	update_vol_template, _ := ovc.GetStorageVolumeTemplateByName(name_to_create)
+	update_vol_template.Name = name_to_update
+	update_vol_template.Description = "Updating description"
 
-		updated_storage_volume := ov.StorageVolumeV3{
-			ProvisioningTypeForUpdate: update_vol.ProvisioningTypeForUpdate,
-			IsPermanent:               update_vol.IsPermanent,
-			IsShareable:               update_vol.IsShareable,
-			Name:                      name_to_update,
-			ProvisionedCapacity:       "107374182400",
-			DeviceSpecificAttributes:  update_vol.DeviceSpecificAttributes,
-			URI:                       update_vol.URI,
-			ETAG:                      update_vol.ETAG,
-			Description:               "empty",
-		}
+	err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
+	if err != nil {
+		fmt.Println("Could not update the volume template", err)
+	} else {
+		fmt.Println("Volume template updated")
+	}
+	time.Sleep(2 * time.Second)
 
-		err = ovc.UpdateStorageVolume(updated_storage_volume)
-		if err != nil {
-			fmt.Println("Could not update the volume", err)
-		}
-	*/
 	// Get All the volume templates present
 	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
 	sort := "name:desc"
@@ -198,16 +192,16 @@ func main() {
 		fmt.Println(vol_temp_list.Members[i].Name)
 	}
 
-	// Get volume by name
-	fmt.Println("\nGetting details of volume with name: ", name_to_update)
-	vol_by_name, _ := ovc.GetStorageVolumeTemplateByName(name_to_update)
-	fmt.Println(vol_by_name.URI)
-
-	/*	// Delete the created volume
-		fmt.Println("\nDeleting the volume with name : UpdatedName")
-		err = ovc.DeleteStorageVolume(name_to_update)
-		if err != nil {
-			fmt.Println("Delete Unsuccessful", err)
-		}
+	/*	// Get volume by name
+		fmt.Println("\nGetting details of volume with name: ", name_to_update)
+		vol_by_name, _ := ovc.GetStorageVolumeTemplateByName(name_to_update)
+		fmt.Println(vol_by_name.URI)
 	*/
+	// Delete the created volume
+	fmt.Println("\nDeleting the volume with name : ", name_to_update)
+	err = ovc.DeleteStorageVolumeTemplate(name_to_update)
+	if err != nil {
+		fmt.Println("Delete Unsuccessful", err)
+	}
+
 }

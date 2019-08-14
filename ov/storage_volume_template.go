@@ -26,6 +26,10 @@ type StorageVolumeTemplate struct {
 	URI                         utils.Nstring      `json:"uri,omitempty"`
 	InitialScopeUris            utils.Nstring      `json:"initialScopeUris,omitempty"`
 	RootTemplateUri             utils.Nstring      `json:"rootTemplateUri,omitempty"`
+	StoragePoolUri              utils.Nstring      `json:"storagePoolUri,omitempty"`
+	Version                     string             `json:"version,omitempty"`
+	Uuid                        string             `json:"uuid,omitempty"`
+	Family                      string             `json:"family,omitempty"`
 	TemplateProperties          TemplateProperties `json:"properties,omitempty"`
 }
 
@@ -51,45 +55,45 @@ type TemplateProperties struct {
 }
 
 type TemplatePropertyDatatypeStruct struct {
-	Meta        Meta     `json:"meta,omitempty"`
-	Type        string   `json:"type,omitempty"`
-	Title       string   `json:"title,omitempty"`
-	Required    bool     `json:"required,omitempty"`
-	Maxlength   int      `json:"maxLength,omitempty"`
-	Minlength   int      `json:"minLength,omitempty"`
-	Description string   `json:"description"`
-	Enum        []string `json:"enum,omitempty"`
-	Default     string   `json:"default,omitempty"`
-	Minimum     int      `json:"minimum,omitempty"`
-	Format      string   `json:"format,omitempty"`
+	Meta        Meta          `json:"meta,omitempty"`
+	Type        string        `json:"type,omitempty"`
+	Title       string        `json:"title,omitempty"`
+	Required    bool          `json:"required"`
+	Maxlength   int           `json:"maxLength,omitempty"`
+	Minlength   int           `json:"minLength,omitempty"`
+	Description utils.Nstring `json:"description"`
+	Enum        []string      `json:"enum,omitempty"`
+	Default     string        `json:"default,omitempty"`
+	Minimum     int           `json:"minimum,omitempty"`
+	Format      string        `json:"format,omitempty"`
 }
 
 type TemplatePropertyDatatypeStructInt struct {
-	Meta        Meta     `json:"meta,omitempty"`
-	Type        string   `json:"type,omitempty"`
-	Title       string   `json:"title,omitempty"`
-	Required    bool     `json:"required,omitempty"`
-	Maxlength   int      `json:"maxLength,omitempty"`
-	Minlength   int      `json:"minLength,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Enum        []string `json:"enum,omitempty"`
-	Default     int      `json:"default,omitempty"`
-	Minimum     int      `json:"minimum,omitempty"`
-	Format      string   `json:"format,omitempty"`
+	Meta        Meta          `json:"meta,omitempty"`
+	Type        string        `json:"type,omitempty"`
+	Title       string        `json:"title,omitempty"`
+	Required    bool          `json:"required"`
+	Maxlength   int           `json:"maxLength,omitempty"`
+	Minlength   int           `json:"minLength,omitempty"`
+	Description utils.Nstring `json:"description"`
+	Enum        []string      `json:"enum,omitempty"`
+	Default     int           `json:"default,omitempty"`
+	Minimum     int           `json:"minimum,omitempty"`
+	Format      string        `json:"format,omitempty"`
 }
 
 type TemplatePropertyDatatypeStructBool struct {
-	Meta        Meta     `json:"meta,omitempty"`
-	Type        string   `json:"type,omitempty"`
-	Title       string   `json:"title,omitempty"`
-	Required    bool     `json:"required,omitempty"`
-	Maxlength   int      `json:"maxLength,omitempty"`
-	Minlength   int      `json:"minLength,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Enum        []string `json:"enum,omitempty"`
-	Default     bool     `json:"default,omitempty"`
-	Minimum     int      `json:"minimum,omitempty"`
-	Format      string   `json:"format,omitempty"`
+	Meta        Meta          `json:"meta,omitempty"`
+	Type        string        `json:"type,omitempty"`
+	Title       string        `json:"title,omitempty"`
+	Required    bool          `json:"required"`
+	Maxlength   int           `json:"maxLength,omitempty"`
+	Minlength   int           `json:"minLength,omitempty"`
+	Description utils.Nstring `json:"description"`
+	Enum        []string      `json:"enum,omitempty"`
+	Default     bool          `json:"default,omitempty"`
+	Minimum     int           `json:"minimum,omitempty"`
+	Format      string        `json:"format,omitempty"`
 }
 
 type Meta struct {
@@ -167,36 +171,21 @@ func (c *OVClient) CreateStorageVolumeTemplate(sVolTemplate StorageVolumeTemplat
 	log.Infof("Initializing creation of storage volume for %s.", sVolTemplate.Name)
 	var (
 		uri = "/rest/storage-volume-templates"
-		t   *Task
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
-	log.Debugf("task -> %+v", t)
 
 	data, err := c.RestAPICall(rest.POST, uri, sVolTemplate)
 
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting new storage volume template request: %s", err)
 		return err
 	}
 
 	log.Debugf("Response New StorageVolumeTemplate %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
 
 	return nil
 }
@@ -205,7 +194,6 @@ func (c *OVClient) DeleteStorageVolumeTemplate(name string) error {
 	var (
 		sVolTemplate StorageVolumeTemplate
 		err          error
-		t            *Task
 		uri          string
 	)
 
@@ -214,33 +202,18 @@ func (c *OVClient) DeleteStorageVolumeTemplate(name string) error {
 		return err
 	}
 	if sVolTemplate.Name != "" {
-		t = t.NewProfileTask(c)
-		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", sVolTemplate.URI, sVolTemplate)
-		log.Debugf("task -> %+v", t)
 		uri = sVolTemplate.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete storage volume template request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
 
-		log.Debugf("Response delete storage volume template%s", data)
-		if err := json.Unmarshal([]byte(data), &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
-		err = t.Wait()
-		if err != nil {
-			return err
-		}
 		return nil
 	} else {
 		log.Infof("StorageVolumeTemplate could not be found to delete, %s, skipping delete ...", name)
@@ -249,36 +222,19 @@ func (c *OVClient) DeleteStorageVolumeTemplate(name string) error {
 }
 
 func (c *OVClient) UpdateStorageVolumeTemplate(sVolTemplate StorageVolumeTemplate) error {
-	log.Infof("Initializing update of storage volume for %s.", sVolTemplate.Name)
+	log.Infof("Initializing update of storage volume to %s.", sVolTemplate.Name)
 	var (
 		uri = sVolTemplate.URI.String()
-		t   *Task
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, sVolTemplate)
+	_, err := c.RestAPICall(rest.PUT, uri, sVolTemplate)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting update StorageVolumeTemplate request: %s", err)
 		return err
 	}
-	log.Debugf("Response update StorageVolumeTemplate %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
