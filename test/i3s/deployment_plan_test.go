@@ -101,15 +101,15 @@ func TestGetDeploymentPlans(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		deploymentPlans, err := c.GetDeploymentPlans("", "")
+		deploymentPlans, err := c.GetDeploymentPlans("", "", "", "", "")
 		assert.NoError(t, err, "GetDeploymentPlans threw error -> %s, %+v\n", err, deploymentPlans)
 
-		deploymentPlans, err = c.GetDeploymentPlans("", "name:asc")
+		deploymentPlans, err = c.GetDeploymentPlans("", "", "", "name:asc", "")
 		assert.NoError(t, err, "GetDeploymentPlans name:asc error -> %s, %+v\n", err, deploymentPlans)
 
 	} else {
 		_, c = getTestDriverU("test_deployment_plan")
-		data, err := c.GetDeploymentPlans("", "")
+		data, err := c.GetDeploymentPlans("", "", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
