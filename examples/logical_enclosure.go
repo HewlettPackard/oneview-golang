@@ -13,8 +13,7 @@ func main() {
 		logical_enclosure   = "log_enc_66"
 		logical_enclosure_1 = "log_enclosure77"
 		logical_enclosure_2 = "log_enclosure88"
-		logical_enclosure_3 = "log_enclosure88"
-		scope_name          = "new-SD5"
+		scope_name          = "updated-SD2"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -22,8 +21,8 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
-		"")
+		1000,
+		"*")
 
 	fmt.Println("#................... Logical Enclosure by Name ...............#")
 	log_en, err := ovc.GetLogicalEnclosureByName(logical_enclosure)
@@ -33,6 +32,16 @@ func main() {
 		fmt.Println(log_en)
 	}
 
+	// Update From Group
+	/*
+		err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+		}
+	*/
+	fmt.Println("#................... Create Logical Enclosure ...............#")
 	scope1, err := ovc.GetScopeByName(scope_name)
 	scope_uri := scope1.URI
 	scope_Uris := new([]string)
@@ -54,9 +63,9 @@ func main() {
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
-	logicalEnclosure := ov.LogicalEnclosure{Name: "log_enclosure77",
+	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
 		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/e48e8024-5e35-48ea-9bb9-0e4b3c69fb91")}
+		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/4586b2d6-1a8f-48af-809e-cb05d04a03a8")}
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {
@@ -82,7 +91,7 @@ func main() {
 		}
 	}
 
-	err = ovc.DeleteLogicalEnclosure(logical_enclosure_3)
+	err = ovc.DeleteLogicalEnclosure(logical_enclosure_2)
 	if err != nil {
 		fmt.Println(err)
 	} else {
