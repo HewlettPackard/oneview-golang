@@ -12,24 +12,24 @@ import (
 // Please remove the omitempty option and use it as and when required.
 
 type StorageVolumeTemplate struct {
-	Category                    string             `json:"category,omitempty"`
-	Created                     string             `json:"created,omitempty"`
-	CompatibleStorageSystemsUri utils.Nstring      `json:"compatibleStorageSystemsUri,omitempty"`
-	Description                 utils.Nstring      `json:"description,omitempty"`
-	ETAG                        string             `json:"eTag,omitempty"`
-	IsRoot                      bool               `json:"isRoot,omitempty"`
-	ScopesURI                   utils.Nstring      `json:"scopesUri,omitempty"`
-	Name                        string             `json:"name,omitempty"`
-	State                       string             `json:"state,omitempty"`
-	Status                      string             `json:"status,omitempty"`
-	Type                        string             `json:"type,omitempty"`
-	URI                         utils.Nstring      `json:"uri,omitempty"`
-	InitialScopeUris            utils.Nstring      `json:"initialScopeUris,omitempty"`
-	RootTemplateUri             utils.Nstring      `json:"rootTemplateUri,omitempty"`
-	StoragePoolUri              utils.Nstring      `json:"storagePoolUri,omitempty"`
-	Version                     string             `json:"version,omitempty"`
-	Uuid                        string             `json:"uuid,omitempty"`
-	Family                      string             `json:"family,omitempty"`
+	Category                    string              `json:"category,omitempty"`
+	Created                     string              `json:"created,omitempty"`
+	CompatibleStorageSystemsUri utils.Nstring       `json:"compatibleStorageSystemsUri,omitempty"`
+	Description                 utils.Nstring       `json:"description,omitempty"`
+	ETAG                        string              `json:"eTag,omitempty"`
+	IsRoot                      bool                `json:"isRoot,omitempty"`
+	ScopesURI                   utils.Nstring       `json:"scopesUri,omitempty"`
+	Name                        string              `json:"name,omitempty"`
+	State                       string              `json:"state,omitempty"`
+	Status                      string              `json:"status,omitempty"`
+	Type                        string              `json:"type,omitempty"`
+	URI                         utils.Nstring       `json:"uri,omitempty"`
+	InitialScopeUris            utils.Nstring       `json:"initialScopeUris,omitempty"`
+	RootTemplateUri             utils.Nstring       `json:"rootTemplateUri,omitempty"`
+	StoragePoolUri              utils.Nstring       `json:"storagePoolUri,omitempty"`
+	Version                     string              `json:"version,omitempty"`
+	Uuid                        string              `json:"uuid,omitempty"`
+	Family                      string              `json:"family,omitempty"`
 	TemplateProperties          *TemplateProperties `json:"properties,omitempty"`
 }
 
