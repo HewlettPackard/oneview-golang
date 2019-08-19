@@ -155,7 +155,7 @@ func main() {
 	}
 
 	storageVolumeTemplate := ov.StorageVolumeTemplate{
-		TemplateProperties: Properties,
+		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
 		RootTemplateUri:    "/rest/storage-volume-templates/533c5b9e-26c3-4c2e-af4c-aa99009ed20e",
@@ -176,7 +176,7 @@ func main() {
 		update_vol_template.Name = name_to_update
 		update_vol_template.Description = "Updating description"
 
-	// Update the previously created storage volume template
+		// Update the previously created storage volume template
 		err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
 		if err != nil {
 			fmt.Println("Could not update the volume template", err)

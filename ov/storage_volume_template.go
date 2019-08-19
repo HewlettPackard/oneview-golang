@@ -30,7 +30,7 @@ type StorageVolumeTemplate struct {
 	Version                     string             `json:"version,omitempty"`
 	Uuid                        string             `json:"uuid,omitempty"`
 	Family                      string             `json:"family,omitempty"`
-	TemplateProperties          TemplateProperties `json:"properties,omitempty"`
+	TemplateProperties          *TemplateProperties `json:"properties,omitempty"`
 }
 
 type TemplateProperties struct {
