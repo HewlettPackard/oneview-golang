@@ -169,16 +169,20 @@ func main() {
 	}
 
 	// Get the volume template by name
-	update_vol_template, _ := ovc.GetStorageVolumeTemplateByName(name_to_create)
-	update_vol_template.Name = name_to_update
-	update_vol_template.Description = "Updating description"
+	update_vol_template, err := ovc.GetStorageVolumeTemplateByName(name_to_create)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		update_vol_template.Name = name_to_update
+		update_vol_template.Description = "Updating description"
 
 	// Update the previously created storage volume template
-	err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
-	if err != nil {
-		fmt.Println("Could not update the volume template", err)
-	} else {
-		fmt.Println("Volume template updated")
+		err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
+		if err != nil {
+			fmt.Println("Could not update the volume template", err)
+		} else {
+			fmt.Println("Volume template updated")
+		}
 	}
 	time.Sleep(2 * time.Second)
 
