@@ -24,7 +24,7 @@ type StorageVolumeTemplate struct {
 	Status                      string              `json:"status,omitempty"`
 	Type                        string              `json:"type,omitempty"`
 	URI                         utils.Nstring       `json:"uri,omitempty"`
-	InitialScopeUris            utils.Nstring       `json:"initialScopeUris,omitempty"`
+	InitialScopeUris            []utils.Nstring       `json:"initialScopeUris,omitempty"`
 	RootTemplateUri             utils.Nstring       `json:"rootTemplateUri,omitempty"`
 	StoragePoolUri              utils.Nstring       `json:"storagePoolUri,omitempty"`
 	Version                     string              `json:"version,omitempty"`
