@@ -34,28 +34,29 @@ type StorageVolumeTemplate struct {
 }
 
 type TemplateProperties struct {
-	Name                          *TemplatePropertyDatatypeStruct     `json:"name,omitempty"`
-	StoragePool                   *TemplatePropertyDatatypeStruct     `json:"storagePool,omitempty"`
-	Size                          *TemplatePropertyDatatypeStructInt  `json:"size,omitempty"`
-	ProvisioningType              *TemplatePropertyDatatypeStruct     `json:"provisioningType,omitempty"`
-	DataTransferLimit             *TemplatePropertyDatatypeStruct     `json:"dataTransferLimit,omitempty"`
-	IsDeduplicated                *TemplatePropertyDatatypeStruct     `json:"isDeduplicated,omitempty"`
-	IsEncrypted                   *TemplatePropertyDatatypeStruct     `json:"isEncrypted,omitempty"`
-	IsPinned                      *TemplatePropertyDatatypeStruct     `json:"isPinned,omitempty"`
-	IopsLimit                     *TemplatePropertyDatatypeStruct     `json:"iopsLimit,omitempty"`
-	Folder                        *TemplatePropertyDatatypeStruct     `json:"folder,omitempty"`
-	TemplateVersion               *TemplatePropertyDatatypeStruct     `json:"templateVersion,omitempty"`
-	PerformancePolicy             *TemplatePropertyDatatypeStruct     `json:"performancePolicy,omitempty"`
-	VolumetSet                    *TemplatePropertyDatatypeStruct     `json:"volumeSet,omitempty"`
-	Description                   *TemplatePropertyDatatypeStruct     `json:"description,omitempty"`
-	IsAdaptiveOptimizationEnabled *TemplatePropertyDatatypeStructBool `json:"isAdaptiveOptimizationEnabled,omitempty"`
-	IsCompressed                  *TemplatePropertyDatatypeStruct     `json:"isCompressed,omitempty"`
-	DataProtectionLevel           *TemplatePropertyDatatypeStruct     `json:"dataProtectionLevel,omitempty"`
-	IsShareable                   *TemplatePropertyDatatypeStructBool `json:"isShareable,omitempty"`
+	Name                          *TemplatePropertyDatatypeStructString `json:"name,omitempty"`
+	StoragePool                   *TemplatePropertyDatatypeStructString `json:"storagePool,omitempty"`
+	Size                          *TemplatePropertyDatatypeStructInt    `json:"size,omitempty"`
+	ProvisioningType              *TemplatePropertyDatatypeStructString `json:"provisioningType,omitempty"`
+	DataTransferLimit             *TemplatePropertyDatatypeStructInt    `json:"dataTransferLimit,omitempty"`
+	IsDeduplicated                *TemplatePropertyDatatypeStructBool   `json:"isDeduplicated,omitempty"`
+	IsEncrypted                   *TemplatePropertyDatatypeStructBool   `json:"isEncrypted,omitempty"`
+	IsPinned                      *TemplatePropertyDatatypeStructBool   `json:"isPinned,omitempty"`
+	IopsLimit                     *TemplatePropertyDatatypeStructInt    `json:"iopsLimit,omitempty"`
+	Folder                        *TemplatePropertyDatatypeStructString `json:"folder,omitempty"`
+	TemplateVersion               *TemplatePropertyDatatypeStructString `json:"templateVersion,omitempty"`
+	PerformancePolicy             *TemplatePropertyDatatypeStructString `json:"performancePolicy,omitempty"`
+	VolumetSet                    *TemplatePropertyDatatypeStructString `json:"volumeSet,omitempty"`
+	Description                   *TemplatePropertyDatatypeStructString `json:"description,omitempty"`
+	IsAdaptiveOptimizationEnabled *TemplatePropertyDatatypeStructBool   `json:"isAdaptiveOptimizationEnabled,omitempty"`
+	IsCompressed                  *TemplatePropertyDatatypeStructBool   `json:"isCompressed,omitempty"`
+	DataProtectionLevel           *TemplatePropertyDatatypeStructString `json:"dataProtectionLevel,omitempty"`
+	IsShareable                   *TemplatePropertyDatatypeStructBool   `json:"isShareable,omitempty"`
 }
 
-type TemplatePropertyDatatypeStruct struct {
-	Meta        Meta          `json:"meta,omitempty"`
+// Struct for properties whose default value is a string
+type TemplatePropertyDatatypeStructString struct {
+	Meta        *Meta         `json:"meta,omitempty"`
 	Type        string        `json:"type,omitempty"`
 	Title       string        `json:"title,omitempty"`
 	Required    bool          `json:"required"`
@@ -68,8 +69,9 @@ type TemplatePropertyDatatypeStruct struct {
 	Format      string        `json:"format,omitempty"`
 }
 
+// Struct for properties whose default value is an int
 type TemplatePropertyDatatypeStructInt struct {
-	Meta        Meta          `json:"meta,omitempty"`
+	Meta        *Meta         `json:"meta,omitempty"`
 	Type        string        `json:"type,omitempty"`
 	Title       string        `json:"title,omitempty"`
 	Required    bool          `json:"required"`
@@ -82,8 +84,9 @@ type TemplatePropertyDatatypeStructInt struct {
 	Format      string        `json:"format,omitempty"`
 }
 
+// Struct for properties whose default value is a bool
 type TemplatePropertyDatatypeStructBool struct {
-	Meta        Meta          `json:"meta,omitempty"`
+	Meta        *Meta         `json:"meta,omitempty"`
 	Type        string        `json:"type,omitempty"`
 	Title       string        `json:"title,omitempty"`
 	Required    bool          `json:"required"`

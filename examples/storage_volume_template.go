@@ -24,7 +24,7 @@ func main() {
 		1000,
 		"*")
 
-	name_properties := ov.TemplatePropertyDatatypeStruct{
+	name_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Volume name",
@@ -36,7 +36,7 @@ func main() {
 		},
 	}
 
-	storage_pool_properties := ov.TemplatePropertyDatatypeStruct{
+	storage_pool_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Storage Pool",
@@ -63,7 +63,7 @@ func main() {
 		},
 	}
 
-	dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStruct{
+	dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
 		Required: true,
 		Type:     "string",
 		Enum: []string{"NetworkRaid0None",
@@ -82,7 +82,7 @@ func main() {
 		},
 	}
 
-	template_version_properties := ov.TemplatePropertyDatatypeStruct{
+	template_version_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Template version",
@@ -93,7 +93,7 @@ func main() {
 		},
 	}
 
-	description_properties := ov.TemplatePropertyDatatypeStruct{
+	description_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    false,
 		Type:        "string",
 		Title:       "Description",
@@ -106,7 +106,7 @@ func main() {
 		},
 	}
 
-	provisioning_type_properties := ov.TemplatePropertyDatatypeStruct{
+	provisioning_type_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    false,
 		Title:       "Provisioning Type",
 		Type:        "string",
