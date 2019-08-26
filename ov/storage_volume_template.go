@@ -78,7 +78,7 @@ type TemplatePropertyDatatypeStructInt struct {
 	Required    bool          `json:"required"`
 	Description utils.Nstring `json:"description"`
 	Enum        []string      `json:"enum,omitempty"`
-	Default     int           `json:"default,omitempty"`
+	Default     int           `json:"default"`
 	Maximum     int           `json:"maximum,omitempty"`
 	Minimum     int           `json:"minimum,omitempty"`
 	Format      string        `json:"format,omitempty"`
@@ -92,7 +92,7 @@ type TemplatePropertyDatatypeStructBool struct {
 	Required    bool          `json:"required"`
 	Description utils.Nstring `json:"description"`
 	Enum        []string      `json:"enum,omitempty"`
-	Default     bool          `json:"default,omitempty"`
+	Default     bool          `json:"default"`
 	Format      string        `json:"format,omitempty"`
 }
 
