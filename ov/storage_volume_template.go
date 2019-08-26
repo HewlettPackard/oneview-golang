@@ -38,6 +38,7 @@ type TemplateProperties struct {
 	StoragePool                   *TemplatePropertyDatatypeStructString `json:"storagePool,omitempty"`
 	Size                          *TemplatePropertyDatatypeStructInt    `json:"size,omitempty"`
 	ProvisioningType              *TemplatePropertyDatatypeStructString `json:"provisioningType,omitempty"`
+	SnapshotPool                  *TemplatePropertyDatatypeStructString `json:"snapshotPool,omitempty"`
 	DataTransferLimit             *TemplatePropertyDatatypeStructInt    `json:"dataTransferLimit,omitempty"`
 	IsDeduplicated                *TemplatePropertyDatatypeStructBool   `json:"isDeduplicated,omitempty"`
 	IsEncrypted                   *TemplatePropertyDatatypeStructBool   `json:"isEncrypted,omitempty"`
