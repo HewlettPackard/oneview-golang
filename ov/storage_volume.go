@@ -83,11 +83,11 @@ type Properties struct {
 	Size                int           `json:"size,omitempty"`
 	ProvisioningType    string        `json:"provisioningType,omitempty"`
 	DataTransferLimit   int           `json:"dataTransferLimit,omitempty"`
-	IsDeduplicated      *bool         `json:"isDeduplicated,omitempty"`
-	IsEncrypted         *bool         `json:"isEncrypted,omitempty"`
-	IsPinned            *bool         `json:"isPinned,omitempty"`
-	IsCompressed        *bool         `json:"isCompressed,omitempty"`
-	IsShareable         *bool         `json:"isShareable,omitempty"`
+	IsDeduplicated      bool          `json:"isDeduplicated,omitempty"`
+	IsEncrypted         bool          `json:"isEncrypted,omitempty"`
+	IsPinned            bool          `json:"isPinned,omitempty"`
+	IsCompressed        bool          `json:"isCompressed,omitempty"`
+	IsShareable         bool          `json:"isShareable,omitempty"`
 	DataProtectionLevel string        `json:"dataProtectionLevel,omitempty"`
 }
 
