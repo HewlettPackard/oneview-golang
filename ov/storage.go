@@ -52,8 +52,14 @@ type StoragePath struct {
 	IsEnabled         bool     `json:"isEnabled"`                   // isEnabled (required), Identifies whether the storage path is enabled.
 	Status            string   `json:"status,omitempty"`            // status (read only), The overall health status of the storage path.
 	StorageTargetType string   `json:"storageTargetType,omitempty"` // storageTargetType ('Auto', 'TargetPorts')
-	StorageTargets    []string `json:"targets,omitempty"`           // only set when storageTargetType is TargetPorts
+	Targets           []Target `json:"targets,omitempty"`           // only set when storageTargetType is TargetPorts
 	TargetSelector    string   `json:"targetSelector,omitempty"`
+}
+
+type Target struct {
+	IpAddress string `json:"IpAddress,omitempty"`
+	Name      string `json:"name,omitempty"`
+	TopPort   string `json:"topPort,omitempty"`
 }
 
 // Clone -
@@ -62,7 +68,7 @@ func (c StoragePath) Clone() StoragePath {
 		ConnectionID:      c.ConnectionID,
 		IsEnabled:         c.IsEnabled,
 		StorageTargetType: c.StorageTargetType,
-		StorageTargets:    c.StorageTargets,
+		Targets:           c.Targets,
 	}
 }
 
