@@ -27,13 +27,13 @@ func main() {
 	// Create storage volume with name <new_volume>
 	properties := &ov.Properties{
 		Name:                new_volume,
-		Storagepool:         utils.NewNstring("/rest/storage-pools/F693B0B6-AD80-40C0-935D-AA99009ED046"),
+		Storagepool:         utils.NewNstring("/rest/storage-pools/16CA2E3F-523A-4B46-8F67-AAAF0099D359"),
 		Size:                107374741824,
 		ProvisioningType:    "Thin",
 		DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
-
-	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/292c2ff4-3e9d-4936-9b24-aa99009f91a3"), Properties: properties, IsPermanent: true}
+	trueVal := true
+	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/01953309-b02e-47d2-921b-aaaf0099d392"), Properties: properties, IsPermanent: &trueVal}
 
 	err := ovc.CreateStorageVolume(storageVolume)
 	if err != nil {
