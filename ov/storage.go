@@ -59,7 +59,7 @@ type StoragePath struct {
 type Target struct {
 	IpAddress string `json:"IpAddress,omitempty"`
 	Name      string `json:"name,omitempty"`
-	TcpPort   int 	 `json:"tcpPort,omitempty"`
+	TcpPort   int    `json:"tcpPort,omitempty"`
 }
 
 // Clone -
