@@ -23,6 +23,8 @@ type FCoENetwork struct {
 	Created               string        `json:"created,omitempty"`
 	Category              string        `json:"category,omitempty"`
 	URI                   utils.Nstring `json:"uri,omitempty"`
+	ScopesUri             utils.Nstring   `json:"scopesUri,omitempty"`
+	InitialScopeUris      []utils.Nstring `json:"initialScopeUris,omitempty"` // "initialScopeUris":[]
 }
 
 type FCoENetworkList struct {
@@ -39,7 +41,7 @@ func (c *OVClient) GetFCoENetworkByName(name string) (FCoENetwork, error) {
 	var (
 		fcoeNet FCoENetwork
 	)
-	fcoeNets, err := c.GetFCoENetworks(fmt.Sprintf("name matches '%s'", name), "name:asc")
+	fcoeNets, err := c.GetFCoENetworks(fmt.Sprintf("name matches '%s'", name), "name:asc", "", "")
 	if fcoeNets.Total > 0 {
 		return fcoeNets.Members[0], err
 	} else {
@@ -47,19 +49,26 @@ func (c *OVClient) GetFCoENetworkByName(name string) (FCoENetwork, error) {
 	}
 }
 
-func (c *OVClient) GetFCoENetworks(filter string, sort string) (FCoENetworkList, error) {
+func (c *OVClient) GetFCoENetworks(filter string, sort string, start string, count string) (FCoENetworkList, error) {
 	var (
 		uri          = "/rest/fcoe-networks"
-		q            map[string]interface{}
+		q          = make(map[string]interface{})
 		fcoeNetworks FCoENetworkList
 	)
-	q = make(map[string]interface{})
 	if len(filter) > 0 {
 		q["filter"] = filter
 	}
 
 	if sort != "" {
 		q["sort"] = sort
+	}
+
+	if start != "" {
+		q["start"] = start
+	}
+
+	if count != "" {
+		q["count"] = count
 	}
 
 	// refresh login
@@ -75,7 +84,7 @@ func (c *OVClient) GetFCoENetworks(filter string, sort string) (FCoENetworkList,
 	}
 
 	log.Debugf("GetfcoeNetworks %s", data)
-	if err := json.Unmarshal([]byte(data), &fcoeNetworks); err != nil {
+	if err := json.Unmarshal(data, &fcoeNetworks); err != nil {
 		return fcoeNetworks, err
 	}
 	return fcoeNetworks, nil
