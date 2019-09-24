@@ -87,15 +87,15 @@ func TestGetFCoENetworks(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute GetTestDrive() ")
 		}
-		fcoeNets, err := c.GetFCoENetworks("", "")
+		fcoeNets, err := c.GetFCoENetworks("", "", "", "")
 		assert.NoError(t, err, "GetFCoENetworks threw error -->  %s, %+v\n", fcoeNets)
 
-		fcoeNets, err = c.GetFCoENetworks("", "name:asc")
+		fcoeNets, err = c.GetFCoENetworks("", "name:asc", "", "")
 		assert.NoError(t, err, "GetFCoENetworks name:asc error --> %s, %+v\n", err, fcoeNets)
 
 	} else {
 		_, c = getTestDriverU("test_fcoe_network")
-		data, err := c.GetFCoENetworks("", "")
+		data, err := c.GetFCoENetworks("", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }

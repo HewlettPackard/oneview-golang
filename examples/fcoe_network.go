@@ -10,8 +10,8 @@ import (
 
 func main() {
 	var (
-		ClientOV    *ov.OVClient
-		testName    = "TestFCoENetworkGOsdk"
+		ClientOV      *ov.OVClient
+		testName      = "TestFCoENetworkGOsdk"
 		new_fcoe_name = "RenamedFCoENetwork"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
@@ -25,12 +25,12 @@ func main() {
 		"*")
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7f369b49-2dfe-41ea-b584-0a5ef6472202")}
 	fcoeNetwork := ov.FCoENetwork{
-		Name:                    testName,
-		Type:                    "fcoe-networkV4",    //The Type value is for API>500.
-		VlanId:									 201,
-		ConnectionTemplateUri:		"",
-		ManagedSanUri:						"",
-		InitialScopeUris:        *initialScopeUris, //added for API>500
+		Name:                  testName,
+		Type:                  "fcoe-networkV4", //The Type value is for API>500.
+		VlanId:                201,
+		ConnectionTemplateUri: "",
+		ManagedSanUri:         "",
+		InitialScopeUris:      *initialScopeUris, //added for API>500
 	}
 	fmt.Println(fcoeNetwork)
 	err := ovc.CreateFCoENetwork(fcoeNetwork)

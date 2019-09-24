@@ -9,20 +9,20 @@ import (
 )
 
 type FCoENetwork struct {
-	Type                  string        `json:"type,omitempty"`
-	VlanId                int           `json:"vlanId,omitempty"`
-	ConnectionTemplateUri utils.Nstring `json:"connectionTemplateUri,omitempty"`
-	ManagedSanUri         utils.Nstring `json:"managedSanUri,omitempty"`
-	FabricUri             utils.Nstring `json:"fabricUri,omitempty"`
-	Description           utils.Nstring `json:"description,omitempty"`
-	Name                  string        `json:"name,omitempty"`
-	State                 string        `json:"state,omitempty"`
-	Status                string        `json:"status,omitempty"`
-	ETAG                  string        `json:"eTag,omitempty"`
-	Modified              string        `json:"modified,omitempty"`
-	Created               string        `json:"created,omitempty"`
-	Category              string        `json:"category,omitempty"`
-	URI                   utils.Nstring `json:"uri,omitempty"`
+	Type                  string          `json:"type,omitempty"`
+	VlanId                int             `json:"vlanId,omitempty"`
+	ConnectionTemplateUri utils.Nstring   `json:"connectionTemplateUri,omitempty"`
+	ManagedSanUri         utils.Nstring   `json:"managedSanUri,omitempty"`
+	FabricUri             utils.Nstring   `json:"fabricUri,omitempty"`
+	Description           utils.Nstring   `json:"description,omitempty"`
+	Name                  string          `json:"name,omitempty"`
+	State                 string          `json:"state,omitempty"`
+	Status                string          `json:"status,omitempty"`
+	ETAG                  string          `json:"eTag,omitempty"`
+	Modified              string          `json:"modified,omitempty"`
+	Created               string          `json:"created,omitempty"`
+	Category              string          `json:"category,omitempty"`
+	URI                   utils.Nstring   `json:"uri,omitempty"`
 	ScopesUri             utils.Nstring   `json:"scopesUri,omitempty"`
 	InitialScopeUris      []utils.Nstring `json:"initialScopeUris,omitempty"` // "initialScopeUris":[]
 }
@@ -52,7 +52,7 @@ func (c *OVClient) GetFCoENetworkByName(name string) (FCoENetwork, error) {
 func (c *OVClient) GetFCoENetworks(filter string, sort string, start string, count string) (FCoENetworkList, error) {
 	var (
 		uri          = "/rest/fcoe-networks"
-		q          = make(map[string]interface{})
+		q            = make(map[string]interface{})
 		fcoeNetworks FCoENetworkList
 	)
 	if len(filter) > 0 {
