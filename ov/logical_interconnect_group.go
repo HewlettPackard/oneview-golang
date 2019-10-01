@@ -450,8 +450,7 @@ func (c *OVClient) GetLogicalInterconnectGroups(count int, filter string, scopeU
 		c.SetQueryString(q)
 	}
 	data, err := c.RestAPICall(rest.GET, uri, nil)
-	if err != nil {
-		fmt.Println(err)
+	if err != nil {		
 		return logicalInterconnectGroups, err
 	}
 

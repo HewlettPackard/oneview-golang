@@ -126,11 +126,11 @@ func main() {
 
 	fmt.Println("... Getting setting for the specified Logical Interconnect Group ....")
 	lig_s, _ := ovc.GetLogicalInterconnectGroupSettings(uri.String())
-	fmt.Println(lig_s.EthernetSettings)
+	fmt.Println(lig_s)
 
 	fmt.Println("...Listing Logical Interconnect Group Default Settings .. ")
 	lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
-	fmt.Println(lig_ds.EthernetSettings)
+	fmt.Println(lig_ds)
 
 	fmt.Println("... Updating LogicalInterconnectGroup ...")
 	fmt.Println("")
