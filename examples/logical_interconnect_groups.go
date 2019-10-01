@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func newTrue() *bool {
@@ -18,17 +19,18 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV     *ov.OVClient
-		lig_name     = "DemoLogicalInterConnectGroup"
-		lig_type     = "logical-interconnect-groupV5"
+		lig_name     = "LIG_Demo"
+		lig_type     = "logical-interconnect-groupV6"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		apiversion,
 		"*")
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
@@ -66,22 +68,24 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
-		URI:                         "/ethernetSettings",
-		Name:                        "defaultEthernetSwitchSettings",
-		ID:                          "e2f5a9ac-8b0e-435c-8a3d-db00407fc7c7",
-		InterconnectType:            "Ethernet",
-		EnableIgmpSnooping:          newFalse(),
-		IgmpIdleTimeoutInterval:     260,
-		EnableFastMacCacheFailover:  newTrue(),
-		MacRefreshInterval:          5,
-		EnableNetworkLoopProtection: newTrue(),
-		EnablePauseFloodProtection:  newTrue(),
-		EnableRichTLV:               newFalse()}
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV5",
+		URI:                                "/ethernetSettings",
+		Name:                               "defaultEthernetSwitchSettings",
+		ID:                                 "45a5a3a5-6af3-449d-a6a9-e0d571c2971b",
+		InterconnectType:                   "Ethernet",
+		EnableIgmpSnooping:                 newFalse(),
+		EnableInterconnectUtilizationAlert: newFalse(),
+		IgmpIdleTimeoutInterval:            260,
+		EnableFastMacCacheFailover:         newTrue(),
+		MacRefreshInterval:                 5,
+		EnableNetworkLoopProtection:        newTrue(),
+		EnablePauseFloodProtection:         newTrue(),
+		EnableRichTLV:                      newFalse()}
 	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration",
 		EnableTelemetry: newTrue(),
 		SampleCount:     12,
-		SampleInterval:  300}
+		SampleInterval:  300,
+	}
 	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration",
 		Enabled:   newFalse(),
 		Category:  "snmp-configuration",
@@ -122,11 +126,11 @@ func main() {
 
 	fmt.Println("... Getting setting for the specified Logical Interconnect Group ....")
 	lig_s, _ := ovc.GetLogicalInterconnectGroupSettings(uri.String())
-	fmt.Println(lig_s)
+	fmt.Println(lig_s.EthernetSettings)
 
 	fmt.Println("...Listing Logical Interconnect Group Default Settings .. ")
 	lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
-	fmt.Println(lig_ds)
+	fmt.Println(lig_ds.EthernetSettings)
 
 	fmt.Println("... Updating LogicalInterconnectGroup ...")
 	fmt.Println("")
