@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
-	"strconv"
 )
 
 func newTrue() *bool {
@@ -23,14 +22,13 @@ func main() {
 		lig_type     = "logical-interconnect-groupV6"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		apiversion,
+		1000,
 		"*")
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
