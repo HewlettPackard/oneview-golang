@@ -36,7 +36,7 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 			return
 		}
 
-		testBlades, _ = c.GetServerHardwareList([]string{fmt.Sprintf("serialNumber matches '%s'", testBladeSerial)}, "name:asc")
+		testBlades, _ = c.GetServerHardwareList([]string{fmt.Sprintf("serialNumber matches '%s'", testBladeSerial)}, "name:asc", "", "", "")
 		assert.True(t, (len(testBlades.Members) > 0), "Did not get any blades from server hardware list")
 
 		testTemplate, _ = c.GetProfileTemplateByName(testTemplateName)
