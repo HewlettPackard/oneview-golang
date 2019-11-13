@@ -96,12 +96,12 @@ func main() {
 
 	fmt.Println("Server Profile refresh using PATCH request")
 	options := new([]ov.Options)
-        *options = append(*options, ov.Options{"replace", "/refreshState", "RefreshPending"})
+	*options = append(*options, ov.Options{"replace", "/refreshState", "RefreshPending"})
 
-        err = ovc.PatchServerProfile(sp,*options)//patchRequest)
-        if err != nil {
-                fmt.Println("Refresh failed",err)
-        }
+	err = ovc.PatchServerProfile(sp, *options) //patchRequest)
+	if err != nil {
+		fmt.Println("Refresh failed", err)
+	}
 
 	sp_update_clone := ov.ServerProfile{
 		Name:                  new_sp_name,
