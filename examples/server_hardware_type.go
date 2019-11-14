@@ -10,8 +10,8 @@ import (
 func main() {
 	var (
 		clientOV                  *ov.OVClient
-		server_hardware_type_name = "SY 480 Gen9 1"
-		uri                       = "/rest/server-hardware-types/D3DCBFC4-E421-4B47-801D-B46E28D99482"
+		server_hardware_type_name = "SY 480 Gen9 2"
+		uri                       = "/rest/server-hardware-types/1A7C413B-6677-49A6-B435-09A71490EBB4"
 		sort                      = "name:desc"
 	)
 	ovc := clientOV.NewOVClient(
