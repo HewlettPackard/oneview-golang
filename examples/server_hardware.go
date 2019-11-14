@@ -16,11 +16,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1000,
 		"*")
 
 	fmt.Println("Get server hardware list by name")
-	serverName, err := ovc.GetServerHardwareByName("EN1, bay 1")
+	serverName, err := ovc.GetServerHardwareByName("0000A66101, bay 3")
 	if err != nil {
 		fmt.Println("Failed to fetch server hardware name: ", err)
 	} else {
@@ -57,14 +57,13 @@ func main() {
 	fmt.Println("Get server-hardware list statistics specifying parameters")
 	fmt.Println("******************")
 
-	filters := []string{"name matches 'EN1, bay 1'"}
-	ServerList, err := ovc.GetServerHardwareList(filters, "name:ascending")
+	filters := []string{"name matches 'SYN03_Frame1, bay 3'"}
+	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
 	if err == nil {
 		fmt.Println("Total server list :", ServerList.Total)
 	} else {
 		fmt.Println("Failed to fetch server List : ", err)
 	}
-	fmt.Println("Get server-hardware whose profiles are unassigned ")
 
 	fmt.Println("Get firmware inventory for a server-hardware")
 	fmt.Println("******************")
