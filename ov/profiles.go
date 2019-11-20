@@ -363,7 +363,7 @@ func (c *OVClient) SubmitDeleteProfile(p ServerProfile) (t *Task, err error) {
 		return t, err
 	}
 
-	log.Infof("Response delete profile %s", data)
+	log.Debugf("Response delete profile %s", data)
 	if err := json.Unmarshal(data, &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
