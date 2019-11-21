@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		600,
+		1000,
 		"*")
 
 	enclosure_create_map := ov.EnclosureCreateMap{
