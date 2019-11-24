@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Network Set
 - Scope
 - Server hardware type
+- Server Profile
 - Storage pool
 - Storage system
 - Storage volume
