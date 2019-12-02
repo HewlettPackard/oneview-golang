@@ -227,19 +227,19 @@ type TrapDestination struct {
 }
 
 type TelemetryConfiguration struct {
-	Category           string        `json:"category,omitempty"`           // "category": "telemetry-configuration",
-	Created            string        `json:"created,omitempty"`            // "created": "20150831T154835.250Z",
-	Description        utils.Nstring `json:"description,omitempty"`        // "description": null,
-	ETAG               string        `json:"eTag,omitempty"`               // "eTag": "1441036118675/8",
-	EnableTelemetry    *bool         `json:"enableTelemetry,omitempty"`    // "enableTelemetry": false,
-	Modified           string        `json:"modified,omitempty"`           // "modified": "20150831T154835.250Z",
-	Name               string        `json:"name,omitempty"`               // "name": "telemetry configuration",
-	SampleCount        int           `json:"sampleCount,omitempty"`        // "sampleCount": 12
-	SampleInterval     int           `json:"sampleInterval,omitempty"`     // "sampleInterval": 300,
-	State              string        `json:"state,omitempty"`              // "state": "Normal",
-	Status             string        `json:"status,omitempty"`             // "status": "Critical",
-	Type               string        `json:"type,omitempty"`               // "type": "telemetry-configuration",
-	URI                utils.Nstring `json:"uri,omitempty"`                // "uri": null,
+	Category            string        `json:"category,omitempty"`            // "category": "telemetry-configuration",
+	Created             string        `json:"created,omitempty"`             // "created": "20150831T154835.250Z",
+	Description         utils.Nstring `json:"description,omitempty"`         // "description": null,
+	ETAG                string        `json:"eTag,omitempty"`                // "eTag": "1441036118675/8",
+	EnableTelemetry     *bool         `json:"enableTelemetry,omitempty"`     // "enableTelemetry": false,
+	Modified            string        `json:"modified,omitempty"`            // "modified": "20150831T154835.250Z",
+	Name                string        `json:"name,omitempty"`                // "name": "telemetry configuration",
+	SampleCount         int           `json:"sampleCount,omitempty"`         // "sampleCount": 12
+	SampleInterval      int           `json:"sampleInterval,omitempty"`      // "sampleInterval": 300,
+	State               string        `json:"state,omitempty"`               // "state": "Normal",
+	Status              string        `json:"status,omitempty"`              // "status": "Critical",
+	Type                string        `json:"type,omitempty"`                // "type": "telemetry-configuration",
+	URI                 utils.Nstring `json:"uri,omitempty"`                 // "uri": null,
 	VcfcsampleIntervals string        `json:"vcfcsampleIntervals,omitempty"` // "vcfcsampleIntervals": "NOT_APPLICABLE"
 }
 
@@ -310,7 +310,7 @@ type UplinkSets struct {
 	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
 	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
 	PrimaryPort            *LogicalLocation        `json:"primaryPort,omitempty"`         // "primaryPort": {...},
-	PrivateVlanDomains     []PrivateVlanDomain    `json:"privateVlanDomains,omitempty"`  // "privateVlanDomains": {...}
+	PrivateVlanDomains     []PrivateVlanDomain     `json:"privateVlanDomains,omitempty"`  // "privateVlanDomains": {...}
 	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
 }
 
