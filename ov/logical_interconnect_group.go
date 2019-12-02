@@ -240,24 +240,24 @@ type TelemetryConfiguration struct {
 	Status             string        `json:"status,omitempty"`             // "status": "Critical",
 	Type               string        `json:"type,omitempty"`               // "type": "telemetry-configuration",
 	URI                utils.Nstring `json:"uri,omitempty"`                // "uri": null,
-	VcfcsampleInterval string        `json:"vcfcsampleInterval,omitempty"` // "vcfcsampleInterval": "NOT_APPLICABLE"
+	VcfcsampleIntervals string        `json:"vcfcsampleIntervals,omitempty"` // "vcfcsampleIntervals": "NOT_APPLICABLE"
 }
 
 type SflowConfiguration struct {
-	Category        string           `json:"category,omitempty"`        // "category": "telemetry-configuration",
+	Category        string           `json:"category,omitempty"`        // "category": "sflow-configuration",
 	Created         string           `json:"created,omitempty"`         // "created": "20150831T154835.250Z",
 	Description     utils.Nstring    `json:"description,omitempty"`     // "description": null,
 	ETAG            string           `json:"eTag,omitempty"`            // "eTag": "1441036118675/8",
 	Enabled         *bool            `json:"enabled,omitempty"`         // "enabled": false,
 	Modified        string           `json:"modified,omitempty"`        // "modified": "20150831T154835.250Z",
-	Name            string           `json:"name,omitempty"`            // "name": "telemetry configuration",
+	Name            string           `json:"name,omitempty"`            // "name": "sflow configuration",
 	SflowAgents     []SflowAgent     `json:"sflowAgents,omitempty"`     // "sflowAgents": {...},
 	SflowCollectors []SflowCollector `json:"sflowCollectors,omitempty"` // "sflowCollectors": {...},
 	SflowNetwork    *SflowNetwork    `json:"sflowNetwork,omitempty"`    // "sflowNetwork": {...},
 	SflowPorts      []SflowPort      `json:"sflowPorts,omitempty"`      // "sflowPorts": {...},
 	State           string           `json:"state,omitempty"`           // "state": "Normal",
 	Status          string           `json:"status,omitempty"`          // "status": "Critical",
-	Type            string           `json:"type,omitempty"`            // "type": "telemetry-configuration",
+	Type            string           `json:"type,omitempty"`            // "type": "sflow-configuration",
 	URI             utils.Nstring    `json:"uri,omitempty"`             // "uri": null
 }
 
@@ -310,11 +310,11 @@ type UplinkSets struct {
 	NetworkType            string                  `json:"networkType,omitempty"`         // "networkType": "Ethernet",
 	NetworkUris            []utils.Nstring         `json:"networkUris"`                   // "networkUris": ["/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"]
 	PrimaryPort            *LogicalLocation        `json:"primaryPort,omitempty"`         // "primaryPort": {...},
-	PrivateVlanDomains     []PrivateVlanDomains    `json:"privateVlanDomains,omitempty"`  // "privateVlanDomains": {...}
+	PrivateVlanDomains     []PrivateVlanDomain    `json:"privateVlanDomains,omitempty"`  // "privateVlanDomains": {...}
 	Reachability           string                  `json:"reachability,omitempty"`        // "reachability": "Reachable",
 }
 
-type PrivateVlanDomains struct {
+type PrivateVlanDomain struct {
 	IsolatedNetwork *NetworkLite `json:"isolatedNetwork,omitempty"` // "isolatedNetwork": {...},
 	PrimaryNetwork  *NetworkLite `json:"primaryNetwork,omitempty"`  // "primaryNetwork": {...},
 }
