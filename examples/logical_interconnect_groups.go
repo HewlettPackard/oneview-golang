@@ -18,8 +18,8 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV     *ov.OVClient
-		lig_name     = "DemoLogicalInterConnectGroup"
-		lig_type     = "logical-interconnect-groupV5"
+		lig_name     = "LIG_Demo"
+		lig_type     = "logical-interconnect-groupV6"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
 	ovc := clientOV.NewOVClient(
@@ -28,7 +28,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1000,
 		"*")
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
@@ -66,22 +66,24 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
-		URI:                         "/ethernetSettings",
-		Name:                        "defaultEthernetSwitchSettings",
-		ID:                          "e2f5a9ac-8b0e-435c-8a3d-db00407fc7c7",
-		InterconnectType:            "Ethernet",
-		EnableIgmpSnooping:          newFalse(),
-		IgmpIdleTimeoutInterval:     260,
-		EnableFastMacCacheFailover:  newTrue(),
-		MacRefreshInterval:          5,
-		EnableNetworkLoopProtection: newTrue(),
-		EnablePauseFloodProtection:  newTrue(),
-		EnableRichTLV:               newFalse()}
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV5",
+		URI:                                "/ethernetSettings",
+		Name:                               "defaultEthernetSwitchSettings",
+		ID:                                 "45a5a3a5-6af3-449d-a6a9-e0d571c2971b",
+		InterconnectType:                   "Ethernet",
+		EnableIgmpSnooping:                 newFalse(),
+		EnableInterconnectUtilizationAlert: newFalse(),
+		IgmpIdleTimeoutInterval:            260,
+		EnableFastMacCacheFailover:         newTrue(),
+		MacRefreshInterval:                 5,
+		EnableNetworkLoopProtection:        newTrue(),
+		EnablePauseFloodProtection:         newTrue(),
+		EnableRichTLV:                      newFalse()}
 	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration",
 		EnableTelemetry: newTrue(),
 		SampleCount:     12,
-		SampleInterval:  300}
+		SampleInterval:  300,
+	}
 	snmpConfig := ov.SnmpConfiguration{Type: "snmp-configuration",
 		Enabled:   newFalse(),
 		Category:  "snmp-configuration",
