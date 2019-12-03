@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Notes
  - Minor Bug Fixes
  - New Endpoint support for Server Hardware (firmware)
- - Server Profile support with Server Profile Template extended to 800
+ - Server Profile support with Server Profile Template extended to 1000
  - Support for update compliance in Logical Interonnect.
 
 ### Major changes:
