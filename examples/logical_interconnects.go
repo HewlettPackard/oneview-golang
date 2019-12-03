@@ -19,10 +19,10 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV        *ov.OVClient
-		id              = "d4468f89-4442-4324-9c01-624c7382db2d"
+		id              = "7a8b37a6-bde0-4d06-8d20-6e574c50f39f"
 		macAddress      = "94:57:A5:67:2C:BE"
 		internalVlan    = "504"
-		interconnectURI = "/rest/interconnects/aca6687f-1370-46cd-b832-7e3192dbddfd"
+		interconnectURI = "/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"
 		externalVlan    = "504"
 		tcId            = "1"
 	)
@@ -32,7 +32,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1000,
 		"*")
 
 	fmt.Println("....  Logical Interconnects Collection .....")
