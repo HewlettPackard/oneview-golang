@@ -18,8 +18,8 @@ func newFalse() *bool {
 
 func main() {
 	var (
-		clientOV   *ov.OVClient
-		id         = "7a8b37a6-bde0-4d06-8d20-6e574c50f39f"
+		clientOV        *ov.OVClient
+		id              = "7a8b37a6-bde0-4d06-8d20-6e574c50f39f"
 		macAddress      = "94:57:A5:67:2C:BE"
 		internalVlan    = "504"
 		interconnectURI = "/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"
