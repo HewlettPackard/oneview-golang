@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"*")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
@@ -53,7 +53,7 @@ func main() {
 		NativeNetworkUri:      "",
 		NetworkUris:           *networkUris,
 		ConnectionTemplateUri: "",
-		Type:                  "network-setV4",
+		Type:                  "network-setV5",
 		NetworkSetType:        "Large",
 	}
 	err = ovc.CreateNetworkSet(NetworkSet)
