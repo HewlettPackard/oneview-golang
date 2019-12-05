@@ -3,8 +3,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.2.0] (Unreleased)
 ### Notes
-- This version partially supports API1200.
-- No fields are added/removed from the existing resources which are introduced in API1200.
+- This release supports API1200 minimally where we can test OneView API1200 with this SDK. No new fields are added/deleted to support API1200. Complete support will be done in next releases.
 
 ### Oneview Features supported
 - Enclosure
