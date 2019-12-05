@@ -20,14 +20,14 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1200,
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
 	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
 
 	server_profile_create_map := ov.ServerProfile{
-		Type:              "ServerProfileV9",
+		Type:              "ServerProfileV11",
 		Name:              sp_name,
 		ServerHardwareURI: "/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
 		InitialScopeUris:  *initialScopeUris,
