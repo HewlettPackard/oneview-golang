@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Interconnect type
 - Network Set
 - Server Profile
+- Storage Pool
+- Storage System
+- Storage Volume
+- Storage Volume Attachment
+- Storage Volume Template
 - Task
 
 # [v1.1.0] (03-12-2019)
