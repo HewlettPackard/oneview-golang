@@ -11,7 +11,7 @@ func main() {
 	var (
 		clientOV                     *ov.OVClient
 		server_profile_template_name = "Test SPT"
-		enclosure_group_name         = "SYN03_EC"
+		enclosure_group_name         = "EG"
 		server_hardware_type_name    = "SY 480 Gen9 1"
 	)
 	ovc := clientOV.NewOVClient(
@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1200,
 		"*")
 
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
@@ -31,10 +31,10 @@ func main() {
 		ManageConnections: true,
 	}
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423"))
 
 	server_profile_template := ov.ServerProfile{
-		Type:                  "ServerProfileTemplateV5",
+		Type:                  "ServerProfileTemplateV7",
 		Name:                  server_profile_template_name,
 		EnclosureGroupURI:     enc_grp.URI,
 		ServerHardwareTypeURI: server_hardware_type.URI,

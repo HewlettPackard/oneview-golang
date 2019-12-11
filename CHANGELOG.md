@@ -7,11 +7,15 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Oneview Features supported
 - Enclosure
+- Enclosure Group
 - FC Network
 - FCoE Network
-- Interconnect type
+- Interconnect Type
+- Logical Enclosure
+- Logical Interconnect Group
 - Network Set
 - Server Profile
+- Server Profile Template
 - Task
 
 # [v1.1.0] (03-12-2019)

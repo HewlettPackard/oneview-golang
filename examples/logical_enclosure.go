@@ -10,10 +10,10 @@ import (
 func main() {
 	var (
 		ClientOV            *ov.OVClient
-		logical_enclosure   = "log_enc_66"
+		logical_enclosure   = "OneViewSDK Test Logical Enclosure"
 		logical_enclosure_1 = "log_enclosure77"
 		logical_enclosure_2 = "log_enclosure88"
-		scope_name          = "updated-SD2"
+		scope_name          = "scope2"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"*")
 
 	fmt.Println("#................... Logical Enclosure by Name ...............#")
@@ -65,7 +65,7 @@ func main() {
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
 		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/4586b2d6-1a8f-48af-809e-cb05d04a03a8")}
+		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/ebd3f18c-6ce7-45db-8c5c-89b429a4f30a")}
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {

@@ -20,16 +20,16 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1200,
 		"*")
 
 	ibMappings := new([]ov.InterconnectBayMap)
-	interconnectBay1 := ov.InterconnectBayMap{InterconnectBay: 1, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/66af31ec-e665-44a4-9758-aaa2498bc5a1")}
-	interconnectBay2 := ov.InterconnectBayMap{InterconnectBay: 4, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/66af31ec-e665-44a4-9758-aaa2498bc5a1")}
+	interconnectBay1 := ov.InterconnectBayMap{InterconnectBay: 1, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/8d9fd7b1-f59f-44c6-b9da-429d68c79f6b")}
+	interconnectBay2 := ov.InterconnectBayMap{InterconnectBay: 2, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/8d9fd7b1-f59f-44c6-b9da-429d68c79f6b")}
 	*ibMappings = append(*ibMappings, interconnectBay1)
 	*ibMappings = append(*ibMappings, interconnectBay2)
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/8aa405fb-bc62-42e5-9ca6-4a544e7ffdec"))
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423"))
 
 	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "External", EnclosureCount: 1}
 	/*
@@ -57,7 +57,7 @@ func main() {
 	}
 
 	if ovc.APIVersion > 500 {
-		scope_uri := "'/rest/scopes/8aa405fb-bc62-42e5-9ca6-4a544e7ffdec'"
+		scope_uri := "'/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423'"
 		enc_grp_list1, err := ovc.GetEnclosureGroups("", "", "", "", scope_uri)
 		if err != nil {
 			fmt.Println("Error in getting EnclosureGroups by scope URIs:", err)
