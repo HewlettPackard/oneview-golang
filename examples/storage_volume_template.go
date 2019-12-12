@@ -21,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
@@ -41,7 +41,7 @@ func main() {
 		Type:        "string",
 		Title:       "Storage Pool",
 		Description: "StoragePoolURI the volume should be added to",
-		Default:     "/rest/storage-pools/F693B0B6-AD80-40C0-935D-AA99009ED046",
+		Default:     "/rest/storage-pools/52F40929-4712-4614-A082-AB200070738A",
 		Meta: ov.Meta{
 			Locked:       false,
 			CreateOnly:   true,
@@ -158,7 +158,7 @@ func main() {
 		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
-		RootTemplateUri:    "/rest/storage-volume-templates/533c5b9e-26c3-4c2e-af4c-aa99009ed20e",
+		RootTemplateUri:    "/rest/storage-volume-templates/7adda42a-cf30-4d99-aa10-ab2000707395",
 	}
 
 	err := ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
