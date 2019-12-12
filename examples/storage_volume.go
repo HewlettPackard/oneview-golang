@@ -21,14 +21,14 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"*")
 
 	// Create storage volume with name <new_volume>
 	properties := &ov.Properties{
 		Name:                new_volume,
-		Storagepool:         utils.NewNstring("/rest/storage-pools/16CA2E3F-523A-4B46-8F67-AAAF0099D359"),
-		Size:                107374741824,
+		Storagepool:         utils.NewNstring("/rest/storage-pools/4EF694D4-FB48-4209-8790-AB200070738C"),
+		Size:                268435456,
 		ProvisioningType:    "Thin",
 		DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
