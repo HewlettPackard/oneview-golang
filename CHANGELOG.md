@@ -47,6 +47,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Scope
 - Server hardware type
 - Server Profile
+- Server Profile Template
 - Storage pool
 - Storage system
 - Storage volume
