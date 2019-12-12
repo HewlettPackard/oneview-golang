@@ -19,7 +19,7 @@ func main() {
 	var (
 		clientOV     *ov.OVClient
 		lig_name     = "LIG_Demo"
-		lig_type     = "logical-interconnect-groupV6"
+		lig_type     = "logical-interconnect-groupV7"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
 	ovc := clientOV.NewOVClient(
@@ -28,7 +28,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"*")
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
@@ -51,10 +51,10 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/59080afb-85b5-43ae-8c69-27c08cb91f3a",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
@@ -66,10 +66,10 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV5",
-		URI:                                "/ethernetSettings",
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV6",
+		URI:                                "/settings",
 		Name:                               "defaultEthernetSwitchSettings",
-		ID:                                 "45a5a3a5-6af3-449d-a6a9-e0d571c2971b",
+		ID:                                 "6732dd2e-05c3-44da-b359-199c2c784f47",
 		InterconnectType:                   "Ethernet",
 		EnableIgmpSnooping:                 newFalse(),
 		EnableInterconnectUtilizationAlert: newFalse(),
