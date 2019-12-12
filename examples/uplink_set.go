@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1000,
+		1200,
 		"")
 
 	fmt.Println("#................... Get-all Uplink-Sets ...............#")
@@ -52,7 +52,7 @@ func main() {
 		ConnectionMode:                 "Auto",
 		NetworkType:                    "Ethernet",
 		EthernetNetworkType:            "Tagged",
-		Type:                           "uplink-setV5",
+		Type:                           "uplink-setV6",
 		ManualLoginRedistributionState: "NotSupported",
 		PrivateVlanDomains:             privateVlanDomains}
 

@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1200,
 		"*")
 
 	fmt.Println("#-----------------------Server Hardware Type by name-------------------------#")

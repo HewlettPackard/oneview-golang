@@ -9,8 +9,12 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure
 - FC Network
 - FCoE Network
+- Interconnect
 - Interconnect type
+- Logical interconnect
 - Network Set
+- Server hardware
+- Server hardware type
 - Server Profile
 - Storage Pool
 - Storage System
@@ -18,6 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Storage Volume Attachment
 - Storage Volume Template
 - Task
+- Uplink set
 
 # [v1.1.0] (03-12-2019)
 ### Notes
