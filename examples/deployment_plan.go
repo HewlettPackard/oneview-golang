@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/i3s"
@@ -18,7 +19,7 @@ func main() {
 		username             = os.Getenv("ONEVIEW_OV_USER")
 		password             = os.Getenv("ONEVIEW_OV_PASSWORD")
 		domain               = os.Getenv("ONEVIEW_OV_DOMAIN")
-		api_version          = 1000
+		api_version          = 1020
 		deployment_plan_name = "DemoDeploymentPlan"
 		new_name             = "RenamedDeploymentPlan"
 	)
