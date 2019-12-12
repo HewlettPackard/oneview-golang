@@ -1,13 +1,13 @@
 package main
 
 import (
-	"os"
 	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"io/ioutil"
+	"os"
 )
 
 func main() {
