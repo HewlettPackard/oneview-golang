@@ -7,6 +7,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"io/ioutil"
+	"os"
 )
 
 func main() {
@@ -18,7 +19,7 @@ func main() {
 		username             = os.Getenv("ONEVIEW_OV_USER")
 		password             = os.Getenv("ONEVIEW_OV_PASSWORD")
 		domain               = os.Getenv("ONEVIEW_OV_DOMAIN")
-		api_version          = 1000
+		api_version          = 1020
 		deployment_plan_name = "DemoDeploymentPlan"
 		new_name             = "RenamedDeploymentPlan"
 	)
