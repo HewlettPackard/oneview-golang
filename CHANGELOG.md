@@ -1,10 +1,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.2.0] (Unreleased)
+# [v1.2.0] (2019-12-13)
 ### Notes
-- This release supports API1200 minimally where we can test OneView API1200 with this SDK. No new fields are added/deleted to support API1200. Complete support will be done in next releases.
-- API version for Image Streamer resources are 1020 for Oneview version 5.0.
+- This release supports API1200 minimally where we can test OneView API1200 with this SDK. No new fields are added/deleted to support API1200
+. Complete support will be done in next releases.
+- Support for API V1020 for image streamer resource deployment plan.
 
 ### Oneview Features supported
 - Deployment Plan
@@ -30,7 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Task
 - Uplink set
 
-# [v1.1.0] (03-12-2019)
+# [v1.1.0] (2019-12-03)
 ### Notes
  - Minor Bug Fixes
  - New Endpoint support for Server Hardware (firmware)
