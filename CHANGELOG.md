@@ -149,6 +149,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Oneview Features supported
 - Ethernet network    
 - FCoE network
+- Hypervisor Managers
 - Interconnect type   
 - Logical interconnect group
 - Logical switch
