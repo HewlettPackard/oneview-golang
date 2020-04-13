@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure Group
 - FC Network
 - FCoE Network
+- Hypervisor Managers
 - Interconnect
 - Interconnect type
 - Logical Enclosure
@@ -149,7 +150,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Oneview Features supported
 - Ethernet network    
 - FCoE network
-- Hypervisor Managers
 - Interconnect type   
 - Logical interconnect group
 - Logical switch
