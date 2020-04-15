@@ -2,7 +2,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 
-# [v1.3.0](Unreleased) (2020-04-15)
+# [v1.3.0](Unreleased)
 ### Notes
 - Added resource files for Server Certificate supporting API V800, V1000, V1200
 ### Oneview Features supported

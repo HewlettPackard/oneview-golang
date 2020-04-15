@@ -22,8 +22,6 @@ func main() {
 		false,
 		800,
 		"")
-	ovVer, _ := ovc.GetAPIVersion()
-	fmt.Println(ovVer)
 
 	server_cert, err := ovc.GetServerCertificateByIp(server_certificate_ip)
 	if err != nil {
@@ -48,12 +46,11 @@ func main() {
 		fmt.Println(server_certn)
 	}
 
-	server_certi, _ := ovc.GetServerCertificateByName(server_certificate_name)
 	certificateDetails := new([]ov.CertificateDetail)
 	certificateDetail_new := ov.CertificateDetail{Type: "CertificateDetailV2", AliasName: server_certificate_name, Base64Data: new_cert_base64data}
 	*certificateDetails = append(*certificateDetails, certificateDetail_new)
-	server_certi.CertificateDetails = *certificateDetails
-	err = ovc.UpdateServerCertificate(server_certi)
+	server_certn.CertificateDetails = *certificateDetails
+	err = ovc.UpdateServerCertificate(server_certn)
 	if err != nil {
 		fmt.Println(err)
 	} else {
