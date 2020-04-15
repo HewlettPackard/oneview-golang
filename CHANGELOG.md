@@ -1,6 +1,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v1.3.0](unreleased) (2020-04-15)
+### Notes
+- This release supportsi for API V800,V1000 and V1200 for HypervisorManager resource
+
+### Oneview Features supported
+- HypervisorManager 
 # [v1.2.0] (2019-12-13)
 ### Notes
 - This release supports API1200 minimally where we can test OneView API1200 with this SDK. No new fields are added/deleted to support API1200
@@ -149,7 +155,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Oneview Features supported
 - Ethernet network    
 - FCoE network
-- Hypervisor Managers
 - Interconnect type   
 - Logical interconnect group
 - Logical switch

@@ -114,7 +114,7 @@ func (c *OVClient) GetHypervisorManagers(start string, count string, filter stri
 	return hypervisorManagers, nil
 }
 
-func (c *OVClient) AddHypervisorManager(hypM HypervisorManager) error {
+func (c *OVClient) CreateHypervisorManager(hypM HypervisorManager) error {
 	log.Infof("Initializing adding of HypervisorManager %s.", hypM.Name)
 	var (
 		uri = "/rest/hypervisor-managers"
@@ -135,7 +135,7 @@ func (c *OVClient) AddHypervisorManager(hypM HypervisorManager) error {
 		return err
 	}
 
-	log.Debugf("Response New EthernetNetwork %s", data)
+	log.Debugf("Response New HypervisorManager %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)

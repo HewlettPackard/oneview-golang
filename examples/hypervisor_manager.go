@@ -25,7 +25,13 @@ func main() {
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/03beb5a0-bf48-4c43-94a5-74b7b5de1255")}
-	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1", Name: "172.18.13.11", Username: "dcs", Password: "dcs", Port: 443, InitialScopeUris: *initialScopeUris, Type: "HypervisorManagerV2"}
+	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
+		Name:             "172.18.13.11",
+		Username:         "dcs",
+		Password:         "dcs",
+		Port:             443,
+		InitialScopeUris: *initialScopeUris,
+		Type:             "HypervisorManagerV2"}
 
 	err := ovc.AddHypervisorManager(hypervisorManager)
 	if err != nil {
