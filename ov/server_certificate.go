@@ -2,7 +2,6 @@ package ov
 
 import (
 	"encoding/json"
-	//"fmt"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -55,31 +54,22 @@ type CertificateDetail struct {
 	SerialNumber             utils.Nstring     `json:"serialNumber,omitempty"`             //"serialNumber":"93:47:c6:5b:4d:ec:32:6e"
 	Sha1Fingerprint          utils.Nstring     `json:"sha1Fingerprint,omitempty"`          //"sha1Fingerprint":"48:32:fc:d8:6a:3f:af:71:b1:fd:5c:21:"
 	Sha256Fingerprint        utils.Nstring     `json:"sha256Fingerprint,omitempty"`        //"sha256Fingerprint":"0a:f6:b1:ca:94:c6:3a:75:97:74:e"
-	Sha384Fingerprint  utils.Nstring `json:"sha384Fingerprint,omitempty"`  //"sha384Fingerprint":"5e:3a:21:7c:78:79:6e:c6:5a:03:89:e1:"
-	SignatureAlgorithm string        `json:"signatureAlgorithm,omitempty"` //"signatureAlgorithm":"SHA256WITHRSA"
-	State              string        `json:"state,omitempty"`              //"state":"OK"
-	Status             string        `json:"status,omitempty"`             //"status":"OK"
-	Surname            string        `json:"surname,omitempty"`            //"surname":"null"
-	Type               string        `json:"type,omitempty"`               //"type":"CertificateDetailV2"
-	Uri                utils.Nstring `json:"uri,omitempty"`                //"uri":"null"
-	ValidFrom          string        `json:"validFrom,omitempty"`          //"validFrom":"2020-04-03T08:03:38.000Z"
-	ValidUntil         string        `json:"validUntil,omitempty"`         //"validUntil":"2120-03-10T08:03:38.000Z"
-	Version            string        `json:"version,omitempty"`            //"version":"3"
+	Sha384Fingerprint        utils.Nstring     `json:"sha384Fingerprint,omitempty"`        //"sha384Fingerprint":"5e:3a:21:7c:78:79:6e:c6:5a:03:89:e1:"
+	SignatureAlgorithm       string            `json:"signatureAlgorithm,omitempty"`       //"signatureAlgorithm":"SHA256WITHRSA"
+	State                    string            `json:"state,omitempty"`                    //"state":"OK"
+	Status                   string            `json:"status,omitempty"`                   //"status":"OK"
+	Surname                  string            `json:"surname,omitempty"`                  //"surname":"null"
+	Type                     string            `json:"type,omitempty"`                     //"type":"CertificateDetailV2"
+	Uri                      utils.Nstring     `json:"uri,omitempty"`                      //"uri":"null"
+	ValidFrom                string            `json:"validFrom,omitempty"`                //"validFrom":"2020-04-03T08:03:38.000Z"
+	ValidUntil               string            `json:"validUntil,omitempty"`               //"validUntil":"2120-03-10T08:03:38.000Z"
+	Version                  string            `json:"version,omitempty"`                  //"version":"3"
 }
 type CertificateStat struct {
 	ChainStatus string `json:"chainStatus"` //"chainStatus":"VALID"
 	SelfSigned  bool   `json:"selfsigned"`  // "selfsigned":true
 	Trusted     bool   `json:"trusted"`     //"trusted":false
 
-}
-type ServerCertificateList struct {
-	Total       int                 `json:"total,omitempty"`       // "total": 1,
-	Count       int                 `json:"count,omitempty"`       // "count": 1,
-	Start       int                 `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring       `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring       `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring       `json:"uri,omitempty"`         // "uri": "/rest/server-certificates?fil"
-	Members     []ServerCertificate `json:"members,omitempty"`     // "members":[]
 }
 
 func (c *OVClient) GetServerCertificateByIp(ip string) (ServerCertificate, error) {

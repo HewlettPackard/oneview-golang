@@ -10,9 +10,9 @@ import (
 func main() {
 	var (
 		ClientOV                *ov.OVClient
-		server_certificate_ip   = "172.18.13.11"
-		server_certificate_name = "new_test_certificate"
-		new_cert_base64data  utils.Nstring= "---BEGIN CERTIFICATE----END CERTIFICATE------"
+		server_certificate_ip                 = "172.18.13.11"
+		server_certificate_name               = "new_test_certificate"
+		new_cert_base64data     utils.Nstring = "---BEGIN CERTIFICATE----END CERTIFICATE------"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -36,9 +36,9 @@ func main() {
 
 	er := ovc.CreateServerCertificate(server_cert)
 	if er != nil {
-		fmt.Println("............... Create Server Certificate Failed:", er)
+		fmt.Println("............... Adding Server Certificate Failed:", er)
 	} else {
-		fmt.Println(".... Create Server Certificate Success")
+		fmt.Println(".... Adding Server Certificate Success")
 	}
 	fmt.Println("#................... Server Certificate by Name ...............#")
 	server_certn, err := ovc.GetServerCertificateByName(server_certificate_name)

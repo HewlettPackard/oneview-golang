@@ -4,32 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.3.0](Unreleased) (2020-04-15)
 ### Notes
-- Added resources file for Server Certificate supporting API V800, V1000, V1200
+- Added resource files for Server Certificate supporting API V800, V1000, V1200
 ### Oneview Features supported
-- Deployment Plan
-- Enclosure
-- Enclosure Group
-- FC Network
-- FCoE Network
-- Interconnect
-- Interconnect type
-- Logical Enclosure
-- Logical interconnect
-- Logical Interconnect Group
-- Network Set
 - Server Certificate
-- Server hardware
-- Server hardware type
-- Server Profile
-- Server Profile Template
-- Storage Pool
-- Storage System
-- Storage Volume
-- Storage Volume Attachment
-- Storage Volume Template
-- Task
-- Uplink set
-
 
 # [v1.2.0] (2019-12-13)
 ### Notes
