@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure Group
 - FC Network
 - FCoE Network
+- Hypervisor Managers
 - Interconnect
 - Interconnect type
 - Logical Enclosure
