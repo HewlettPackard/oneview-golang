@@ -12,7 +12,6 @@ func main() {
 		ClientOV                        *ov.OVClient
 		hypervisor_manager              = "172.18.13.11"
 		hypervisor_manager_display_name = "HM2"
-		//hypervisor_manager_2 = "eth88"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -22,8 +21,6 @@ func main() {
 		false,
 		800,
 		"")
-	ovVer, _ := ovc.GetAPIVersion()
-	fmt.Println(ovVer)
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/03beb5a0-bf48-4c43-94a5-74b7b5de1255")}
 	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
 		Name:             "172.18.13.11",
@@ -59,9 +56,8 @@ func main() {
 		}
 	}
 
-	hypervisor_mgnr, _ := ovc.GetHypervisorManagerByName(hypervisor_manager)
-	hypervisor_mgnr.DisplayName = hypervisor_manager_display_name
-	err = ovc.UpdateHypervisorManager(hypervisor_mgnr)
+	hypervisor_mgr.DisplayName = hypervisor_manager_display_name
+	err = ovc.UpdateHypervisorManager(hypervisor_mgr)
 	if err != nil {
 		fmt.Println(err)
 	} else {
