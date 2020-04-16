@@ -2,10 +2,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 
-# [v1.3.0](Unreleased)
+# [v1.3.0](unreleased)
 ### Notes
+- This release supports for API V800,V1000 and V1200 for HypervisorManager resource
 - Added resource files for Server Certificate supporting API V800, V1000, V1200
 ### Oneview Features supported
+- HypervisorManager 
 - Server Certificate
 
 # [v1.2.0] (2019-12-13)
