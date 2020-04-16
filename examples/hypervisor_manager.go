@@ -30,11 +30,11 @@ func main() {
 		InitialScopeUris: *initialScopeUris,
 		Type:             "HypervisorManagerV2"}
 
-	err := ovc.AddHypervisorManager(hypervisorManager)
+	err := ovc.CreateHypervisorManager(hypervisorManager)
 	if err != nil {
-		fmt.Println("............... Adding Hypervisor Manager Failed:", err)
+		fmt.Println("............... Create Hypervisor Manager Failed:", err)
 	} else {
-		fmt.Println(".... Adding Hypervisor Man Success")
+		fmt.Println(".... Create Hypervisor Manager Success")
 	}
 
 	fmt.Println("#................... Hypervisor Manager by Name ...............#")
