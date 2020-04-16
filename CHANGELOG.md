@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+
+# [v1.3.0](Unreleased)
+### Notes
+- Added resource files for Server Certificate supporting API V800, V1000, V1200
+### Oneview Features supported
+- Server Certificate
+
 # [v1.2.0] (2019-12-13)
 ### Notes
 - This release supports API1200 minimally where we can test OneView API1200 with this SDK. No new fields are added/deleted to support API1200
