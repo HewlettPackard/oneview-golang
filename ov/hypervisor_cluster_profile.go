@@ -61,7 +61,6 @@ type DeploymentPlan struct {
 	DeploymentPlanUri         utils.Nstring   `json:"deploymentPlanUri,omitempty"`         //"deploymentPlanUri":"null"
 	Name                      string          `json:"name,omitempty"`                      //"name":"null"
 	ServerPassword            string          `json:"serverPassword,omitempty"`            //"serverPassword":"null"
-
 }
 
 type HostConfigPolicy struct {
