@@ -14,7 +14,7 @@ func main() {
 		new_hcp                 = "test_new"
 		server_profile_template = utils.Nstring("/rest/server-profile-templates/278cadfb-2e86-4a05-8932-972553518259")
 		hypervisor_manager      = utils.Nstring("/rest/hypervisor-managers/1ded903a-ac66-41cf-ba57-1b9ded9359b6")
-		)
+	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
