@@ -4,10 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.3.0](unreleased)
 ### Notes
-- This release supports for API V800,V1000 and V1200 for HypervisorManager resource
-- Added resource files for Server Certificate supporting API V800, V1000, V1200
+- This release add supports for Hypervisor Manager, Hypervisor Cluster and Server Certificate for API V800,V1000 and V1200
 ### Oneview Features supported
-- HypervisorManager 
+- Hypervisor Cluster Profile
+- Hypervisor Manager 
 - Server Certificate
 
 # [v1.2.0] (2019-12-13)
