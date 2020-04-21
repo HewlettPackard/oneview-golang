@@ -1,6 +1,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v1.3.1] (unreleased)
+### Notes
+- Added support for loginMsgAck attribute in login session POST request.
 
 # [v1.3.0] (2020-04-17)
 ### Notes
