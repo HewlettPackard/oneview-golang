@@ -3,7 +3,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.3.1] (unreleased)
 ### Notes
-- Added support for login msessage acknowledgement
+- Added support for loginMsgAck attribute in login session POST request.
 
 # [v1.3.0] (2020-04-17)
 ### Notes
