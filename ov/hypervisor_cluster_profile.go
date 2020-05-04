@@ -2,6 +2,7 @@ package ov
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -105,13 +106,13 @@ type VirtualSwitchUplinks struct {
 	Vmnic  string `json:"vmnic,omitempty"`  //"vmnic":"null"
 }
 type HypervisorClusterProfileList struct {
-	Total       int            `json:"total,omitempty"`       // "total": 1,
-	Count       int            `json:"count,omitempty"`       // "count": 1,
-	Start       int            `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring  `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring  `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring  `json:"uri,omitempty"`         // "uri": "/rest/interconnects?start=2&count=2",
-	Members     []Interconnect `json:"members,omitempty"`     // "members":[]
+	Total       int                        `json:"total,omitempty"`       // "total": 1,
+	Count       int                        `json:"count,omitempty"`       // "count": 1,
+	Start       int                        `json:"start,omitempty"`       // "start": 0,
+	PrevPageURI utils.Nstring              `json:"prevPageUri,omitempty"` // "prevPageUri": null,
+	NextPageURI utils.Nstring              `json:"nextPageUri,omitempty"` // "nextPageUri": null,
+	URI         utils.Nstring              `json:"uri,omitempty"`         // "uri": "/rest/interconnects?start=2&count=2",
+	Members     []HypervisorClusterProfile `json:"members,omitempty"`     // "members":[]
 }
 
 type HypervisorClusterProfileCompliancePreview struct {
@@ -157,7 +158,17 @@ func (c *OVClient) GetHypervisorClusterProfileById(id string) (HypervisorCluster
 
 	return hypervisorclusterprofile, err
 }
-
+func (c *OVClient) GetHypervisorClusterProfileByName(name string) (HypervisorClusterProfile, error) {
+	var (
+		hypervisorclusterprofile HypervisorClusterProfile
+	)
+	hypervisorclusterprofiles, err := c.GetHypervisorClusterProfiles("", "", fmt.Sprintf("name matches '%s'", name), "name:asc")
+	if hypervisorclusterprofiles.Total > 0 {
+		return hypervisorclusterprofiles.Members[0], err
+	} else {
+		return hypervisorclusterprofile, err
+	}
+}
 func (c *OVClient) GetHypervisorClusterProfileByUri(uri string) (HypervisorClusterProfile, error) {
 	var (
 		hypervisorClusterProfile HypervisorClusterProfile
@@ -294,7 +305,7 @@ func (c *OVClient) CreateVirtualSwitchLayout(virtualswitchlayout VirtualSwitchLa
 	return nil
 }
 
-func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
+func (c *OVClient) DeleteHypervisorClusterProfile(name string) error {
 	var (
 		hyClustProf HypervisorClusterProfile
 		err         error
@@ -302,7 +313,7 @@ func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
 		uri         string
 	)
 
-	hyClustProf, err = c.GetHypervisorClusterProfileById(id)
+	hyClustProf, err = c.GetHypervisorClusterProfileByName(name)
 	if err != nil {
 		return err
 	}
@@ -336,7 +347,7 @@ func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
 		}
 		return nil
 	} else {
-		log.Infof("HypervisorClusterProfile could not be found to delete, %s, skipping delete ...", id)
+		log.Infof("HypervisorClusterProfile could not be found to delete, %s, skipping delete ...", name)
 	}
 	return nil
 }
