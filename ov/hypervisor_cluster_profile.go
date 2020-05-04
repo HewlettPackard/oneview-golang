@@ -305,7 +305,7 @@ func (c *OVClient) CreateVirtualSwitchLayout(virtualswitchlayout VirtualSwitchLa
 	return nil
 }
 
-func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
+func (c *OVClient) DeleteHypervisorClusterProfile(name string) error {
 	var (
 		hyClustProf HypervisorClusterProfile
 		err         error
@@ -313,7 +313,7 @@ func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
 		uri         string
 	)
 
-	hyClustProf, err = c.GetHypervisorClusterProfileById(id)
+	hyClustProf, err = c.GetHypervisorClusterProfileByName(name)
 	if err != nil {
 		return err
 	}
@@ -347,7 +347,7 @@ func (c *OVClient) DeleteHypervisorClusterProfile(id string) error {
 		}
 		return nil
 	} else {
-		log.Infof("HypervisorClusterProfile could not be found to delete, %s, skipping delete ...", id)
+		log.Infof("HypervisorClusterProfile could not be found to delete, %s, skipping delete ...", name)
 	}
 	return nil
 }
