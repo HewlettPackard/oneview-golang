@@ -21,6 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
 		1200,
+		1600,
 		"*")
 
 	ibMappings := new([]ov.InterconnectBayMap)
