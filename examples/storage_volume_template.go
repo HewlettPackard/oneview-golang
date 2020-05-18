@@ -21,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1200,
+		1600,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
