@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 # [v1.3.1] (unreleased)
 ### Notes
 - Added support for loginMsgAck attribute in login session POST request.
+- This release supports API1600 minimally where we can test OneView API1600 with this SDK
+
+### Oneview Features supported
+- Interconnects
+- Interconnect Type
+- Logical Interconnect
+- Logical Interconnect Type
+- Server Hardware
+- Server Hardware Type
 
 # [v1.3.0] (2020-04-17)
 ### Notes
