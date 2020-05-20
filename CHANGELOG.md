@@ -7,10 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - This release supports API1600 minimally where we can test OneView API1600 with this SDK
 
 ### Oneview Features supported
-- Interconnects
+- Interconnect
 - Interconnect Type
 - Logical Interconnect
-- Logical Interconnect Type
+- Logical Interconnect Group
 - Server Hardware
 - Server Hardware Type
 
