@@ -12,8 +12,8 @@ func main() {
 		clientOV                *ov.OVClient
 		hcp_name                = "test"
 		new_hcp                 = "test_new"
-		server_profile_template = utils.Nstring("/rest/server-profile-templates/278cadfb-2e86-4a05-8932-972553518259")
-		hypervisor_manager      = utils.Nstring("/rest/hypervisor-managers/1ded903a-ac66-41cf-ba57-1b9ded9359b6")
+		server_profile_template = utils.Nstring("/rest/server-profile-templates/72cff973-6296-4a67-ac7c-785c522a9f81")
+		hypervisor_manager      = utils.Nstring("/rest/hypervisor-managers/d6367a98-6f79-4a10-a396-6f6a8e99fe5a")
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,14 +21,18 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1200,
+		1600,
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/bddc4cc7-d259-4655-af6b-961beffd07e5"))
+
+	deploymentPlan := ov.DeploymentPlan{
+		ServerPassword: "dcs"}
 
 	hypervisorHostProfileTemplate := ov.HypervisorHostProfileTemplate{
 		ServerProfileTemplateUri: server_profile_template,
+		DeploymentPlan:           &deploymentPlan,
 		Hostprefix:               "test"}
 
 	hypervisorclustprof := ov.HypervisorClusterProfile{
@@ -100,11 +104,21 @@ func main() {
 		fmt.Println("#----------------HypervisorClusterProfile updated---------------#")
 	}
 
-	err = ovc.DeleteHypervisorClusterProfile(id)
-	if err != nil {
-		fmt.Println("HypervisorClusterProfile Delete Failed: ", err)
+	//Delete function accepts 2 optional arguments - softDelete(boolean) and force(boolean) till API1200
+	//softDelete is mandatory argument for delete function in API 1600
+	if ovc.APIVersion > 1200 {
+		err = ovc.DeleteHypervisorClusterProfileSoftDelete(new_hcp, false)
+		if err != nil {
+			fmt.Println("API1600: HypervisorClusterProfile Delete Failed: ", err)
+		} else {
+			fmt.Println("#---------------API1600: HypervisorClusterProfile Deleted---------------#")
+		}
 	} else {
-		fmt.Println("#---------------HypervisorClusterProfile Deleted---------------#")
+		err = ovc.DeleteHypervisorClusterProfile(new_hcp)
+		if err != nil {
+			fmt.Println("HypervisorClusterProfile Delete Failed: ", err)
+		} else {
+			fmt.Println("#---------------HypervisorClusterProfile Deleted---------------#")
+		}
 	}
-
 }

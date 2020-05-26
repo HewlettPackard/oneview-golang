@@ -6,6 +6,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+	"strconv"
 )
 
 type HypervisorClusterProfile struct {
@@ -328,6 +329,70 @@ func (c *OVClient) DeleteHypervisorClusterProfile(name string) error {
 			t.TaskIsDone = true
 			return err
 		}
+		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		if err != nil {
+			log.Errorf("Error submitting delete hypervisor cluster profile request: %s", err)
+			t.TaskIsDone = true
+			return err
+		}
+
+		log.Debugf("Response delete hypervisor cluster profile %s", data)
+		if err := json.Unmarshal([]byte(data), &t); err != nil {
+			t.TaskIsDone = true
+			log.Errorf("Error with task un-marshal: %s", err)
+			return err
+		}
+		err = t.Wait()
+		if err != nil {
+			return err
+		}
+		return nil
+	} else {
+		log.Infof("HypervisorClusterProfile could not be found to delete, %s, skipping delete ...", name)
+	}
+	return nil
+}
+
+func (c *OVClient) DeleteHypervisorClusterProfileSoftDelete(name string, soft_delete bool) error {
+	err_softdelete := c.DeleteHypervisorClusterProfileSoftDeleteForce(name, soft_delete, false)
+	return err_softdelete
+}
+
+func (c *OVClient) DeleteHypervisorClusterProfileSoftDeleteForce(name string, soft_delete bool, force bool) error {
+	var (
+		hyClustProf HypervisorClusterProfile
+		err         error
+		t           *Task
+		uri         string
+		q           map[string]interface{}
+	)
+
+	q = make(map[string]interface{})
+	q["softDelete"] = strconv.FormatBool(soft_delete)
+	q["force"] = strconv.FormatBool(force)
+
+	hyClustProf, err = c.GetHypervisorClusterProfileByName(name)
+	if err != nil {
+		return err
+	}
+	if hyClustProf.Name != "" {
+		t = t.NewProfileTask(c)
+		t.ResetTask()
+		log.Debugf("REST : %s \n %+v\n", hyClustProf.URI, hyClustProf)
+		log.Debugf("task -> %+v", t)
+		uri = hyClustProf.URI.String()
+		if uri == "" {
+			log.Warn("Unable to post delete, no uri found.")
+			t.TaskIsDone = true
+			return err
+		}
+
+		// refresh login
+		c.RefreshLogin()
+		c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+		// Setup query
+		c.SetQueryString(q)
+
 		data, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete hypervisor cluster profile request: %s", err)
