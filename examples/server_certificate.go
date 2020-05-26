@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1600,
 		"")
 
 	server_cert, err := ovc.GetServerCertificateByIp(server_certificate_ip)
@@ -29,7 +29,9 @@ func main() {
 	} else {
 		fmt.Println(server_cert)
 	}
+
 	server_cert.CertificateDetails[0].AliasName = server_certificate_name
+	server_cert.Type = ""     // The type field in certificate is not required in POST call, so making it empty
 	fmt.Println(server_cert.CertificateDetails[0].AliasName)
 
 	er := ovc.CreateServerCertificate(server_cert)

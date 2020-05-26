@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure Group
 - Hypervisor Manager
 - Logical Enclosure
+- Server Certificate
 - Server Profile
 - Server Profile Template
 - Storage Pool
