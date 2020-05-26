@@ -13,15 +13,14 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - FC Network
 - FCOE Network
 - Hypervisor Manager
-- Logical Enclosure
-- Network Set
-- Scopes
 - Interconnect
 - Interconnect Type
 - Logical Enclosure
-- Network Set
 - Logical Interconnect
 - Logical Interconnect Group
+- Network Set
+- Scopes
+- Server Certificate
 - Server Hardware
 - Server Hardware Type
 - Server Profile
