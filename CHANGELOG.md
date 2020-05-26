@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - FC Network
 - FCOE Network
 - Hypervisor Manager
+- Logical Enclosure
+- Network Set
+- Scopes
 - Interconnect
 - Interconnect Type
 - Logical Enclosure
@@ -30,6 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Storage Volume Template
 - Task
 - Uplink Set
+
 
 # [v1.3.0] (2020-04-17)
 ### Notes
