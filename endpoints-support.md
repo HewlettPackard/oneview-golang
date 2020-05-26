@@ -231,11 +231,11 @@
 
 ## HPE Synergy Image Streamer
 
-| Endpoints                                                                       | Verb     | V300 | V500 | V600 | V800 | V1000 | V1020 |
-| --------------------------------------------------------------------------------------- | -------- | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: |
+| Endpoints                                                                       | Verb     | V300 | V500 | V600 | V800 | V1000 | V1020 | V1600 |
+| --------------------------------------------------------------------------------------- | -------- | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: | :------------------: |
 |     **Deployment Plans**                                                                                         |
-|<sub> /rest/deployment-plans </sub>                                       | POST             | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|<sub> /rest/deployment-plans </sub>                                       | GET              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|<sub> /rest/deployment-plans/{id} </sub>                                  | GET              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|<sub> /rest/deployment-plans/{id} </sub>                                  | PUT              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|<sub> /rest/deployment-plans/{id} </sub>                                  | DELETE           | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|<sub> /rest/deployment-plans </sub>                                       | POST             | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|<sub> /rest/deployment-plans </sub>                                       | GET              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|<sub> /rest/deployment-plans/{id} </sub>                                  | GET              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|<sub> /rest/deployment-plans/{id} </sub>                                  | PUT              | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|<sub> /rest/deployment-plans/{id} </sub>                                  | DELETE           | :heavy_multiplication_x: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: |
