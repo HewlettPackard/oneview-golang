@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		800,
+		1600,
 		"")
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/03beb5a0-bf48-4c43-94a5-74b7b5de1255")}
 	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
@@ -76,7 +76,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("#...................... Deleteed Hypervisor Manager Successfully .....#")
+		fmt.Println("#...................... Deleted Hypervisor Manager Successfully .....#")
 	}
 
 }
