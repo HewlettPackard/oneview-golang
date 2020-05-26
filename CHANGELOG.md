@@ -9,10 +9,14 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Deployment Plan
 - Enclosure
 - Enclosure Group
+- Ethernet Network
+- FC Network
+- FCOE Network
 - Hypervisor Manager
 - Interconnect
 - Interconnect Type
 - Logical Enclosure
+- Network Set
 - Logical Interconnect
 - Logical Interconnect Group
 - Server Hardware
@@ -25,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Storage Volume Attachment
 - Storage Volume Template
 - Task
+- Uplink Set
 
 # [v1.3.0] (2020-04-17)
 ### Notes
