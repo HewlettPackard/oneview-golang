@@ -31,7 +31,7 @@ func main() {
 	}
 	server_cert.CertificateDetails[0].AliasName = server_certificate_name
 	fmt.Println(server_cert.CertificateDetails[0].AliasName)
-        server_cert.Type = ""  //Making Type field as empty as it is not required
+	server_cert.Type = "" //Making Type field as empty as it is not required
 
 	er := ovc.CreateServerCertificate(server_cert)
 	if er != nil {
