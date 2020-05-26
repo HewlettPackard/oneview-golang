@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1200,
+		1600,
 		"*")
 
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
@@ -34,7 +34,7 @@ func main() {
 	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423"))
 
 	server_profile_template := ov.ServerProfile{
-		Type:                  "ServerProfileTemplateV7",
+		Type:                  "ServerProfileTemplateV8",
 		Name:                  server_profile_template_name,
 		EnclosureGroupURI:     enc_grp.URI,
 		ServerHardwareTypeURI: server_hardware_type.URI,
