@@ -2,31 +2,29 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/docker/machine/libmachine/log"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateApplianceTimeandLocal(t *testing.T) {
 	var (
-		d        *OVTest
-		c        *ov.OVClient
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
-		d, c = getTestDriverA("test_appliancetime_and_local")
+		_, c = getTestDriverA("test_appliancetime_and_local")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		applianceTimeandLocal := ov.ApplianceTimeandLocal{
-			locale:     "en_US.UTF-8",
-			dateTime:   "2014-09-11T12:10:33",
-			timezone:   "UTC"
+			Locale:   "en_US.UTF-8",
+			DateTime: "2014-09-11T12:10:33",
+			Timezone: "UTC",
 		}
 		err := c.CreateApplianceTimeandLocal(applianceTimeandLocal)
 		assert.NoError(t, err, "CreateApplianceTimeandLocal error -> %s", err)
- 		err = c.CreateApplianceTimeandLocal(applianceTimeandLocal)
+		err = c.CreateApplianceTimeandLocal(applianceTimeandLocal)
 		assert.Error(t, err, "CreateApplianceTimeandLocal should error becaue the network already exists, err -> %s", err)
 	}
 }
