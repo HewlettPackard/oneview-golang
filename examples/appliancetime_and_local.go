@@ -25,7 +25,7 @@ func main() {
 	ntpServers := new([]utils.Nstring)
 	*ntpServers = append(*ntpServers, utils.NewNstring("16.110.135.123"))
 	*ntpServers = append(*ntpServers, utils.NewNstring("16.85.40.52"))
-	applianceTimeandLocal := ov.FCNetwork{
+	applianceTimeandLocal := ov.ApplianceTimeandLocal
 		locale:     "en_US.UTF-8",
 		dateTime:   "2014-09-11T12:10:33",
 		timezone:   "UTC",
