@@ -2,7 +2,7 @@ package ov
 
 import (
 	"encoding/json"
-	"fmt"
+//	"fmt"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -17,15 +17,15 @@ type ApplianceTimeandLocal struct {
 	Created                 string          `json:"created,omitempty"`
 	Locale                  string          `json:"locale,omitempty"`
 	LocaleDisplayName       utils.Nstring   `json:"localeDisplayName,omitempty"`
-	DateTime                string          `json:"dateTime,omitempty"`
+	DateTime                utils.Nstring   `json:"dateTime,omitempty"`
 	NtpServers              []utils.Nstring `json:"ntpServers,omitempty"`
-	Timezone                utils.Nstring   `json:"Timezone,omitempty"`
+	Timezone                utils.Nstring   `json:"timezone,omitempty"`
 	PollingInterval         string          `json:"pollingInterval,omitempty"`
 }
 
 
-func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal) error {
-	log.Infof("Initializing creation of fc network for %s.", timelocal.Name)
+func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal) error {
+	log.Infof("Initializing creation of time and local for %s.", timelocal)
 	var (
 		uri = "/rest/appliance/configuration/time-locale"
 		t   = (&Task{}).NewProfileTask(c)
@@ -40,7 +40,7 @@ func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal)
 	data, err := c.RestAPICall(rest.POST, uri, timelocal)
 	if err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error submitting new fc network request: %s", err)
+		log.Errorf("Error submitting new time and local request: %s", err)
 		return err
 	}
 
@@ -59,11 +59,11 @@ func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal)
 	return nil
 }
 
-func (c *OVClient) Gettimelocalworks(filter string, sort string, start string, count string) (timelocalworkList, error) {
+func (c *OVClient) GetApplianceTimeandLocals(filter string, sort string, start string, count string) (ApplianceTimeandLocal, error) {
 	var (
-		uri        = "/rest/fc-networks"
+		uri        = "/rest/appliance/configuration/time-locale"
 		q          = make(map[string]interface{})
-		timelocalworks timelocalworkList
+		timelocallist ApplianceTimeandLocal
 	)
 
 	if len(filter) > 0 {
@@ -91,12 +91,12 @@ func (c *OVClient) Gettimelocalworks(filter string, sort string, start string, c
 	}
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
-		return timelocalworks, err
+		return timelocallist, err
 	}
 
-	log.Debugf("Gettimelocalworks %s", data)
-	if err := json.Unmarshal(data, &timelocalworks); err != nil {
-		return timelocalworks, err
+	log.Debugf("Gettimelocallist %s", data)
+	if err := json.Unmarshal(data, &timelocallist); err != nil {
+		return timelocallist, err
 	}
-	return timelocalworks, nil
+	return timelocallist, nil
 }
