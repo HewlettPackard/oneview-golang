@@ -2,27 +2,26 @@ package ov
 
 import (
 	"encoding/json"
-//	"fmt"
+	//	"fmt"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 )
 
 type ApplianceTimeandLocal struct {
-	Type                    string          `json:"type,omitempty"`
-	Category                string          `json:"category,omitempty"`
-	URI                     utils.Nstring   `json:"uri,omitempty"`
-	ETAG                    string          `json:"eTag,omitempty"`
-	Modified                string          `json:"modified,omitempty"`
-	Created                 string          `json:"created,omitempty"`
-	Locale                  string          `json:"locale,omitempty"`
-	LocaleDisplayName       utils.Nstring   `json:"localeDisplayName,omitempty"`
-	DateTime                utils.Nstring   `json:"dateTime,omitempty"`
-	NtpServers              []utils.Nstring `json:"ntpServers,omitempty"`
-	Timezone                utils.Nstring   `json:"timezone,omitempty"`
-	PollingInterval         string          `json:"pollingInterval,omitempty"`
+	Type              string          `json:"type,omitempty"`
+	Category          string          `json:"category,omitempty"`
+	URI               utils.Nstring   `json:"uri,omitempty"`
+	ETAG              string          `json:"eTag,omitempty"`
+	Modified          string          `json:"modified,omitempty"`
+	Created           string          `json:"created,omitempty"`
+	Locale            string          `json:"locale,omitempty"`
+	LocaleDisplayName utils.Nstring   `json:"localeDisplayName,omitempty"`
+	DateTime          utils.Nstring   `json:"dateTime,omitempty"`
+	NtpServers        []utils.Nstring `json:"ntpServers,omitempty"`
+	Timezone          utils.Nstring   `json:"timezone,omitempty"`
+	PollingInterval   string          `json:"pollingInterval,omitempty"`
 }
-
 
 func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal) error {
 	log.Infof("Initializing creation of time and local for %s.", timelocal)
@@ -61,8 +60,8 @@ func (c *OVClient) CreateApplianceTimeandLocal(timelocal ApplianceTimeandLocal) 
 
 func (c *OVClient) GetApplianceTimeandLocals(filter string, sort string, start string, count string) (ApplianceTimeandLocal, error) {
 	var (
-		uri        = "/rest/appliance/configuration/time-locale"
-		q          = make(map[string]interface{})
+		uri           = "/rest/appliance/configuration/time-locale"
+		q             = make(map[string]interface{})
 		timelocallist ApplianceTimeandLocal
 	)
 
