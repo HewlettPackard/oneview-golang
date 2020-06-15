@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v1.5.0] (unreleased)
+### Notes
+This release supports some more resources for Oneview appliance till API1600
+
+### Oneview Features supported
+- Appliance Time and Locale Configuration
+
 # [v1.4.0] (2020-05-27)
 ### Notes
 - Added support for loginMsgAck attribute in login session POST request.
