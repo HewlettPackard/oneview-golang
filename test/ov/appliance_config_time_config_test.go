@@ -19,14 +19,14 @@ func TestGetTimeConfigs(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		timeConfigs, err := c.GetTimeConfigs("", "", "", "")
+		timeConfigs, err := c.GetTimeConfigs()
 		assert.NoError(t, err, "GetTimeConfigs threw an error -> %s. %+v\n", err, timeConfigs)
 
-		timeConfigs, err = c.GetTimeConfigs("", "name:asc", "", "")
+		timeConfigs, err = c.GetTimeConfigs()
 		assert.NoError(t, err, "GetTimeConfigs name:asc error -> %s. %+v\n", err, timeConfigs)
 
 	} else {
-		_, c = getTestDriverU("test_fc_network")
+		_, c = getTestDriverU("test_appliance_time_config")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
@@ -35,7 +35,7 @@ func TestGetTimeConfigs(t *testing.T) {
 
 	}
 
-	_, c = getTestDriverU("test_fc_network")
-	data, err := c.GetTimeConfigs("", "", "", "")
+	_, c = getTestDriverU("test_appliance_time_config")
+	data, err := c.GetTimeConfigs()
 	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 }
