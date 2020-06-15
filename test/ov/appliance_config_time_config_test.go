@@ -30,7 +30,7 @@ func TestGetTimeConfigs(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.GetTimeConfigs("", "", "", "")
+		data, err := c.GetTimeConfigs()
 		assert.Error(t, err, fmt.Sprintf("All OK, no error, caught as expected: %s,%+v\n", err, data))
 
 	}
