@@ -9,7 +9,7 @@ import (
 
 func main() {
 	var (
-		ClientOV    *ov.OVClient
+		ClientOV *ov.OVClient
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(

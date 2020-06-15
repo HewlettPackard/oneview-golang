@@ -9,8 +9,8 @@ import (
 
 type TimeConfig struct {
 	DisplayName utils.Nstring `json:"displayName,omitempty"`
-	Locale      string `json:"locale,omitempty"`
-	LocaleName  string `json:"localName,omitempty"`
+	Locale      string        `json:"locale,omitempty"`
+	LocaleName  string        `json:"localName,omitempty"`
 }
 
 type TimeConfigList struct {
@@ -33,7 +33,6 @@ func (c *OVClient) GetTimeConfigs() (TimeConfigList, error) {
 		uri         = "/rest/appliance/configuration/timeconfig/locales"
 		timeConfigs TimeConfigList
 	)
-
 
 	// refresh login
 	c.RefreshLogin()

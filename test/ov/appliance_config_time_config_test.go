@@ -10,8 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
-
 func TestGetTimeConfigs(t *testing.T) {
 	var (
 		c *ov.OVClient
@@ -41,4 +39,3 @@ func TestGetTimeConfigs(t *testing.T) {
 	data, err := c.GetTimeConfigs("", "", "", "")
 	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 }
-
