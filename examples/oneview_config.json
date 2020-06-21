@@ -1,0 +1,8 @@
+{
+      "username":"Administrator",
+      "password":"admin123",
+      "endpoint":"https://10.50.9.41/",
+      "domain": "LOCAL",
+      "apiversion":1600
+
+}
