@@ -13,7 +13,7 @@ setting for make to avoid using docker. Otherwise make sure to have these tools:
 - docker client and daemon
 - gnu make tools
 
-###Docker Setup
+### Docker Container Setup
 
 We also provide a lightweight and easy way to test and run `oneview-golang`. The `hewlettpackardenterprise/hpe-oneview-sdk-for-golang:<tag>` docker image contains an installation of oneview-golang installation you can use by just pulling down the Docker Image:
 
