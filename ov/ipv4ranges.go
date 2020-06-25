@@ -2,14 +2,13 @@ package ov
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 )
 
-type ipv4Range struct {
+type ipv4Range struct{
 	AllocatedFragmentUri    utils.Nstring          `json:"allocatedFragmentUri,omitempty"`
 	AllocatedIdCount        int                    `json:"allocatedIdCount,omitempty"`
 	AllocatorUri            utils.Nstring          `json:"allocatorUri,omitempty"`
@@ -59,17 +58,17 @@ type fragmentsList struct {
 	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
 	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
-	Members     []ipv4Range   `json:"members,omitempty"`     // "members":[]
+	Members     []ipv4        `json:"members,omitempty"`     // "members":[]
 }
 
-type updateAllocatorList struct {    
+type UpdateAllocatorList struct {    
 	Count       int              `json:"count,omitempty"`       // "count": 1,
 	ETAG        string           `json:"eTag,omitempty"`
 	Valid       bool             `json:"valid,omitempty"`
 	IdList      []utils.Nstring  `json:"idList,omitempty"`
 }
 
-type updateCollectorList struct {    
+type UpdateCollectorList struct {    
 	ETAG        string           `json:"eTag,omitempty"`
 	IdList      []utils.Nstring  `json:"idList,omitempty"`
 }
@@ -182,12 +181,15 @@ func (c *OVClient) GetFreeFragments(filter string, sort string, start string, co
 
 func (c *OVClient) GetIpV4RangeSchema() (error) {
 	var (
-		uri        = "/rest/id-pools/ipv4/ranges/schema"
+		uri   = "/rest/id-pools/ipv4/ranges/schema"
+		t     *Task
 	)
 
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+        t = t.NewProfileTask(c)
+	t.ResetTask()
 
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
@@ -251,7 +253,7 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 		ipv4 ipv4Range
 		err   error
 		t     *Task
-		uri   "/rest/id-pools/ipv4/ranges/"
+		uri   string
 	)
 
 	ipv4, err = c.GetIPv4RangebyId(id)
@@ -288,7 +290,7 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 		}
 		return nil
 	} else {
-		log.Infof("ipv4 Range could not be found to delete, %s, skipping delete ...", name)
+		log.Infof("ipv4 Range could not be found to delete, %s, skipping delete ...", ipv4.Name)
 	}
 	return nil
 }
@@ -325,66 +327,68 @@ func (c *OVClient) UpdateIpv4Range(ipv4 ipv4Range) error {
 	return nil
 }
 
-func (c *OVClient) UpdateAllocator(id, ipv4[]]) (updateAllocatorList, error) {
-	log.Infof("Initializing update of allocator in ipv4Range for %s.", id)
-	var (
-		uri = "/rest/id-pools/ipv4/ranges/" + id + "/allocator"
-		t   *Task
-	)
+//func (c *OVClient) UpdateAllocator(id int, []ipv4) (UpdateAllocatorList, error) {
+//	log.Infof("Initializing update of allocator in ipv4Range for %s.", id)
+//	var (
+//		uri = "/rest/id-pools/ipv4/ranges/" + id + "/allocator"
+//		t   *Task
+//		updateAllocatorList UpdateAllocatorList
+//	)
 	// refresh login
-	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+//	c.RefreshLogin()
+//	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+//
+//	t = t.NewProfileTask(c)
+//	t.ResetTask()
+//
+//	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
+//	log.Debugf("task -> %+v", t)
+//	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
+//	if err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error submitting update allocator for ipv4 Range request: %s", err)
+//		return updateAllocatorList, err
+//	}
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
+//	log.Debugf("Response update ipv4 Range %s", data)
+//	if err := json.Unmarshal([]byte(data), &t); err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error with task un-marshal: %s", err)
+//		return err
+//	}
 
-	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
-	if err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error submitting update allocator for ipv4 Range request: %s", err)
-		return err
-	}
+//	return updateAllocatorList
+//}
 
-	log.Debugf("Response update ipv4 Range %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
+//func (c *OVClient) UpdateCollector(id, []ipv4) (UpdateCollectorList, error) {
+//	log.Infof("Initializing update of collector in ipv4Range for %s.", id)
+//	var (
+//		uri = "/rest/id-pools/ipv4/ranges/" + id + "/collector"
+//		t   *Task
+//		updatecollectorList UpdateCollectorList
+//	)
+//	// refresh login
+//	c.RefreshLogin()
+//	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	return nil
-}
+//	t = t.NewProfileTask(c)
+//	t.ResetTask()
+//
+//	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
+//	log.Debugf("task -> %+v", t)
+//	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
+//	if err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error submitting update collector for ipv4 Range request: %s", err)
+//		return updatecollectorList, err
+//	}
+//
+//	log.Debugf("Response update ipv4 Range %s", data)
+//	if err := json.Unmarshal([]byte(data), &t); err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error with task un-marshal: %s", err)
+//		return err
+//	}
 
-func (c *OVClient) UpdateCollector(id, ipv4[]]) (updateCollectorList, error) {
-	log.Infof("Initializing update of collector in ipv4Range for %s.", id)
-	var (
-		uri = "/rest/id-pools/ipv4/ranges/" + id + "/collector"
-		t   *Task
-	)
-	// refresh login
-	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
-	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
-	if err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error submitting update collector for ipv4 Range request: %s", err)
-		return err
-	}
-
-	log.Debugf("Response update ipv4 Range %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	return nil
-}
+//	return updatecollectorList
+//}
