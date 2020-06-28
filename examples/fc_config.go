@@ -1,12 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
-_	"strconv"
-	"encoding/json"
+	_ "strconv"
 )
 
 func main() {
@@ -17,10 +17,10 @@ func main() {
 		falseVar    = false
 	)
 	configFile, err1 := os.Open("oneview_config.json")
-/*	if err != nil {
-		return err
-	}
-*/	var config ov.Configuration
+	/*	if err != nil {
+			return err
+		}
+	*/var config ov.Configuration
 	defer configFile.Close()
 	if err1 != nil {
 		fmt.Println(err1.Error())
@@ -29,9 +29,8 @@ func main() {
 	jsonParser.Decode(&config)
 	fmt.Println(config.Password)
 
-
 	ovc := ClientOV.NewOVClient(
-	        config.UserName,
+		config.UserName,
 		config.Password,
 		config.Domain,
 		config.Endpoint,
@@ -39,15 +38,15 @@ func main() {
 		config.ApiVersion,
 		"*")
 
-/*	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")*/
+	/*	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+		ovc := ClientOV.NewOVClient(
+			os.Getenv("ONEVIEW_OV_USER"),
+			os.Getenv("ONEVIEW_OV_PASSWORD"),
+			os.Getenv("ONEVIEW_OV_DOMAIN"),
+			os.Getenv("ONEVIEW_OV_ENDPOINT"),
+			false,
+			apiversion,
+			"*")*/
 	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
