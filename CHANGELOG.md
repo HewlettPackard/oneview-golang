@@ -1,9 +1,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.3.1] (unreleased)
+# [v1.4.0] (2020-05-27)
 ### Notes
 - Added support for loginMsgAck attribute in login session POST request.
+- This release supports API1600 minimally where we can test OneView API1600 with this SDK
+### Oneview Features supported
+- Deployment Plan
+- Enclosure
+- Enclosure Group
+- Ethernet Network
+- FC Network
+- FCOE Network
+- Hypervisor Cluster Profile
+- Hypervisor Manager
+- Interconnect
+- Interconnect Type
+- Logical Enclosure
+- Logical Interconnect
+- Logical Interconnect Group
+- Network Set
+- Scopes
+- Server Certificate
+- Server Hardware
+- Server Hardware Type
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Volume
+- Storage Volume Attachment
+- Storage Volume Template
+- Task
+- Uplink Set
+
 
 # [v1.3.0] (2020-04-17)
 ### Notes
