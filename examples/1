@@ -8,11 +8,11 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-type ipv4Range struct{
+type Ipv4Range struct{
 	AllocatedFragmentUri    utils.Nstring          `json:"allocatedFragmentUri,omitempty"`
 	AllocatedIdCount        int                    `json:"allocatedIdCount,omitempty"`
 	AllocatorUri            utils.Nstring          `json:"allocatorUri,omitempty"`
-	AssociatedResources     *associatedResources   `json:"associatedResources,omitempty"`
+	AssociatedResources     []AssociatedResources   `json:"AssociatedResources,omitempty"`
 	Category                string                 `json:"category,omitempty"`
 	CollectorUri            utils.Nstring          `json:"collectorUri"`
 	Created                 string                 `json:"created,omitempty"`
@@ -28,20 +28,20 @@ type ipv4Range struct{
 	RangeCategory           utils.Nstring          `json:"rangeCategory,omitempty"`
 	ReservedIdCount         int                    `json:"reservedIdCount,omitempty"`
 	StartAddress            utils.Nstring          `json:"startAddress,omitempty"`
-	StartStopFragments      *startStopFragments    `json:"startStopFragments,omitempty"`
+	StartStopFragments      *StartStopFragments    `json:"startStopFragments,omitempty"`
 	SubnetUri                utils.Nstring         `json:"subnetUri,omitempty"`
 	TotalCount               int                   `json:"totalCount,omitempty"`
 	Type                     string                `json:"type,omitempty"`
 }
 
-type associatedResources struct {
+type AssociatedResources struct {
 	AssociationType            string           `json:"associationType,omitempty"`   
 	ResourceCategory           string           `json:"resourceCategory,omitempty"` 
 	ResourceName               string           `json:"resourceName,omitempty"`               
 	ResourceUri                utils.Nstring    `json:"resourceUri,omitempty"`               
 }
 
-type startStopFragments struct {
+type StartStopFragments struct {
 	EndAddress              utils.Nstring       `json:"endAddress,omitempty"` 
 	StartAddress            utils.Nstring       `json:"startAddress,omitempty"` 
 	FragmentType            string              `json:"fragmentType,omitempty"`            
@@ -58,7 +58,7 @@ type fragmentsList struct {
 	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
 	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
 	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
-	Members     []ipv4        `json:"members,omitempty"`     // "members":[]
+	Members     []Ipv4Range        `json:"members,omitempty"`     // "members":[]
 }
 
 type UpdateAllocatorList struct {    
@@ -73,26 +73,29 @@ type UpdateCollectorList struct {
 	IdList      []utils.Nstring  `json:"idList,omitempty"`
 }
 
-func (c *OVClient) GetIPv4RangebyId(id string) (ipv4Range, error) {
+func (c *OVClient) GetIPv4RangebyId(id string) (Ipv4Range, error) {
 	var (
-		uri        = "/rest/id-pools/ipv4/ranges/schema"
-		ipv4Ranges ipv4Range
+		uri        = "/rest/id-pools/ipv4/ranges/"
+		ipv4Range Ipv4Range
 	)
-
+        
+	uri = uri + id
 	// refresh login
+	log.Debugf("--------------------------")
+	log.Debugf(uri)
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
-		return ipv4Ranges, err
+		return ipv4Range, err
 	}
 
 	log.Debugf("GetIpv4Ranges %s", data)
-	if err := json.Unmarshal(data, &ipv4Ranges); err != nil {
-		return ipv4Ranges, err
+	if err := json.Unmarshal([]byte(data), &ipv4Range); err != nil {
+		return ipv4Range, err
 	}
-	return ipv4Ranges, nil
+	return ipv4Range, nil
 }
 
 func (c *OVClient) GetAllocatedFragments(filter string, sort string, start string, count string, id string) (fragmentsList, error) {
@@ -179,41 +182,30 @@ func (c *OVClient) GetFreeFragments(filter string, sort string, start string, co
 	return freeFragments, nil
 }
 
-func (c *OVClient) GetIpV4RangeSchema() (error) {
+func (c *OVClient) GetIpV4RangeSchema() (Ipv4Range,  error) {
 	var (
 		uri   = "/rest/id-pools/ipv4/ranges/schema"
-		t     *Task
+		ipv4Range  Ipv4Range
 	)
 
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-        t = t.NewProfileTask(c)
-	t.ResetTask()
 
-	data, err := c.RestAPICall(rest.GET, uri, nil)
-	if err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error submitting new ipv4Range creation request: %s", err)
-		return err
+        data, err := c.RestAPICall(rest.GET, uri, nil)
+        if err != nil {
+                return ipv4Range, err
+        }
+
+	log.Debugf("Get ipv4Range Schema %s", data)
+	if err := json.Unmarshal(data, &ipv4Range); err != nil {
+		return ipv4Range, err
 	}
 
-	log.Debugf("Response New ipv4Range %s", data)
-	if err := json.Unmarshal(data, &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return ipv4Range, nil
 }
 
-func (c *OVClient) CreateIPv4Range(ipv4 ipv4Range) error {
+func (c *OVClient) CreateIPv4Range(ipv4 Ipv4Range) error {
 	log.Infof("Initializing creation of ipv4Range for %s.", ipv4.Name)
 	var (
 		uri = "/rest/id-pools/ipv4/ranges/"
@@ -250,7 +242,7 @@ func (c *OVClient) CreateIPv4Range(ipv4 ipv4Range) error {
 
 func (c *OVClient) DeleteIpv4Range(id string) error {
 	var (
-		ipv4 ipv4Range
+		ipv4 Ipv4Range
 		err   error
 		t     *Task
 		uri   string
@@ -295,7 +287,7 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 	return nil
 }
 
-func (c *OVClient) UpdateIpv4Range(ipv4 ipv4Range) error {
+func (c *OVClient) UpdateIpv4Range(ipv4 Ipv4Range) error {
 	log.Infof("Initializing update of ipv4 Range for %s.", ipv4.Name)
 	var (
 		uri = "/rest/id-pools/ipv4/ranges/"
