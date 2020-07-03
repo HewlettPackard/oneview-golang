@@ -2,6 +2,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 # [v1.4.1] (unreleased)
+### Notes
+- Added support for Email Notifications resource from API 1600.
 #### Bug fixes & Enhancements:
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
 
