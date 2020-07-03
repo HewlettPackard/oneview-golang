@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -71,6 +72,26 @@ type Options struct {
 	Value string `json:"value,omitempty"` // "value": "Compliant",
 }
 
+type Servers struct {
+	    EnclosureGroupName      string     `json:"enclosureGroupName, omitempty"`
+            EnclosureName           string     `json:"enclosureGroupName, omitempty"`
+	    EnclosureUri            string     `json:"enclosureGroupName, omitempty"`
+            EnclosureBay            int        `json:"enclosureBay, omitempty"`
+            ServerHardwareName      string     `json:"serverHardwareName, omitempty"`
+            ServerHardwareUri       string     `json:"serverHardwareUri, omitempty"`
+            ServerHardwareTypeName  string     `json:"serverHardwareTypeName, omitempty"`
+            ServerHardwareTypeUri   string     `json:"serverHardwareTypeUri, omitempty"`
+            EnclosureGroupUri       string     `json:"enclosuregroupUri, omitempty"`
+            PowerState              string     `json:"powerState, omitempty"`
+            FormFactor              []string   `json:"formFactor, omitempty"`
+            ServerHardwareStatus    string     `json:"serverHardwareStatus, omitempty"`
+    }
+
+type AvailableTarget struct {
+	Type                string          `json:"type, omitempty"`
+	Members             []Servers        `json:"targets, omitempty"`
+}
+
 // ServerProfile - server profile object for ov
 type ServerProfile struct {
 	ServerProfilev200
@@ -102,7 +123,7 @@ type ServerProfile struct {
 	SerialNumber          utils.Nstring       `json:"serialNumber,omitempty"`          // "serialNumber": "2M25090RMW",
 	SerialNumberType      string              `json:"serialNumberType,omitempty"`      // "serialNumberType": "Physical",
 	ServerHardwareTypeURI utils.Nstring       `json:"serverHardwareTypeUri,omitempty"` // "serverHardwareTypeUri": "/rest/server-hardware-types/DB7726F7-F601-4EA8-B4A6-D1EE1B32C07C",
-	ServerHardwareURI     utils.Nstring       `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
+	ServerHardwareURI     utils.Nstring               `json:"serverHardwareUri,omitempty"`     // "serverHardwareUri": "/rest/server-hardware/30373237-3132-4D32-3235-303930524D57",
 	State                 string              `json:"state,omitempty"`                 // "state": "Normal",
 	Status                string              `json:"status,omitempty"`                // "status": "Critical",
 	TaskURI               utils.Nstring       `json:"taskUri,omitempty"`               // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
@@ -111,6 +132,7 @@ type ServerProfile struct {
 	UUID                  utils.Nstring       `json:"uuid,omitempty"`                  // "uuid": "30373237-3132-4D32-3235-303930524D57",
 	WWNType               string              `json:"wwnType,omitempty"`               // "wwnType": "Physical",
 }
+
 
 // GetConnectionByName gets the connection from a profile with a given name
 func (s ServerProfile) GetConnectionByName(name string) (Connection, error) {
@@ -260,21 +282,76 @@ func (c *OVClient) GetProfileByURI(uri utils.Nstring) (ServerProfile, error) {
 	return profile, nil
 }
 
+// GetAvailableServers - To fetch available server hardwares 
+func (c *OVClient) GetAvailableServers(ServerHardwareUri string) error {
+        var (
+		hardwareUri      = "/rest/server-profiles/available-targets"
+		isHardwareAvailable = false
+                profiles AvailableTarget
+        )
+
+        // refresh login
+        c.RefreshLogin()
+        c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+        sh_data, err := c.RestAPICall(rest.GET, hardwareUri, nil)
+        if err != nil {
+                return err
+        }
+
+        if err := json.Unmarshal([]byte(sh_data), &profiles); err != nil {
+                return err
+        }
+
+	for i := 0; i < len(profiles.Members); i++ {
+                if profiles.Members[i].ServerHardwareUri == ServerHardwareUri {
+                        isHardwareAvailable = true
+                }
+        }
+        if isHardwareAvailable == false {
+                log.Errorf("Given %s is not available.", ServerHardwareUri)
+                os.Exit(1)
+        }
+
+
+        return nil
+}
+
+
 // SubmitNewProfile - submit new profile template
 func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 	log.Infof("Initializing creation of server profile for %s.", p.Name)
 	var (
 		uri = "/rest/server-profiles"
+		server ServerHardware
 		t   *Task
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
+
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
+
+	// Get available server hardwares to assign it to SP
+	err = c.GetAvailableServers(p.ServerHardwareURI.String())
+	if err != nil {
+		log.Errorf("Error getting available Hardwares")
+	}
+
+	server, err = c.GetServerHardwareByUri(p.ServerHardwareURI)
+        if err != nil {
+		log.Warnf("Problem getting server hardware, %s", err)
+	}
+
+        // power off the server so that we can add to SP
+        if server.Name != "" {
+		server.PowerOff()
+        }
+
 	data, err := c.RestAPICall(rest.POST, uri, p)
 	if err != nil {
 		t.TaskIsDone = true
