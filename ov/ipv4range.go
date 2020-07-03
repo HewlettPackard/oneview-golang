@@ -8,92 +8,89 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-type Ipv4Range struct{
-	AllocatedFragmentUri    utils.Nstring          `json:"allocatedFragmentUri,omitempty"`
-	AllocatedIdCount        int                    `json:"allocatedIdCount,omitempty"`
-	AllocatorUri            utils.Nstring          `json:"allocatorUri,omitempty"`
-	AssociatedResources     []AssociatedResources  `json:"associatedResources,omitempty"`
-	Category                string                 `json:"category,omitempty"`
-	CollectorUri            utils.Nstring          `json:"collectorUri"`
-	Created                 string                 `json:"created,omitempty"`
-	DefaultRange            bool                   `json:"defaultRange"`
-	ETAG                    string                 `json:"eTag,omitempty"`
-	Modified                string                 `json:"modified,omitempty"`
-	Enabled                 bool                   `json:"enabled,omitempty"`
-	Name                    string                 `json:"name,omitempty"`
-	EndAddress              utils.Nstring          `json:"endAddress,omitempty"`
-	FreeFragmentUri         utils.Nstring          `json:"freeFragmentUri,omitempty"`
-	URI                     utils.Nstring          `json:"uri,omitempty"`
-	Prefix                  utils.Nstring          `json:"prefix,omitempty"`
-	RangeCategory           utils.Nstring          `json:"rangeCategory,omitempty"`
-	ReservedIdCount         int                    `json:"reservedIdCount,omitempty"`
-	StartAddress            utils.Nstring          `json:"startAddress,omitempty"`
-	StartStopFragments      []StartStopFragments   `json:"startStopFragments,omitempty"`
-	SubnetUri                utils.Nstring         `json:"subnetUri,omitempty"`
-	TotalCount               int                   `json:"totalCount,omitempty"`
-	Type                     string                `json:"type,omitempty"`
+type Ipv4Range struct {
+	AllocatedFragmentUri utils.Nstring         `json:"allocatedFragmentUri,omitempty"`
+	AllocatedIdCount     int                   `json:"allocatedIdCount,omitempty"`
+	AllocatorUri         utils.Nstring         `json:"allocatorUri,omitempty"`
+	AssociatedResources  []AssociatedResources `json:"associatedResources,omitempty"`
+	Category             string                `json:"category,omitempty"`
+	CollectorUri         utils.Nstring         `json:"collectorUri"`
+	Created              string                `json:"created,omitempty"`
+	DefaultRange         bool                  `json:"defaultRange"`
+	ETAG                 string                `json:"eTag,omitempty"`
+	Modified             string                `json:"modified,omitempty"`
+	Enabled              bool                  `json:"enabled,omitempty"`
+	Name                 string                `json:"name,omitempty"`
+	EndAddress           utils.Nstring         `json:"endAddress,omitempty"`
+	FreeFragmentUri      utils.Nstring         `json:"freeFragmentUri,omitempty"`
+	URI                  utils.Nstring         `json:"uri,omitempty"`
+	Prefix               utils.Nstring         `json:"prefix,omitempty"`
+	RangeCategory        utils.Nstring         `json:"rangeCategory,omitempty"`
+	ReservedIdCount      int                   `json:"reservedIdCount,omitempty"`
+	StartAddress         utils.Nstring         `json:"startAddress,omitempty"`
+	StartStopFragments   []StartStopFragments  `json:"startStopFragments,omitempty"`
+	SubnetUri            utils.Nstring         `json:"subnetUri,omitempty"`
+	TotalCount           int                   `json:"totalCount,omitempty"`
+	Type                 string                `json:"type,omitempty"`
 }
 
-type CreateIpv4Range struct{
-        Name                    string                 `json:"name,omitempty"`
-        StartStopFragments      []StartStopFragments   `json:"startStopFragments,omitempty"`
-        SubnetUri                utils.Nstring         `json:"subnetUri,omitempty"`
-        Type                     string                `json:"type,omitempty"`
-
+type CreateIpv4Range struct {
+	Name               string               `json:"name,omitempty"`
+	StartStopFragments []StartStopFragments `json:"startStopFragments,omitempty"`
+	SubnetUri          utils.Nstring        `json:"subnetUri,omitempty"`
+	Type               string               `json:"type,omitempty"`
 }
 
 type AssociatedResources struct {
-	AssociationType            string           `json:"associationType,omitempty"`   
-	ResourceCategory           string           `json:"resourceCategory,omitempty"` 
-	ResourceName               string           `json:"resourceName,omitempty"`               
-	ResourceUri                utils.Nstring    `json:"resourceUri,omitempty"`               
+	AssociationType  string        `json:"associationType,omitempty"`
+	ResourceCategory string        `json:"resourceCategory,omitempty"`
+	ResourceName     string        `json:"resourceName,omitempty"`
+	ResourceUri      utils.Nstring `json:"resourceUri,omitempty"`
 }
 
 type StartStopFragments struct {
-	StartAddress            utils.Nstring       `json:"startAddress,omitempty"` 
-	EndAddress              utils.Nstring       `json:"endAddress,omitempty"` 
-	FragmentType            string              `json:"fragmentType,omitempty"`            
+	StartAddress utils.Nstring `json:"startAddress,omitempty"`
+	EndAddress   utils.Nstring `json:"endAddress,omitempty"`
+	FragmentType string        `json:"fragmentType,omitempty"`
 }
 
 type FragmentsList struct {
-	Category    string                      `json:"category,omitempty"`     
-	Count       int                         `json:"count,omitempty"`       
-	ETAG        string                      `json:"eTag,omitempty"`
-	Created     string                      `json:"created,omitempty"`
-	Modified    string                      `json:"modified,omitempty"`
-	Total       int                         `json:"total,omitempty"`
-	Start       int                         `json:"start,omitempty"`       
-	PrevPageURI utils.Nstring               `json:"prevPageUri,omitempty"` 
-	NextPageURI utils.Nstring               `json:"nextPageUri,omitempty"` 
-	URI         utils.Nstring               `json:"uri,omitempty"`         
-	Members     []StartStopFragments        `json:"members,omitempty"`     
+	Category    string               `json:"category,omitempty"`
+	Count       int                  `json:"count,omitempty"`
+	ETAG        string               `json:"eTag,omitempty"`
+	Created     string               `json:"created,omitempty"`
+	Modified    string               `json:"modified,omitempty"`
+	Total       int                  `json:"total,omitempty"`
+	Start       int                  `json:"start,omitempty"`
+	PrevPageURI utils.Nstring        `json:"prevPageUri,omitempty"`
+	NextPageURI utils.Nstring        `json:"nextPageUri,omitempty"`
+	URI         utils.Nstring        `json:"uri,omitempty"`
+	Members     []StartStopFragments `json:"members,omitempty"`
 }
 
-type UpdateAllocatorList struct {    
-	Count       int              `json:"count,omitempty"`      
-	ETAG        string           `json:"eTag,omitempty"`
-	Valid       bool             `json:"valid,omitempty"`
-	IdList      []utils.Nstring  `json:"idList,omitempty"`
+type UpdateAllocatorList struct {
+	Count  int             `json:"count,omitempty"`
+	ETAG   string          `json:"eTag,omitempty"`
+	Valid  bool            `json:"valid,omitempty"`
+	IdList []utils.Nstring `json:"idList,omitempty"`
 }
 
-type UpdateCollectorList struct {    
-	ETAG        string           `json:"eTag,omitempty"`
-	IdList      []utils.Nstring  `json:"idList,omitempty"`
+type UpdateCollectorList struct {
+	ETAG   string          `json:"eTag,omitempty"`
+	IdList []utils.Nstring `json:"idList,omitempty"`
 }
-
 
 type UpdateIpv4 struct {
-    Enabled        bool           `json:"enabled,omitempty"`
-    Type           string         `json:"type,omitempty"`
+	Enabled bool   `json:"enabled,omitempty"`
+	Type    string `json:"type,omitempty"`
 }
-
 
 func (c *OVClient) GetIPv4RangebyId(id string) (Ipv4Range, error) {
 	var (
-		uri        = "/rest/id-pools/ipv4/ranges/"
+		uri       = "/rest/id-pools/ipv4/ranges/"
 		ipv4Range Ipv4Range
 	)
-        
+
 	uri = uri + id
 	// refresh login
 	c.RefreshLogin()
@@ -113,8 +110,8 @@ func (c *OVClient) GetIPv4RangebyId(id string) (Ipv4Range, error) {
 
 func (c *OVClient) GetAllocatedFragments(filter string, sort string, start string, count string, id string) (FragmentsList, error) {
 	var (
-		uri        = "/rest/id-pools/ipv4/ranges/" + id + "/allocated-fragments"
-		q          = make(map[string]interface{})
+		uri                = "/rest/id-pools/ipv4/ranges/" + id + "/allocated-fragments"
+		q                  = make(map[string]interface{})
 		allocatedFragments FragmentsList
 	)
 
@@ -156,8 +153,8 @@ func (c *OVClient) GetAllocatedFragments(filter string, sort string, start strin
 
 func (c *OVClient) GetFreeFragments(filter string, sort string, start string, count string, id string) (FragmentsList, error) {
 	var (
-		uri        = "/rest/id-pools/ipv4/ranges/" + id + "/free-fragments"
-		q          = make(map[string]interface{})
+		uri           = "/rest/id-pools/ipv4/ranges/" + id + "/free-fragments"
+		q             = make(map[string]interface{})
 		freeFragments FragmentsList
 	)
 
@@ -234,9 +231,9 @@ func (c *OVClient) CreateIPv4Range(ipv4 CreateIpv4Range) error {
 func (c *OVClient) DeleteIpv4Range(id string) error {
 	var (
 		ipv4 Ipv4Range
-		err   error
-		t     *Task
-		uri   string
+		err  error
+		t    *Task
+		uri  string
 	)
 
 	ipv4, err = c.GetIPv4RangebyId(id)
@@ -310,38 +307,38 @@ func (c *OVClient) UpdateIpv4Range(id string, ipv4 UpdateIpv4) error {
 	return nil
 }
 
-func (c *OVClient) UpdateAllocator(id string, []ipv4) (UpdateAllocatorList, err error) {
-	log.Infof("Initializing update of allocator in ipv4Range for %s.", id)
-	var (
-		uri = "/rest/id-pools/ipv4/ranges/" + id + "/allocator"
-		t   *Task
-		updateAllocatorList UpdateAllocatorList
-	)
-	// refresh login
-	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+//func (c *OVClient) UpdateAllocator(id string, []ipv4) (UpdateAllocatorList, err error) {
+//	log.Infof("Initializing update of allocator in ipv4Range for %s.", id)
+//	var (
+//		uri = "/rest/id-pools/ipv4/ranges/" + id + "/allocator"
+//		t   *Task
+//		updateAllocatorList UpdateAllocatorList
+//	)
+// refresh login
+//	c.RefreshLogin()
+//	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
+//	t = t.NewProfileTask(c)
+//	t.ResetTask()
 
-	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
-	if err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error submitting update allocator of ipv4 Range request: %s", err)
-		return updateAllocatorList, err
-	}
-
-	log.Debugf("Response updateAllocator of ipv4 Range %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-
-	return updateAllocatorList
-}
+//	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
+//	log.Debugf("task -> %+v", t)
+//	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
+//	if err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error submitting update allocator of ipv4 Range request: %s", err)
+//		return updateAllocatorList, err
+//	}
+//
+//	log.Debugf("Response updateAllocator of ipv4 Range %s", data)
+//	if err := json.Unmarshal([]byte(data), &t); err != nil {
+//		t.TaskIsDone = true
+//		log.Errorf("Error with task un-marshal: %s", err)
+//		return err
+//	}
+//
+//	return updateAllocatorList
+//}
 
 //func (c *OVClient) UpdateCollector(id, []ipv4) (UpdateCollectorList, error) {
 //	log.Infof("Initializing update of collector in ipv4Range for %s.", id)
