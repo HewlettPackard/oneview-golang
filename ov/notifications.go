@@ -2,7 +2,6 @@ package ov
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -59,7 +58,7 @@ type TestEmailRequest struct {
 	HtmlMessageBody        utils.Nstring          `json:"htmlMessageBody,omitempty"`
 	Subject                utils.Nstring          `json:"subject,omitempty"`
 	TextMessageBody        utils.Nstring          `json:"textMessageBody,omitempty"`
-	ToAddress              []utils.Nstring          `json:"toAddress,omitempty"`
+	ToAddress              []utils.Nstring        `json:"toAddress,omitempty"`
 }
 
 
@@ -270,9 +269,9 @@ func (c *OVClient) ConfigureAppliance(configuration EmailNotificationList) error
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, email)
+	log.Debugf("REST : %s \n %+v\n", uri, configuration)
 	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, email)
+	data, err := c.RestAPICall(rest.POST, uri, configuration)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new email configuraion request: %s", err)
