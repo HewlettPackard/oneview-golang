@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	//      "os"
+	"os"
 	"strconv"
 )
 
@@ -12,12 +12,12 @@ func main() {
 		ClientOV *ov.OVClient
 		id       = "a257c58c-bbe9-4174-b2a3-eada622fc555"
 	)
-	apiversion, _ := strconv.Atoi("1600")
+	apiversion, _ := strconv.Atoi("ONEVIEW_APIVERSION")
 	ovc := ClientOV.NewOVClient(
-		"Administrator",
-		"admin123",
-		"LOCAL",
-		"https://10.50.9.90/",
+		os.Getenv("ONEVIEW_OV_USER"),
+		os.Getenv("ONEVIEW_OV_PASSWORD"),
+		os.Getenv("ONEVIEW_OV_DOMAIN"),
+		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
 		apiversion,
 		"*")
@@ -42,7 +42,7 @@ func main() {
 
 	// Creates an IPv4 range
 	fmt.Println(ipV4Range)
-	//err = ovc.CreateIPv4Range(ipV4Range)
+	err = ovc.CreateIPv4Range(ipV4Range)
 	if err != nil {
 		fmt.Println("IPv4 Range Creation Failed: ", err)
 	} else {
@@ -94,10 +94,10 @@ func main() {
 	//	}
 
 	// Deletes an IPv4 range.
-	//	err = ovc.DeleteIpv4Range(id)
-	//	if err != nil {
-	///		panic(err)
-	///	} else {
-	//		fmt.Println("Deleted Ipv4Range successfully...")
-	//	}
+	err = ovc.DeleteIpv4Range(id)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Deleted Ipv4Range successfully...")
+	}
 }
