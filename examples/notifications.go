@@ -58,7 +58,7 @@ func main() {
 		Subject:                 "Critical alert generated",
 		TextMessageBody:         "Plain text mail content",
 		ToAddress:               *toAddress,
-	  }
+	}
 
 	err1 := ovc.SendTestEmail(testEmail)
 	if err1 != nil {
@@ -73,7 +73,7 @@ func main() {
 		Subject:                 "Critical alert generated",
 		TextMessageBody:         "Plain text mail content",
 		ToAddress:               *toAddress,
-	  }
+	}
 	err2 := ovc.SendEmail(email)
 	if err2 != nil {
 		fmt.Println("Sending Email Failed: ", err2)
