@@ -26,35 +26,32 @@ func main() {
       fragment1 := ov.StartStopFragments{EndAddress: "10.16.0.100", StartAddress: "10.16.0.10"}
       *fragments = append(*fragments, fragment1)
       ipV4Range := ov.Createipv4Range{
-             Type:                "Range",
-             Name:                "test",
-	     StartStopFragments:  *fragments,
-//             StartAddress: "10.16.0.10",
-//           EndAddress:   "10.16.0.100",
-             SubnetUri:           "/rest/id-pools/ipv4/subnets/d1f095c9-014c-43db-a65d-8236aea70b21",
+            Type:                "Range",
+            Name:                "test",
+	     	StartStopFragments:  *fragments,
+            SubnetUri:           "/rest/id-pools/ipv4/subnets/d1f095c9-014c-43db-a65d-8236aea70b21",
       }
-
-      fmt.Println(ipV4Range)
-      ipv4Range_by_id, err := ovc.GetIPv4RangebyId(id)
+	
+	// Gets an IPv4 range
+    ipv4Range_by_id, err := ovc.GetIPv4RangebyId(id)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#-------------Get Ipv4Range by id----------------#")
 		fmt.Println(ipv4Range_by_id)
 	}
+
+	// Creates an IPv4 range
+	fmt.Println(ipV4Range)
 	//err = ovc.CreateIPv4Range(ipV4Range)
 	if err != nil {
 		fmt.Println("IPv4 Range Creation Failed: ", err)
 	} else {
 		fmt.Println("IPv4 Range created successfully...")
 	}
-//	err = ovc.DeleteIpv4Range("6d4ca176-ac47-49b9-a6b3-9648272fc279")
-//	if err != nil {
-///		panic(err)
-///	} else {
-//		fmt.Println("Deleted Ipv4Range successfully...")
-//	}
-	allocatedFragments, err := ovc.GetAllocatedFragments("", "", "", "", "a257c58c-bbe9-4174-b2a3-eada622fc555")
+
+	// Gets all allocated fragments in an IPv4 range
+	allocatedFragments, err := ovc.GetAllocatedFragments("", "", "", "", id)
 	if err != nil {
 		panic(err)
 	} else {
@@ -63,7 +60,9 @@ func main() {
 			fmt.Println(allocatedFragments.Members[i])
 		}
 	}
-	freeFragments, err := ovc.GetFreeFragments("", "", "", "", "a257c58c-bbe9-4174-b2a3-eada622fc555")
+
+	// Gets all free fragments in an IPv4 range
+	freeFragments, err := ovc.GetFreeFragments("", "", "", "", id)
 	if err != nil {
 		panic(err)
 	} else {
@@ -72,7 +71,9 @@ func main() {
 			fmt.Println(freeFragments.Members[i])
 		}
 	}
-        updateIpv4Range := ov.Updateipv4{Type: "Range", Enabled: false}
+
+	// Perform either of the following operations on a Range i.e., Enable Range or Edit Range
+    updateIpv4Range := ov.Updateipv4{Type: "Range", Enabled: false}
 	err = ovc.UpdateIpv4Range("a257c58c-bbe9-4174-b2a3-eada622fc555", updateIpv4Range)
 	if err != nil {
 		panic(err)
@@ -83,11 +84,21 @@ func main() {
 			fmt.Println("Ipv4Range has enabled successfully")
 		}
 	}
-        idList = ["10.255.3.5"]
+
+	// Allocates a set of IDs from an IPv4 range.
+    idList = ["10.255.3.5"]
 	updatedAllocators, err := ovc.UpdateAllocator("a257c58c-bbe9-4174-b2a3-eada622fc555", idList)
 	if err != nil {
 		panic(err)
 	} else {
 		fmt.Println("Allocated "+ idList + "successfully")
 	}
+
+	// Deletes an IPv4 range.
+	//	err = ovc.DeleteIpv4Range(id)
+//	if err != nil {
+///		panic(err)
+///	} else {
+//		fmt.Println("Deleted Ipv4Range successfully...")
+//	}
 }

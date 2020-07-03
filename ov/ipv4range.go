@@ -12,14 +12,14 @@ type Ipv4Range struct{
 	AllocatedFragmentUri    utils.Nstring          `json:"allocatedFragmentUri,omitempty"`
 	AllocatedIdCount        int                    `json:"allocatedIdCount,omitempty"`
 	AllocatorUri            utils.Nstring          `json:"allocatorUri,omitempty"`
-	AssociatedResources     []AssociatedResources   `json:"AssociatedResources,omitempty"`
+	AssociatedResources     []AssociatedResources  `json:"associatedResources,omitempty"`
 	Category                string                 `json:"category,omitempty"`
 	CollectorUri            utils.Nstring          `json:"collectorUri"`
 	Created                 string                 `json:"created,omitempty"`
 	DefaultRange            bool                   `json:"defaultRange"`
 	ETAG                    string                 `json:"eTag,omitempty"`
 	Modified                string                 `json:"modified,omitempty"`
-	Enabled                 bool                   `json:" enabled,omitempty"`
+	Enabled                 bool                   `json:"enabled,omitempty"`
 	Name                    string                 `json:"name,omitempty"`
 	EndAddress              utils.Nstring          `json:"endAddress,omitempty"`
 	FreeFragmentUri         utils.Nstring          `json:"freeFragmentUri,omitempty"`
@@ -28,13 +28,13 @@ type Ipv4Range struct{
 	RangeCategory           utils.Nstring          `json:"rangeCategory,omitempty"`
 	ReservedIdCount         int                    `json:"reservedIdCount,omitempty"`
 	StartAddress            utils.Nstring          `json:"startAddress,omitempty"`
-	StartStopFragments      []StartStopFragments    `json:"startStopFragments,omitempty"`
+	StartStopFragments      []StartStopFragments   `json:"startStopFragments,omitempty"`
 	SubnetUri                utils.Nstring         `json:"subnetUri,omitempty"`
 	TotalCount               int                   `json:"totalCount,omitempty"`
 	Type                     string                `json:"type,omitempty"`
 }
 
-type Createipv4Range struct{
+type CreateIpv4Range struct{
         Name                    string                 `json:"name,omitempty"`
         StartStopFragments      []StartStopFragments   `json:"startStopFragments,omitempty"`
         SubnetUri                utils.Nstring         `json:"subnetUri,omitempty"`
@@ -55,22 +55,22 @@ type StartStopFragments struct {
 	FragmentType            string              `json:"fragmentType,omitempty"`            
 }
 
-type fragmentsList struct {
-	Category    string        `json:"category,omitempty"`     
-	Count       int           `json:"count,omitempty"`       // "count": 1,
-	ETAG        string        `json:"eTag,omitempty"`
-	Created     string        `json:"created,omitempty"`
-	Modified    string        `json:"modified,omitempty"`
-	Total       int           `json:"total,omitempty"`
-	Start       int           `json:"start,omitempty"`       // "start": 0,
-	PrevPageURI utils.Nstring `json:"prevPageUri,omitempty"` // "prevPageUri": null,
-	NextPageURI utils.Nstring `json:"nextPageUri,omitempty"` // "nextPageUri": null,
-	URI         utils.Nstring `json:"uri,omitempty"`         // "uri": "/rest/server-profiles?filter=connectionTemplateUri%20matches%7769cae0-b680-435b-9b87-9b864c81657fsort=name:asc"
-	Members     []StartStopFragments        `json:"members,omitempty"`     // "members":[]
+type FragmentsList struct {
+	Category    string                      `json:"category,omitempty"`     
+	Count       int                         `json:"count,omitempty"`       
+	ETAG        string                      `json:"eTag,omitempty"`
+	Created     string                      `json:"created,omitempty"`
+	Modified    string                      `json:"modified,omitempty"`
+	Total       int                         `json:"total,omitempty"`
+	Start       int                         `json:"start,omitempty"`       
+	PrevPageURI utils.Nstring               `json:"prevPageUri,omitempty"` 
+	NextPageURI utils.Nstring               `json:"nextPageUri,omitempty"` 
+	URI         utils.Nstring               `json:"uri,omitempty"`         
+	Members     []StartStopFragments        `json:"members,omitempty"`     
 }
 
 type UpdateAllocatorList struct {    
-	Count       int              `json:"count,omitempty"`       // "count": 1,
+	Count       int              `json:"count,omitempty"`      
 	ETAG        string           `json:"eTag,omitempty"`
 	Valid       bool             `json:"valid,omitempty"`
 	IdList      []utils.Nstring  `json:"idList,omitempty"`
@@ -82,9 +82,9 @@ type UpdateCollectorList struct {
 }
 
 
-type Updateipv4 struct {
-        Enabled        bool           `json:"enabled,omitempty"`
-        Type           string         `json:"type,omitempty"`
+type UpdateIpv4 struct {
+    Enabled        bool           `json:"enabled,omitempty"`
+    Type           string         `json:"type,omitempty"`
 }
 
 
@@ -111,11 +111,11 @@ func (c *OVClient) GetIPv4RangebyId(id string) (Ipv4Range, error) {
 	return ipv4Range, nil
 }
 
-func (c *OVClient) GetAllocatedFragments(filter string, sort string, start string, count string, id string) (fragmentsList, error) {
+func (c *OVClient) GetAllocatedFragments(filter string, sort string, start string, count string, id string) (FragmentsList, error) {
 	var (
 		uri        = "/rest/id-pools/ipv4/ranges/" + id + "/allocated-fragments"
 		q          = make(map[string]interface{})
-		allocatedFragments fragmentsList
+		allocatedFragments FragmentsList
 	)
 
 	if len(filter) > 0 {
@@ -137,6 +137,7 @@ func (c *OVClient) GetAllocatedFragments(filter string, sort string, start strin
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
 	// Setup query
 	if len(q) > 0 {
 		c.SetQueryString(q)
@@ -153,11 +154,11 @@ func (c *OVClient) GetAllocatedFragments(filter string, sort string, start strin
 	return allocatedFragments, nil
 }
 
-func (c *OVClient) GetFreeFragments(filter string, sort string, start string, count string, id string) (fragmentsList, error) {
+func (c *OVClient) GetFreeFragments(filter string, sort string, start string, count string, id string) (FragmentsList, error) {
 	var (
 		uri        = "/rest/id-pools/ipv4/ranges/" + id + "/free-fragments"
 		q          = make(map[string]interface{})
-		freeFragments fragmentsList
+		freeFragments FragmentsList
 	)
 
 	if len(filter) > 0 {
@@ -195,7 +196,7 @@ func (c *OVClient) GetFreeFragments(filter string, sort string, start string, co
 	return freeFragments, nil
 }
 
-func (c *OVClient) CreateIPv4Range(ipv4 Createipv4Range) error {
+func (c *OVClient) CreateIPv4Range(ipv4 CreateIpv4Range) error {
 	log.Infof("Initializing creation of ipv4Range for %s.", ipv4.Name)
 	var (
 		uri = "/rest/id-pools/ipv4/ranges/"
@@ -255,7 +256,7 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 		}
 		data, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
-			log.Errorf("Error submitting new fc network request: %s", err)
+			log.Errorf("Error submitting new ipv4 delete request: %s", err)
 			t.TaskIsDone = true
 			return err
 		}
@@ -277,7 +278,7 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 	return nil
 }
 
-func (c *OVClient) UpdateIpv4Range(id string, ipv4 Updateipv4) error {
+func (c *OVClient) UpdateIpv4Range(id string, ipv4 UpdateIpv4) error {
 	log.Infof("Initializing update of ipv4 Range")
 	var (
 		uri = "/rest/id-pools/ipv4/ranges/" + id
@@ -328,19 +329,19 @@ func (c *OVClient) UpdateAllocator(id string, []ipv4) (UpdateAllocatorList, err 
 	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
 	if err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error submitting update allocator for ipv4 Range request: %s", err)
+		log.Errorf("Error submitting update allocator of ipv4 Range request: %s", err)
 		return updateAllocatorList, err
 	}
 
-//	log.Debugf("Response update ipv4 Range %s", data)
-//	if err := json.Unmarshal([]byte(data), &t); err != nil {
-//		t.TaskIsDone = true
-//		log.Errorf("Error with task un-marshal: %s", err)
-//		return err
-//	}
+	log.Debugf("Response updateAllocator of ipv4 Range %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
 
-//	return updateAllocatorList
-//}
+	return updateAllocatorList
+}
 
 //func (c *OVClient) UpdateCollector(id, []ipv4) (UpdateCollectorList, error) {
 //	log.Infof("Initializing update of collector in ipv4Range for %s.", id)
