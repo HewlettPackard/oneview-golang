@@ -1,8 +1,10 @@
 {
-      "username":"Administrator",
-      "password":"admin123",
-      "endpoint":"https://10.50.9.41/",
+      "username":"<ov_username>",
+      "password":"<ov_password>",
+      "endpoint":"<ov_ip>",
       "domain": "LOCAL",
-      "apiversion":1600
+      "apiversion":<ov_apiversion>,
+      "sslverify":false,
+      "ifmatch":"*"
 
 }

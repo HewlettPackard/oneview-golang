@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	_ "strconv"
+	_ "os"
+	"path/filepath"
 )
 
 func main() {
@@ -16,27 +15,18 @@ func main() {
 		new_fc_name = "RenamedFCNetwork"
 		falseVar    = false
 	)
-	configFile, err1 := os.Open("oneview_config.json")
-	/*	if err != nil {
-			return err
-		}
-	*/var config ov.Configuration
-	defer configFile.Close()
+	config, err1 := ov.LoadConfigFile("oneview_config.json")
 	if err1 != nil {
-		fmt.Println(err1.Error())
+		fmt.Println(err1)
 	}
-	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
-	fmt.Println(config.Password)
-
 	ovc := ClientOV.NewOVClient(
 		config.UserName,
 		config.Password,
 		config.Domain,
 		config.Endpoint,
-		false,
+		config.SSlVerify,
 		config.ApiVersion,
-		"*")
+		config.IfMatch)
 
 	/*	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 		ovc := ClientOV.NewOVClient(
