@@ -1,39 +1,40 @@
 package ov
 
 import (
-	"os"
-	"testing"
-	"github.com/HewlettPackard/oneview-golang/utils"
+	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
 	"github.com/stretchr/testify/assert"
+	"os"
+	"testing"
 )
 
 func TestSendTestEmail(t *testing.T) {
 	var (
-		d        *OVTest
-		c        *ov.OVClient
+		d *OVTest
+		c *ov.OVClient
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_email_notification")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-			email := ov.TestEmailRequest{
-				ToAddress:                    d.Tc.GetTestData(d.Env, "ToAddress").(string),,
-				HtmlMessageBody:              d.Tc.GetTestData(d.Env, "HtmlMessageBody").(string),
-				TextMessageBody:              d.Tc.GetTestData(d.Env, "TextMessageBody").(string),
-				Subject:                      d.Tc.GetTestData(d.Env, "Subject").(string),
-			}
-
-			err := c.SendTestEmail(email)
-			assert.NoError(t, err, "SendTestEmail error -> %s", err)
-
-			err = c.SendTestEmail(email)
-			assert.Error(t, err, "SendTestEmail should error becaue the network already exists, err -> %s", err)
-		} else {
-			log.Warnf("The email already exists so skipping SendTestEmail test for %s")
+		toAddress := make([]utils.Nstring, 0)
+		email := ov.TestEmailRequest{
+			ToAddress:       toAddress,
+			HtmlMessageBody: utils.Nstring(d.Tc.GetTestData(d.Env, "HtmlMessageBody").(string)),
+			TextMessageBody: utils.Nstring(d.Tc.GetTestData(d.Env, "TextMessageBody").(string)),
+			Subject:         utils.Nstring(d.Tc.GetTestData(d.Env, "Subject").(string)),
 		}
+
+		err := c.SendTestEmail(email)
+		assert.NoError(t, err, "SendTestEmail error -> %s", err)
+
+		err = c.SendTestEmail(email)
+		assert.Error(t, err, "SendTestEmail should error becaue the network already exists, err -> %s", err)
+	} else {
+		log.Warnf("The email already exists so skipping SendTestEmail test for %s")
 	}
 }
 
@@ -108,12 +109,12 @@ func GetEmailNotificationsByFilter(t *testing.T) {
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		data, err := c.emailNotificationsFilter("scope:Name", "", "", "")
+		data, err := c.GetEmailNotificationsByFilter("scope:Name", "", "", "")
 		assert.Error(t, err, fmt.Sprintf("All OK, no error, caught as expected: %s,%+v\n", err, data))
 
 	}
 
 	_, c = getTestDriverU("test_email_notification")
-	data, err := c.emailNotificationsFilter("", "", "", "")
+	data, err := c.GetEmailNotificationsByFilter("", "", "", "")
 	assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 }

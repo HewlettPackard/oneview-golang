@@ -9,63 +9,62 @@ import (
 )
 
 type EmailNotificationList struct {
-	AlertEmailDisabled       bool           `json:"alertEmailDisabled,omitempty"`
-	AlertEmailFilters        []utils.Nstring `json:"alertEmailFilters,omitempty"`
-	Category                string          `json:"category,omitempty"`
-	URI                     utils.Nstring   `json:"uri,omitempty"`
-	ETAG                    string          `json:"eTag,omitempty"`
-	Modified                string          `json:"modified,omitempty"`
-	Created                 string          `json:"created,omitempty"`       
-	Type                    string          `json:"type,omitempty"`
-	Password                utils.Nstring   `json:"password,omitempty"`
-	SenderEmailAddress      utils.Nstring   `json:"senderEmailAddress,omitempty"`
-	SmtpPort                int             `json:"smtpPort,omitempty"`
-	SmtpServer              utils.Nstring   `json:"smtpServer,omitempty"`
-	SmtpProtocol            string          `json:"smtpProtocol,omitempty"`
+	AlertEmailDisabled bool            `json:"alertEmailDisabled,omitempty"`
+	AlertEmailFilters  []utils.Nstring `json:"alertEmailFilters,omitempty"`
+	Category           string          `json:"category,omitempty"`
+	URI                utils.Nstring   `json:"uri,omitempty"`
+	ETAG               string          `json:"eTag,omitempty"`
+	Modified           string          `json:"modified,omitempty"`
+	Created            string          `json:"created,omitempty"`
+	Type               string          `json:"type,omitempty"`
+	Password           utils.Nstring   `json:"password,omitempty"`
+	SenderEmailAddress utils.Nstring   `json:"senderEmailAddress,omitempty"`
+	SmtpPort           int             `json:"smtpPort,omitempty"`
+	SmtpServer         utils.Nstring   `json:"smtpServer,omitempty"`
+	SmtpProtocol       string          `json:"smtpProtocol,omitempty"`
 }
 
 type AlertEmailFilters struct {
-	Disabled                     bool                      `json:"disabled,omitempty"`
-	DisplayFilter                string                    `json:"displayFilter,omitempty"`
-	Emails                       []utils.Nstring           `json:"emails,omitempty"`
-	Filter                       string                    `json:"filter,omitempty"`
-	UserQueryFilter              string                    `json:"userQueryFilter,omitempty"`
-	Limit                        int                       `json:"limit,omitempty"`       
-	LimitDuration                string                    `json:"limitDuration,omitempty"`
-	ScopeQuery                   utils.Nstring             `json:"scopeQuery,omitempty"`
-	FilterName                   int                       `json:"filterName,omitempty"`
+	Disabled        bool            `json:"disabled,omitempty"`
+	DisplayFilter   string          `json:"displayFilter,omitempty"`
+	Emails          []utils.Nstring `json:"emails,omitempty"`
+	Filter          string          `json:"filter,omitempty"`
+	UserQueryFilter string          `json:"userQueryFilter,omitempty"`
+	Limit           int             `json:"limit,omitempty"`
+	LimitDuration   string          `json:"limitDuration,omitempty"`
+	ScopeQuery      utils.Nstring   `json:"scopeQuery,omitempty"`
+	FilterName      int             `json:"filterName,omitempty"`
 }
 
 type EmailFilterList struct {
-	FilterName        []utils.Nstring `json:"filterName,omitempty"`
+	FilterName []utils.Nstring `json:"filterName,omitempty"`
 }
 
 type TestEmailResponse struct {
-	Category                string          `json:"category,omitempty"`
-	URI                     utils.Nstring   `json:"uri,omitempty"`
-	ETAG                    string          `json:"eTag,omitempty"`
-	Modified                string          `json:"modified,omitempty"`
-	Created                 string          `json:"created,omitempty"`
-	Type                    string          `json:"type,omitempty"`
-	Password                utils.Nstring   `json:"password,omitempty"`
-	SenderEmailAddress      utils.Nstring   `json:"senderEmailAddress,omitempty"`
-	SmtpPort                int             `json:"smtpPort,omitempty"`
-	UserProvidedSmtpServer  utils.Nstring   `json:"userProvidedSmtpServer,omitempty"`
-	PreferredSmtpServer     utils.Nstring   `json:"preferredSmtpServer,omitempty"`
+	Category               string        `json:"category,omitempty"`
+	URI                    utils.Nstring `json:"uri,omitempty"`
+	ETAG                   string        `json:"eTag,omitempty"`
+	Modified               string        `json:"modified,omitempty"`
+	Created                string        `json:"created,omitempty"`
+	Type                   string        `json:"type,omitempty"`
+	Password               utils.Nstring `json:"password,omitempty"`
+	SenderEmailAddress     utils.Nstring `json:"senderEmailAddress,omitempty"`
+	SmtpPort               int           `json:"smtpPort,omitempty"`
+	UserProvidedSmtpServer utils.Nstring `json:"userProvidedSmtpServer,omitempty"`
+	PreferredSmtpServer    utils.Nstring `json:"preferredSmtpServer,omitempty"`
 }
 
 type TestEmailRequest struct {
-	HtmlMessageBody        utils.Nstring          `json:"htmlMessageBody,omitempty"`
-	Subject                utils.Nstring          `json:"subject,omitempty"`
-	TextMessageBody        utils.Nstring          `json:"textMessageBody,omitempty"`
-	ToAddress              []utils.Nstring        `json:"toAddress,omitempty"`
+	HtmlMessageBody utils.Nstring   `json:"htmlMessageBody,omitempty"`
+	Subject         utils.Nstring   `json:"subject,omitempty"`
+	TextMessageBody utils.Nstring   `json:"textMessageBody,omitempty"`
+	ToAddress       []utils.Nstring `json:"toAddress,omitempty"`
 }
-
 
 func (c *OVClient) GetEmailNotifications(filter string, sort string, start string, count string) (EmailNotificationList, error) {
 	var (
-		uri               = "/rest/appliance/notifications/email-config/"
-		q                 = make(map[string]interface{})
+		uri                = "/rest/appliance/notifications/email-config/"
+		q                  = make(map[string]interface{})
 		emailNotifications EmailNotificationList
 	)
 
@@ -106,9 +105,9 @@ func (c *OVClient) GetEmailNotifications(filter string, sort string, start strin
 
 func (c *OVClient) GetEmailNotificationsByFilter(filter string, sort string, start string, count string) (EmailFilterList, error) {
 	var (
-		uri               = "/rest/appliance/notifications/email-config/filters"
-		q                 = make(map[string]interface{})
-		emailFilters      EmailFilterList
+		uri          = "/rest/appliance/notifications/email-config/filters"
+		q            = make(map[string]interface{})
+		emailFilters EmailFilterList
 	)
 
 	if len(filter) > 0 {
@@ -148,9 +147,9 @@ func (c *OVClient) GetEmailNotificationsByFilter(filter string, sort string, sta
 
 func (c *OVClient) GetEmailNotificationsConfiguration(filter string, sort string, start string, count string) (TestEmailResponse, error) {
 	var (
-		uri               = "/rest/appliance/notifications/test-email-config"
-		q                 = make(map[string]interface{})
-		emailResponse      TestEmailResponse
+		uri           = "/rest/appliance/notifications/test-email-config"
+		q             = make(map[string]interface{})
+		emailResponse TestEmailResponse
 	)
 
 	if len(filter) > 0 {
@@ -292,4 +291,3 @@ func (c *OVClient) ConfigureAppliance(configuration EmailNotificationList) error
 
 	return nil
 }
-
