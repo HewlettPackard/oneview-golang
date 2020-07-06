@@ -4,22 +4,22 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	//	"os"
-	//	"strconv"
+	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
-	//apiversion, _ := strconv.Atoi(os.Getenv("1600"))
-	ovc := ClientOV.NewOVClient(
-		"Administrator",
-		"admin123",
-		"LOCAL",
-		"https://10.50.9.90/",
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	ovc := clientOV.NewOVClient(
+		os.Getenv("ONEVIEW_OV_USER"),
+		os.Getenv("ONEVIEW_OV_PASSWORD"),
+		os.Getenv("ONEVIEW_OV_DOMAIN"),
+		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 
 	// Retrieve email notification details with configured filters
