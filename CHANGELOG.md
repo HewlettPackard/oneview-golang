@@ -3,7 +3,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.5.0] (unreleased)
 ### Notes
-- This release extends supports to API1800.
+
+- This release extends supports of the SDK to Oneview API1800.
 - Minor Bug Fixes
 
 ### Oneview Features supported
