@@ -23,7 +23,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/ad6ad113-d4ac-49c5-9dc0-de0e294a19d7")}
 	fcoeNetwork := ov.FCoENetwork{
 		Name:                  testName,
 		Type:                  "fcoe-networkV4", //The Type value is for API>500.

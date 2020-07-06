@@ -24,7 +24,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/c5f5467f-7e86-4596-bb1f-81b9bedcd488")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",

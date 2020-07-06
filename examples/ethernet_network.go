@@ -20,11 +20,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/2cb74c0a-ec49-43eb-9d35-2c305900a8c3")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7fe26585-b7a1-497e-992e-90908f70dfaf")}
 	fmt.Println("#................... Ethernet Network by Name ...............#")
 	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
 	if err != nil {
@@ -44,7 +44,7 @@ func main() {
 		}
 	}
 
-	ethernet_nw_id := "02bbab66-4f23-4297-88fa-5420294ec552"
+	ethernet_nw_id := "ca0da0ad-81e6-4d43-92ad-2eb66f77611c"
 	fmt.Println("#................... GetAssociatedProfiles ....................#")
 	ethernet_nw_ass_pfl, err := ovc.GetAssociatedProfile(ethernet_nw_id)
 	if err != nil {
@@ -65,7 +65,7 @@ func main() {
 
 	ethernetNetwork := ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
 
-	bulkEthernetNetwork := ov.BulkEthernetNetwork{VlanIdRange: "2-4", Purpose: "General", NamePrefix: "Test_eth", SmartLink: false, PrivateNetwork: false, Bandwidth: bandwidth, Type: "bulk-ethernet-networkV1"}
+	bulkEthernetNetwork := ov.BulkEthernetNetwork{VlanIdRange: "2-4", Purpose: "General", NamePrefix: "Test_eth", SmartLink: false, PrivateNetwork: false, Bandwidth: bandwidth, Type: "bulk-ethernet-networkV2"}
 
 	er := ovc.CreateEthernetNetwork(ethernetNetwork)
 	if er != nil {
