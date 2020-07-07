@@ -10,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV       *ov.OVClient
-		name_to_create = "Cluster-1"
+		name_to_create = "ThreePAR-1"
 		managed_domain = "TestDomain" //Variable to update the managedDomain
 	)
 
@@ -20,11 +20,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	// Create storage system
-	storageSystem := ov.StorageSystem{Hostname: "<hostname>", Username: "<username>", Password: "<password>", Family: "<family>", Description: "<description>"}
+	storageSystem := ov.StorageSystem{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual", Description: "<description>"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
@@ -43,14 +43,14 @@ func main() {
 	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 
 	updated_storage_system := ov.StorageSystem{
-		Name:                                  name_to_create,
+		Name: name_to_create,
 		StorageSystemDeviceSpecificAttributes: DeviceSpecificAttributesForUpdate,
-		URI:                                   update_system.URI,
-		ETAG:                                  update_system.ETAG,
-		Description:                           "Updated the storage system",
-		Credentials:                           update_system.Credentials,
-		Hostname:                              update_system.Hostname,
-		Ports:                                 update_system.Ports,
+		URI:         update_system.URI,
+		ETAG:        update_system.ETAG,
+		Description: "Updated the storage system",
+		Credentials: update_system.Credentials,
+		Hostname:    update_system.Hostname,
+		Ports:       update_system.Ports,
 	}
 
 	err = ovc.UpdateStorageSystem(updated_storage_system)
