@@ -21,19 +21,19 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	// Create storage volume with name <new_volume>
 	properties := &ov.Properties{
 		Name:                new_volume,
-		Storagepool:         utils.NewNstring("/rest/storage-pools/4EF694D4-FB48-4209-8790-AB200070738C"),
+		Storagepool:         utils.NewNstring("/rest/storage-pools/7D2A17CD-414A-45EF-B221-ABF1006D6F44"),
 		Size:                268435456,
 		ProvisioningType:    "Thin",
 		DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
-	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/01953309-b02e-47d2-921b-aaaf0099d392"), Properties: properties, IsPermanent: &trueVal}
+	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/798f3224-8f8d-43b1-a02f-abf100736549"), Properties: properties, IsPermanent: &trueVal}
 
 	err := ovc.CreateStorageVolume(storageVolume)
 	if err != nil {
@@ -50,10 +50,11 @@ func main() {
 		Name:                      name_to_update,
 		ProvisionedCapacity:       "107374741824",
 		DeviceSpecificAttributes:  update_vol.DeviceSpecificAttributes,
-		URI:                       update_vol.URI,
-		ETAG:                      update_vol.ETAG,
-		Description:               "empty",
-		TemplateVersion:           "1.1",
+		URI:               update_vol.URI,
+		ETAG:              update_vol.ETAG,
+		Description:       "empty",
+		TemplateVersion:   "1.1",
+		VolumeTemplateUri: update_vol.VolumeTemplateUri,
 	}
 
 	err = ovc.UpdateStorageVolume(updated_storage_volume)
