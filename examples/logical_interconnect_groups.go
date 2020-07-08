@@ -18,8 +18,8 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV     *ov.OVClient
-		lig_name     = "LIG_Demo"
-		lig_type     = "logical-interconnect-groupV7"
+		lig_name     = "TestEG"
+		lig_type     = "logical-interconnect-groupV8"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
 	ovc := clientOV.NewOVClient(
@@ -28,7 +28,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
@@ -42,6 +42,7 @@ func main() {
 	locationEntries1 := new([]ov.LocationEntry)
 	*locationEntries1 = append(*locationEntries1, locationEntry_first)
 	*locationEntries1 = append(*locationEntries1, locationEntry_second)
+
 	locationEntry_third := ov.LocationEntry{Type: "Bay", RelativeValue: 6}
 	locationEntry_four := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
 	locationEntries2 := new([]ov.LocationEntry)
@@ -51,10 +52,10 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/3a87bace-0c1f-4b46-add1-abe94ffb95ed",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/f4437afa-529f-467a-9875-7dd3a4fe561f",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
@@ -66,10 +67,10 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV6",
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		URI:                                "/settings",
 		Name:                               "defaultEthernetSwitchSettings",
-		ID:                                 "6732dd2e-05c3-44da-b359-199c2c784f47",
+		ID:                                 "cf3509e5-5330-4464-8d4c-fc679bc3ad0b",
 		InterconnectType:                   "Ethernet",
 		EnableIgmpSnooping:                 newFalse(),
 		EnableInterconnectUtilizationAlert: newFalse(),

@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		ClientOV              *ov.OVClient
-		existing_interconnect = "HP VC FlexFabric 10Gb/24-Port Module"
+		existing_interconnect = "Virtual Connect SE 40Gb F8 Module for Synergy"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -18,7 +18,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	fmt.Println("#................... Interconnect Type by Name ...............#")
@@ -29,7 +29,7 @@ func main() {
 		fmt.Println(interconnect)
 	}
 
-	interconnect_type := utils.NewNstring("/rest/interconnect-types/a3af4d5e-7114-4e7a-a6c4-f97b707ec87c")
+	interconnect_type := utils.NewNstring("/rest/interconnects/e1242fc7-4e54-488d-90b2-2f8469a2b80a")
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
 	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type)
 	if err != nil {
