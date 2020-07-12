@@ -50,11 +50,11 @@ func main() {
 		Name:                      name_to_update,
 		ProvisionedCapacity:       "107374741824",
 		DeviceSpecificAttributes:  update_vol.DeviceSpecificAttributes,
-		URI:                       update_vol.URI,
-		ETAG:                      update_vol.ETAG,
-		Description:               "empty",
-		TemplateVersion:           "1.1",
-		VolumeTemplateUri:         update_vol.VolumeTemplateUri,
+		URI:               update_vol.URI,
+		ETAG:              update_vol.ETAG,
+		Description:       "empty",
+		TemplateVersion:   "1.1",
+		VolumeTemplateUri: update_vol.VolumeTemplateUri,
 	}
 
 	err = ovc.UpdateStorageVolume(updated_storage_volume)
