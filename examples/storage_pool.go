@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"io/ioutil"
 	"os"
 )
 
@@ -33,8 +31,6 @@ func main() {
 	// Attempting to unmanage a StoreVirtual pool is not allowed and the attempt will return a task error.
 	// To request a refresh of a storage pool the user must set the "requestingRefresh" attribute to true. The user cannot perform any other attribute update to the storage pool while also requesting a refresh of the pool.
 	update_pool.IsManaged = true
-	file, _ := json.MarshalIndent(update_pool, "", " ")
-	_ = ioutil.WriteFile("test.json", file, 0644)
 	err := ovc.UpdateStoragePool(update_pool)
 	if err != nil {
 		fmt.Println("Could not update the pool", err)
