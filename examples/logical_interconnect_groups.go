@@ -19,7 +19,7 @@ func main() {
 	var (
 		clientOV     *ov.OVClient
 		lig_name     = "LIG_Demo"
-		lig_type     = "logical-interconnect-groupV7"
+		lig_type     = "logical-interconnect-groupV8"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
 	ovc := clientOV.NewOVClient(
@@ -51,10 +51,10 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/169acbca-5c6e-4565-836a-e555418af388",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/5d6c7348-bed9-4b6a-99f3-c5aaf47a2b95",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/169acbca-5c6e-4565-836a-e555418af388",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
@@ -66,14 +66,13 @@ func main() {
 
 	enclosureIndexes := []int{1}
 
-	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV6",
+	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		URI:                                "/settings",
 		Name:                               "defaultEthernetSwitchSettings",
 		ID:                                 "6732dd2e-05c3-44da-b359-199c2c784f47",
 		InterconnectType:                   "Ethernet",
 		EnableIgmpSnooping:                 newFalse(),
 		EnableInterconnectUtilizationAlert: newFalse(),
-		IgmpIdleTimeoutInterval:            260,
 		EnableFastMacCacheFailover:         newTrue(),
 		MacRefreshInterval:                 5,
 		EnableNetworkLoopProtection:        newTrue(),

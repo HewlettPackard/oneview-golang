@@ -10,45 +10,53 @@ import (
 )
 
 type LogicalInterconnectGroup struct {
-	Category                string                   `json:"category,omitempty"`               // "category": "logical-interconnect-groups",
-	Created                 string                   `json:"created,omitempty"`                // "created": "20150831T154835.250Z",
-	Description             utils.Nstring            `json:"description,omitempty"`            // "description": "Logical Interconnect Group 1",
-	ETAG                    string                   `json:"eTag,omitempty"`                   // "eTag": "1441036118675/8",
-	EnclosureIndexes        []int                    `json:"enclosureIndexes,omitempty"`       // "enclosureIndexes": [1],
-	EnclosureType           string                   `json:"enclosureType,omitempty"`          // "enclosureType": "C7000",
-	EthernetSettings        *EthernetSettings        `json:"ethernetSettings,omitempty"`       // "ethernetSettings": {...},
-	FabricUri               utils.Nstring            `json:"fabricUri,omitempty"`              // "fabricUri": "/rest/fabrics/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",
-	InterconnectBaySet      int                      `json:"interconnectBaySet,omitempty"`     // "interconnectBaySet": 1,
-	InterconnectMapTemplate *InterconnectMapTemplate `json:"interconnectMapTemplate"`          // "interconnectMapTemplate": {...},
-	InternalNetworkUris     []utils.Nstring          `json:"internalNetworkUris,omitempty"`    // "internalNetworkUris": []
-	Modified                string                   `json:"modified,omitempty"`               // "modified": "20150831T154835.250Z",
-	Name                    string                   `json:"name"`                             // "name": "Logical Interconnect Group1",
-	QosConfiguration        *QosConfiguration        `json:"qosConfiguration,omitempty"`       // "qosConfiguration": {},
-	RedundancyType          string                   `json:"redundancyType,omitempty"`         // "redundancyType": "HighlyAvailable"
-	ScopesUri               utils.Nstring            `json:"scopesUri,omitempty"`              // "scopesUri":""
-	InitialScopeUris        []utils.Nstring          `json:"initialScopeUris,omitempty"`       // "initialScopeUris":[]
-	NextPageUri             string                   `json:"NextPageUri,omitempty"`            // "NextPageUri":""
-	PrevPageUri             string                   `json:"prevPageUri,omitempty"`            // "PrevPageUri":""
-	Start                   int                      `json:"start,omitempty"`                  // "start":""
-	Total                   int                      `json:"total,omitempty"`                  // "total":""
-	SnmpConfiguration       *SnmpConfiguration       `json:"snmpConfiguration,omitempty"`      // "snmpConfiguration": {...}
-	StackingHealth          string                   `json:"stackingHealth,omitempty"`         //"stackingHealth": "Connected",
-	StackingMode            string                   `json:"stackingMode,omitempty"`           //"stackingMode": "Enclosure",
-	State                   string                   `json:"state,omitempty"`                  // "state": "Normal",
-	Status                  string                   `json:"status,omitempty"`                 // "status": "Critical",
-	TelemetryConfiguration  *TelemetryConfiguration  `json:"telemetryConfiguration,omitempty"` // "telemetryConfiguration": {...},
-	SflowConfiguration      *SflowConfiguration      `json:"sflowConfiguration,omitempty"`     // "sflowConfiguration": {...},
-	Type                    string                   `json:"type"`                             // "type": "logical-interconnect-groupsV3",
-	UplinkSets              []UplinkSets             `json:"uplinkSets"`                       // "uplinkSets": {...},
-	URI                     utils.Nstring            `json:"uri,omitempty"`                    // "uri": "/rest/logical-interconnect-groups/e2f0031b-52bd-4223-9ac1-d91cb519d548",
+	Category                               string                   `json:"category,omitempty"`                               // "category": "logical-interconnect-groups",
+	ConsistencyCheckingForInternalNetworks string                   `json:"consistencyCheckingForInternalNetworks,omitempty"` //"consistencyCheckingForInternalNetworks": "ExactMatch",
+	Created                                string                   `json:"created,omitempty"`                                // "created": "20150831T154835.250Z",
+	Description                            utils.Nstring            `json:"description,omitempty"`                            // "description": "Logical Interconnect Group 1",
+	DownlinkSpeedMode                      string                   `json:"downlinkSpeedMode,omitempty"`                      // "downlinkSpeedMode": "UNSUPPORTED",
+	ETAG                                   string                   `json:"eTag,omitempty"`                                   // "eTag": "1441036118675/8",
+	EnclosureIndexes                       []int                    `json:"enclosureIndexes,omitempty"`                       // "enclosureIndexes": [1],
+	EnclosureType                          string                   `json:"enclosureType,omitempty"`                          // "enclosureType": "C7000",
+	EthernetSettings                       *EthernetSettings        `json:"ethernetSettings,omitempty"`                       // "ethernetSettings": {...},
+	FabricUri                              utils.Nstring            `json:"fabricUri,omitempty"`                              // "fabricUri": "/rest/fabrics/9b8f7ec0-52b3-475e-84f4-c4eac51c2c20",
+	IgmpSettings                           *IgmpSettings            `json:"igmpSettings,omitempty"`                           //"igmpSettings":{...},
+	InitialScopeUris                       []utils.Nstring          `json:"initialScopeUris,omitempty"`                       // "initialScopeUris":[]
+	InterconnectBaySet                     int                      `json:"interconnectBaySet,omitempty"`                     // "interconnectBaySet": 1,
+	InterconnectMapTemplate                *InterconnectMapTemplate `json:"interconnectMapTemplate"`                          // "interconnectMapTemplate": {...},
+	InternalNetworkUris                    []utils.Nstring          `json:"internalNetworkUris,omitempty"`                    // "internalNetworkUris": []
+	Modified                               string                   `json:"modified,omitempty"`                               // "modified": "20150831T154835.250Z",
+	Name                                   string                   `json:"name"`                                             // "name": "Logical Interconnect Group1",
+	NtpConfiguration                       string                   `json:"ntpConfiguration,omitempty"`                       //"ntpConfiguration" : {...}
+	QosConfiguration                       *QosConfiguration        `json:"qosConfiguration,omitempty"`                       // "qosConfiguration": {},
+	RedundancyType                         string                   `json:"redundancyType,omitempty"`                         // "redundancyType": "HighlyAvailable"
+	ScopesUri                              utils.Nstring            `json:"scopesUri,omitempty"`                              // "scopesUri":""
+	NextPageUri                            string                   `json:"NextPageUri,omitempty"`                            // "NextPageUri":""
+	PrevPageUri                            string                   `json:"prevPageUri,omitempty"`                            // "PrevPageUri":""
+	Start                                  int                      `json:"start,omitempty"`                                  // "start":""
+	Total                                  int                      `json:"total,omitempty"`                                  // "total":""
+	SflowConfiguration                     *SflowConfiguration      `json:"sflowConfiguration,omitempty"`                     // "sflowConfiguration": {...},
+	SnmpConfiguration                      *SnmpConfiguration       `json:"snmpConfiguration,omitempty"`                      // "snmpConfiguration": {...}
+	StackingHealth                         string                   `json:"stackingHealth,omitempty"`                         //"stackingHealth": "Connected",
+	StackingMode                           string                   `json:"stackingMode,omitempty"`                           //"stackingMode": "Enclosure",
+	State                                  string                   `json:"state,omitempty"`                                  // "state": "Normal",
+	Status                                 string                   `json:"status,omitempty"`                                 // "status": "Critical",
+	TelemetryConfiguration                 *TelemetryConfiguration  `json:"telemetryConfiguration,omitempty"`                 // "telemetryConfiguration": {...},
+	Type                                   string                   `json:"type"`                                             // "type": "logical-interconnect-groupsV3",
+	UplinkSets                             []UplinkSets             `json:"uplinkSets"`                                       // "uplinkSets": {...},
+	URI                                    utils.Nstring            `json:"uri,omitempty"`                                    // "uri": "/rest/logical-interconnect-groups/e2f0031b-52bd-4223-9ac1-d91cb519d548",
 }
 
 type EthernetSettings struct {
 	Category                           utils.Nstring `json:"category,omitempty"`                           // "category": null,
+	ConsistencyChecking                string        `json:"consistencyChecking,omitempty"`                //"consistencyChecking": "ExactMatch",
 	Created                            string        `json:"created,omitempty"`                            // "created": "20150831T154835.250Z",
-	DependentResourceUri               utils.Nstring `json:"dependentResourceUri,omitempty"`               // dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
-	Description                        utils.Nstring `json:"description,omitempty,omitempty"`              // "description": "Ethernet Settings",
+	DependentResourceUri               utils.Nstring `json:"dependentResourceUri"`                         // dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
+	Description                        utils.Nstring `json:"description,omitempty"`                        // "description": "Ethernet Settings",
+	DomainName                         string        `json:"domainName,omitempty"`                         //"domainName": "",
 	ETAG                               string        `json:"eTag,omitempty"`                               // "eTag": "1441036118675/8",
+	EnableCutThrough                   *bool         `json:"enableCutThrough,omitempty"`                   //"enableCutThrough":false,
+	EnableDdns                         *bool         `json:"enableDdns,omitempty"`                         //"enableDdns":false,
 	EnableFastMacCacheFailover         *bool         `json:"enableFastMacCacheFailover,omitempty"`         //"enableFastMacCacheFailover": false,
 	EnableIgmpSnooping                 *bool         `json:"enableIgmpSnooping,omitempty"`                 // "enableIgmpSnooping": false,
 	EnableInterconnectUtilizationAlert *bool         `json:"enableInterconnectUtilizationAlert,omitempty"` // "enableInterconnectUtilizationAlert": false,
@@ -58,12 +66,10 @@ type EthernetSettings struct {
 	EnableStormControl                 *bool         `json:"enableStormControl,omitempty"`                 // "enableStormControl": false,
 	EnableTaggedLldp                   *bool         `json:"enableTaggedLldp,omitempty"`                   // "enableTaggedLldp": false,
 	ID                                 string        `json:"id,omitempty"`                                 //"id": "0c398238-2d35-48eb-9eb5-7560d59f94b3",
-	IgmpIdleTimeoutInterval            int           `json:"igmpIdleTimeoutInterval,omitempty"`            // "igmpIdleTimeoutInterval": 260,
-	IgmpSnoopingVlanIds                string        `json:"igmpSnoopingVlanIds,omitempty"`                // "igmpSnoopingVlanIds": "",
+	InterconnectType                   string        `json:"interconnectType,omitempty"`                   // "interconnectType": "Ethernet",
 	LldpIpAddressMode                  string        `json:"lldpIpAddressMode,omitempty"`                  // "lldpIpAddressMode": "IPV4",
 	LldpIpv4Address                    string        `json:"lldpIpv4Address,omitempty"`                    // "lldpIpv4Address": "",
 	LldpIpv6Address                    string        `json:"lldpIpv6Address,omitempty"`                    //"lldpIpv6Address": "",
-	InterconnectType                   string        `json:"interconnectType,omitempty"`                   // "interconnectType": "Ethernet",
 	MacRefreshInterval                 int           `json:"macRefreshInterval,omitempty"`                 // "macRefreshInterval": 5,
 	Modified                           string        `json:"modified,omitempty"`                           // "modified": "20150831T154835.250Z",
 	Name                               string        `json:"name,omitempty"`                               // "name": "ethernetSettings 1",
@@ -75,6 +81,26 @@ type EthernetSettings struct {
 	URI                                utils.Nstring `json:"uri,omitempty"`                                // "uri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86/ethernetSettings"
 }
 
+type IgmpSettings struct {
+	Category                utils.Nstring `json:"category,omitempty"`                // "category": null,
+	ConsistencyChecking     string        `json:"consistencyChecking,omitempty"`     //"consistencyCheckingForInternalNetworks": "ExactMatch",
+	Created                 string        `json:"created,omitempty"`                 // "created": "20150831T154835.250Z",
+	DependentResourceUri    utils.Nstring `json:"dependentResourceUri"`              // dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
+	Description             utils.Nstring `json:"description,omitempty"`             // "description": "Ethernet Settings",
+	ETAG                    string        `json:"eTag,omitempty"`                    // "eTag": "1441036118675/8",
+	EnableIgmpSnooping      *bool         `json:"enableIgmpSnooping,omitempty"`      // "enableIgmpSnooping": false,
+	EnablePreventFlooding   *bool         `json:"enablePreventFlooding,omitempty"`   // "enablePreventFlooding": false,
+	EnableProxyReporting    *bool         `json:"enableProxyReporting,omitempty"`    // "enableProxyReporting": false,
+	ID                      string        `json:"id,omitempty"`                      //"id": "0c398238-2d35-48eb-9eb5-7560d59f94b3",
+	IgmpIdleTimeoutInterval int           `json:"igmpIdleTimeoutInterval,omitempty"` // "igmpIdleTimeoutInterval": 260,
+	IgmpSnoopingVlanIds     string        `json:"igmpSnoopingVlanIds,omitempty"`     // "igmpSnoopingVlanIds": "",
+	Modified                string        `json:"modified,omitempty"`                // "modified": "20150831T154835.250Z",
+	Name                    string        `json:"name,omitempty"`                    // "name": "ethernetSettings 1",
+	State                   string        `json:"state,omitempty"`                   // "state": "Normal",
+	Status                  string        `json:"status,omitempty"`                  // "status": "Critical",
+	Type                    string        `json:"type,omitempty"`                    // "EthernetInterconnectSettingsV5",
+	URI                     utils.Nstring `json:"uri,omitempty"`                     // "uri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86/ethernetSettings"
+}
 type InterconnectMapTemplate struct {
 	InterconnectMapEntryTemplates []InterconnectMapEntryTemplate `json:"interconnectMapEntryTemplates"` // "interconnectMapEntryTemplates": {...},
 }
