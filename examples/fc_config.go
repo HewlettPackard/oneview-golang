@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	_ "os"
-	"path/filepath"
 )
 
 func main() {
@@ -15,29 +13,33 @@ func main() {
 		new_fc_name = "RenamedFCNetwork"
 		falseVar    = false
 	)
-	config, err1 := ov.LoadConfigFile("oneview_config.json")
-	if err1 != nil {
-		fmt.Println(err1)
+
+	//To run this example  uncomment below section to fill the ip and the credentials below or use a configuration file
+	/*	apiversion, _ := strconv.Atoi("ONEVIEW_APIVERSION")
+		ovc := ClientOV.NewOVClient(
+			"ONEVIEW_OV_USER",
+			"ONEVIEW_OV_PASSWORD",
+			"ONEVIEW_OV_DOMAIN",
+			"ONEVIEW_OV_ENDPOINT",
+			false,
+			apiversion,
+			"*")*/
+
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("oneview_config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
 	}
 	ovc := ClientOV.NewOVClient(
 		config.UserName,
 		config.Password,
 		config.Domain,
 		config.Endpoint,
-		config.SSlVerify,
+		config.SslVerify,
 		config.ApiVersion,
 		config.IfMatch)
 
-	/*	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-		ovc := ClientOV.NewOVClient(
-			os.Getenv("ONEVIEW_OV_USER"),
-			os.Getenv("ONEVIEW_OV_PASSWORD"),
-			os.Getenv("ONEVIEW_OV_DOMAIN"),
-			os.Getenv("ONEVIEW_OV_ENDPOINT"),
-			false,
-			apiversion,
-			"*")*/
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/8ef32b43-2478-4aea-bb68-a65d0fbfea93")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",

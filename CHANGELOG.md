@@ -14,6 +14,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 #### Bug fixes & Enhancements:
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
+- [#154] (https://github.com/HewlettPackard/oneview-golang/issues/154) Add json configuration file for creating NewOVClient to run examples
 
 # [v1.4.0] (2020-05-27)
 ### Notes
