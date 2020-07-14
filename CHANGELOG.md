@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure
 - Enclosure Group
 - Uplink Sets
+- Storage Volume Attachment
 
 #### Bug fixes & Enhancements:
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
