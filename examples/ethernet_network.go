@@ -112,7 +112,7 @@ func main() {
 
 	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/913eee50-6ce3-4da9-91da-60e51f9c0056"), utils.NewNstring("/rest/ethernet-networks/65220487-b40f-43d8-8ee3-6c5b914d3e43")}
 	bulkDeleteEthernetNetwork := ov.BulkDelete{NetworkUris: *network_uris}
-	err := ovc.DeleteBulkEthernetNetwork(bulkDeleteEthernetNetwork)
+	err = ovc.DeleteBulkEthernetNetwork(bulkDeleteEthernetNetwork)
 
 	if err != nil {
 		fmt.Println("............. Ethernet Network Bulk-Deletion Failed:", err)
