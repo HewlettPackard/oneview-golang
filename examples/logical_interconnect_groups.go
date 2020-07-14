@@ -18,7 +18,7 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV     *ov.OVClient
-		lig_name     = "TestEG"
+		lig_name     = "TestLIG-GO"
 		lig_type     = "logical-interconnect-groupV8"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
@@ -52,7 +52,7 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/3a87bace-0c1f-4b46-add1-abe94ffb95ed",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/f4437afa-529f-467a-9875-7dd3a4fe561f",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
 		PermittedInterconnectTypeUri: "/rest/interconnect-types/f4437afa-529f-467a-9875-7dd3a4fe561f",
@@ -72,14 +72,20 @@ func main() {
 		Name:                               "defaultEthernetSwitchSettings",
 		ID:                                 "cf3509e5-5330-4464-8d4c-fc679bc3ad0b",
 		InterconnectType:                   "Ethernet",
-		EnableIgmpSnooping:                 newFalse(),
 		EnableInterconnectUtilizationAlert: newFalse(),
-		IgmpIdleTimeoutInterval:            260,
 		EnableFastMacCacheFailover:         newTrue(),
 		MacRefreshInterval:                 5,
 		EnableNetworkLoopProtection:        newTrue(),
 		EnablePauseFloodProtection:         newTrue(),
 		EnableRichTLV:                      newFalse()}
+
+	igmpSettings := ov.IgmpSettings{Type: "IgmpSettings",
+		Name:                    "defaultIgmpSettings",
+		EnableIgmpSnooping:      newTrue(),
+		ConsistencyChecking:     "ExactMatch",
+		IgmpIdleTimeoutInterval: 260,
+		EnableProxyReporting:    newTrue()}
+
 	telemetryConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration",
 		EnableTelemetry: newTrue(),
 		SampleCount:     12,
@@ -98,6 +104,7 @@ func main() {
 
 	logicalInterconnectGroup := ov.LogicalInterconnectGroup{Type: lig_type,
 		EthernetSettings:        &ethernetSettings,
+		IgmpSettings:            &igmpSettings,
 		Name:                    lig_name,
 		TelemetryConfiguration:  &telemetryConfig,
 		InterconnectMapTemplate: &interconnectMapTemplate,
