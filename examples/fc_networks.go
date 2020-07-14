@@ -73,4 +73,14 @@ func main() {
 		fmt.Println("Deleted FCNetworks successfully...")
 	}
 
+	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fc-networks/17547746-d14d-4779-85cb-51b9dbc3cfdf"), utils.NewNstring("/rest/fc-networks/20064875-ae83-47b1-ad99-8c55ddba9f77")}
+	bulkDeleteFCNetwork := ov.FCNetworkBulkDelete{FCNetworkUris: *network_uris}
+	err = ovc.DeleteBulkFcNetwork(bulkDeleteFCNetwork)
+
+	if err != nil {
+		fmt.Println("............. FC Network Bulk-Deletion Failed:", err)
+	} else {
+		fmt.Println(".... FC Network Bulk-Delete is Successful")
+	}
+
 }
