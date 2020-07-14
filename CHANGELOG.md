@@ -10,7 +10,11 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Oneview Features supported
 - Enclosure
 - Enclosure Group
+- Logical Enclosure
+- Server Hardware
+- Server Hardware Template
 - Uplink Sets
+- Task
 
 #### Bug fixes & Enhancements:
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
