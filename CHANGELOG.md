@@ -11,8 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enclosure
 - Enclosure Group
 - Logical Enclosure
-- Server Hardware
-- Server Hardware Template
+- Server Profile
+- Server Profile Template
 - Uplink Sets
 - Task
 
