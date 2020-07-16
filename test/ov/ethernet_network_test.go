@@ -3,7 +3,9 @@ package ov
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
+
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -153,6 +155,35 @@ func TestDeleteEthernetNetwork(t *testing.T) {
 		_, c = getTestDriverU("test_ethernet_network")
 		err := c.DeleteEthernetNetwork("footest")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testEthNet))
+	}
+
+}
+
+func TestDeleteBulkEthernetNetwork(t *testing.T) {
+	var (
+		c *ov.OVClient
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA("test_ethernet_network")
+		networkUris := make([]utils.Nstring, 0)
+		testNetSet := ov.BulkDelete{
+			NetworkUris: networkUris,
+		}
+
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		err := c.DeleteBulkEthernetNetwork(testNetSet)
+		assert.NoError(t, err, "DeleteEthernetNetwork err-> %s", err)
+	} else {
+		_, c = getTestDriverU("test_ethernet_network")
+		networkUri := make([]utils.Nstring, 0)
+		testNetSet := ov.BulkDelete{
+			NetworkUris: networkUri,
+		}
+		err := c.DeleteBulkEthernetNetwork(testNetSet)
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %+v", err))
 	}
 
 }
