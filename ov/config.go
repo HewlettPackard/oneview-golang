@@ -2,8 +2,7 @@ package ov
 
 import (
 	"encoding/json"
-	"fmt"
-	_ "github.com/HewlettPackard/oneview-golang/utils"
+	"fmt"	
 	"os"
 )
 
