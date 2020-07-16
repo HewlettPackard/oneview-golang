@@ -84,15 +84,6 @@ func main() {
 		}
 	}
 
-	// Allocates a set of IDs from an IPv4 range.
-	//    idList = ["10.255.3.5"]
-	//	updatedAllocators, err := ovc.UpdateAllocator("a257c58c-bbe9-4174-b2a3-eada622fc555", idList)
-	//	if err != nil {
-	//		panic(err)
-	//	} else {
-	//		fmt.Println("Allocated "+ idList + "successfully")
-	//	}
-
 	// Deletes an IPv4 range.
 	err = ovc.DeleteIpv4Range(id)
 	if err != nil {
