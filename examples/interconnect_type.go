@@ -29,7 +29,7 @@ func main() {
 		fmt.Println(interconnect)
 	}
 
-	interconnect_type := utils.NewNstring("/rest/interconnects/e1242fc7-4e54-488d-90b2-2f8469a2b80a")
+	interconnect_type := utils.NewNstring("/rest/interconnect-types/a3af4d5e-7114-4e7a-a6c4-f97b707ec87c")
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
 	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type)
 	if err != nil {

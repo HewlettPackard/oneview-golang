@@ -22,7 +22,7 @@ func main() {
 		id              = "e6f42b51-ba5a-430e-8b68-a9d1de223293"
 		macAddress      = "94:57:A5:67:2C:BE"
 		internalVlan    = "1052"
-		interconnectURI = "rest/ethernet-networks/577d8021-67e1-4d3e-92a1-fa20f61c812a"
+		interconnectURI = "/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"
 		externalVlan    = "1052"
 		tcId            = "1"
 	)
