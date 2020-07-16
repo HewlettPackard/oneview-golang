@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Storage Pool
 - Storage System
 - Storage Volume
+- Storage Volume Attachment
 - Storage Volume Template
 - Task
 - Uplink Sets
