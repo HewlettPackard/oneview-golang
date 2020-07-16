@@ -10,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV     *ov.OVClient
-		storage_pool = "CPG-SSD"
+		storage_pool = "<storage_pool>"
 	)
 
 	ovc := ClientOV.NewOVClient(
