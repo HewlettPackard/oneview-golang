@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	//Get storage pool by name to update
@@ -31,7 +31,6 @@ func main() {
 	// Attempting to unmanage a StoreVirtual pool is not allowed and the attempt will return a task error.
 	// To request a refresh of a storage pool the user must set the "requestingRefresh" attribute to true. The user cannot perform any other attribute update to the storage pool while also requesting a refresh of the pool.
 	update_pool.IsManaged = true
-
 	err := ovc.UpdateStoragePool(update_pool)
 	if err != nil {
 		fmt.Println("Could not update the pool", err)
