@@ -2,6 +2,7 @@ package ov
 
 import (
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"testing"
 
@@ -138,6 +139,35 @@ func TestDeleteFCNetwork(t *testing.T) {
 		_, c = getTestDriverU("test_fc_network")
 		err := c.DeleteFCNetwork("footest")
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testFcNet))
+	}
+
+}
+
+func TestDeleteBulkFcNetwork(t *testing.T) {
+	var (
+		c *ov.OVClient
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA("test_fc_network")
+		networkUris := make([]utils.Nstring, 0)
+		testNetSet := ov.FCNetworkBulkDelete{
+			FCNetworkUris: networkUris,
+		}
+
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		err := c.DeleteBulkFcNetwork(testNetSet)
+		assert.NoError(t, err, "DeleteFCNetwork err-> %s", err)
+	} else {
+		_, c = getTestDriverU("test_fc_network")
+		networkUri := make([]utils.Nstring, 0)
+		testNetSet := ov.FCNetworkBulkDelete{
+			FCNetworkUris: networkUri,
+		}
+		err := c.DeleteBulkFcNetwork(testNetSet)
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %+v", err))
 	}
 
 }
