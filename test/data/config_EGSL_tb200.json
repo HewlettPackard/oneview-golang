@@ -129,7 +129,10 @@
         "Modified": "2016-04-04T21:04:24.209Z",
         "Created": "2016-04-04T21:04:24.207Z",
         "Category": "ethernet-networks",
-        "URI": "/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"
+        "URI": "/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163",
+	"BulkDelete": [
+	  "/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	]
       }
     },
     {
