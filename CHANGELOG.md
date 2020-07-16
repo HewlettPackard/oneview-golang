@@ -2,23 +2,32 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 # [v1.5.0] (unreleased)
-### Notes
 
+### Notes
 - This release extends supports of the SDK to Oneview API1800.
 - Minor Bug Fixes
 
 ### Oneview Features supported
 - Enclosure
 - Enclosure Group
+- Ethernet Network
+- FCOE Network
+- FC Network
 - Logical Enclosure
+- Hypervisor Cluster Profile
+- Hypervisor Manager
+- Scope
+- Server Certificate
 - Server Profile
 - Server Profile Template
+- Storage System
 - Task
 - Uplink Sets
 
 #### Bug fixes & Enhancements:
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
 
+ 
 # [v1.4.0] (2020-05-27)
 ### Notes
 - Added support for loginMsgAck attribute in login session POST request.

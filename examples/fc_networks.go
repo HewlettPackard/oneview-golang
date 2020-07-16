@@ -24,7 +24,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7e4f76b0-bb2c-49d2-a641-d785475df423")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/c5f5467f-7e86-4596-bb1f-81b9bedcd488")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",
@@ -71,6 +71,16 @@ func main() {
 		panic(err)
 	} else {
 		fmt.Println("Deleted FCNetworks successfully...")
+	}
+
+	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fc-networks/17547746-d14d-4779-85cb-51b9dbc3cfdf"), utils.NewNstring("/rest/fc-networks/20064875-ae83-47b1-ad99-8c55ddba9f77")}
+	bulkDeleteFCNetwork := ov.FCNetworkBulkDelete{FCNetworkUris: *network_uris}
+	err = ovc.DeleteBulkFcNetwork(bulkDeleteFCNetwork)
+
+	if err != nil {
+		fmt.Println("............. FC Network Bulk-Deletion Failed:", err)
+	} else {
+		fmt.Println(".... FC Network Bulk-Delete is Successful")
 	}
 
 }
