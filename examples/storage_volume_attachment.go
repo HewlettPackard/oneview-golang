@@ -36,11 +36,19 @@ func main() {
 	id := filepath.Base(string(attachment_list.Members[0].URI))
 
 	// Get volume attachment by id
-	fmt.Println("\nGetting details of volume attachment with name: ", id)
-	volAttach_by_id, _ := ovc.GetStorageAttachmentById(id)
+	fmt.Println("\nGetting details of volume attachment with id: ", id)
+	volAttach_by_id, err_id := ovc.GetStorageAttachmentById(id)
+	if err_id != nil {
+		fmt.Println("Error Getting the storage attachments ", err_id)
+	}
+
 	fmt.Println(volAttach_by_id)
 	// Get volume attachment by name
 	fmt.Println("\nGetting details of volume attachment with name: ", name_to_get)
-	volAttach_by_name, _ := ovc.GetStorageAttachmentByName(name_to_get)
+	volAttach_by_name, err_name := ovc.GetStorageAttachmentByName(name_to_get)
+	if err_name != nil {
+		fmt.Println("Error Getting the storage attachments ", err_name)
+	}
+
 	fmt.Println(volAttach_by_name)
 }
