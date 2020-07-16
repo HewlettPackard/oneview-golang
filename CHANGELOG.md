@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Server Certificate
 - Server Profile
 - Server Profile Template
+- Storage Pool
 - Storage System
 - Task
 - Uplink Sets
