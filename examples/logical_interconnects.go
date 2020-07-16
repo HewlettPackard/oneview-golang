@@ -96,6 +96,10 @@ func main() {
 	telemetry_config, _ := ovc.GetTelemetryConfigurations(id, "1")
 	fmt.Println(telemetry_config)
 
+	fmt.Println("....  Logical Interconnect IgmpSettings.....")
+	igmpSettings, _ := ovc.GetLogicalInterconnectIgmpSettings(id)
+	fmt.Println(igmpSettings)
+
 	fmt.Println("....  Updating Logical Interconnect Consistent State.....")
 	var liUris []utils.Nstring
 	liUris = append(liUris, utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293"))
@@ -198,6 +202,15 @@ func main() {
 	err_tm := ovc.UpdateLogicalInterconnectTelemetryConfigurations(liTMConfig, id, tcId)
 	if err_tm != nil {
 		fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_tm)
+	}
+
+	fmt.Println("....  Updating Logical Interconnect Igmp Configuration.....")
+	dru := "/rest/logical-interconnects/" + id
+	liIgmpConfig := ov.IgmpSettingsUpdate{Type: "IgmpSettings", Name: "Igmp-Update", EnableIgmpSnooping: newTrue(), IgmpIdleTimeoutInterval: 200, ID: id, DependentResourceUri: dru}
+
+	err_is := ovc.UpdateLogicalInterconnectIgmpSettings(liIgmpConfig, id)
+	if err_is != nil {
+		fmt.Println("Could not update Igmp Configuration of Logical Interconnect", err_is)
 	}
 
 }

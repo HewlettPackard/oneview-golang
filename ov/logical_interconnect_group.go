@@ -81,8 +81,8 @@ type IgmpSettings struct {
 	Category                utils.Nstring `json:"category,omitempty"`                // "category": null,
 	ConsistencyChecking     string        `json:"consistencyChecking,omitempty"`     // "consistencyChecking":"ExactMatch"
 	Created                 string        `json:"created,omitempty"`                 // "created": "20150831T154835.250Z",
-	DependentResourceUri    utils.Nstring `json:"dependentResourceUri,omitempty"`    // "dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
-	Description             utils.Nstring `json:"description,omitempty"`             // "description": "Igmp Settings",
+	DependentResourceUri    string        `json:"dependentResourceUri,omitempty"`    // "dependentResourceUri": "/rest/logical-interconnect-groups/b7b144e9-1f5e-4d52-8534-2e39280f9e86",
+	Description             string        `json:"description,omitempty"`             // "description": "Igmp Settings",
 	ETAG                    utils.Nstring `json:"eTag,omitempty"`                    // "eTag": "1441036118675/8",
 	EnableIgmpSnooping      *bool         `json:"enableIgmpSnooping,omitempty"`      // "enableIgmpSnooping": true,
 	EnablePreventFlooding   *bool         `json:"enablePreventFlooding,omitempty"`   // "enablePreventFlooding": false,
