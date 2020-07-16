@@ -16,7 +16,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	fmt.Println("Get server hardware list by name")
@@ -47,7 +47,7 @@ func main() {
 
 	fmt.Println("******************")
 
-	ServerId, err := ovc.GetServerHardwareByUri("/rest/server-hardware/36343537-3338-4E43-3736-30333036524D")
+	ServerId, err := ovc.GetServerHardwareByUri("/rest/server-hardware/30373737-3237-4D32-3230-333030314752")
 	if err == nil {
 		fmt.Println(ServerId.URI)
 	} else {
@@ -76,7 +76,7 @@ func main() {
 	}
 
 	fmt.Println("******************")
-	serverHarware, err := ovc.GetAvailableHardware("/rest/server-hardware-types/9F529AA5-2021-4A10-93ED-DDC5BD80E949", "/rest/enclosure-groups/293e8efe-c6b1-4783-bf88-2d35a8e49071")
+	serverHarware, err := ovc.GetAvailableHardware("/rest/server-hardware-types/4F7CDE05-86EA-4415-A438-D9CB7ACB880B", "/rest/enclosure-groups/464e8e4f-ba42-42c3-bb79-1d0409b458b5")
 
 	if err == nil {
 		fmt.Println(serverHarware.Type)

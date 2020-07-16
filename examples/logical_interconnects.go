@@ -19,11 +19,11 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV        *ov.OVClient
-		id              = "7a8b37a6-bde0-4d06-8d20-6e574c50f39f"
+		id              = "e6f42b51-ba5a-430e-8b68-a9d1de223293"
 		macAddress      = "94:57:A5:67:2C:BE"
-		internalVlan    = "504"
+		internalVlan    = "1052"
 		interconnectURI = "/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"
-		externalVlan    = "504"
+		externalVlan    = "1052"
 		tcId            = "1"
 	)
 	ovc := clientOV.NewOVClient(
@@ -32,7 +32,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	fmt.Println("....  Logical Interconnects Collection .....")
@@ -96,9 +96,13 @@ func main() {
 	telemetry_config, _ := ovc.GetTelemetryConfigurations(id, "1")
 	fmt.Println(telemetry_config)
 
+	fmt.Println("....  Logical Interconnect IgmpSettings.....")
+	igmpSettings, _ := ovc.GetLogicalInterconnectIgmpSettings(id)
+	fmt.Println(igmpSettings)
+
 	fmt.Println("....  Updating Logical Interconnect Consistent State.....")
 	var liUris []utils.Nstring
-	liUris = append(liUris, utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"))
+	liUris = append(liUris, utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293"))
 	liCompliance := ov.LogicalInterconnectCompliance{Type: "li-compliance",
 		LogicalInterconnectUris: liUris,
 		Description:             ""}
@@ -114,10 +118,10 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect EthernetSetting .....")
-	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV4",
+	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		InterconnectType: "Ethernet",
-		URI:              utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d/ethernetSettings"),
-		ID:               "d4468f89-4442-4324-9c01-624c7382db2d"}
+		URI:              utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293/ethernetSettings"),
+		ID:               "cf3509e5-5330-4464-8d4c-fc679bc3ad0b"}
 	err_ethernet := ovc.UpdateLogicalInterconnectEthernetSettings(liEthernetSettings, id)
 	if err_ethernet != nil {
 		fmt.Println("Could not update Ethernet Settings of Logical Interconnect", err_ethernet)
@@ -150,7 +154,7 @@ func main() {
 
 	fmt.Println("....  Updating Logical Interconnect InternalNetworks.....")
 	var internalNetworks []utils.Nstring
-	internalNetworks = append(internalNetworks, utils.NewNstring("/rest/ethernet-networks/a71b9c9e-b044-48ee-8e4e-26ced1a9a9ef"))
+	internalNetworks = append(internalNetworks, utils.NewNstring("/rest/ethernet-networks/577d8021-67e1-4d3e-92a1-fa20f61c812a"))
 	err_networks := ovc.UpdateLogicalInterconnectInternalNetworks(internalNetworks, id)
 	if err_networks != nil {
 		fmt.Println("Could not update Internal Networks of Logical Interconnect", err_networks)
@@ -185,7 +189,7 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect Port Monitor Configuration.....")
-	liPMConfig := ov.PortMonitor{Type: "port-monitor", Category: "port-monitor", ETAG: "8a302a85-ec4d-4214-a3e0-10ef71d28769", Name: "name2095641007-1533682087640"}
+	liPMConfig := ov.PortMonitor{Type: "port-monitorV1", Category: "port-monitor", ETAG: "08d7c29-0c0e-4231-bf44-78bf96686455", Name: "name677351721-1594111671299"}
 
 	err_pm := ovc.UpdateLogicalInterconnectPortMonitor(liPMConfig, id)
 	if err_pm != nil {
@@ -193,11 +197,20 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect Telemetry  Configuration.....")
-	liTMConfig := ov.TelemetryConfiguration{Type: "telemetry-configuration", EnableTelemetry: newTrue(), SampleInterval: 300, SampleCount: 12, Name: "name771327580-1533682118441"}
+	liTMConfig := ov.TelemetryConfiguration{Type: "telemetry-configurations", EnableTelemetry: newTrue(), SampleInterval: 300, SampleCount: 12, Name: "name-1563511630-1594111846712"}
 
 	err_tm := ovc.UpdateLogicalInterconnectTelemetryConfigurations(liTMConfig, id, tcId)
 	if err_tm != nil {
 		fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_tm)
+	}
+
+	fmt.Println("....  Updating Logical Interconnect Igmp Configuration.....")
+	dru := "/rest/logical-interconnects/" + id
+	liIgmpConfig := ov.IgmpSettingsUpdate{Type: "IgmpSettings", Name: "Igmp-Update", EnableIgmpSnooping: newTrue(), IgmpIdleTimeoutInterval: 200, ID: id, DependentResourceUri: dru}
+
+	err_is := ovc.UpdateLogicalInterconnectIgmpSettings(liIgmpConfig, id)
+	if err_is != nil {
+		fmt.Println("Could not update Igmp Configuration of Logical Interconnect", err_is)
 	}
 
 }

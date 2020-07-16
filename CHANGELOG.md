@@ -13,12 +13,19 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet Network
 - FCOE Network
 - FC Network
-- Id pools IPV4 Ranges
-- Logical Enclosure
 - Hypervisor Cluster Profile
 - Hypervisor Manager
+- Id pools IPV4 Ranges
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect
+- Logical Interconnect Types
+- Network Set
 - Scope
 - Server Certificate
+- Server Hardware
+- Server Heardware Types
 - Server Profile
 - Server Profile Template
 - Storage Pool
