@@ -13,11 +13,15 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet Network
 - FCOE Network
 - FC Network
+- Logical Enclosure
 - Hypervisor Cluster Profile
 - Hypervisor Manager
 - Scope
 - Server Certificate
+- Server Profile
+- Server Profile Template
 - Storage System
+- Task
 - Uplink Sets
 
 #### Bug fixes & Enhancements:
