@@ -15,14 +15,13 @@ func main() {
 	)
 
 	//To run this example  uncomment below section to fill the ip and the credentials below or use a configuration file
-	/*	apiversion, _ := strconv.Atoi("ONEVIEW_APIVERSION")
-		ovc := ClientOV.NewOVClient(
+/*		ovc := ClientOV.NewOVClient(
 			"ONEVIEW_OV_USER",
 			"ONEVIEW_OV_PASSWORD",
 			"ONEVIEW_OV_DOMAIN",
 			"ONEVIEW_OV_ENDPOINT",
 			false,
-			apiversion,
+			<apiversion>,
 			"*")*/
 
 	// Use configuratin file to set the ip and  credentails
