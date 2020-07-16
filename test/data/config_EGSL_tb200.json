@@ -129,7 +129,10 @@
         "Modified": "2016-04-04T21:04:24.209Z",
         "Created": "2016-04-04T21:04:24.207Z",
         "Category": "ethernet-networks",
-        "URI": "/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163"
+        "URI": "/rest/ethernet-networks/f1e38895-721b-4204-8395-ae0caba5e163",
+	"BulkDelete": [
+	  "/rest/ethernet-networks/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	]
       }
     },
     {
@@ -171,6 +174,40 @@
       "Created": "2016-04-04T21:04:27.703Z",
       "Category": "fc-networks",
       "URI": "/rest/fc-networks/72dc37d9-320e-42c5-8417-8e899cd735dd"
+      }
+    },
+    {
+      "Name": "test_ipv4_range",
+      "Enabled": true,
+      "Test_data": {
+      "Type": "Range",
+      "Category": "id-range-ipv4",
+      "StartAddress": "10.16.0.10",
+      "EndAddress": "10.16.0.100",
+      "Prefix": null,
+      "Enabled": true,
+      "AllocatorUri": "/rest/id-pools/ipv4/ranges/72dc37d9-320e-42c5-8417-8e899cd735dd/allocator",
+      "CollectorUri": "/rest/id-pools/ipv4/ranges/72dc37d9-320e-42c5-8417-8e899cd735dd/collector",
+      "TotalCount": 30,
+      "AllocatedCount": 10, 
+      "freeIdCount": 5,
+      "ReservedIdCount": 20,
+      "SubnetUri": "/rest/id-pools/ipv4/subnets/72dc37d9-320e-42c5-8417-8e899cd735dd",
+      "AssociatedResources" :[],
+      "DefaultRange": null,
+      "StartStopFragments": {
+        "StartAddress": "10.16.0.10",
+        "EndAddress": "10.16.0.100",
+        "FragmentType": "FREE"
+      },
+      "Description": null,
+      "Name": "test",
+      "ETAG": "d063ee03-3e47-4e85-b6df-fe54cad4ab86",
+      "Modified": "2016-04-04T21:04:27.711Z",
+      "Created": "2016-04-04T21:04:27.703Z",
+      "RangeCategory": null,
+      "Id": "2a6a64f2-0d0e-45c0-b60a-94a65a8b4917",
+      "URI": "/rest/id-pools/ipv4/ranges/72dc37d9-320e-42c5-8417-8e899cd735dd"
       }
     },
     {
