@@ -1,5 +1,5 @@
 /*
-(c) Copyright [2015] Hewlett Packard Enterprise Development LP
+(c) Copyright [2020] Hewlett Packard Enterprise Development LP
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -282,7 +282,7 @@ func (c *OVClient) GetProfileByURI(uri utils.Nstring) (ServerProfile, error) {
 }
 
 // GetAvailableServers - To fetch available server hardwares
-func (c *OVClient) GetAvailableServers(ServerHardwareUri string) error {
+func (c *OVClient) GetAvailableServers(ServerHardwareUri string) (bool, error) {
 	var (
 		hardwareUri         = "/rest/server-profiles/available-targets"
 		isHardwareAvailable = false
@@ -295,11 +295,11 @@ func (c *OVClient) GetAvailableServers(ServerHardwareUri string) error {
 
 	sh_data, err := c.RestAPICall(rest.GET, hardwareUri, nil)
 	if err != nil {
-		return err
+		return isHardwareAvailable, err
 	}
 
 	if err := json.Unmarshal([]byte(sh_data), &profiles); err != nil {
-		return err
+		return isHardwareAvailable, err
 	}
 
 	for i := 0; i < len(profiles.Members); i++ {
@@ -307,12 +307,7 @@ func (c *OVClient) GetAvailableServers(ServerHardwareUri string) error {
 			isHardwareAvailable = true
 		}
 	}
-	if isHardwareAvailable == false {
-		log.Errorf("Given %s is not available.", ServerHardwareUri)
-		os.Exit(1)
-	}
-
-	return nil
+	return isHardwareAvailable, nil
 }
 
 // SubmitNewProfile - submit new profile template
@@ -333,9 +328,10 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 	log.Debugf("task -> %+v", t)
 
 	// Get available server hardwares to assign it to SP
-	err = c.GetAvailableServers(p.ServerHardwareURI.String())
-	if err != nil {
-		log.Errorf("Error getting available Hardwares")
+	isHardwareAvailable, err := c.GetAvailableServers(p.ServerHardwareURI.String())
+	if err != nil || isHardwareAvailable == false {
+		log.Errorf("Error getting available Hardware: %s", p.ServerHardwareURI.String())
+		os.Exit(1)
 	}
 
 	server, err = c.GetServerHardwareByUri(p.ServerHardwareURI)
