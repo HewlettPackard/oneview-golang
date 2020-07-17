@@ -10,8 +10,8 @@ import (
 func main() {
 	var (
 		clientOV                  *ov.OVClient
-		server_hardware_type_name = "SY 480 Gen9 2"
-		uri                       = "/rest/server-hardware-types/1A7C413B-6677-49A6-B435-09A71490EBB4"
+		server_hardware_type_name = "SY 480 Gen9 1"
+		uri                       = "/rest/server-hardware-types/4F7CDE05-86EA-4415-A438-D9CB7ACB880B"
 		sort                      = "name:desc"
 	)
 	ovc := clientOV.NewOVClient(
@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	fmt.Println("#-----------------------Server Hardware Type by name-------------------------#")

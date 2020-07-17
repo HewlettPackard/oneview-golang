@@ -10,8 +10,8 @@ import (
 func main() {
 	var (
 		clientOV    *ov.OVClient
-		sp_name     = "test"
-		sp_sn       = "VCGRE1S007"
+		sp_name     = "testxx"
+		sp_sn       = "VCGXC30000"
 		new_sp_name = "Renamed Server Profile"
 	)
 	ovc := clientOV.NewOVClient(
@@ -20,16 +20,16 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/74877630-9a22-4061-9db4-d12b6c4cfee0"))
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/7fe26585-b7a1-497e-992e-90908f70dfaf"))
 
 	server_profile_create_map := ov.ServerProfile{
 		Type:              "ServerProfileV12",
 		Name:              sp_name,
-		ServerHardwareURI: "/rest/server-hardware/36343537-3338-4E43-3735-3532304D315A",
+		ServerHardwareURI: "/rest/server-hardware/30373737-3237-4D32-3230-333030314752",
 		InitialScopeUris:  *initialScopeUris,
 	}
 
@@ -46,7 +46,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Server Profile Template Retrieval By Name Failed: ", err)
 	} else {
-		serverName, err := ovc.GetServerHardwareByName("DL980p Gen8 1 (new name)")
+		serverName, err := ovc.GetServerHardwareByName("SY 480 Gen9 1")
 		if err != nil {
 			fmt.Println("Failed to fetch server hardware name: ", err)
 		} else {

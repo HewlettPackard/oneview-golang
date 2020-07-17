@@ -21,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
@@ -31,7 +31,7 @@ func main() {
 		Description: "A volume name between 1 and 100 characters",
 		Maxlength:   100,
 		Minlength:   1,
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: false,
 		},
 	}
@@ -41,8 +41,8 @@ func main() {
 		Type:        "string",
 		Title:       "Storage Pool",
 		Description: "StoragePoolURI the volume should be added to",
-		Default:     "/rest/storage-pools/52F40929-4712-4614-A082-AB200070738A",
-		Meta: ov.Meta{
+		Default:     "/rest/storage-pools/7D2A17CD-414A-45EF-B221-ABF1006D6F44",
+		Meta: &ov.Meta{
 			Locked:       false,
 			CreateOnly:   true,
 			SemanticType: "device-storage-pool",
@@ -57,7 +57,7 @@ func main() {
 		Default:     1073741824,
 		Minimum:     4194304,
 		Description: "Capacity of the volume in bytes",
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked:       false,
 			SemanticType: "capacity",
 		},
@@ -76,7 +76,7 @@ func main() {
 		Title:       "Data Protection Level",
 		Default:     "NetworkRaid10Mirror2Way",
 		Description: "Indicates the number and configuration of data copies in the Storage Pool",
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked:       false,
 			SemanticType: "device-dataProtectionLevel",
 		},
@@ -88,7 +88,7 @@ func main() {
 		Title:       "Template version",
 		Description: "Version of the template",
 		Default:     "1.1",
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 	}
@@ -101,7 +101,7 @@ func main() {
 		Default:     "A description for the volume",
 		Maxlength:   2000,
 		Minlength:   1,
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: false,
 		},
 	}
@@ -113,7 +113,7 @@ func main() {
 		Description: "The provisioning type for the volume",
 		Default:     "Thin",
 		Enum:        []string{"Thin", "Full"},
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked:       true,
 			CreateOnly:   true,
 			SemanticType: "device-provisioningType",
@@ -121,7 +121,7 @@ func main() {
 	}
 
 	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 		Type:        "boolean",
@@ -132,7 +132,7 @@ func main() {
 	}
 
 	is_shareable_properties := ov.TemplatePropertyDatatypeStructBool{
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 		Type:        "boolean",
@@ -158,7 +158,7 @@ func main() {
 		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
-		RootTemplateUri:    "/rest/storage-volume-templates/7adda42a-cf30-4d99-aa10-ab2000707395",
+		RootTemplateUri:    "/rest/storage-volume-templates/11f5fb2e-068a-4fe3-a1a6-abf1006d6f65",
 	}
 
 	err := ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)

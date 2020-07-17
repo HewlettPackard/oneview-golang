@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		1800,
 		"*")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
@@ -46,8 +46,8 @@ func main() {
 
 	networkUris := new([]utils.Nstring)
 	//append all your network and fc network uri to networkUris
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58064275-de05-40a1-b8cf-5098f84fcaea"))
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/662f05ee-32e5-43c0-bf74-1d7574c55b44"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/65220487-b40f-43d8-8ee3-6c5b914d3e43"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/913eee50-6ce3-4da9-91da-60e51f9c0056"))
 
 	NetworkSet := ov.NetworkSet{Name: networkset_3,
 		NativeNetworkUri:      "",
