@@ -105,7 +105,7 @@ func main() {
 	}
 
 	//Delete function accepts 2 optional arguments - softDelete(boolean) and force(boolean) till API1200
-	//softDelete is mandatory argument for delete function in API 1600
+	//softDelete is mandatory argument for delete function from API 1600
 	if ovc.APIVersion > 1200 {
 		err = ovc.DeleteHypervisorClusterProfileSoftDelete(new_hcp, false)
 		if err != nil {
