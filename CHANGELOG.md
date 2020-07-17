@@ -38,6 +38,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Uplink Sets
 
 #### Bug fixes & Enhancements:
+- [#56] (https://github.com/HewlettPackard/oneview-golang/issues/56) Selecting available machines should be atomic
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
 - [#154] (https://github.com/HewlettPackard/oneview-golang/issues/154) Add json configuration file for creating NewOVClient to run examples
 

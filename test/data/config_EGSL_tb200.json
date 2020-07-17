@@ -255,6 +255,17 @@
       }
     },
     {
+      "Name": "test_server_profile",
+      "Enabled": true,
+      "Test_data": {
+        "Name": "goTest",
+        "Type": "ServerProfileV12",
+        "ServerHardwareUri": "/rest/server-hardware/08D06441-6C1A-4B55-998F-E345BF0CE7BF",
+	"ScopesUri": "/rest/scopes/resources/rest/server-profiles/cdb47785-3de0-4813-a31f-9613e85bd0b8",
+        "EnclosureGroupUri":  "/rest/enclosure-groups/8c03d9b8-8274-4191-9757-440d24a61757"
+      }
+    },
+    {
       "Name": "test_interconnect_type",
       "Enabled": true,
       "Test_data": {
