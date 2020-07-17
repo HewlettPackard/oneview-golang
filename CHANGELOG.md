@@ -1,7 +1,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.5.0] (unreleased)
+# [v1.5.0] (2020-07-17)
 ### Notes
 - This release extends supports of the SDK to Oneview API1800.
 - Added support for Id pools IPV4 Ranges.
