@@ -95,7 +95,7 @@ func TestSubmitNewProfile(t *testing.T) {
 
 		isAvailable, err := c.GetAvailableServers(testProfile.ServerHardwareURI.String())
 		assert.NoError(t, err, "GetAvailableServers get the server hardware error -> %s", err)
-		assert.Equal(t, "", isAvailable, fmt.Sprintf("Is given hardware available: %s", isAvailable))
+		assert.Equal(t, "", isAvailable, fmt.Sprintf("Is given hardware available: %+v", isAvailable))
 
 		testServerHardware, err := c.GetServerHardwareByUri(testProfile.ServerHardwareURI)
 		assert.NoError(t, err, "SubmitNewProfile call to GetServerHardwareByUri got error -> %s", err)
