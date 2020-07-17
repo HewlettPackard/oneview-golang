@@ -93,8 +93,9 @@ func TestSubmitNewProfile(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 
-		err := c.GetAvailableServers(testProfile.ServerHardwareURI.String())
+		isAvailable, err := c.GetAvailableServers(testProfile.ServerHardwareURI.String())
 		assert.NoError(t, err, "GetAvailableServers get the server hardware error -> %s", err)
+		assert.Equal(t, "", isAvailble, fmt.Sprintf("Is given hardware available: %s", isAvailable))
 
 		testServerHardware, err := c.GetServerHardwareByUri(testProfile.ServerHardwareURI)
 		assert.NoError(t, err, "SubmitNewProfile call to GetServerHardwareByUri got error -> %s", err)
