@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Notes
 - This release extends supports of the SDK to Oneview API1800.
 - Added support for Id pools IPV4 Ranges.
+- Added support for Email Notifications resource from API 1600.
 - Minor Bug Fixes
 
 ### Oneview Features supported
