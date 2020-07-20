@@ -123,36 +123,6 @@ func (s ServerProfile) GetConnectionByName(name string) (Connection, error) {
 	return connection, errors.New("Error connection not found on server profile, please try a different connection name.")
 }
 
-// Clone server profile
-func (s ServerProfile) Clone() ServerProfile {
-	var ca []Connection
-	for _, c := range s.Connections {
-		ca = append(ca, c.Clone())
-	}
-
-	return ServerProfile{
-		Affinity:           s.Affinity,
-		Bios:               s.Bios,
-		Boot:               s.Boot,
-		BootMode:           s.BootMode,
-		Connections:        ca,
-		Description:        s.Description,
-		EnclosureBay:       s.EnclosureBay,
-		EnclosureGroupURI:  s.EnclosureGroupURI,
-		EnclosureURI:       s.EnclosureURI,
-		Firmware:           s.Firmware,
-		HideUnusedFlexNics: s.HideUnusedFlexNics,
-		LocalStorage:       s.LocalStorage.Clone(),
-		MACType:            s.MACType,
-		Name:               s.Name,
-		SanStorage:         s.SanStorage.Clone(),
-		SerialNumberType:   s.SerialNumberType,
-		Type:               s.Type,
-		WWNType:            s.WWNType,
-		URI:                s.URI,
-	}
-}
-
 // ServerProfileList a list of ServerProfile objects
 // TODO: missing properties, need to think how we can make a higher lvl structure like an OVList
 // Then things like Members are inherited
@@ -306,32 +276,33 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 	)
 
 	//GET on /rest/server-profile-templates/{id}new-profile
-	if c.IsProfileTemplates() {
-		log.Debugf("getting profile by URI %+v, v2", template.URI)
-		new_template, err = c.GetProfileByURI(template.URI)
-		if err != nil {
-			return err
-		}
-		if c.APIVersion == 200 {
-			new_template.Type = "ServerProfileV5"
-		} else if c.APIVersion == 300 {
-			new_template.Type = "ServerProfileV6"
-		} else if c.APIVersion == 500 {
-			new_template.Type = "ServerProfileV7"
-		} else if c.APIVersion == 600 {
-			new_template.Type = "ServerProfileV8"
-		} else if c.APIVersion == 800 {
-			new_template.Type = "ServerProfileV9"
-		}
-		new_template.ServerProfileTemplateURI = template.URI // create relationship
-		new_template.ConnectionSettings = ConnectionSettings{
-			Connections: template.ConnectionSettings.Connections,
-		}
-		log.Debugf("new_template -> %+v", new_template)
-	} else {
-		log.Debugf("get new_template from clone, v1")
-		new_template = template.Clone()
+	log.Debugf("getting profile by URI %+v, v2", template.URI)
+	new_template, err = c.GetProfileByURI(template.URI)
+	if err != nil {
+		return err
 	}
+	if c.APIVersion == 200 {
+		new_template.Type = "ServerProfileV5"
+	} else if c.APIVersion == 300 {
+		new_template.Type = "ServerProfileV6"
+	} else if c.APIVersion == 500 {
+		new_template.Type = "ServerProfileV7"
+	} else if c.APIVersion == 600 {
+		new_template.Type = "ServerProfileV8"
+	} else if c.APIVersion == 800 {
+		new_template.Type = "ServerProfileV9"
+	} else if c.APIVersion == 1000 {
+		new_template.Type = "ServerProfileV10"
+	} else if c.APIVersion == 1200 {
+		new_template.Type = "ServerProfileV11"
+	} else if c.APIVersion >= 1600 {
+		new_template.Type = "ServerProfileV12"
+	}
+	new_template.ServerProfileTemplateURI = template.URI // create relationship
+	new_template.ConnectionSettings = ConnectionSettings{
+		Connections: template.ConnectionSettings.Connections,
+	}
+	log.Debugf("new_template -> %+v", new_template)
 	new_template.ServerHardwareURI = blade.URI
 	new_template.Description += " " + name
 	new_template.Name = name
