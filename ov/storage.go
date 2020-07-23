@@ -29,10 +29,12 @@ type LogicalDrive struct {
 
 // LocalStorageOptions -
 type LocalStorageOptions struct { // "localStorage": {
-	LocalStorageSettingsV3
-	ManageLocalStorage bool           `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
-	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
-	Initialize         bool           `json:"initialize,omitempty"`         // 				"initialize": true
+	Controllers        []LocalStorageEmbeddedController `json:"controllers,omitempty"`        //  The list of embedded local storage controllers.
+	Initialize         bool                             `json:"initialize,omitempty"`         // 				"initialize": true
+	LogicalDrives      []LogicalDrive                   `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
+	ManageLocalStorage bool                             `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
+	ReapplyState       string                           `json:"reapplyState,omitempty"`       //Current reapply state of SAN storage component.
+	SasLogicalJBODs    []LogicalJbod                    `json:"sasLogicalJBODs,omitempty"`    // "sasLogicalJBODs": [],
 }
 
 // StoragePath storage path host-to-target paths
