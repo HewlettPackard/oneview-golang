@@ -71,11 +71,11 @@ type Connection struct {
 	InterconnectPort    int           `json:"interconnectPort,omitempty"`    //The interconnect port associated with the connection.
 	InterconnectURI     utils.Nstring `json:"interconnectUri,omitempty"`     // interconnectUri(Nstring:read), The interconnectUri associated with the connection.
 	Ipv4                *Ipv4Option   `json:"ipv4,omitempty"`                //The IP information for a connection
-	IsolatedTrunk       bool         `json:"isolatedTrunk,omitempty"`       //When selected, for each PVLAN domain, primary VLAN ID tags will translated to the isolated VLAN ID tags for traffic egressing to the downlink ports
+	IsolatedTrunk       bool          `json:"isolatedTrunk,omitempty"`       //When selected, for each PVLAN domain, primary VLAN ID tags will translated to the isolated VLAN ID tags for traffic egressing to the downlink ports
 	LagName             string        `json:"lagName",omitempty`             //The link aggregation group name for a server profile connection.
 	MAC                 utils.Nstring `json:"mac,omitempty"`                 // mac(Nstring), The MAC address that is currently programmed on the FlexNic. The value can be a virtual MAC, user defined MAC or physical MAC read from the device. It cannot be modified after the connection is created.
 	MacType             string        `json:"macType,omitempty"`             // macType(const_string), Physical, UserDefined, Virtual
-	Managed             bool         `json:"managed,omitempty"`             //Indicates whether the connection is capable of Virtual Connect functionality and managed by OneView
+	Managed             bool          `json:"managed,omitempty"`             //Indicates whether the connection is capable of Virtual Connect functionality and managed by OneView
 	MaximumMbps         int           `json:"maximumMbps,omitempty"`         // maximumMbps(int:read),  Maximum transmit throughput (mbps) allowed on this connection. The value is limited by the maximum throughput of the network link and maximumBandwidth of the selected network (networkUri). For Fibre Channel connections, the value is limited to the same value as the allocatedMbps.
 	Name                string        `json:"name,omitempty"`                // name(string), A string used to identify the respective connection. The connection name is case insensitive, limited to 63 characters and must be unique within the profile.
 	NetworkName         string        `json:"networkName,omitempty"`         //The name of the network or network set to be connected
