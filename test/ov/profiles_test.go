@@ -166,7 +166,7 @@ func TestGetConnectionByName(t *testing.T) {
 		profile, err := c.GetProfileByName(testname)
 		assert.NoError(t, err, "GetProfileByName threw error -> %s", err)
 
-		for _, c := range profile.Connections {
+		for _, c := range profile.ConnectionSettings.Connections {
 			log.Debugf("connection -> %d %s %s %s", c.ID, c.Name, c.MAC, c.MacType)
 		}
 

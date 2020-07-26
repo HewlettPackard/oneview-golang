@@ -140,7 +140,7 @@ func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
 	s.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
 	s.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
 
-	s.Connections, err = c.ManageI3SConnections(s.Connections, cs.EthernetNetworkName)
+	s.ConnectionSettings.Connections, err = c.ManageI3SConnections(s.ConnectionSettings.Connections, cs.EthernetNetworkName)
 	if err != nil {
 		return err
 	}
