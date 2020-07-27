@@ -34,17 +34,17 @@ type FirmwareOption struct {
 	FirmwareBaselineUri      utils.Nstring `json:"firmwareBaselineUri,omitempty"`      // "firmwareBaselineUri": null,
 	FirmwareInstallType      string        `json:"firmwareInstallType,omitempty"`      // Specifies the way a Service Pack for ProLiant (SPP) is installed. This field is used if the 'manageFirmware' field is true. Possible values are
 	firmwareScheduleDateTime string        `json:"firmwareScheduleDateTime,omitempty"` // Identifies the date and time the Service Pack for Proliant (SPP) will be activated.
-	ForceInstallFirmware     bool          `json:"forceInstallFirmware"`     // "forceInstallFirmware": false,
-	ManageFirmware           bool          `json:"manageFirmware"`           // "manageFirmware": false
+	ForceInstallFirmware     bool          `json:"forceInstallFirmware"`               // "forceInstallFirmware": false,
+	ManageFirmware           bool          `json:"manageFirmware"`                     // "manageFirmware": false
 	ReapplyState             string        `json:"reapplyState,omitempty"`             //Current reapply state of the firmware component.
 }
 
 // BootModeOption mode option
 type BootModeOption struct {
-	ManageMode    bool          `json:"manageMode"`    // "manageMode": true,
+	ManageMode    bool          `json:"manageMode"`              // "manageMode": true,
 	Mode          string        `json:"mode,omitempty"`          // "mode": "BIOS",
 	PXEBootPolicy utils.Nstring `json:"pxeBootPolicy,omitempty"` // "pxeBootPolicy": null
-	secureBoot    string        `json:"secureBoot",omitempty`    // Enable or disable UEFI Secure Boot
+	secureBoot    string        `json:"secureBoot,omitempty"`    // Enable or disable UEFI Secure Boot
 }
 
 // BootManagement management
@@ -61,15 +61,15 @@ type BiosSettings struct {
 
 // BiosOption - bios options
 type BiosOption struct {
-	ConsistencyState   string         `json:"consistencyState",omitempty`   //Consistency state of the BIOS component
-	ManageBios         bool           `json:"manageBios"`         // "manageBios": false,
+	ConsistencyState   string         `json:"consistencyState,omitempty"`   //Consistency state of the BIOS component
+	ManageBios         bool           `json:"manageBios"`                   // "manageBios": false,
 	OverriddenSettings []BiosSettings `json:"overriddenSettings,omitempty"` // "overriddenSettings": []
-	ReapplyState       string         `json:"reapplyState",omitempty`       //Current reapply state of the BIOS component.
+	ReapplyState       string         `json:"reapplyState,omitempty"`       //Current reapply state of the BIOS component.
 }
 
 type ConnectionSettings struct {
 	ComplianceControl string       `json:"complianceControl,omitempty"` // "complianceControl": "Checked",
-//	ManageConnections bool         `json:"manageConnections"` // "manageConnections": false,
+	ManageConnections bool         `json:"manageConnections,omitempty"` // "manageConnections": false,
 	Connections       []Connection `json:"connections,omitempty"`
 	ReapplyState      string       `json:"reapplyState,omitempty"` //Current reapply state of the connection downlinks associated with the server profile
 }
@@ -101,7 +101,7 @@ type AvailableTarget struct {
 }
 
 type ManagementProcessor struct {
-	ManageMp     bool       `json:"manageMp,omitempty"`
+	ManageMp     bool         `json:"manageMp,omitempty"`
 	MpSettings   []mpSettings `json:"mpSettings,omitempty"`
 	ReapplyState string       `json:"reapplyState,omitempty"`
 }
@@ -126,14 +126,14 @@ type ServerProfile struct {
 	EnclosureGroupURI          utils.Nstring        `json:"enclosureGroupUri,omitempty"`          // "enclosureGroupUri": "/rest/enclosure-groups/56ad0069-8362-42fd-b4e3-f5c5a69af039",
 	EnclosureURI               utils.Nstring        `json:"enclosureUri,omitempty"`               // "enclosureUri": "/rest/enclosures/092SN51207RR",
 	Firmware                   FirmwareOption       `json:"firmware,omitempty"`                   // "firmware": { },
-	HideUnusedFlexNics         bool                 `json:"hideUnusedFlexNics"`         // "hideUnusedFlexNics": false,
-	InProgress                 bool                 `json:"inProgress"`                 // "inProgress": false,
+	HideUnusedFlexNics         bool                 `json:"hideUnusedFlexNics"`                   // "hideUnusedFlexNics": false,
+	InProgress                 bool                 `json:"inProgress"`                           // "inProgress": false,
 	InitialScopeUris           []utils.Nstring      `json:"initialScopeUris,omitempty"`           // "initialScopeUris":[],
 	IscsiInitiatorName         string               `json:"iscsiInitiatorName,omitempty"`         //When iscsiInitatorNameType is set to UserDefined
 	IscsiInitiatorNameType     string               `json:"iscsiInitiatorNameType,omitempty"`     //When set to UserDefined, the value of iscsiInitatorName is used as provided
 	LocalStorage               LocalStorageOptions  `json:"localStorage,omitempty"`               // "localStorage": {},
 	MACType                    string               `json:"macType,omitempty"`                    // "macType": "Physical",
-	ManagementProcessor        *ManagementProcessor  `json:"managementProcessor,omitempty"`        //
+	ManagementProcessor        *ManagementProcessor `json:"managementProcessor,omitempty"`        //
 	Modified                   string               `json:"modified,omitempty"`                   // "modified": "20150902T175611.657Z",
 	Name                       string               `json:"name,omitempty"`                       // "name": "Server_Profile_scs79",
 	OSDeploymentSettings       OSDeploymentSettings `json:"osDeploymentSettings,omitempty"`       // "osDeploymentSettings": {...},
