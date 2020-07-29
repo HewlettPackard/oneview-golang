@@ -127,7 +127,7 @@ type ServerProfile struct {
 	EnclosureURI               utils.Nstring        `json:"enclosureUri,omitempty"`               // "enclosureUri": "/rest/enclosures/092SN51207RR",
 	Firmware                   FirmwareOption       `json:"firmware,omitempty"`                   // "firmware": { },
 	HideUnusedFlexNics         bool                 `json:"hideUnusedFlexNics"`                   // "hideUnusedFlexNics": false,
-	InProgress                 bool                 `json:"inProgress,omitempty"`                           // "inProgress": false,
+	InProgress                 bool                 `json:"inProgress,omitempty"`                 // "inProgress": false,
 	InitialScopeUris           []utils.Nstring      `json:"initialScopeUris,omitempty"`           // "initialScopeUris":[],
 	IscsiInitiatorName         string               `json:"iscsiInitiatorName,omitempty"`         //When iscsiInitatorNameType is set to UserDefined
 	IscsiInitiatorNameType     string               `json:"iscsiInitiatorNameType,omitempty"`     //When set to UserDefined, the value of iscsiInitatorName is used as provided
