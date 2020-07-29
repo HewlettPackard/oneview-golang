@@ -29,10 +29,12 @@ type LogicalDrive struct {
 
 // LocalStorageOptions -
 type LocalStorageOptions struct { // "localStorage": {
-	LocalStorageSettingsV3
-	ManageLocalStorage bool           `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
-	LogicalDrives      []LogicalDrive `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
-	Initialize         bool           `json:"initialize,omitempty"`         // 				"initialize": true
+	Controllers        []LocalStorageEmbeddedController `json:"controllers,omitempty"`        //  The list of embedded local storage controllers.
+	Initialize         bool                             `json:"initialize,omitempty"`         // 				"initialize": true
+	LogicalDrives      []LogicalDrive                   `json:"logicalDrives,omitempty"`      // "logicalDrives": [],
+	ManageLocalStorage bool                             `json:"manageLocalStorage,omitempty"` // "manageLocalStorage": true,
+	ReapplyState       string                           `json:"reapplyState,omitempty"`       //Current reapply state of SAN storage component.
+	SasLogicalJBODs    []LogicalJbod                    `json:"sasLogicalJBODs,omitempty"`    // "sasLogicalJBODs": [],
 }
 
 // StoragePath storage path host-to-target paths
@@ -53,7 +55,7 @@ type Target struct {
 	TcpPort   int    `json:"tcpPort,omitempty"`
 }
 
-type Properites struct {
+type PropertiesSP struct {
 	DataProtectionLevel           string        `json:"dataProtectionLevel,omitempty"`           //The data protection level of the volume.
 	DataTransferLimit             int           `json:"dataTransferLimit,omitempty"`             //The data transfer limit of the volume in mebibytes.
 	Description                   string        `json:"description,omitempty"`                   //The description of the volume.
@@ -80,7 +82,7 @@ type Properites struct {
 type Volume struct {
 	InitialScopeUris utils.Nstring `json:"initialScopeUris,omitempty"` //Initial scopes for the volume.
 	IsPermanent      *bool         `json:"isPermanent,omitempty"`      //If true, indicates that the volume will persist when the profile using this volume is deleted.
-	Properties       *Properties   `json:"properties"`                 //The properties specific to a storage system family required for the creation of a storage volume.
+	Properties       *PropertiesSP `json:"properties"`                 //The properties specific to a storage system family required for the creation of a storage volume.
 	TemplateUri      utils.Nstring `json:"templateUri,omitempty"`      //URI of the storage volume template from which the volume will be created.
 
 }
