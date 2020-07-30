@@ -43,7 +43,7 @@ type LocalStorageOptions struct { // "localStorage": {
 type StoragePath struct {
 	ConnectionID   int           `json:"connectionId,omitempty"` // connectionId (required), The ID of the connection associated with this storage path. Use GET /rest/server-profiles/available-networks to retrieve the list of available networks.
 	IsEnabled      bool          `json:"isEnabled"`              // isEnabled (required), Identifies whether the storage path is enabled.
-	networkUri     utils.Nstring `json:"networkUri"`             //The URI of the network associated with this storage path
+	NetworkUri     utils.Nstring `json:"networkUri"`             //The URI of the network associated with this storage path
 	Status         string        `json:"status,omitempty"`       // status (read only), The overall health status of the storage path.
 	Targets        []Target      `json:"targets,omitempty"`      // only set when storageTargetType is TargetPorts
 	TargetSelector string        `json:"targetSelector,omitempty"`

@@ -33,7 +33,7 @@ type FirmwareOption struct {
 	FirmwareActivationType   string        `json:"firmwareActivationType,omitempty"`
 	FirmwareBaselineUri      utils.Nstring `json:"firmwareBaselineUri,omitempty"`      // "firmwareBaselineUri": null,
 	FirmwareInstallType      string        `json:"firmwareInstallType,omitempty"`      // Specifies the way a Service Pack for ProLiant (SPP) is installed. This field is used if the 'manageFirmware' field is true. Possible values are
-	firmwareScheduleDateTime string        `json:"firmwareScheduleDateTime,omitempty"` // Identifies the date and time the Service Pack for Proliant (SPP) will be activated.
+	FirmwareScheduleDateTime string        `json:"firmwareScheduleDateTime,omitempty"` // Identifies the date and time the Service Pack for Proliant (SPP) will be activated.
 	ForceInstallFirmware     bool          `json:"forceInstallFirmware"`               // "forceInstallFirmware": false,
 	ManageFirmware           bool          `json:"manageFirmware"`                     // "manageFirmware": false
 	ReapplyState             string        `json:"reapplyState,omitempty"`             //Current reapply state of the firmware component.
@@ -127,7 +127,7 @@ type ServerProfile struct {
 	EnclosureURI               utils.Nstring        `json:"enclosureUri,omitempty"`               // "enclosureUri": "/rest/enclosures/092SN51207RR",
 	Firmware                   FirmwareOption       `json:"firmware,omitempty"`                   // "firmware": { },
 	HideUnusedFlexNics         bool                 `json:"hideUnusedFlexNics"`                   // "hideUnusedFlexNics": false,
-	InProgress                 bool                 `json:"inProgress"`                           // "inProgress": false,
+	InProgress                 bool                 `json:"inProgress,omitempty"`                 // "inProgress": false,
 	InitialScopeUris           []utils.Nstring      `json:"initialScopeUris,omitempty"`           // "initialScopeUris":[],
 	IscsiInitiatorName         string               `json:"iscsiInitiatorName,omitempty"`         //When iscsiInitatorNameType is set to UserDefined
 	IscsiInitiatorNameType     string               `json:"iscsiInitiatorNameType,omitempty"`     //When set to UserDefined, the value of iscsiInitatorName is used as provided
