@@ -31,7 +31,6 @@ func main() {
 		2000,
 		"*")
 
-
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
 	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
 	locationEntry_second := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
