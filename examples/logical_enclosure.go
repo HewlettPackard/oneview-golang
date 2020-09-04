@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE"
 		logical_enclosure_2 = "log_enclosure88"
-		scope_name          = "Eth-Network-Scope"
+		scope_name          = "test"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,8 +22,48 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
+
+	fmt.Println("#................... Create Logical Enclosure ...............#")
+	enclosureUris := new([]utils.Nstring)
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
+	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
+
+	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
+		EnclosureUris:     *enclosureUris,
+		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/d8f1f41e-6bc1-4842-932b-b526ce4f7321")}
+
+	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
+	if er != nil {
+		fmt.Println("............... Logical Enclosure Creation Failed:", er)
+	} else {
+		fmt.Println(".... Logical Enclosure Created Success")
+	}
+
+	fmt.Println("#................... Create Logical Enclosure Support Dumps ...............#")
+
+	supportdmp := ov.SupportDumps{ErrorCode: "MyDump16",
+		ExcludeApplianceDump:    false,
+		LogicalInterconnectUris: []utils.Nstring{utils.NewNstring("/rest/logical-interconnects/99d75d4d-f573-4b2e-805d-f636af16fdd8")}}
+
+	data, er := ovc.CreateSupportDump(supportdmp, "99d75d4d-f573-4b2e-805d-f636af16fdd8")
+
+	if er != nil {
+		fmt.Println("............... Logical Enclosure Support Dump Creation Failed:", er)
+	} else {
+		fmt.Println(".... Logical Enclosure Support Dump Created Successfully", data)
+		fmt.Println(data["URI"])
+		id := strings.Trim(data["URI"], "/rest/tasks/")
+		task, err := ovc.GetTasksById("", "", "", "", id)
+		if err != nil {
+			fmt.Println("Error getting the task details ", err)
+		}
+		fmt.Println(task)
+	}
+
+	log_enc, _ := ovc.GetLogicalEnclosureByName(logical_enclosure_1)
 
 	fmt.Println("#................... Logical Enclosure by Name ...............#")
 	log_en, err := ovc.GetLogicalEnclosureByName(logical_enclosure)
@@ -41,7 +82,6 @@ func main() {
 			fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
 		}
 	*/
-	fmt.Println("#................... Create Logical Enclosure ...............#")
 	scope1, err := ovc.GetScopeByName(scope_name)
 	scope_uri := scope1.URI
 	scope_Uris := new([]string)
@@ -58,23 +98,6 @@ func main() {
 		}
 	}
 
-	enclosureUris := new([]utils.Nstring)
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
-
-	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
-		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/464e8e4f-ba42-42c3-bb79-1d0409b458b5")}
-
-	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
-	if er != nil {
-		fmt.Println("............... Logical Enclosure Creation Failed:", err)
-	} else {
-		fmt.Println(".... Logical Enclosure Created Success")
-	}
-
-	log_enc, _ := ovc.GetLogicalEnclosureByName(logical_enclosure_1)
 	log_enc.Name = logical_enclosure_2
 	err = ovc.UpdateLogicalEnclosure(log_enc)
 	if err != nil {
