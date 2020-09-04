@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		ClientOV     *ov.OVClient
-		networkset   = "networkset"
+		networkset   = "test"
 		networkset_2 = "updatednetworkset"
 		networkset_3 = "creatednetworkset"
 	)
@@ -46,8 +46,8 @@ func main() {
 
 	networkUris := new([]utils.Nstring)
 	//append all your network and fc network uri to networkUris
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/65220487-b40f-43d8-8ee3-6c5b914d3e43"))
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/913eee50-6ce3-4da9-91da-60e51f9c0056"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/fa01374d-0e50-41fc-bcd7-3dfc21776b6c"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/d085fa2d-41f8-44e1-950b-3f5076371300"))
 
 	NetworkSet := ov.NetworkSet{Name: networkset_3,
 		NativeNetworkUri:      "",
