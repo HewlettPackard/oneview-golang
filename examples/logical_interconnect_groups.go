@@ -28,13 +28,9 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
-	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
-	sort := "name:desc"
-	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups(10, "", "", sort, 0)
-	fmt.Println(logicalInterconnectGroupList)
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
 	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
@@ -52,10 +48,10 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/f4437afa-529f-467a-9875-7dd3a4fe561f",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/18f00f2f-505b-4497-a825-8336996196a6",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/f4437afa-529f-467a-9875-7dd3a4fe561f",
+		PermittedInterconnectTypeUri: "/rest/interconnect-types/18f00f2f-505b-4497-a825-8336996196a6",
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
@@ -120,6 +116,11 @@ func main() {
 	} else {
 		fmt.Println(".....Logical Interconnect Group Creation Success....")
 	}
+
+	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
+	sort := "name:desc"
+	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups(10, "", "", sort, 0)
+	fmt.Println(logicalInterconnectGroupList)
 
 	fmt.Println("....  Logical Interconnect Group by Name.....")
 	lig, _ := ovc.GetLogicalInterconnectGroupByName(lig_name)
