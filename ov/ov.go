@@ -20,10 +20,11 @@ package ov
 import (
 	"errors"
 	"fmt"
-
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/docker/machine/libmachine/log"
 )
+
+var min_api_version int = 600
 
 // OVClient - wrapper class for ov api's
 type OVClient struct {
@@ -32,7 +33,7 @@ type OVClient struct {
 
 // new Client
 func (c *OVClient) NewOVClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int, ifmatch string) *OVClient {
-	return &OVClient{
+	c = &OVClient{
 		rest.Client{
 			User:       user,
 			Password:   password,
@@ -44,6 +45,31 @@ func (c *OVClient) NewOVClient(user string, password string, domain string, endp
 			IfMatch:    ifmatch,
 		},
 	}
+	var apiver APIVersion
+	apiver, _ = c.GetAPIVersion()
+	//If no api version is provided use the current version to create client
+	if apiversion == 0 {
+		current_apiversion := apiver.CurrentVersion
+		return &OVClient{
+			rest.Client{
+				User:       user,
+				Password:   password,
+				Domain:     domain,
+				Endpoint:   endpoint,
+				SSLVerify:  sslverify,
+				APIVersion: current_apiversion,
+				APIKey:     "none",
+				IfMatch:    ifmatch,
+			},
+		}
+	}
+	//Throw error if provided api version is not supported
+	if apiversion < apiver.MinimumVersion {
+		log.Errorf("The minimum api version supported is %d", apiver.MinimumVersion)
+		panic(errors.New(fmt.Sprintf("The minimum api version supported is %d", apiver.MinimumVersion)))
+
+	}
+	return c
 }
 
 // Create machine
