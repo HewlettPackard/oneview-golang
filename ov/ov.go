@@ -24,8 +24,6 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-var min_api_version int = 600
-
 // OVClient - wrapper class for ov api's
 type OVClient struct {
 	rest.Client
