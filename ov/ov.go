@@ -48,9 +48,9 @@ func (c *OVClient) NewOVClient(user string, password string, domain string, endp
 	}
 	//If no api version is provided use the current version to create client
 	if apiversion == 0 {
-	    apiver, err := c.GetAPIVersion()
-		if err!=nil{
-            panic(errors.New(fmt.Sprintf("Could not fetch the appliance %s version", endpoint )))
+		apiver, err := c.GetAPIVersion()
+		if err != nil {
+			panic(errors.New(fmt.Sprintf("Could not fetch the appliance %s version", endpoint)))
 		}
 		current_apiversion := apiver.CurrentVersion
 		return &OVClient{
