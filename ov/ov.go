@@ -33,6 +33,7 @@ type OVClient struct {
 
 // new Client
 func (c *OVClient) NewOVClient(user string, password string, domain string, endpoint string, sslverify bool, apiversion int, ifmatch string) *OVClient {
+	var apiver APIVersion
 	c = &OVClient{
 		rest.Client{
 			User:       user,
@@ -45,10 +46,12 @@ func (c *OVClient) NewOVClient(user string, password string, domain string, endp
 			IfMatch:    ifmatch,
 		},
 	}
-	var apiver APIVersion
-	apiver, _ = c.GetAPIVersion()
 	//If no api version is provided use the current version to create client
 	if apiversion == 0 {
+	    apiver, err := c.GetAPIVersion()
+		if err!=nil{
+            panic(errors.New(fmt.Sprintf("Could not fetch the appliance %s version", endpoint )))
+		}
 		current_apiversion := apiver.CurrentVersion
 		return &OVClient{
 			rest.Client{
