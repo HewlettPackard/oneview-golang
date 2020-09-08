@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
 
+### Major changes:
+- Refactored SDK to take default API version from Oneview appliance.
+
 # [v1.5.0] (2020-07-17)
 ### Notes
 - This release extends supports of the SDK to Oneview API1800.
