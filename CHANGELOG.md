@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 # [v1.5.1] (unreleased)
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
+- [#257] (https://github.com/HewlettPackard/oneview-golang/issues/257) Add server name to ServerHardware structure in server_hardware.go
 
 ### Major changes:
 - Refactored SDK to take default API version from Oneview appliance.
