@@ -32,7 +32,7 @@ func main() {
 	}
 	initialScopeUris := new([]utils.Nstring)
 	scp, scperr := ovc.GetScopeByName("test")
-	if scperr != nil{
+	if scperr != nil {
 		*initialScopeUris = append(*initialScopeUris, scp.URI)
 	}
 

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-//	"github.com/HewlettPackard/oneview-golang/utils"
+	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -23,12 +23,12 @@ func main() {
 		2000,
 		"*")
 
-        initialScopeUris := new([]utils.Nstring)
-        scp, scperr := ovc.GetScopeByName("test")
-        if scperr != nil{
-                *initialScopeUris = append(*initialScopeUris, scp.URI)
-        }
-        serverName, err := ovc.GetServerHardwareByName("0000A66102, bay 5")
+	initialScopeUris := new([]utils.Nstring)
+	scp, scperr := ovc.GetScopeByName("test")
+	if scperr != nil {
+		*initialScopeUris = append(*initialScopeUris, scp.URI)
+	}
+	serverName, err := ovc.GetServerHardwareByName("0000A66102, bay 5")
 
 	server_profile_create_map := ov.ServerProfile{
 		Type:              "ServerProfileV12",
