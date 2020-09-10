@@ -2,8 +2,15 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 # [v1.5.1] (unreleased)
-#### Bug fixes & Enhancements:
-- [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
+### Notes
+- This release extends supports of the SDK to Oneview API2000.
+- Minor Bug Fixes
+
+### Oneview Features supported
+- Logical Interconnect Group
+- Server Hardware
+- Server Hardware Types
+- Server Certificates
 
 ### Major changes:
 - Refactored SDK to take default API version from Oneview appliance.
