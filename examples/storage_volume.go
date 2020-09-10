@@ -21,19 +21,20 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	// Create storage volume with name <new_volume>
+	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
 	properties := &ov.Properties{
 		Name:                new_volume,
-		Storagepool:         utils.NewNstring("/rest/storage-pools/7D2A17CD-414A-45EF-B221-ABF1006D6F44"),
+		Storagepool:         st_pool.URI,
 		Size:                268435456,
 		ProvisioningType:    "Thin",
 		DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
-	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/798f3224-8f8d-43b1-a02f-abf100736549"), Properties: properties, IsPermanent: &trueVal}
+	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/5d57f25a-0fb0-4980-84af-ac3001139130"), Properties: properties, IsPermanent: &trueVal}
 
 	err := ovc.CreateStorageVolume(storageVolume)
 	if err != nil {

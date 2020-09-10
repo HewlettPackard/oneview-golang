@@ -11,7 +11,7 @@ func main() {
 
 	var (
 		ClientOV    *ov.OVClient
-		name_to_get = "<volume attachment name>"
+		name_to_get = "<vol_attachment_name>"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	// Get All the attachments present
