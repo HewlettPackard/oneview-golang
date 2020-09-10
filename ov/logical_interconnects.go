@@ -277,7 +277,7 @@ type Reports struct {
 
 func (c *OVClient) BulkInconsistencyValidations(ligUris map[string][]utils.Nstring) (BulkInconsistencyValidation, error) {
 	var (
-		uri = "/rest/logical-interconnects/bulk-inconsistency-validation"
+		uri     = "/rest/logical-interconnects/bulk-inconsistency-validation"
 		payload BulkInconsistencyValidation
 	)
 
