@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"")
 
 	fmt.Println("#................... Get-all Uplink-Sets ...............#")
@@ -36,7 +36,7 @@ func main() {
 
 	// Create Uplink Set
 	networkUris := new([]utils.Nstring)
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/ca0da0ad-81e6-4d43-92ad-2eb66f77611c"))
+	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58196a2d-0043-4281-9728-7c973d9660b9"))
 
 	fcNetworkUris := make([]utils.Nstring, 0)
 	fcoeNetworkUris := make([]utils.Nstring, 0)
@@ -44,7 +44,7 @@ func main() {
 	privateVlanDomains := make([]ov.PrivateVlanDomains, 0)
 
 	uplinkSet := ov.UplinkSet{Name: new_uplink,
-		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293"),
+		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/5fe6ef52-42d6-4895-8500-dfb633478225"),
 		NetworkURIs:                    *networkUris,
 		FcNetworkURIs:                  fcNetworkUris,
 		FcoeNetworkURIs:                fcoeNetworkUris,

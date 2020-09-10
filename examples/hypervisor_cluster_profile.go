@@ -12,8 +12,8 @@ func main() {
 		clientOV                *ov.OVClient
 		hcp_name                = "test"
 		new_hcp                 = "test_new"
-		server_profile_template = utils.Nstring("/rest/server-profile-templates/fee8d166-ad5b-49a1-a568-131759b7c1cc")
-		hypervisor_manager      = utils.Nstring("/rest/hypervisor-managers/ee0e59da-6511-4d7b-bdfc-50445ef3dbcd")
+		server_profile_template = utils.Nstring("/rest/server-profile-templates/7aa47730-d829-4053-b82a-62c67d656440")
+		hypervisor_manager      = utils.Nstring("/rest/hypervisor-managers/d9720361-2598-43f7-bc3b-987327fea17f")
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,11 +21,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/8ef32b43-2478-4aea-bb68-a65d0fbfea93"))
+	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/cd31a4da-83cb-4157-bc23-c24a1627832c"))
 
 	deploymentPlan := ov.DeploymentPlan{
 		ServerPassword: "dcs"}
