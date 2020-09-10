@@ -35,7 +35,7 @@ func main() {
 			Locked: false,
 		},
 	}
-//	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
+	//	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
 	storage_pool_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
@@ -49,7 +49,7 @@ func main() {
 		},
 		Format: "x-uri-reference",
 	}
-        snapshot_pool := ov.TemplatePropertyDatatypeStructString{
+	snapshot_pool := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Snapshot Pool",
@@ -143,14 +143,14 @@ func main() {
 		Title:       "Adaptive Optimization",
 	}
 	isDeduplicated := ov.TemplatePropertyDatatypeStructBool{
-              Meta: &ov.Meta{
-                      Locked: true,
-              },
-              Type:        "boolean",
-              Description: "Enables or disables deduplication of the volume",
-              Default:     true,
-              Required:    false,
-              Title:       "Is Deduplicated",
+		Meta: &ov.Meta{
+			Locked: true,
+		},
+		Type:        "boolean",
+		Description: "Enables or disables deduplication of the volume",
+		Default:     true,
+		Required:    false,
+		Title:       "Is Deduplicated",
 	}
 	is_shareable_properties := ov.TemplatePropertyDatatypeStructBool{
 		Meta: &ov.Meta{
@@ -168,8 +168,8 @@ func main() {
 		StoragePool:                   &storage_pool_properties,
 		Size:                          &size_properties,
 		DataProtectionLevel:           &dataProtectionLevel_properties,
-		SnapshotPool:		       &snapshot_pool,
-		IsDeduplicated:		       &isDeduplicated,
+		SnapshotPool:                  &snapshot_pool,
+		IsDeduplicated:                &isDeduplicated,
 		TemplateVersion:               &template_version_properties,
 		Description:                   &description_properties,
 		ProvisioningType:              &provisioning_type_properties,
