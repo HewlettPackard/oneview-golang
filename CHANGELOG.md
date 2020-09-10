@@ -1,7 +1,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.5.1] (unreleased)
+### Notes
+- This release extends supports of the SDK to Oneview API2000.
+- Minor Bug Fixes
+
+### Oneview Features supported
+- Storage Pool
+- Storage Volume
+- Storage Volume Attachments
+- Storage Volume Template
+- Storage Systems
+
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
 
