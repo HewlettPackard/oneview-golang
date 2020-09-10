@@ -5,9 +5,11 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -191,11 +193,110 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}) ([
 		return nil, err
 	}
 
-	// Added the condition to accomodate the response where only the response header is returned.
+	// Added the condition to accommodate the response where only the response header is returned.
 	if len(data) == 0 {
 		if resp.Header["Location"] != nil {
 			data = []byte(`{"URI":"` + resp.Header["Location"][0] + `"}`)
+		} else {
+			data = []byte(`{"URI":"` + resp.Header["Date"][0] + `"}`)
 		}
 	}
 	return data, nil
+}
+
+// RestAPIGetFile - Function to Download File
+func (c *Client) RestAPIGetFile(path string, outputFile string, options interface{}) error {
+
+	// Declare Variables
+	var (
+		Url *url.URL
+		err error
+		req *http.Request
+	)
+
+	// Get URL Path
+	Url, err = url.Parse(utils.Sanatize(c.Endpoint))
+	if err != nil {
+		return err
+	}
+	Url.Path += path
+	log.Debugf("RestAPIGetFile %s - %s%s", "GET", utils.Sanatize(c.Endpoint), path)
+
+	// Manage the Query String
+	c.GetQueryString(Url)
+	log.Debugf("*** url => %s", Url.String())
+
+	// Parse URL
+	reqUrl, err := url.Parse(Url.String())
+	if err != nil {
+		return fmt.Errorf("Error with request: %v - %q", Url, err)
+	}
+
+	// Add Options
+	if options != nil {
+		OptionsJSON, err := json.Marshal(options)
+		if err != nil {
+			return err
+		}
+		log.Debugf("*** options => %+v", bytes.NewBuffer(OptionsJSON))
+		req, err = http.NewRequest("GET", reqUrl.String(), bytes.NewBuffer(OptionsJSON))
+	} else {
+		req, err = http.NewRequest("GET", reqUrl.String(), nil)
+	}
+	if err != nil {
+		return fmt.Errorf("Error with request: %v - %q", Url, err)
+	}
+
+	// Setup Proxy
+	proxyUrl, err := http.ProxyFromEnvironment(req)
+	if err != nil {
+		return fmt.Errorf("Error with proxy: %v - %q", proxyUrl, err)
+	}
+	if proxyUrl != nil {
+		tr.Proxy = http.ProxyURL(proxyUrl)
+		log.Debugf("*** proxy => %+v", tr.Proxy)
+	}
+
+	// Build Headers
+	// Skip Content-Type as it's doesn't fit the Application/JSON Type
+	for k, v := range c.Option.Headers {
+		log.Debugf("*** headers -> %s -> %+v\n", k, v)
+		if k != "Content-Type" {
+			req.Header.Add(k, v)
+		}
+	}
+
+	// Get File Content
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Check Response Status
+	if !c.isOkStatus(resp.StatusCode) {
+		type apiErr struct {
+			Message string `json:"message"`
+			Details string `json:"details"`
+		}
+		var outErr apiErr
+		return fmt.Errorf("Error in response: %s\n Response Status: %s\n Response Details: %s", outErr.Message, resp.Status, outErr.Details)
+	}
+
+	// Create the File
+	log.Debugf("Output FileName %s", outputFile)
+	out, err := os.Create(outputFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Copy Content
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	// Return
+	return nil
 }
