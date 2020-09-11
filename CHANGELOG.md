@@ -7,12 +7,31 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Minor Bug Fixes
 
 ### Oneview Features supported
+- Enclosure
+- Enclosure Group
+- Ethernet Network
+- FC Network
+- FCOE Network
 - Hypervisor Manager
 - Hypervisor Cluster Profile
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect
+- Logical Interconnect Group
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Tasks
 - Uplink Set 
 
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
+- [#257] (https://github.com/HewlettPackard/oneview-golang/issues/257) Add server name to ServerHardware structure in server_hardware.go
 
 ### Major changes:
 - Refactored SDK to take default API version from Oneview appliance.
