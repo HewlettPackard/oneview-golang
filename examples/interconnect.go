@@ -16,7 +16,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	sort := "name:desc"

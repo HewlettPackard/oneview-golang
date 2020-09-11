@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
+	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
 func main() {
 	var (
 		clientOV    *ov.OVClient
-		sp_name     = "testxx"
+		sp_name     = "SP_test"
 		sp_sn       = "VCGXC30000"
 		new_sp_name = "Renamed Server Profile"
 	)
@@ -20,20 +20,24 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/7fe26585-b7a1-497e-992e-90908f70dfaf"))
+	scp, scperr := ovc.GetScopeByName("test")
+	if scperr != nil {
+		*initialScopeUris = append(*initialScopeUris, scp.URI)
+	}
+	serverName, err := ovc.GetServerHardwareByName("0000A66102, bay 5")
 
 	server_profile_create_map := ov.ServerProfile{
 		Type:              "ServerProfileV12",
 		Name:              sp_name,
-		ServerHardwareURI: "/rest/server-hardware/30373737-3237-4D32-3230-333030314752",
+		ServerHardwareURI: serverName.URI,
 		InitialScopeUris:  *initialScopeUris,
 	}
 
-	err := ovc.SubmitNewProfile(server_profile_create_map)
+	err = ovc.SubmitNewProfile(server_profile_create_map)
 	if err != nil {
 		fmt.Println("Server Profile Create Failed: ", err)
 	} else {
@@ -42,11 +46,11 @@ func main() {
 
 	sort := ""
 
-	spt, err := ovc.GetProfileTemplateByName("go_test")
+	spt, err := ovc.GetProfileTemplateByName("test_SP")
 	if err != nil {
 		fmt.Println("Server Profile Template Retrieval By Name Failed: ", err)
 	} else {
-		serverName, err := ovc.GetServerHardwareByName("SY 480 Gen9 1")
+		serverName, err := ovc.GetServerHardwareByName("0000A66102, bay 7")
 		if err != nil {
 			fmt.Println("Failed to fetch server hardware name: ", err)
 		} else {

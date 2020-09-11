@@ -20,11 +20,11 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/7fe26585-b7a1-497e-992e-90908f70dfaf")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
 	fmt.Println("#................... Ethernet Network by Name ...............#")
 	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
 	if err != nil {
@@ -44,7 +44,7 @@ func main() {
 		}
 	}
 
-	ethernet_nw_id := "ca0da0ad-81e6-4d43-92ad-2eb66f77611c"
+	ethernet_nw_id := "cc65605c-9a90-4293-8e53-4556d5cc7892"
 	fmt.Println("#................... GetAssociatedProfiles ....................#")
 	ethernet_nw_ass_pfl, err := ovc.GetAssociatedProfile(ethernet_nw_id)
 	if err != nil {
@@ -110,7 +110,8 @@ func main() {
 		fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
 	}
 
-	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/913eee50-6ce3-4da9-91da-60e51f9c0056"), utils.NewNstring("/rest/ethernet-networks/65220487-b40f-43d8-8ee3-6c5b914d3e43")}
+	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/cc65605c-9a90-4293-8e53-4556d5cc7892"), utils.NewNstring("/rest/ethernet-networks/dd170a44-9a3e-4507-8f7b-4a9a4fec737c")}
+
 	bulkDeleteEthernetNetwork := ov.BulkDelete{NetworkUris: *network_uris}
 	err = ovc.DeleteBulkEthernetNetwork(bulkDeleteEthernetNetwork)
 
