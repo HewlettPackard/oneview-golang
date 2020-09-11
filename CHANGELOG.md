@@ -7,13 +7,22 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Minor Bug Fixes
 
 ### Oneview Features supported
+- Enclosure
+- Enclosure Group
 - Ethernet Network
 - FC Network
 - FCOE Network
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
 - Network Set
+- Tasks
 
 #### Bug fixes & Enhancements:
-- [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
+- [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working with OV 5.20
+
+### Major changes:
+- Refactored SDK to take default API version from Oneview appliance.
 
 # [v1.5.0] (2020-07-17)
 ### Notes
