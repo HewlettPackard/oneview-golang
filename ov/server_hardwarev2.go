@@ -59,13 +59,13 @@ type ServerHardwarev200 struct {
 //     Reset
 //     Resetting
 
-// MpHostInfov200 -
+// MpHostInfov200 Structure
 type MpHostInfov200 struct {
 	MpHostName    string            `json:"mpHostName,omitempty"`    // mpHostName The host name of the Management Processor. string
 	MpIPAddresses []MpIPAddressv200 `json:"mpIpAddresses,omitempty"` // The list of IP addresses and corresponding type information for the Management Processor.
 }
 
-// MpIPAddressv200 -
+// MpIPAddressv200 Map Structure
 type MpIPAddressv200 struct {
 	Address string `json:"address,omitempty"` // address An IP address for the Management Processor. string
 	Type    string `json:"type,omitempty"`    // type The type of IP address. The following are useful values for the IP address type: Static - Static IP address configuration; DHCP - Dynamic host configuration protocol; SLAAC - Stateless address autoconfiguration (IPv6); LinkLocal - Link-local address (IPv6);
@@ -171,6 +171,7 @@ type FirmwareAndDriversInstallStatev200 struct {
 // Uninitialized Indicates the current firmware and/or OS driver settings have been cleared. No components will be updated on the server.
 // Unknown Indicates the server failed to return the current settings, therefore, the actual values might not be current.
 
+// HpSmartUpdateToolStatusv200 Structure
 type HpSmartUpdateToolStatusv200 struct {
 	HPSUTInstallState string `json:"hpSUTInstallState,omitempty"` // hpSUTInstallState HpSUT Install State Enum
 	InstallState      string `json:"installState,omitempty"`      // installState HP Smart Update Tool's installed state on the server indicating whether it is installed, not installed or unknown.
@@ -180,7 +181,7 @@ type HpSmartUpdateToolStatusv200 struct {
 	Version           string `json:"version,omitempty"`           // version The current version of the HP Smart Update Tool installed on the server. string
 }
 
-// Signaturev200 -
+// Signaturev200 Structure
 type Signaturev200 struct {
 	PersonalityChecksum int `json:"personalityChecksum,omitempty"` // A calculated checksum of the server 'personality,' based on the defined connections and server identifiers. integer read only
 	ServerHwChecksum    int `json:"serverHwChecksum,omitempty"`    // A calculated checksum of the server hardware, based on the hardware components installed in the server. integer read only
