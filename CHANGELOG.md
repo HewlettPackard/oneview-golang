@@ -15,11 +15,18 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Interconnects
 - Interconnect Types
 - Logical Enclosure
+- Logical Interconnect
 - Network Set
+- Scope
+- Server Profile
+- Server Profile Template
 - Tasks
 
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working with OV 5.20
+
+### Major changes:
+- Refactored SDK to take default API version from Oneview appliance.
 
 ### Major changes:
 - Refactored SDK to take default API version from Oneview appliance.

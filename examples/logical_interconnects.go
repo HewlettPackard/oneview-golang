@@ -19,10 +19,10 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV        *ov.OVClient
-		id              = "e6f42b51-ba5a-430e-8b68-a9d1de223293"
+		id              = "eb2d04c8-bfc6-4adb-a230-dcac4ab8de33"
 		macAddress      = "94:57:A5:67:2C:BE"
-		internalVlan    = "1052"
-		interconnectURI = "/rest/interconnects/b6b7325f-666f-474f-a8f7-2c32b3c9faab"
+		internalVlan    = "1026"
+		interconnectURI = "/rest/interconnects/8dd8576c-043f-491a-9c10-1c63d5bfd258"
 		externalVlan    = "1052"
 		tcId            = "1"
 	)
@@ -32,7 +32,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"*")
 
 	fmt.Println("....  Logical Interconnects Collection .....")
@@ -194,6 +194,15 @@ func main() {
 	err_pm := ovc.UpdateLogicalInterconnectPortMonitor(liPMConfig, id)
 	if err_pm != nil {
 		fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_pm)
+	}
+
+	li_uris := make(map[string][]utils.Nstring)
+	li_uris["logicalInterconnectUris"] = []utils.Nstring{lig.URI}
+	data, err := ovc.BulkInconsistencyValidations(li_uris)
+	if err == nil {
+		fmt.Println(data)
+	} else {
+		fmt.Println("Bulk Inconsistency Validation Failed", err)
 	}
 
 	fmt.Println("....  Updating Logical Interconnect Telemetry  Configuration.....")
