@@ -35,13 +35,16 @@ func main() {
 			Locked: false,
 		},
 	}
-	//	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
+	st_pool, err := ovc.GetStoragePoolByName("CPG-SSD")
+	if err != nil {
+		fmt.Println(err)
+	}
 	storage_pool_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Storage Pool",
 		Description: "A common provisioning group URI reference",
-		Default:     "/rest/storage-pools/73D63DE9-7B0F-4D84-852E-AC30011285E4",
+		Default:     st_pool.URI,
 		Meta: &ov.Meta{
 			Locked:       false,
 			CreateOnly:   true,
@@ -54,7 +57,7 @@ func main() {
 		Type:        "string",
 		Title:       "Snapshot Pool",
 		Description: "A URI reference to the common provisioning group used to create snapshots",
-		Default:     "/rest/storage-pools/73D63DE9-7B0F-4D84-852E-AC30011285E4",
+		Default:     st_pool.URI,
 		Meta: &ov.Meta{
 			Locked:       false,
 			SemanticType: "device-snapshot-storage-pool",
