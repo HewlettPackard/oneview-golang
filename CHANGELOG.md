@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Major changes:
 - Refactored SDK to take default API version from Oneview appliance.
+- Added support for publishing Docker Image whenever a new release is created in GitHub.
 
 # [v1.5.0] (2020-07-17)
 ### Notes
