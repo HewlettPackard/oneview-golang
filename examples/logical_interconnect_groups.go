@@ -46,11 +46,18 @@ func main() {
 
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
+
+	interconnect1, err := ovc.GetInterconnectTypeByName("int_type_1")
+	interconnect2, err := ovc.GetInterconnectTypeByName("int_type_2")
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	interconnectMapEntryTemplate1 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation1,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/18f00f2f-505b-4497-a825-8336996196a6",
+		PermittedInterconnectTypeUri: interconnect1.URI,
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplate2 := ov.InterconnectMapEntryTemplate{LogicalLocation: logicalLocation2,
-		PermittedInterconnectTypeUri: "/rest/interconnect-types/18f00f2f-505b-4497-a825-8336996196a6",
+		PermittedInterconnectTypeUri: interconnect2.URI,
 		EnclosureIndex:               1}
 	interconnectMapEntryTemplates := new([]ov.InterconnectMapEntryTemplate)
 	*interconnectMapEntryTemplates = append(*interconnectMapEntryTemplates, interconnectMapEntryTemplate1)
