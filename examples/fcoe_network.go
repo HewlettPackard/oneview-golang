@@ -23,7 +23,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/ad6ad113-d4ac-49c5-9dc0-de0e294a19d7")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
 	fcoeNetwork := ov.FCoENetwork{
 		Name:                  testName,
 		Type:                  "fcoe-networkV4", //The Type value is for API>500.
@@ -71,7 +71,7 @@ func main() {
 		fmt.Println("Deleted FCoENetworks successfully...")
 	}
 	//DeleteBulkFCoENetwork
-	fcoe_network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fcoe-networks/bf818802-ca28-4c5d-a378-191f523649a1"), utils.NewNstring("/rest/fcoe-networks/acecb86b-6d9d-4e37-9a36-5c798a9b16f2")}
+	fcoe_network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fcoe-networks/c5175600-845b-403c-b76f-81e018a93a44"), utils.NewNstring("/rest/fcoe-networks/12df5737-d0bf-4915-96e4-d0c8077838ab")}
 	bulkDeleteFCoENetwork := ov.FCoENetworkBulkDelete{FCoENetworkUris: *fcoe_network_uris}
 	err = ovc.DeleteBulkFCoENetwork(bulkDeleteFCoENetwork)
 

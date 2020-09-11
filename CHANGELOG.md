@@ -9,9 +9,13 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Oneview Features supported
 - Enclosure
 - Enclosure Group
+- Ethernet Network
+- FC Network
+- FCOE Network
 - Interconnects
 - Interconnect Types
 - Logical Enclosure
+- Network Set
 - Tasks
 
 #### Bug fixes & Enhancements:
