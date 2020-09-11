@@ -34,7 +34,11 @@ func main() {
 		DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
-	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/5d57f25a-0fb0-4980-84af-ac3001139130"), Properties: properties, IsPermanent: &trueVal}
+        vol_template, err := ovc.GetStorageVolumeTemplateByName("template1")
+        if err != nil {
+                fmt.Println(err)
+	}
+	storageVolume := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties, IsPermanent: &trueVal}
 
 	err := ovc.CreateStorageVolume(storageVolume)
 	if err != nil {
