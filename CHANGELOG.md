@@ -12,6 +12,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Ethernet Network
 - FC Network
 - FCOE Network
+- Hypervisor Manager
+- Hypervisor Cluster Profile
 - Interconnects
 - Interconnect Types
 - Logical Enclosure
@@ -25,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Server Profile
 - Server Profile Template
 - Tasks
+- Uplink Set 
 
 #### Bug fixes & Enhancements:
 - [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20

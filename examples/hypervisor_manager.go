@@ -19,9 +19,9 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1800,
+		2000,
 		"")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/8ef32b43-2478-4aea-bb68-a65d0fbfea93")}
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
 	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
 		Name:             "172.18.13.11",
 		Username:         "dcs",
