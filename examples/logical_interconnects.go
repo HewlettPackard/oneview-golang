@@ -197,7 +197,7 @@ func main() {
 	}
 
 	li_uris := make(map[string][]utils.Nstring)
-	li_uris["logicalInterconnectUris"] = []utils.Nstring{utils.Nstring("/rest/logical-interconnects/eb2d04c8-bfc6-4adb-a230-dcac4ab8de33")}
+	li_uris["logicalInterconnectUris"] = []utils.Nstring{lig.URI}
 	data, err := ovc.BulkInconsistencyValidations(li_uris)
 	if err == nil {
 		fmt.Println(data)
