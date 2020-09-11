@@ -1,7 +1,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.6.0] (unreleased)
+# [v1.6.0] 
 ### Notes
 - This release extends supports of the SDK to Oneview API2000.
 - Minor Bug Fixes
