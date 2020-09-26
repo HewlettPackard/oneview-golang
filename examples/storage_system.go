@@ -46,7 +46,7 @@ func main() {
 		DeviceSpecificAttributesForUpdate.ManagedDomain = DeviceSpecificAttributesForUpdate.DiscoveredDomains[0]
 		for k, pools := range DeviceSpecificAttributesForUpdate.DiscoveredPools {
 
-			if pools.Domain == DeviceSpecificAttributesForUpdate.ManagedDomain { //&&  pools.Name =="FST_CPG1"{
+			if pools.Domain == DeviceSpecificAttributesForUpdate.ManagedDomain {
 
 				pools := ov.ManagedPools(pools)
 				//remove pools  from discovered pools
@@ -97,8 +97,8 @@ func main() {
 
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name_to_create)
-	// err = ovc.DeleteStorageSystem(name_to_create)
-	// if err != nil {
-	// 	fmt.Println("Delete Unsuccessful", err)
-	// }
+	err = ovc.DeleteStorageSystem(name_to_create)
+	if err != nil {
+		fmt.Println("Delete Unsuccessful", err)
+	}
 }
