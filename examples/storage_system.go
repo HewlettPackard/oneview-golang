@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
-	"reflect"
+
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	var (
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
-		//managed_domain = "No Domain" //Variable to update the managedDomain
+		managed_domain = "No Domain" //Variable to update the managedDomain
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -40,10 +40,9 @@ func main() {
 
 	// Update the given storage system
 	//Managed domain is mandatory attribute for update
-	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
-	fmt.Println(reflect.TypeOf(DeviceSpecificAttributesForUpdate))
+	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes	
 	if DeviceSpecificAttributesForUpdate.ManagedDomain == "" {
-		DeviceSpecificAttributesForUpdate.ManagedDomain = DeviceSpecificAttributesForUpdate.DiscoveredDomains[0]
+		DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 		for k, pools := range DeviceSpecificAttributesForUpdate.DiscoveredPools {
 
 			if pools.Domain == DeviceSpecificAttributesForUpdate.ManagedDomain {
