@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"reflect"
 )
 
 func main() {
@@ -11,7 +12,7 @@ func main() {
 	var (
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
-		managed_domain = "TestDomain" //Variable to update the managedDomain
+		//managed_domain = "No Domain" //Variable to update the managedDomain
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -24,7 +25,7 @@ func main() {
 		"*")
 
 	// Create storage system
-	storageSystem := ov.StorageSystem{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual", Description: "<description>"}
+	storageSystem := ov.StorageSystem{Hostname: "172.18.11.11", Username: "dcs", Password: "dcs", Family: "StoreServ", Description: "<description>"}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
@@ -40,7 +41,22 @@ func main() {
 	// Update the given storage system
 	//Managed domain is mandatory attribute for update
 	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
-	DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
+	fmt.Println(reflect.TypeOf(DeviceSpecificAttributesForUpdate))
+	if DeviceSpecificAttributesForUpdate.ManagedDomain == "" {
+		DeviceSpecificAttributesForUpdate.ManagedDomain = DeviceSpecificAttributesForUpdate.DiscoveredDomains[0]
+		for k, pools := range DeviceSpecificAttributesForUpdate.DiscoveredPools {
+
+			if pools.Domain == DeviceSpecificAttributesForUpdate.ManagedDomain { //&&  pools.Name =="FST_CPG1"{
+
+				pools := ov.ManagedPools(pools)
+				//remove pools  from discovered pools
+				copy(DeviceSpecificAttributesForUpdate.DiscoveredPools[k:], DeviceSpecificAttributesForUpdate.DiscoveredPools[k+1:])
+				//Add pools  to Managed discovered pools
+				DeviceSpecificAttributesForUpdate.ManagedPools = append(DeviceSpecificAttributesForUpdate.ManagedPools, pools)
+
+			}
+		}
+	}
 
 	updated_storage_system := ov.StorageSystem{
 		Name:                                  name_to_create,
@@ -52,7 +68,6 @@ func main() {
 		Hostname:                              update_system.Hostname,
 		Ports:                                 update_system.Ports,
 	}
-
 	err = ovc.UpdateStorageSystem(updated_storage_system)
 	if err != nil {
 		fmt.Println("Could not update the system", err)
@@ -82,8 +97,8 @@ func main() {
 
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name_to_create)
-	err = ovc.DeleteStorageSystem(name_to_create)
-	if err != nil {
-		fmt.Println("Delete Unsuccessful", err)
-	}
+	// err = ovc.DeleteStorageSystem(name_to_create)
+	// if err != nil {
+	// 	fmt.Println("Delete Unsuccessful", err)
+	// }
 }
