@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
-
 )
 
 func main() {
@@ -40,7 +39,7 @@ func main() {
 
 	// Update the given storage system
 	//Managed domain is mandatory attribute for update
-	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes	
+	DeviceSpecificAttributesForUpdate := update_system.StorageSystemDeviceSpecificAttributes
 	if DeviceSpecificAttributesForUpdate.ManagedDomain == "" {
 		DeviceSpecificAttributesForUpdate.ManagedDomain = managed_domain
 		for k, pools := range DeviceSpecificAttributesForUpdate.DiscoveredPools {
