@@ -20,16 +20,21 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
+	lig, _ := ovc.GetLogicalInterconnectGroupByName("LIG-FC")
+
 	ibMappings := new([]ov.InterconnectBayMap)
-	interconnectBay1 := ov.InterconnectBayMap{InterconnectBay: 3, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/b0fce8d1-4916-4564-8e91-1bd32527aba4")}
-	interconnectBay2 := ov.InterconnectBayMap{InterconnectBay: 6, LogicalInterconnectGroupUri: utils.NewNstring("/rest/logical-interconnect-groups/b0fce8d1-4916-4564-8e91-1bd32527aba4")}
+	interconnectBay1 := ov.InterconnectBayMap{InterconnectBay: 2, LogicalInterconnectGroupUri: lig.URI}
+	interconnectBay2 := ov.InterconnectBayMap{InterconnectBay: 5, LogicalInterconnectGroupUri: lig.URI}
+
 	*ibMappings = append(*ibMappings, interconnectBay1)
 	*ibMappings = append(*ibMappings, interconnectBay2)
+
+	scp, _ := ovc.GetScopeByName("testing")
 	initialScopeUris := new([]utils.Nstring)
-	*initialScopeUris = append(*initialScopeUris, utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498"))
+	*initialScopeUris = append(*initialScopeUris, scp.URI)
 
 	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "External", EnclosureCount: 1}
 	/*
@@ -57,7 +62,7 @@ func main() {
 	}
 
 	if ovc.APIVersion > 500 {
-		scope_uri := "'/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498'"
+		scope_uri := string(scp.URI)
 		enc_grp_list1, err := ovc.GetEnclosureGroups("", "", "", "", scope_uri)
 		if err != nil {
 			fmt.Println("Error in getting EnclosureGroups by scope URIs:", err)
@@ -114,8 +119,8 @@ func main() {
 		fmt.Println("Error in getting configuration Script: ", err)
 	}
 	fmt.Println("Configuation Script: ", conf_script)
-
 	fmt.Println(script)
+
 	err = ovc.DeleteEnclosureGroup(new_eg_name)
 	if err != nil {
 		panic(err)

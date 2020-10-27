@@ -10,10 +10,10 @@ import (
 func main() {
 	var (
 		ClientOV    *ov.OVClient
-		scp_name    = "test"
+		scp_name    = "ScopeTest"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "test_eth"
+		eth_network = "testing"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,7 +21,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	fmt.Println("#................... Scope by Name ...............#")

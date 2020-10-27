@@ -18,7 +18,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 	// Get all tasks present
 	sort := "name:desc"
@@ -29,10 +29,10 @@ func main() {
 		fmt.Println("Error getting the storage volumes ", err)
 	}
 	for i := 0; i < len(task_list.Members); i++ {
-		fmt.Println(task_list.Members[i].Name)
+		fmt.Println(task_list.Members[i].Name, task_list.Members[i].URI)
 	}
 
-	id := "a3af4d5e-7114-4e7a-a6c4-f97b707ec87c"
+	id := "cc0d18ca-ff2d-4da4-8b16-ee0ad864fb2c"
 
 	fmt.Println("Getting Details of the requested Task")
 	task, err := ovc.GetTasksById("", "", "", "", id)
@@ -40,4 +40,5 @@ func main() {
 		fmt.Println("Error getting the task details ", err)
 	}
 	fmt.Println(task)
+
 }

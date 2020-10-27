@@ -9,8 +9,8 @@ import (
 func main() {
 	var (
 		clientOV           *ov.OVClient
-		enc_name           = "0000A66101"
-		new_enclosure_name = "RenamedEnclosure"
+		enc_name           = "Synergy-Encl 2"
+		new_enclosure_name = "Synergy-Encl-2"
 		path               = "/name"
 		op                 = "replace"
 	)
@@ -20,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	enclosure_create_map := ov.EnclosureCreateMap{

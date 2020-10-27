@@ -14,7 +14,7 @@ func main() {
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE"
 		logical_enclosure_2 = "log_enclosure88"
-		scope_name          = "test"
+		scope_name          = "testing"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -22,7 +22,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	fmt.Println("#................... Create Logical Enclosure ...............#")
@@ -31,9 +31,11 @@ func main() {
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
+	enc_grp, err := ovc.GetEnclosureGroupByName("EG-Synergy-Local")
+
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
 		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/d8f1f41e-6bc1-4842-932b-b526ce4f7321")}
+		EnclosureGroupUri: enc_grp.URI}
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {
@@ -74,14 +76,14 @@ func main() {
 	}
 
 	// Update From Group
-	/*
-		err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
-		}
-	*/
+
+	err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+	}
+
 	scope1, err := ovc.GetScopeByName(scope_name)
 	scope_uri := scope1.URI
 	scope_Uris := new([]string)

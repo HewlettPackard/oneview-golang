@@ -28,7 +28,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
@@ -47,8 +47,8 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 
-	interconnect1, err := ovc.GetInterconnectTypeByName("int_type_1")
-	interconnect2, err := ovc.GetInterconnectTypeByName("int_type_2")
+	interconnect1, err := ovc.GetInterconnectTypeByName("Virtual Connect SE 40Gb F8 Module for Synergy")
+	interconnect2, err := ovc.GetInterconnectTypeByName("Virtual Connect SE 40Gb F8 Module for Synergy")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -72,7 +72,6 @@ func main() {
 	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		URI:                                "/settings",
 		Name:                               "defaultEthernetSwitchSettings",
-		ID:                                 "cf3509e5-5330-4464-8d4c-fc679bc3ad0b",
 		InterconnectType:                   "Ethernet",
 		EnableInterconnectUtilizationAlert: newFalse(),
 		EnableFastMacCacheFailover:         newTrue(),
@@ -148,7 +147,7 @@ func main() {
 	fmt.Println("... Updating LogicalInterconnectGroup ...")
 	fmt.Println("")
 	lig_uri.Name = new_lig_name
-	err := ovc.UpdateLogicalInterconnectGroup(lig_uri)
+	err = ovc.UpdateLogicalInterconnectGroup(lig_uri)
 	if err != nil {
 		panic(err)
 	} else {
