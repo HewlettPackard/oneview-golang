@@ -10,7 +10,7 @@ func main() {
 
 	var (
 		ClientOV     *ov.OVClient
-		storage_pool = "<st_pool>"
+		storage_pool = "Cluster-1"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -19,7 +19,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	//Get storage pool by name to update
