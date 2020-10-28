@@ -205,7 +205,6 @@ func main() {
 		update_vol_template.Description = "Updating description"
 
 		// Update the previously created storage volume template
-		fmt.Println(update_vol_template)
 		err = ovc.UpdateStorageVolumeTemplate(update_vol_template)
 		if err != nil {
 			fmt.Println("Could not update the volume template", err)
@@ -216,6 +215,7 @@ func main() {
 	time.Sleep(2 * time.Second)
 
 	// Get All the volume templates present
+	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
 
 	sort := "name:desc"
 	vol_temp_list, err := ovc.GetStorageVolumeTemplates("", sort, "", "")
