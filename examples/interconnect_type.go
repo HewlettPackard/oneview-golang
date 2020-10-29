@@ -28,7 +28,6 @@ func main() {
 		fmt.Println(interconnect)
 	}
 
-
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
 	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect.URI)
 	if err != nil {

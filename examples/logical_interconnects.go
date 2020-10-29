@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"strings"
 	"os"
+	"strings"
 )
 
 func newTrue() *bool {
@@ -19,9 +19,9 @@ func newFalse() *bool {
 
 func main() {
 	var (
-		clientOV        *ov.OVClient
+		clientOV         *ov.OVClient
 		ethernet_network = "testeth1"
-		tcId            = "1"
+		tcId             = "1"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -32,14 +32,14 @@ func main() {
 		2200,
 		"*")
 
-        logicalInterconnect, err := ovc.GetLogicalInterconnects("", "", "")
-        if err != nil {
-                fmt.Println(err)
-        } else {
+	logicalInterconnect, err := ovc.GetLogicalInterconnects("", "", "")
+	if err != nil {
+		fmt.Println(err)
+	} else {
 
-                fmt.Println("#-------------All Logical Interconnect Names----------------#")
-                fmt.Println(logicalInterconnect.Members[0].Name)
-        }
+		fmt.Println("#-------------All Logical Interconnect Names----------------#")
+		fmt.Println(logicalInterconnect.Members[0].Name)
+	}
 	interconnectURI := string(logicalInterconnect.Members[0].URI)
 	id := strings.Replace(string(logicalInterconnect.Members[0].URI), "/rest/logical-interconnects/", "", 1)
 
@@ -197,15 +197,15 @@ func main() {
 	if err_conf != nil {
 		fmt.Println("Could not update Configuration of Logical Interconnect", err_conf)
 	}
-/*
-	fmt.Println("....  Updating Logical Interconnect Port Monitor Configuration.....")
-	liPMConfig := ov.PortMonitor{Type: "port-monitorV1", Category: "port-monitor", ETAG: "08d7c29-0c0e-4231-bf44-78bf96686455", Name: "name677351721-1594111671299"}
+	/*
+		fmt.Println("....  Updating Logical Interconnect Port Monitor Configuration.....")
+		liPMConfig := ov.PortMonitor{Type: "port-monitorV1", Category: "port-monitor", ETAG: "08d7c29-0c0e-4231-bf44-78bf96686455", Name: "name677351721-1594111671299"}
 
-	err_pm := ovc.UpdateLogicalInterconnectPortMonitor(liPMConfig, id)
-	if err_pm != nil {
-		fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_pm)
-	}
-*/
+		err_pm := ovc.UpdateLogicalInterconnectPortMonitor(liPMConfig, id)
+		if err_pm != nil {
+			fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_pm)
+		}
+	*/
 	li_uris := make(map[string][]utils.Nstring)
 	li_uris["logicalInterconnectUris"] = []utils.Nstring{lig.URI}
 	data, err := ovc.BulkInconsistencyValidations(li_uris)
