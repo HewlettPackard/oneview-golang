@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
@@ -11,7 +10,6 @@ func main() {
 	var (
 		clientOV                  *ov.OVClient
 		server_hardware_type_name = "SY 660 Gen9 2"
-		uri                       = "/rest/server-hardware-types/BD58D379-730F-4888-97E8-55E6622A1116"
 		sort                      = "name:desc"
 	)
 	ovc := clientOV.NewOVClient(
@@ -20,7 +18,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
 
 	fmt.Println("#-----------------------Server Hardware Type by name-------------------------#")
@@ -31,9 +29,9 @@ func main() {
 	fmt.Println(server_hardware_type)
 
 	fmt.Println("#----------------------Server Hardware Type by uri---------------------------#")
-	server_hardware_type, err = ovc.GetServerHardwareTypeByUri(utils.NewNstring(uri))
+	server_hardware_type, err = ovc.GetServerHardwareTypeByUri(server_hardware_type.URI)
 	if err != nil {
-		fmt.Println("Error while getting server hardware type by uri ", uri, ":", err)
+		fmt.Println("Error while getting server hardware type by uri ", server_hardware_type.URI, ":", err)
 	}
 	fmt.Println(server_hardware_type)
 

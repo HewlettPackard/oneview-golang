@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
+	"strings"
 	"os"
 )
 
@@ -19,11 +20,7 @@ func newFalse() *bool {
 func main() {
 	var (
 		clientOV        *ov.OVClient
-		id              = "eb2d04c8-bfc6-4adb-a230-dcac4ab8de33"
-		macAddress      = "94:57:A5:67:2C:BE"
-		internalVlan    = "1026"
-		interconnectURI = "/rest/interconnects/8dd8576c-043f-491a-9c10-1c63d5bfd258"
-		externalVlan    = "1052"
+		ethernet_network = "testeth1"
 		tcId            = "1"
 	)
 	ovc := clientOV.NewOVClient(
@@ -32,8 +29,19 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"*")
+
+        logicalInterconnect, err := ovc.GetLogicalInterconnects("", "", "")
+        if err != nil {
+                fmt.Println(err)
+        } else {
+
+                fmt.Println("#-------------All Logical Interconnect Names----------------#")
+                fmt.Println(logicalInterconnect.Members[0].Name)
+        }
+	interconnectURI := string(logicalInterconnect.Members[0].URI)
+	id := strings.Replace(string(logicalInterconnect.Members[0].URI), "/rest/logical-interconnects/", "", 1)
 
 	fmt.Println("....  Logical Interconnects Collection .....")
 	logicalInterconnectList, _ := ovc.GetLogicalInterconnects("", "0", "10")
@@ -61,20 +69,21 @@ func main() {
 
 	fmt.Println("....  Logical Interconnect Forwarding Information.....")
 	var filter []string
-	fi, _ := ovc.GetLogicalInterconnectForwardingInformation(filter, id)
+	fi, er := ovc.GetLogicalInterconnectForwardingInformation(filter, id)
 	fmt.Println(fi)
+	if er != nil {
+		fmt.Println("....  Logical Interconnect Forwarding Information By Mac Address.....")
+		fi_mac, _ := ovc.GetLogicalInterconnectForwardingInformationByMacAddress(fi.Members[0].MacAddress, id)
+		fmt.Println(fi_mac)
 
-	fmt.Println("....  Logical Interconnect Forwarding Information By Mac Address.....")
-	fi_mac, _ := ovc.GetLogicalInterconnectForwardingInformationByMacAddress(macAddress, id)
-	fmt.Println(fi_mac)
+		fmt.Println("....  Logical Interconnect Forwarding Information By Internal Vlan.....")
+		fi_intern_vlan, _ := ovc.GetLogicalInterconnectForwardingInformationByInternalVlan(fi.Members[0].InternalVlan, id)
+		fmt.Println(fi_intern_vlan)
 
-	fmt.Println("....  Logical Interconnect Forwarding Information By Internal Vlan.....")
-	fi_intern_vlan, _ := ovc.GetLogicalInterconnectForwardingInformationByInternalVlan(internalVlan, id)
-	fmt.Println(fi_intern_vlan)
-
-	fmt.Println("....  Logical Interconnect Forwarding Information By Interconnect URI and ExternalVlan.....")
-	fi_interconnect_external, _ := ovc.GetLogicalInterconnectForwardingInformationByInterconnectAndExternalVlan(interconnectURI, externalVlan, id)
-	fmt.Println(fi_interconnect_external)
+		fmt.Println("....  Logical Interconnect Forwarding Information By Interconnect URI and ExternalVlan.....")
+		fi_interconnect_external, _ := ovc.GetLogicalInterconnectForwardingInformationByInterconnectAndExternalVlan(interconnectURI, fi.Members[0].ExternalVlan, id)
+		fmt.Println(fi_interconnect_external)
+	}
 
 	fmt.Println("....  Logical Interconnect Internal VLAN IDs for the provisioned networks.....")
 	fi_internal_vlan, _ := ovc.GetLogicalInternalVlans(id)
@@ -102,7 +111,7 @@ func main() {
 
 	fmt.Println("....  Updating Logical Interconnect Consistent State.....")
 	var liUris []utils.Nstring
-	liUris = append(liUris, utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293"))
+	liUris = append(liUris, logicalInterconnect.Members[0].URI)
 	liCompliance := ov.LogicalInterconnectCompliance{Type: "li-compliance",
 		LogicalInterconnectUris: liUris,
 		Description:             ""}
@@ -120,8 +129,8 @@ func main() {
 	fmt.Println("....  Updating Logical Interconnect EthernetSetting .....")
 	liEthernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		InterconnectType: "Ethernet",
-		URI:              utils.NewNstring("/rest/logical-interconnects/e6f42b51-ba5a-430e-8b68-a9d1de223293/ethernetSettings"),
-		ID:               "cf3509e5-5330-4464-8d4c-fc679bc3ad0b"}
+		URI:              ethernetSettings.URI,
+		ID:               ethernetSettings.ID}
 	err_ethernet := ovc.UpdateLogicalInterconnectEthernetSettings(liEthernetSettings, id)
 	if err_ethernet != nil {
 		fmt.Println("Could not update Ethernet Settings of Logical Interconnect", err_ethernet)
@@ -153,8 +162,9 @@ func main() {
 	}
 
 	fmt.Println("....  Updating Logical Interconnect InternalNetworks.....")
+	eth_nw, _ := ovc.GetEthernetNetworkByName(ethernet_network)
 	var internalNetworks []utils.Nstring
-	internalNetworks = append(internalNetworks, utils.NewNstring("/rest/ethernet-networks/577d8021-67e1-4d3e-92a1-fa20f61c812a"))
+	internalNetworks = append(internalNetworks, eth_nw.URI)
 	err_networks := ovc.UpdateLogicalInterconnectInternalNetworks(internalNetworks, id)
 	if err_networks != nil {
 		fmt.Println("Could not update Internal Networks of Logical Interconnect", err_networks)
@@ -187,7 +197,7 @@ func main() {
 	if err_conf != nil {
 		fmt.Println("Could not update Configuration of Logical Interconnect", err_conf)
 	}
-
+/*
 	fmt.Println("....  Updating Logical Interconnect Port Monitor Configuration.....")
 	liPMConfig := ov.PortMonitor{Type: "port-monitorV1", Category: "port-monitor", ETAG: "08d7c29-0c0e-4231-bf44-78bf96686455", Name: "name677351721-1594111671299"}
 
@@ -195,7 +205,7 @@ func main() {
 	if err_pm != nil {
 		fmt.Println("Could not update PortMonitor Configuration of Logical Interconnect", err_pm)
 	}
-
+*/
 	li_uris := make(map[string][]utils.Nstring)
 	li_uris["logicalInterconnectUris"] = []utils.Nstring{lig.URI}
 	data, err := ovc.BulkInconsistencyValidations(li_uris)
