@@ -10,7 +10,8 @@ import (
 func main() {
 	var (
 		ClientOV                        *ov.OVClient
-		hypervisor_manager              = "172.18.13.11"
+		scope                           = "<scope_name>"
+		hypervisor_manager_ip           = "172.18.13.11"
 		hypervisor_manager_display_name = "HM2"
 	)
 	ovc := ClientOV.NewOVClient(
@@ -19,9 +20,28 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
+
+	scp, _ := ovc.GetScopeByName(scope)
+	initialScopeUris := &[]utils.Nstring{scp.URI}
+
+	// Adding Hypervisor Manager Server Certificate to Oneview for Secure conection
+	server_cert, err := ovc.GetServerCertificateByIp(hypervisor_manager_ip)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("Fetched Hypervisor Manager Server Certificate.")
+	}
+	server_cert.CertificateDetails[0].AliasName = "Hypervisor Manager Server Certificate"
+	server_cert.Type = ""
+	er := ovc.CreateServerCertificate(server_cert)
+	if er != nil {
+		fmt.Println("............... Adding Server Certificate Failed: ", er)
+	} else {
+		fmt.Println("Imported Hypervisor Manager Server Certificate to Oneview for secure connection successfully.")
+	}
+
 	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
 		Name:             "172.18.13.11",
 		Username:         "dcs",
@@ -30,7 +50,7 @@ func main() {
 		InitialScopeUris: *initialScopeUris,
 		Type:             "HypervisorManagerV2"}
 
-	err := ovc.CreateHypervisorManager(hypervisorManager)
+	err = ovc.CreateHypervisorManager(hypervisorManager)
 	if err != nil {
 		fmt.Println("............... Create Hypervisor Manager Failed:", err)
 	} else {
@@ -38,7 +58,7 @@ func main() {
 	}
 
 	fmt.Println("#................... Hypervisor Manager by Name ...............#")
-	hypervisor_mgr, err := ovc.GetHypervisorManagerByName(hypervisor_manager)
+	hypervisor_mgr, err := ovc.GetHypervisorManagerByName(hypervisor_manager_ip)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -72,7 +92,7 @@ func main() {
 		}
 	}
 
-	err = ovc.DeleteHypervisorManager(hypervisor_manager)
+	err = ovc.DeleteHypervisorManager(hypervisor_manager_ip)
 	if err != nil {
 		fmt.Println(err)
 	} else {
