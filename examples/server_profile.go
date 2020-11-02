@@ -15,6 +15,7 @@ func main() {
 		new_sp_name       = "Renamed Server Profile"
 		server_hardware_1 = "0000A66101, bay 5"
 		server_hardware_2 = "0000A66101, bay 7"
+		scope = "ScopeTest"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -26,7 +27,7 @@ func main() {
 		"*")
 
 	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName("ScopeTest")
+	scp, scperr := ovc.GetScopeByName(scope)
 	if scperr != nil {
 		*initialScopeUris = append(*initialScopeUris, scp.URI)
 	}
