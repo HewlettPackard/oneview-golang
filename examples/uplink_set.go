@@ -12,6 +12,7 @@ func main() {
 		ClientOV   *ov.OVClient
 		new_uplink = "test_new"
 		upd_uplink = "test_update"
+		ethernet_network = "testeth1"
 	)
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -19,7 +20,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		2200,
 		"")
 
 	fmt.Println("#................... Get-all Uplink-Sets ...............#")
@@ -36,15 +37,18 @@ func main() {
 
 	// Create Uplink Set
 	networkUris := new([]utils.Nstring)
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58196a2d-0043-4281-9728-7c973d9660b9"))
+	ethernet_ntw, _ := ovc.GetEthernetNetworkByName(ethernet_network)
+	*networkUris = append(*networkUris, ethernet_ntw.URI)
 
 	fcNetworkUris := make([]utils.Nstring, 0)
 	fcoeNetworkUris := make([]utils.Nstring, 0)
 	portConfigInfos := make([]ov.PortConfigInfos, 0)
 	privateVlanDomains := make([]ov.PrivateVlanDomains, 0)
 
+
+
 	uplinkSet := ov.UplinkSet{Name: new_uplink,
-		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/5fe6ef52-42d6-4895-8500-dfb633478225"),
+		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/f2587e79-c4de-4c71-8e0d-f8178258dfa6"),
 		NetworkURIs:                    *networkUris,
 		FcNetworkURIs:                  fcNetworkUris,
 		FcoeNetworkURIs:                fcoeNetworkUris,
