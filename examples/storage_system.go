@@ -12,6 +12,11 @@ func main() {
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
 		managed_domain = "TestDomain" //Variable to update the managedDomain
+		username       = "<user_name>"
+		password       = "<password>"
+		host_ip        = "<host_ip_address>"
+		family         = "<storage_system_family>"
+		description    = "<description>"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -24,7 +29,7 @@ func main() {
 		"*")
 
 	// Create storage system
-	storageSystem := ov.StorageSystem{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual", Description: "<description>"}
+	storageSystem := ov.StorageSystem{Hostname: host_ip, Username: username, Password: password, Family: family, Description: description}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {
