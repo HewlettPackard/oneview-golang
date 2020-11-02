@@ -156,6 +156,7 @@ func (c *OVClient) GetStorageVolumeTemplates(filter string, sort string, start s
 	}
 
 	data, err := c.RestAPICall(rest.GET, uri, nil)
+
 	if err != nil {
 		return sVolTemplates, err
 	}
@@ -176,8 +177,17 @@ func (c *OVClient) CreateStorageVolumeTemplate(sVolTemplate StorageVolumeTemplat
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
+	// Fetching Root Template URI for Storage Template Creation.
+	vol_temp_list, _ := c.GetStorageVolumeTemplates("", "name:desc", "", "")
+	for i := 0; i < len(vol_temp_list.Members); i++ {
+		if vol_temp_list.Members[i].IsRoot == true {
+			sVolTemplate.RootTemplateUri = vol_temp_list.Members[i].URI
+			fmt.Println(sVolTemplate.RootTemplateUri)
+			break
+		}
+	}
 
+	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
 	data, err := c.RestAPICall(rest.POST, uri, sVolTemplate)
 
 	if err != nil {

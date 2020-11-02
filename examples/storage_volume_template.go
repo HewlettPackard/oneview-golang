@@ -185,7 +185,6 @@ func main() {
 		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
-		RootTemplateUri:    "/rest/storage-volume-templates/6ae24a18-59a5-498b-9426-ac6200baa9e6",
 	}
 
 	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
