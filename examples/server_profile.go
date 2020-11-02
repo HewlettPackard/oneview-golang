@@ -15,7 +15,7 @@ func main() {
 		new_sp_name       = "Renamed Server Profile"
 		server_hardware_1 = "0000A66101, bay 5"
 		server_hardware_2 = "0000A66101, bay 7"
-		scope = "ScopeTest"
+		scope             = "ScopeTest"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
