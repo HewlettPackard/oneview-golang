@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	//	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 )
 
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
-		new_volume     = "TestVolume"
-		name_to_update = "UpdatedName"
+		ClientOV        *ov.OVClient
+		st_vol_template = "template"
+		new_volume      = "TestVolume"
+		name_to_update  = "UpdatedName"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -34,7 +34,7 @@ func main() {
 		//	DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
-	vol_template, err := ovc.GetStorageVolumeTemplateByName("template")
+	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)
 	if err != nil {
 		fmt.Println(err)
 	}

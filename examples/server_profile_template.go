@@ -13,6 +13,7 @@ func main() {
 		server_profile_template_name = "Test SPT"
 		enclosure_group_name         = "TESTEG"
 		server_hardware_type_name    = "SY 480 Gen9 1"
+		scope                        = "ScopeTest"
 	)
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -31,7 +32,7 @@ func main() {
 		ManageConnections: true,
 	}
 	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName("ScopeTest")
+	scp, scperr := ovc.GetScopeByName(scope)
 	if scperr != nil {
 		*initialScopeUris = append(*initialScopeUris, scp.URI)
 	}

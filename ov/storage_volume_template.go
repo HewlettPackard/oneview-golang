@@ -232,7 +232,6 @@ func (c *OVClient) UpdateStorageVolumeTemplate(sVolTemplate StorageVolumeTemplat
 
 	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
 	_, err := c.RestAPICall(rest.PUT, uri, sVolTemplate)
-
 	if err != nil {
 		log.Errorf("Error submitting update StorageVolumeTemplate request: %s", err)
 		return err
