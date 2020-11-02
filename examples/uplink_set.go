@@ -9,9 +9,9 @@ import (
 
 func main() {
 	var (
-		ClientOV   *ov.OVClient
-		new_uplink = "test_new"
-		upd_uplink = "test_update"
+		ClientOV         *ov.OVClient
+		new_uplink       = "test_new"
+		upd_uplink       = "test_update"
 		ethernet_network = "testeth1"
 	)
 	ovc := ClientOV.NewOVClient(
@@ -44,8 +44,6 @@ func main() {
 	fcoeNetworkUris := make([]utils.Nstring, 0)
 	portConfigInfos := make([]ov.PortConfigInfos, 0)
 	privateVlanDomains := make([]ov.PrivateVlanDomains, 0)
-
-
 
 	uplinkSet := ov.UplinkSet{Name: new_uplink,
 		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/f2587e79-c4de-4c71-8e0d-f8178258dfa6"),
