@@ -14,13 +14,15 @@ func main() {
 		new_eg_name = "RenamedEnclosureGroup"
 		script      = "#TEST COMMAND"
 	)
+
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	lig, _ := ovc.GetLogicalInterconnectGroupByName("LIG-FC")

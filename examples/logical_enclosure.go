@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -15,14 +16,17 @@ func main() {
 		logical_enclosure_1 = "TestLE"
 		logical_enclosure_2 = "log_enclosure88"
 		scope_name          = "testing"
+		li_name		    = "<logical_interconnect_name>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	fmt.Println("#................... Create Logical Enclosure ...............#")
@@ -44,13 +48,23 @@ func main() {
 		fmt.Println(".... Logical Enclosure Created Success")
 	}
 
+	logicalInterconnect, _ := ovc.GetLogicalInterconnects("", "", "")
+	li := ov.LogicalInterconnect{}
+	for i := 0; i < len(logicalInterconnect.Members); i++{
+		if logicalInterconnect.Members[i].Name == li_name{
+			li = logicalInterconnect.Members[i]
+		}
+	}
+
 	fmt.Println("#................... Create Logical Enclosure Support Dumps ...............#")
 
 	supportdmp := ov.SupportDumps{ErrorCode: "MyDump16",
 		ExcludeApplianceDump:    false,
-		LogicalInterconnectUris: []utils.Nstring{utils.NewNstring("/rest/logical-interconnects/99d75d4d-f573-4b2e-805d-f636af16fdd8")}}
+                LogicalInterconnectUris: []utils.Nstring{ li.URI }}
 
-	data, er := ovc.CreateSupportDump(supportdmp, "99d75d4d-f573-4b2e-805d-f636af16fdd8")
+	li_id := strings.Replace(string(li.URI), "/rest/logical-interconnects/", "", 1)
+
+	data, er := ovc.CreateSupportDump(supportdmp, li_id)
 
 	if er != nil {
 		fmt.Println("............... Logical Enclosure Support Dump Creation Failed:", er)
