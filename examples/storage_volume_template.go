@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
-	"time"
 	"strconv"
+	"time"
 )
 
 func main() {
