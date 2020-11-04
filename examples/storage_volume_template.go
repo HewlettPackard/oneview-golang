@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"time"
+	"strconv"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 		name_to_create = "VolumeTemplateExample"
 		name_to_update = "VolumeTemplateExample- updated"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,7 +23,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
