@@ -5,22 +5,26 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV                        *ov.OVClient
 		scope                           = "<scope_name>"
-		hypervisor_manager_ip           = "172.18.13.11"
+		hypervisor_manager_ip           = "<hypervisor_manager_ip>"
 		hypervisor_manager_display_name = "HM2"
+		username                        = "<hypervisor_user_name>"
+		password                        = "<hypervisor_password>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"")
 
 	scp, _ := ovc.GetScopeByName(scope)
@@ -43,9 +47,9 @@ func main() {
 	}
 
 	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
-		Name:             "172.18.13.11",
-		Username:         "dcs",
-		Password:         "dcs",
+		Name:             hypervisor_manager_ip,
+		Username:         username,
+		Password:         password,
 		Port:             443,
 		InitialScopeUris: *initialScopeUris,
 		Type:             "HypervisorManagerV2"}

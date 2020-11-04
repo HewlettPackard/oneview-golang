@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -14,15 +15,16 @@ func main() {
 		new_hcp                      = "test_new"
 		scope                        = "testing"
 		server_profile_template_name = "VolAtSPT"
-		hypervisor_manager_ip        = "172.18.13.11"
+		hypervisor_manager_ip        = "<hypervisor_manager_ip>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	hypervisor_manager, err := ovc.GetHypervisorManagerByName(hypervisor_manager_ip)
