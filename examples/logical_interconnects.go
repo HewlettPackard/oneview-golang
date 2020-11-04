@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -23,13 +24,14 @@ func main() {
 		ethernet_network = "testeth1"
 		tcId             = "1"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	logicalInterconnect, err := ovc.GetLogicalInterconnects("", "", "")

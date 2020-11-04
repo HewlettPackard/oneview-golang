@@ -4,19 +4,21 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		clientOV *ov.OVClient
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	sort := "name:desc"

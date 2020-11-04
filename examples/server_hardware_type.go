@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -12,13 +13,14 @@ func main() {
 		server_hardware_type_name = "SY 660 Gen9 2"
 		sort                      = "name:desc"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2200,
+		apiversion,
 		"*")
 
 	fmt.Println("#-----------------------Server Hardware Type by name-------------------------#")
