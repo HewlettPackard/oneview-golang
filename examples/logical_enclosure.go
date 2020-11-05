@@ -16,7 +16,7 @@ func main() {
 		logical_enclosure_1 = "TestLE"
 		logical_enclosure_2 = "log_enclosure88"
 		scope_name          = "testing"
-		li_name		    = "<logical_interconnect_name>"
+		li_name             = "<logical_interconnect_name>"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -50,8 +50,8 @@ func main() {
 
 	logicalInterconnect, _ := ovc.GetLogicalInterconnects("", "", "")
 	li := ov.LogicalInterconnect{}
-	for i := 0; i < len(logicalInterconnect.Members); i++{
-		if logicalInterconnect.Members[i].Name == li_name{
+	for i := 0; i < len(logicalInterconnect.Members); i++ {
+		if logicalInterconnect.Members[i].Name == li_name {
 			li = logicalInterconnect.Members[i]
 		}
 	}
@@ -60,7 +60,7 @@ func main() {
 
 	supportdmp := ov.SupportDumps{ErrorCode: "MyDump16",
 		ExcludeApplianceDump:    false,
-                LogicalInterconnectUris: []utils.Nstring{ li.URI }}
+		LogicalInterconnectUris: []utils.Nstring{li.URI}}
 
 	li_id := strings.Replace(string(li.URI), "/rest/logical-interconnects/", "", 1)
 
