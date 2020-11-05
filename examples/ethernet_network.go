@@ -5,6 +5,8 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -14,17 +16,27 @@ func main() {
 		ethernet_network_1 = "eth77"
 		ethernet_network_2 = "eth88"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
+
+	scope := ov.Scope{Name: "ScopeTest", Description: "Test from script", Type: "ScopeV3"}
+	_ = ovc.CreateScope(scope)
+	scp, _ := ovc.GetScopeByName("ScopeTest")
+	initialScopeUris := &[]utils.Nstring{scp.URI}
+
+	fmt.Println("#................... Creating Ethernet Network ...............#")
+	ethernetNetwork := ov.EthernetNetwork{Name: ethernet_network, VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	er := ovc.CreateEthernetNetwork(ethernetNetwork)
+
 	fmt.Println("#................... Ethernet Network by Name ...............#")
 	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
 	if err != nil {
@@ -44,7 +56,7 @@ func main() {
 		}
 	}
 
-	ethernet_nw_id := "cc65605c-9a90-4293-8e53-4556d5cc7892"
+	ethernet_nw_id := strings.Replace(string(ethernet_nw.URI), "/rest/ethernet-networks/", "", 1)
 	fmt.Println("#................... GetAssociatedProfiles ....................#")
 	ethernet_nw_ass_pfl, err := ovc.GetAssociatedProfile(ethernet_nw_id)
 	if err != nil {
@@ -63,11 +75,12 @@ func main() {
 
 	bandwidth := ov.Bandwidth{MaximumBandwidth: 10000, TypicalBandwidth: 2000}
 
-	ethernetNetwork := ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	ethernetNetwork = ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	er = ovc.CreateEthernetNetwork(ethernetNetwork)
 
 	bulkEthernetNetwork := ov.BulkEthernetNetwork{VlanIdRange: "2-4", Purpose: "General", NamePrefix: "Test_eth", SmartLink: false, PrivateNetwork: false, Bandwidth: bandwidth, Type: "bulk-ethernet-networkV2"}
 
-	er := ovc.CreateEthernetNetwork(ethernetNetwork)
+	er = ovc.CreateEthernetNetwork(ethernetNetwork)
 	if er != nil {
 		fmt.Println("............... Ethernet Network Creation Failed:", err)
 	} else {
@@ -83,7 +96,7 @@ func main() {
 
 	bulk_ethernet_network_list, err := ovc.GetEthernetNetworks("", "", "", sort)
 	for i := 0; i < len(bulk_ethernet_network_list.Members); i++ {
-		fmt.Println(bulk_ethernet_network_list.Members[i].Name)
+		fmt.Println(i, bulk_ethernet_network_list.Members[i].Name, bulk_ethernet_network_list.Members[i].URI)
 	}
 
 	ethernet_ntw, _ := ovc.GetEthernetNetworkByName(ethernet_network_1)
@@ -98,11 +111,13 @@ func main() {
 			fmt.Println(err)
 		} else {
 			for i := 0; i < len(ethernet_nw_after_update.Members); i++ {
-				fmt.Println(ethernet_nw_after_update.Members[i].Name)
+				fmt.Println(i, ethernet_nw_after_update.Members[i].Name, ethernet_nw_after_update.Members[i].URI)
 			}
 		}
 	}
 
+	ethernet_ntw_0, _ := ovc.GetEthernetNetworkByName(ethernet_network)
+	err = ovc.DeleteEthernetNetwork(ethernet_ntw_0.Name)
 	err = ovc.DeleteEthernetNetwork(ethernet_network_2)
 	if err != nil {
 		fmt.Println(err)
@@ -110,7 +125,12 @@ func main() {
 		fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
 	}
 
-	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/ethernet-networks/cc65605c-9a90-4293-8e53-4556d5cc7892"), utils.NewNstring("/rest/ethernet-networks/dd170a44-9a3e-4507-8f7b-4a9a4fec737c")}
+	ethernet_nw_list, err = ovc.GetEthernetNetworks("", "", "", sort)
+	ethernet_ntw2, _ := ovc.GetEthernetNetworkByName("Test_eth_2")
+	ethernet_ntw3, _ := ovc.GetEthernetNetworkByName("Test_eth_3")
+	ethernet_ntw4, _ := ovc.GetEthernetNetworkByName("Test_eth_4")
+
+	network_uris := &[]utils.Nstring{ethernet_ntw2.URI, ethernet_ntw3.URI, ethernet_ntw4.URI}
 
 	bulkDeleteEthernetNetwork := ov.BulkDelete{NetworkUris: *network_uris}
 	err = ovc.DeleteBulkEthernetNetwork(bulkDeleteEthernetNetwork)

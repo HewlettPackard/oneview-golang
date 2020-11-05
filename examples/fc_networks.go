@@ -24,7 +24,11 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
+	scope := ov.Scope{Name: "ScopTest", Description: "Test from script", Type: "ScopeV3"}
+	_ = ovc.CreateScope(scope)
+	scp, _ := ovc.GetScopeByName("ScopTest")
+	initialScopeUris := &[]utils.Nstring{scp.URI}
+
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",
@@ -73,8 +77,32 @@ func main() {
 		fmt.Println("Deleted FCNetworks successfully...")
 	}
 
-	network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fc-networks/17547746-d14d-4779-85cb-51b9dbc3cfdf"), utils.NewNstring("/rest/fc-networks/20064875-ae83-47b1-ad99-8c55ddba9f77")}
+	fcNetwork01 := ov.FCNetwork{
+		AutoLoginRedistribution: falseVar,
+		Description:             "Test FC Network 1",
+		LinkStabilityTime:       30,
+		FabricType:              "FabricAttach",
+		Name:                    "testName1",
+		Type:                    "fc-networkV4",
+	}
+	err = ovc.CreateFCNetwork(fcNetwork01)
+
+	fcNetwork02 := ov.FCNetwork{
+		AutoLoginRedistribution: falseVar,
+		Description:             "Test FC Network 2",
+		LinkStabilityTime:       30,
+		FabricType:              "FabricAttach",
+		Name:                    "testName2",
+		Type:                    "fc-networkV4",
+	}
+	err = ovc.CreateFCNetwork(fcNetwork02)
+
+	fcNetwork1, err := ovc.GetFCNetworkByName("testName1")
+	fcNetwork2, err = ovc.GetFCNetworkByName("testName2")
+
+	network_uris := &[]utils.Nstring{fcNetwork1.URI, fcNetwork2.URI}
 	bulkDeleteFCNetwork := ov.FCNetworkBulkDelete{FCNetworkUris: *network_uris}
+	err = ovc.DeleteScope("ScopTest")
 	err = ovc.DeleteBulkFcNetwork(bulkDeleteFCNetwork)
 
 	if err != nil {
