@@ -9,7 +9,12 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Deployment Plan
 - Hypervisor Cluster Profiles
 - Hypervisor Manager
+- Interconnects
+- Interconnect Types
+- Logical Interconnect
 - Server Certificates
+- Server Hardware
+- Server Hardware Types
 - Storage Volume Attachments
 
 # [v1.6.0] 

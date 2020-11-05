@@ -4,23 +4,27 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV *ov.OVClient
+		server_1 = "<server_hardware_name>"
+		server_2 = "<server_hardware_name>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	fmt.Println("Get server hardware list by name")
-	serverName, err := ovc.GetServerHardwareByName("0000A66102, bay 3")
+	serverName, err := ovc.GetServerHardwareByName(server_1)
 	if err != nil {
 		fmt.Println("Failed to fetch server hardware name: ", err)
 	} else {
@@ -76,7 +80,9 @@ func main() {
 	}
 
 	fmt.Println("******************")
-	serverHarware, err := ovc.GetAvailableHardware("/rest/server-hardware-types/4F7CDE05-86EA-4415-A438-D9CB7ACB880B", "/rest/enclosure-groups/464e8e4f-ba42-42c3-bb79-1d0409b458b5")
+	server2, err := ovc.GetServerHardwareByName(server_1)
+	server1, err := ovc.GetServerHardwareByName(server_2)
+	serverHarware, err := ovc.GetAvailableHardware(string(server2.URI), string(server1.URI))
 
 	if err == nil {
 		fmt.Println(serverHarware.Type)
