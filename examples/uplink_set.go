@@ -5,21 +5,26 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
-		ClientOV   *ov.OVClient
-		new_uplink = "test_new"
-		upd_uplink = "test_update"
+		ClientOV         *ov.OVClient
+		new_uplink       = "test_new"
+		upd_uplink       = "test_update"
+		ethernet_network = "testeth1"
+		li_name          = "LE-TESTLIG" //"<logical_interconnect_name>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"")
 
 	fmt.Println("#................... Get-all Uplink-Sets ...............#")
@@ -36,15 +41,24 @@ func main() {
 
 	// Create Uplink Set
 	networkUris := new([]utils.Nstring)
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58196a2d-0043-4281-9728-7c973d9660b9"))
+	ethernet_ntw, _ := ovc.GetEthernetNetworkByName(ethernet_network)
+	*networkUris = append(*networkUris, ethernet_ntw.URI)
 
 	fcNetworkUris := make([]utils.Nstring, 0)
 	fcoeNetworkUris := make([]utils.Nstring, 0)
 	portConfigInfos := make([]ov.PortConfigInfos, 0)
 	privateVlanDomains := make([]ov.PrivateVlanDomains, 0)
 
+	logicalInterconnect, _ := ovc.GetLogicalInterconnects("", "", "")
+	li := ov.LogicalInterconnect{}
+	for i := 0; i < len(logicalInterconnect.Members); i++ {
+		if logicalInterconnect.Members[i].Name == li_name {
+			li = logicalInterconnect.Members[i]
+		}
+	}
+
 	uplinkSet := ov.UplinkSet{Name: new_uplink,
-		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/5fe6ef52-42d6-4895-8500-dfb633478225"),
+		LogicalInterconnectURI:         li.URI,
 		NetworkURIs:                    *networkUris,
 		FcNetworkURIs:                  fcNetworkUris,
 		FcoeNetworkURIs:                fcoeNetworkUris,

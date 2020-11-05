@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
+	"strings"
 )
 
 func main() {
@@ -11,14 +13,14 @@ func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
-
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 	// Get all tasks present
 	sort := "name:desc"
@@ -29,10 +31,10 @@ func main() {
 		fmt.Println("Error getting the storage volumes ", err)
 	}
 	for i := 0; i < len(task_list.Members); i++ {
-		fmt.Println(task_list.Members[i].Name)
+		fmt.Println(task_list.Members[i].Name, task_list.Members[i].URI)
 	}
 
-	id := "a3af4d5e-7114-4e7a-a6c4-f97b707ec87c"
+	id := strings.Replace(string(task_list.Members[0].URI), "/rest/tasks/", "", 1)
 
 	fmt.Println("Getting Details of the requested Task")
 	task, err := ovc.GetTasksById("", "", "", "", id)
@@ -40,4 +42,5 @@ func main() {
 		fmt.Println("Error getting the task details ", err)
 	}
 	fmt.Println(task)
+
 }

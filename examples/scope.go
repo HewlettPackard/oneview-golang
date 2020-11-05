@@ -5,23 +5,26 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV    *ov.OVClient
-		scp_name    = "test"
+		scp_name    = "ScopeTest"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "test_eth"
+		eth_network = "testing"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	fmt.Println("#................... Scope by Name ...............#")
