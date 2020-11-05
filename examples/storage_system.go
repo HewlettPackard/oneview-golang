@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -12,19 +13,24 @@ func main() {
 		ClientOV       *ov.OVClient
 		name_to_create = "ThreePAR-1"
 		managed_domain = "TestDomain" //Variable to update the managedDomain
+		username       = "<user_name>"
+		password       = "<password>"
+		host_ip        = "<host_ip_address>"
+		family         = "<storage_system_family>"
+		description    = "<description>"
 	)
-
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	// Create storage system
-	storageSystem := ov.StorageSystem{Hostname: "172.18.30.1", Username: "dcs", Password: "dcs", Family: "StoreVirtual", Description: "<description>"}
+	storageSystem := ov.StorageSystem{Hostname: host_ip, Username: username, Password: password, Family: family, Description: description}
 
 	err := ovc.CreateStorageSystem(storageSystem)
 	if err != nil {

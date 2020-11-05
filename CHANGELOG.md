@@ -24,6 +24,12 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Server Certificates
 - Server Hardware
 - Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
 - Storage Volume Attachments
 - Tasks
 - Uplink Set

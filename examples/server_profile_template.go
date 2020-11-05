@@ -5,22 +5,25 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		clientOV                     *ov.OVClient
 		server_profile_template_name = "Test SPT"
-		enclosure_group_name         = "enclosureGp"
+		enclosure_group_name         = "TESTEG"
 		server_hardware_type_name    = "SY 480 Gen9 1"
+		scope                        = "ScopeTest"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
@@ -31,7 +34,7 @@ func main() {
 		ManageConnections: true,
 	}
 	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName("test")
+	scp, scperr := ovc.GetScopeByName(scope)
 	if scperr != nil {
 		*initialScopeUris = append(*initialScopeUris, scp.URI)
 	}

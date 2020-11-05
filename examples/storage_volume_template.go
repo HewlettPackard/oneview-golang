@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -14,6 +15,7 @@ func main() {
 		name_to_create = "VolumeTemplateExample"
 		name_to_update = "VolumeTemplateExample- updated"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,7 +23,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
@@ -44,7 +46,7 @@ func main() {
 		Type:        "string",
 		Title:       "Storage Pool",
 		Description: "A common provisioning group URI reference",
-		Default:     st_pool.URI,
+		Default:     string(st_pool.URI),
 		Meta: &ov.Meta{
 			Locked:       false,
 			CreateOnly:   true,
@@ -57,7 +59,7 @@ func main() {
 		Type:        "string",
 		Title:       "Snapshot Pool",
 		Description: "A URI reference to the common provisioning group used to create snapshots",
-		Default:     st_pool.URI,
+		Default:     string(st_pool.URI),
 		Meta: &ov.Meta{
 			Locked:       false,
 			SemanticType: "device-snapshot-storage-pool",
@@ -145,6 +147,7 @@ func main() {
 		Required:    false,
 		Title:       "Adaptive Optimization",
 	}
+
 	isDeduplicated := ov.TemplatePropertyDatatypeStructBool{
 		Meta: &ov.Meta{
 			Locked: true,
@@ -184,10 +187,9 @@ func main() {
 		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
-		RootTemplateUri:    "/rest/storage-volume-templates/727d5e9a-9ca5-4788-8eb1-ac30011285e7",
 	}
 
-	err := ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
+	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
 	if err != nil {
 		fmt.Println("Could not create the volume Template", err)
 	} else {
@@ -196,6 +198,7 @@ func main() {
 
 	// Get the volume template by name
 	update_vol_template, err := ovc.GetStorageVolumeTemplateByName(name_to_create)
+
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -214,6 +217,7 @@ func main() {
 
 	// Get All the volume templates present
 	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
+
 	sort := "name:desc"
 	vol_temp_list, err := ovc.GetStorageVolumeTemplates("", sort, "", "")
 	if err != nil {

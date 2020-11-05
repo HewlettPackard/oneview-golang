@@ -3,44 +3,46 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
-		new_volume     = "TestVolume"
-		name_to_update = "UpdatedName"
+		ClientOV        *ov.OVClient
+		st_vol_template = "template"
+		new_volume      = "TestVolume"
+		name_to_update  = "UpdatedName"
 	)
 
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	// Create storage volume with name <new_volume>
 	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
 	properties := &ov.Properties{
-		Name:                new_volume,
-		Storagepool:         st_pool.URI,
-		Size:                268435456,
-		ProvisioningType:    "Thin",
-		DataProtectionLevel: "NetworkRaid10Mirror2Way",
+		Name:             new_volume,
+		Storagepool:      st_pool.URI,
+		Size:             268435456,
+		ProvisioningType: "Thin",
+		//	DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
-	vol_template, err := ovc.GetStorageVolumeTemplateByName("template1")
+	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)
 	if err != nil {
 		fmt.Println(err)
 	}
 	storageVolume := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties, IsPermanent: &trueVal}
 
-	err := ovc.CreateStorageVolume(storageVolume)
+	err = ovc.CreateStorageVolume(storageVolume)
 	if err != nil {
 		fmt.Println("Could not create the volume", err)
 	}
