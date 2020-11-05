@@ -178,13 +178,24 @@ func (c *OVClient) CreateStorageVolumeTemplate(sVolTemplate StorageVolumeTemplat
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	// Fetching Root Template URI for Storage Template Creation.
+	St_pool_URI := sVolTemplate.TemplateProperties.StoragePool.Default
+	if St_pool_URI == "" {
+		log.Errorf("Default URI not available or not provided correctly in Storage Pool Property")
+	}
+	s_pool, _ := c.GetStoragePoolByUri(St_pool_URI)
+	s_sys, er_sys := c.GetStorageSystemByUri(string(s_pool.StorageSystemUri))
+	if er_sys != nil {
+		log.Errorf("Error finding Storage System ")
+	}
 	vol_temp_list, _ := c.GetStorageVolumeTemplates("", "name:desc", "", "")
 	for i := 0; i < len(vol_temp_list.Members); i++ {
-		if vol_temp_list.Members[i].IsRoot == true {
+		if vol_temp_list.Members[i].IsRoot == true && vol_temp_list.Members[i].Family == s_sys.Family {
 			sVolTemplate.RootTemplateUri = vol_temp_list.Members[i].URI
-			fmt.Println(sVolTemplate.RootTemplateUri)
 			break
 		}
+	}
+	if sVolTemplate.RootTemplateUri == "" {
+		log.Errorf("Not able to fetch correct Root Template URI")
 	}
 
 	log.Debugf("REST : %s \n %+v\n", uri, sVolTemplate)
