@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -14,13 +15,15 @@ func main() {
 		networkset_2 = "updatednetworkset"
 		networkset_3 = "creatednetworkset"
 	)
+
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
@@ -45,9 +48,13 @@ func main() {
 	}
 
 	networkUris := new([]utils.Nstring)
+
 	//append all your network and fc network uri to networkUris
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/fa01374d-0e50-41fc-bcd7-3dfc21776b6c"))
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/d085fa2d-41f8-44e1-950b-3f5076371300"))
+	ethernet_ntw1, _ := ovc.GetEthernetNetworkByName("testeth1")
+	ethernet_ntw2, _ := ovc.GetEthernetNetworkByName("testeth2")
+
+	*networkUris = append(*networkUris, ethernet_ntw1.URI)
+	*networkUris = append(*networkUris, ethernet_ntw2.URI)
 
 	NetworkSet := ov.NetworkSet{Name: networkset_3,
 		NativeNetworkUri:      "",

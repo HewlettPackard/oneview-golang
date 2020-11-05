@@ -4,27 +4,33 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		clientOV           *ov.OVClient
-		enc_name           = "0000A66101"
-		new_enclosure_name = "RenamedEnclosure"
+		enc_name           = "Synergy-Encl 2"
+		new_enclosure_name = "Synergy-Encl-2"
 		path               = "/name"
 		op                 = "replace"
+		eg_name            = "<Enclosure_Group_Name>"
 	)
+
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
+	enc_grp, _ := ovc.GetEnclosureGroupByName(eg_name)
+
 	enclosure_create_map := ov.EnclosureCreateMap{
-		EnclosureGroupUri: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
+		EnclosureGroupUri: enc_grp.URI,
 		Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
 		Username:          os.Getenv("ENCLOSURE_USERNAME"),
 		Password:          os.Getenv("ENCLOSURE_PASSWORD"),

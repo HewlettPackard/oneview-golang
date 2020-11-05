@@ -23,7 +23,12 @@ func main() {
 		false,
 		apiversion,
 		"*")
-	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/94a9804e-8521-4c26-bb00-e4875be53498")}
+
+	scope := ov.Scope{Name: "ScopeTest", Description: "Test from script", Type: "ScopeV3"}
+	_ = ovc.CreateScope(scope)
+	scp, _ := ovc.GetScopeByName("ScopeTest")
+	initialScopeUris := &[]utils.Nstring{scp.URI}
+
 	fcoeNetwork := ov.FCoENetwork{
 		Name:                  testName,
 		Type:                  "fcoe-networkV4", //The Type value is for API>500.
@@ -71,7 +76,27 @@ func main() {
 		fmt.Println("Deleted FCoENetworks successfully...")
 	}
 	//DeleteBulkFCoENetwork
-	fcoe_network_uris := &[]utils.Nstring{utils.NewNstring("/rest/fcoe-networks/c5175600-845b-403c-b76f-81e018a93a44"), utils.NewNstring("/rest/fcoe-networks/12df5737-d0bf-4915-96e4-d0c8077838ab")}
+	fcoeNetwork01 := ov.FCoENetwork{
+		Name:                  "testName01",
+		Type:                  "fcoe-networkV4", //The Type value is for API>500.
+		VlanId:                201,
+		ConnectionTemplateUri: "",
+		ManagedSanUri:         "",
+	}
+	err = ovc.CreateFCoENetwork(fcoeNetwork01)
+	fcoeNet1, err := ovc.GetFCoENetworkByName("testName01")
+
+	fcoeNetwork02 := ov.FCoENetwork{
+		Name:                  "testName02",
+		Type:                  "fcoe-networkV4", //The Type value is for API>500.
+		VlanId:                201,
+		ConnectionTemplateUri: "",
+		ManagedSanUri:         "",
+	}
+	err = ovc.CreateFCoENetwork(fcoeNetwork02)
+	fcoeNet2, err := ovc.GetFCoENetworkByName("testName02")
+
+	fcoe_network_uris := &[]utils.Nstring{fcoeNet1.URI, fcoeNet2.URI}
 	bulkDeleteFCoENetwork := ov.FCoENetworkBulkDelete{FCoENetworkUris: *fcoe_network_uris}
 	err = ovc.DeleteBulkFCoENetwork(bulkDeleteFCoENetwork)
 
