@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Oneview Features supported
 - Deployment Plan
+- Hypervisor Cluster Profiles
+- Hypervisor Manager
+- Server Certificates
+- Storage Volume Attachments
 
 # [v1.6.0] 
 ### Notes
