@@ -5,6 +5,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -14,15 +15,18 @@ func main() {
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE"
 		logical_enclosure_2 = "log_enclosure88"
-		scope_name          = "test"
+		scope_name          = "testing"
+		li_name             = "<logical_interconnect_name>"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	fmt.Println("#................... Create Logical Enclosure ...............#")
@@ -31,9 +35,11 @@ func main() {
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
 	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
+	enc_grp, err := ovc.GetEnclosureGroupByName("EG-Synergy-Local")
+
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure_1,
 		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: utils.NewNstring("/rest/enclosure-groups/d8f1f41e-6bc1-4842-932b-b526ce4f7321")}
+		EnclosureGroupUri: enc_grp.URI}
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {
@@ -42,13 +48,23 @@ func main() {
 		fmt.Println(".... Logical Enclosure Created Success")
 	}
 
+	logicalInterconnect, _ := ovc.GetLogicalInterconnects("", "", "")
+	li := ov.LogicalInterconnect{}
+	for i := 0; i < len(logicalInterconnect.Members); i++ {
+		if logicalInterconnect.Members[i].Name == li_name {
+			li = logicalInterconnect.Members[i]
+		}
+	}
+
 	fmt.Println("#................... Create Logical Enclosure Support Dumps ...............#")
 
 	supportdmp := ov.SupportDumps{ErrorCode: "MyDump16",
 		ExcludeApplianceDump:    false,
-		LogicalInterconnectUris: []utils.Nstring{utils.NewNstring("/rest/logical-interconnects/99d75d4d-f573-4b2e-805d-f636af16fdd8")}}
+		LogicalInterconnectUris: []utils.Nstring{li.URI}}
 
-	data, er := ovc.CreateSupportDump(supportdmp, "99d75d4d-f573-4b2e-805d-f636af16fdd8")
+	li_id := strings.Replace(string(li.URI), "/rest/logical-interconnects/", "", 1)
+
+	data, er := ovc.CreateSupportDump(supportdmp, li_id)
 
 	if er != nil {
 		fmt.Println("............... Logical Enclosure Support Dump Creation Failed:", er)
@@ -74,14 +90,14 @@ func main() {
 	}
 
 	// Update From Group
-	/*
-		err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
-		}
-	*/
+
+	err = ovc.UpdateFromGroupLogicalEnclosure(log_en)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+	}
+
 	scope1, err := ovc.GetScopeByName(scope_name)
 	scope_uri := scope1.URI
 	scope_Uris := new([]string)

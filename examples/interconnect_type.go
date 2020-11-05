@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -12,13 +12,14 @@ func main() {
 		ClientOV              *ov.OVClient
 		existing_interconnect = "Virtual Connect SE 40Gb F8 Module for Synergy"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	fmt.Println("#................... Interconnect Type by Name ...............#")
@@ -29,9 +30,8 @@ func main() {
 		fmt.Println(interconnect)
 	}
 
-	interconnect_type := utils.NewNstring("/rest/interconnect-types/a3af4d5e-7114-4e7a-a6c4-f97b707ec87c")
 	fmt.Println("#................... Interconnect Type by Uri ....................#")
-	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect_type)
+	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect.URI)
 	if err != nil {
 		fmt.Println(err)
 	} else {

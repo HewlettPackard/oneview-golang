@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func newTrue() *bool {
@@ -22,13 +23,15 @@ func main() {
 		lig_type     = "logical-interconnect-groupV8"
 		new_lig_name = "RenamedLogicalInterConnectGroup"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		2000,
+		apiversion,
 		"*")
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
@@ -47,8 +50,8 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 
-	interconnect1, err := ovc.GetInterconnectTypeByName("int_type_1")
-	interconnect2, err := ovc.GetInterconnectTypeByName("int_type_2")
+	interconnect1, err := ovc.GetInterconnectTypeByName("Virtual Connect SE 40Gb F8 Module for Synergy")
+	interconnect2, err := ovc.GetInterconnectTypeByName("Virtual Connect SE 40Gb F8 Module for Synergy")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -72,7 +75,6 @@ func main() {
 	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		URI:                                "/settings",
 		Name:                               "defaultEthernetSwitchSettings",
-		ID:                                 "cf3509e5-5330-4464-8d4c-fc679bc3ad0b",
 		InterconnectType:                   "Ethernet",
 		EnableInterconnectUtilizationAlert: newFalse(),
 		EnableFastMacCacheFailover:         newTrue(),
@@ -148,7 +150,7 @@ func main() {
 	fmt.Println("... Updating LogicalInterconnectGroup ...")
 	fmt.Println("")
 	lig_uri.Name = new_lig_name
-	err := ovc.UpdateLogicalInterconnectGroup(lig_uri)
+	err = ovc.UpdateLogicalInterconnectGroup(lig_uri)
 	if err != nil {
 		panic(err)
 	} else {
