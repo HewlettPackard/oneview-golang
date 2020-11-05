@@ -6,11 +6,21 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - This release extends supports of the SDK to Oneview API2200.
 
 ### Oneview Features supported
+- Deployment Plan
 - Enclosure
 - Enclosure Group
+- Hypervisor Cluster Profiles
+- Hypervisor Manager
+- Interconnects
+- Interconnect Types
+- Logical Interconnect
 - Logical Enclosure
 - Logical Interconnect Group
 - Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Storage Volume Attachments
 - Tasks
 - Uplink Set
 
