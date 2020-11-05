@@ -3,9 +3,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.7.0](Unreleased)
 ### Notes
-- This release extends supports of the SDK to Oneview API2200.
+- This release extends supports of the SDK to Oneview API Version 2200 and Image Streamer API Version 2000.
 
 ### Oneview Features supported
+- Deployment Plan
 - Hypervisor Cluster Profiles
 - Hypervisor Manager
 - Server Certificates
