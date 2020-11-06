@@ -45,23 +45,23 @@ $ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.6.0-OV5.
 - Local installation requires 
 Installing Go
 ```bash 
-    $ apt-get install build-essential git wget
-    $ wget https://dl.google.com/go/go1.11.3.linux-amd64.tar.gz
+$ apt-get install build-essential git wget
+$ wget https://dl.google.com/go/go1.11.3.linux-amd64.tar.gz
 ```
 unzip and untar  with "tar -zxvf go1.11.linux-amd64.tar.gz", move it to /usr/local/ and create directory for Go.
 ```bash 
-    $ mv go1.11.3.linux-amd64.tar.gz /usr/local/ 
-    $ mkdir ~/go
+$ mv go1.11.3.linux-amd64.tar.gz /usr/local/ 
+$ mkdir ~/go
 ```
 Setting Environment Variable 
 ```bash 
-    $ export GOROOT=/usr/local/go
-    $ export GOPATH=$HOME/go 
-    $ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+$ export GOROOT=/usr/local/go
+$ export GOPATH=$HOME/go 
+$ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
 Install Oneview Go SDK
 ```go
-    $ go get -u github.com/HewlettPackard/oneview-golang 
+go get -u github.com/HewlettPackard/oneview-golang 
 ```
 
 
@@ -74,12 +74,12 @@ Following environment variables can be set for testing:
 
 ```bash
 # Required
-    export ONEVIEW_OV_ENDPOINT=<ov_endpoint>
-    export ONEVIEW_OV_USER=<ov_username>
-    export ONEVIEW_OV_PASSWORD=<ov_password>
-    export ONEVIEW_OV_DOMAIN=LOCAL
-    export ONEVIEW_SSLVERIFY=false
-    export ONEVIEW_APIVERSION=<ov_apiversion>
+$ export ONEVIEW_OV_ENDPOINT=<ov_endpoint>
+$ export ONEVIEW_OV_USER=<ov_username>
+$ export ONEVIEW_OV_PASSWORD=<ov_password>
+$ export ONEVIEW_OV_DOMAIN=LOCAL
+$ export ONEVIEW_SSLVERIFY=false
+$ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
 Note: Currently this SDK supports OneView API 2200 minimally where we can test OneView API 2200 version with this SDK. No new fields have been added/deleted to support API 2000 version. Complete support will be done in next releases. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
@@ -93,13 +93,13 @@ var ClientOV    *ov.OVClient
 apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
 ovc := ClientOV.NewOVClient(
-    os.Getenv("ONEVIEW_OV_USER"),       # This is to set the Oneview UserName
-    os.Getenv("ONEVIEW_OV_PASSWORD"),   # This is to set the Oneview Password
-    os.Getenv("ONEVIEW_OV_DOMAIN"),     # This is to set the Domain, default is LOCAL
-	os.Getenv("ONEVIEW_OV_ENDPOINT"),   # This is to set the IP Address of the Oneview Appliance
-	false,                              # This is to set the SSL, default is false
-    apiversion,                         # This is to set the OneView REST API Version. Defaults to oneview appliance maximum supported REST API Version
-	"*")
+  os.Getenv("ONEVIEW_OV_USER"),       # This is to set the Oneview UserName
+  os.Getenv("ONEVIEW_OV_PASSWORD"),   # This is to set the Oneview Password
+  os.Getenv("ONEVIEW_OV_DOMAIN"),     # This is to set the Domain, default is LOCAL
+  os.Getenv("ONEVIEW_OV_ENDPOINT"),   # This is to set the IP Address of the Oneview Appliance
+  false,                              # This is to set the SSL, default is false
+  apiversion,                         # This is to set the OneView REST API Version. Defaults to oneview appliance maximum supported REST API Version
+  "*")
 ```
 :lock: Tip: Check the file permissions because the password is stored in clear-text as Environment Variable.
 
@@ -111,24 +111,24 @@ Following extra environment variables should be set for testing:
 
 ```bash
 # Required
-    export ONEVIEW_I3S_ENDPOINT=<i3s_endpoint>
+$ export ONEVIEW_I3S_ENDPOINT=<i3s_endpoint>
 ```
 
 ```go
-# Create a OneView client object:
+# Create a OneView client object
 import (
-    "github.com/HewlettPackard/oneview-golang/ov"
-    "github.com/HewlettPackard/oneview-golang/i3s" 
+  "github.com/HewlettPackard/oneview-golang/ov"
+  "github.com/HewlettPackard/oneview-golang/i3s" 
 )
 
 var (
-	clientOV             *ov.OVClient
-	i3sClient            *i3s.I3SClient
-	endpoint             = os.Getenv("ONEVIEW_OV_ENDPOINT")
-	i3sc_endpoint        = os.Getenv("ONEVIEW_I3S_ENDPOINT")
-	username             = os.Getenv("ONEVIEW_OV_USER")
-	password             = os.Getenv("ONEVIEW_OV_PASSWORD")
-    domain               = os.Getenv("ONEVIEW_OV_DOMAIN")
+  clientOV             *ov.OVClient
+  i3sClient            *i3s.I3SClient
+  endpoint             = os.Getenv("ONEVIEW_OV_ENDPOINT")
+  i3sc_endpoint        = os.Getenv("ONEVIEW_I3S_ENDPOINT")
+  username             = os.Getenv("ONEVIEW_OV_USER")
+  password             = os.Getenv("ONEVIEW_OV_PASSWORD")
+  domain               = os.Getenv("ONEVIEW_OV_DOMAIN")
 )
 
 apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
@@ -153,13 +153,13 @@ Configuration files can also be used to define client configuration (json or yam
 ```bash
 Update the ``` oneview_config.json ``` file in example directory as below.
 {
-    "username":     "<ov_username>",  
-    "password":     "<ov_password>",
-    "endpoint":     "<ov_ip>",
-    "domain":       "LOCAL",
-    "apiversion":   <ov_apiversion>,
-    "sslverify":    false,
-    "ifmatch":      "*"
+  "username":     "<ov_username>",  
+  "password":     "<ov_password>",
+  "endpoint":     "<ov_ip>",
+  "domain":       "LOCAL",
+  "apiversion":   <ov_apiversion>,
+  "sslverify":    false,
+  "ifmatch":      "*"
 }
 ```
 
@@ -171,13 +171,13 @@ var	ClientOV    *ov.OVClient
 config, _ := ov.LoadConfigFile("oneview_config.json")
 
 ovc := ClientOV.NewOVClient(
-	config.UserName,        # This is to set the Oneview UserName
-	config.Password,        # This is to set the Oneview Password
-	config.Domain,          # This is to set the Domain, default is LOCAL
-	config.Endpoint,        # This is to set the IP Address of the 
-	config.SslVerify,       # This is to set the SSL, default is false
-	config.ApiVersion,      # This is to set the OneView REST API Version. Defaults to oneview appliance maximum supported REST API Version
-	config.IfMatch)
+  config.UserName,        # This is to set the Oneview UserName
+  config.Password,        # This is to set the Oneview Password
+  config.Domain,          # This is to set the Domain, default is LOCAL
+  config.Endpoint,        # This is to set the IP Address of the 
+  config.SslVerify,       # This is to set the SSL, default is false
+  config.ApiVersion,      # This is to set the OneView REST API Version. Defaults to oneview appliance maximum supported REST API Version
+  config.IfMatch)
 ```
 :lock: Tip: Check the file permissions if the password or token is stored in clear-text.
 
@@ -204,8 +204,8 @@ The Test Data for these Tests are  supplied through JSON file stored at ```test/
 These Tests can be run locally, you must install the below dependencies as mention in .travis.yml and do export USE_CONTAINER=false
 
 ```go
-$ go get github.com/mattn/goveralls
-$ go get -u golang.org/x/lint/golint
+go get github.com/mattn/goveralls
+go get -u golang.org/x/lint/golint
 ```
 
 These Tests are being ran through make files to save the compile time. 
@@ -243,7 +243,7 @@ This feedback is important for us to deliver a useful product.
 
 ## Additional Resources 
 
-### HPE OneView Documentation
+##### HPE OneView Documentation
 
 [HPE OneView Release Notes](http://hpe.com/info/OneView/docs)
 
@@ -261,7 +261,7 @@ This feedback is important for us to deliver a useful product.
 
 [HPE OneView Deployment and Management White Paper](http://hpe.com/info/OneView/docs)
 
-### HPE OneView Community
+##### HPE OneView Community
 
 [HPE OneView Community Forums](http://hpe.com/info/oneviewcommunity)
 
