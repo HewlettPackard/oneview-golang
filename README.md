@@ -201,7 +201,7 @@ make test
 * Install golang 1.5 or higher(We recommend using Go 1.11)
 * Install go packages listed in .travis.yml
 
-The Test Data for these Tests are  supplied through JSON file stored at ```test/data config_EGSL_tb200.json```
+The Test Data for these Tests are  supplied through JSON file stored at `test/data config_EGSL_tb200.json`
 
 These Tests can be run locally, you must install the below dependencies as mention in .travis.yml and do export USE_CONTAINER=false
 
