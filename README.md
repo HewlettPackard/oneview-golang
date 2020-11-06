@@ -20,7 +20,7 @@ Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/ma
 ## Installation
 HPE OneView SDK for Go can be installed from Source or Docker container installation methods. You can either use a docker container which will have the HPE OneView SDK for Go installed or perform local installation.
 
-## Build requirements
+### Build requirements
 We use docker to build and test, run this project on a system that has docker. If you don't use docker, you will need to install and setup go-lang locally as well as any other make requirements.  
 You can use `USE_CONTAINER=false` environment setting for make to avoid using docker. Otherwise make sure to have these tools:
 - docker client and daemon
@@ -185,16 +185,18 @@ ovc := ClientOV.NewOVClient(
 
 A detailed list of the HPE OneView REST interfaces that have been implemented in this SDK can be found in the [endpoints-support.md](https://github.com/HewlettPackard/oneview-golang/blob/master/endpoints-support.md) file.
 
+
 ## Testing your changes
 
-### From a container
+The Tests in GoLang are divided into two segments one is doing the acceptance test and another drives the Unit Tests.
+
+### With Docker
 
 ```
 make test
 ```
 
 ### Without docker
-The Tests in GoLang are divided into two segments one is doing the acceptance test and another drives the Unit Tests.
 
 * Install golang 1.5 or higher(We recommend using Go 1.11)
 * Install go packages listed in .travis.yml
@@ -208,9 +210,8 @@ go get github.com/mattn/goveralls
 go get -u golang.org/x/lint/golint
 ```
 
-These Tests are being ran through make files to save the compile time. 
-
-Below commands should help you to run them.
+These Tests are using make files to save the compile time. 
+Below are the commands to run the tests.
 
 ```bash
 $ sudo make vet
@@ -219,7 +220,7 @@ $ sudo make test-long
 $ sudo make coverage-send
 ```
 
-Note: ```make test``` runs all the tests.
+Note: ```make test``` runs all the above mentioned tests.
 
 ## Getting Help 
 
