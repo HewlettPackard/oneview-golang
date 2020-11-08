@@ -81,7 +81,7 @@ $ export ONEVIEW_OV_DOMAIN=LOCAL
 $ export ONEVIEW_SSLVERIFY=false
 $ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
-Note: Currently this SDK supports OneView API 2200 minimally where we can test OneView API 2200 version with this SDK. No new fields have been added/deleted to support API 2000 version. Complete support will be done in next releases. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
+Note: Currently this SDK supports OneView API 2200 minimally, where we can test OneView API 2200 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
 ```go
 # Create a OneView client object:
@@ -244,7 +244,7 @@ This feedback is important for us to deliver a useful product.
 
 ## Additional Resources 
 
-##### HPE OneView Documentation
+### HPE OneView Documentation
 
 [HPE OneView Release Notes](http://hpe.com/info/OneView/docs)
 
@@ -262,7 +262,7 @@ This feedback is important for us to deliver a useful product.
 
 [HPE OneView Deployment and Management White Paper](http://hpe.com/info/OneView/docs)
 
-##### HPE OneView Community
+### HPE OneView Community
 
 [HPE OneView Community Forums](http://hpe.com/info/oneviewcommunity)
 
