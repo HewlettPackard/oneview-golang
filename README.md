@@ -20,12 +20,6 @@ Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/ma
 ## Installation
 HPE OneView SDK for Go can be installed from Source or Docker container installation methods. You can either use a docker container which will have the HPE OneView SDK for Go installed or perform local installation.
 
-### Build requirements
-We use docker to build and test, run this project on a system that has docker. If you don't use docker, you will need to install and setup go-lang locally as well as any other make requirements.  
-You can use `USE_CONTAINER=false` environment setting for make to avoid using docker. Otherwise make sure to have these tools:
-- docker client and daemon
-- gnu make tools
-
 ### Docker Container Setup
 
 We also provide a lightweight and easy way to test and run oneview-golang. The `hewlettpackardenterprise/hpe-oneview-sdk-for-golang:<tag>` docker image contains an installation of oneview-golang installation you can use by just pulling down the Docker Image:
@@ -187,6 +181,11 @@ A detailed list of the HPE OneView REST interfaces that have been implemented in
 
 
 ## Testing your changes
+
+We use docker to build and test, run this project on a system that has docker. If you don't use docker, you will need to install and setup go-lang locally as well as any other make requirements.  
+You can use `USE_CONTAINER=false` environment setting for make to avoid using docker. Otherwise make sure to have these tools:
+- docker client and daemon
+- gnu make tools
 
 The Tests in GoLang are divided into two segments one is doing the acceptance test and another drives the Unit Tests.
 
