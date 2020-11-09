@@ -28,11 +28,11 @@ The Docker Store image `tag` consist of two sections: `<sdk_version-OV_version>`
 
 Download and store a local copy of hpe-oneview-sdk-for-golang and use it as a Docker image.
 ```bash
-$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.6.0-OV5.4
+$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.7.0-OV5.5
 ```
 Run docker commands and this will in turn create a sh session where you can create files, issue commands and execute the tests
 ```bash
-$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.6.0-OV5.4 /bin/sh
+$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.7.0-OV5.5 /bin/sh
 ```
 
 ### Local Setup
