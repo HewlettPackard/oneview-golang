@@ -160,7 +160,7 @@ Configuration files can also be used to define client configuration (json or yam
   "password":     "<ov_password>",
   "endpoint":     "<ov_ip>",
   "domain":       "LOCAL",
-  "apiversion":   <ov_apiversion>,
+  "apiversion":   "<ov_apiversion>",
   "sslverify":    false,
   "ifmatch":      "*"
 }
@@ -222,18 +222,16 @@ You can use `USE_CONTAINER=false` environment setting for make to avoid using do
 
 The Tests in GoLang are divided into two segments one is doing the acceptance test and another drives the Unit Tests.
 
-### With Docker
-
+#### With Docker
 ```
 $ make test
 ```
 
-### Without docker
-
+#### Without docker
 * Install golang 1.5 or higher(We recommend using Go 1.11)
 * Install go packages listed in .travis.yml
 
-The Test Data for these Tests are  supplied through JSON file stored at `test/data config_EGSL_tb200.json`
+The Test Data for these Tests are  supplied through JSON file stored at `test/data for example config_EGSL_tb200.json`
 
 These Tests can be run locally, you must install the below dependencies as mention in .travis.yml and do export USE_CONTAINER=false
 
