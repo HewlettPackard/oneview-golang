@@ -11,11 +11,10 @@ import (
 func main() {
 	var (
 		ClientOV                        *ov.OVClient
-		scope                           = "<scope_name>"
-		hypervisor_manager_ip           = "<hypervisor_manager_ip>"
+		hypervisor_manager_ip           = "172.18.13.11"//"<hypervisor_manager_ip>"
 		hypervisor_manager_display_name = "HM2"
-		username                        = "<hypervisor_user_name>"
-		password                        = "<hypervisor_password>"
+		username                        = "dcs"//"<hypervisor_user_name>"
+		password                        = "dcs"//"<hypervisor_password>"*/
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
@@ -26,10 +25,8 @@ func main() {
 		false,
 		apiversion,
 		"")
-
-	scp, _ := ovc.GetScopeByName(scope)
-	initialScopeUris := &[]utils.Nstring{scp.URI}
-
+	scp, _ := ovc.GetScopeByName("ScopeTest")
+	initialScopeUris := &[]utils.Nstring{(scp.URI)}
 	// Adding Hypervisor Manager Server Certificate to Oneview for Secure conection
 	server_cert, err := ovc.GetServerCertificateByIp(hypervisor_manager_ip)
 	if err != nil {
@@ -95,12 +92,10 @@ func main() {
 			}
 		}
 	}
-
 	err = ovc.DeleteHypervisorManager(hypervisor_manager_ip)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#...................... Deleted Hypervisor Manager Successfully .....#")
 	}
-
 }
