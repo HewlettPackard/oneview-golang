@@ -34,7 +34,6 @@ func main() {
 	_ = ovc.CreateEthernetNetwork(ethernetNetwork)
 	ethernet_ntw1, _ := ovc.GetEthernetNetworkByName("test_eth-1")
 
-
 	*networkUris = append(*networkUris, ethernet_ntw1.URI)
 
 	NetworkSet := ov.NetworkSet{Name: networkset_3,
@@ -88,7 +87,7 @@ func main() {
 	}
 
 	err = ovc.DeleteNetworkSet(networkset_2)
-        _ = ovc.DeleteEthernetNetwork("test_eth-1")
+	_ = ovc.DeleteEthernetNetwork("test_eth-1")
 	if err != nil {
 		fmt.Println(err)
 	} else {
