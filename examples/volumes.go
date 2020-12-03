@@ -33,14 +33,12 @@ func main() {
 		Storagepool:      st_pool.URI,
 		Size:             268435456,
 		ProvisioningType: "Thin",
-		//	DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	properties_auto := &ov.Properties{
 		Name:             "Auto-Volume",
 		Storagepool:      st_pool.URI,
 		Size:             268435456,
 		ProvisioningType: "Thin",
-		//	DataProtectionLevel: "NetworkRaid10Mirror2Way",
 	}
 	trueVal := true
 	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)

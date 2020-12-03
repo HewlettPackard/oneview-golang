@@ -10,8 +10,6 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-//		server_1 = "asdasd"
-//		server_2 = "asdasd"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
@@ -23,7 +21,6 @@ func main() {
 		apiversion,
 		"*")
 
-//	filters := []string{"name matches 'SY 660 Gen9 2'"}
 	filters := []string{""}
 	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
 	if err == nil {

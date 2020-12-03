@@ -10,16 +10,16 @@ import (
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
+		ClientOV        *ov.OVClient
 		name2_to_create = "ThreePAR-2"
-		name_to_create = "ThreePAR-1"
-		managed_domain = "TestDomain" //Variable to update the managedDomain
-		username       = "dcs"
-		password       = "dcs"
-		host_ip        = "172.18.11.11"
+		name_to_create  = "ThreePAR-1"
+		managed_domain  = "TestDomain" //Variable to update the managedDomain
+		username        = "dcs"
+		password        = "dcs"
+		host_ip         = "172.18.11.11"
 		host2_ip        = "172.18.11.12"
-		family         = "StoreServ"
-//		description    = ""
+		family          = "StoreServ"
+		//		description    = ""
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(

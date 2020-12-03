@@ -10,12 +10,12 @@ import (
 
 func main() {
 	var (
-		clientOV                     *ov.OVClient
-		server_profile_template_name = "Test SPT"
-	        server_profile_template_name_auto = "Auto-SPT"
-		enclosure_group_name         = "Auto-TestEG"
-		server_hardware_type_name    = "SY 480 Gen9 1"
-		scope                        = "Auto-Scope"
+		clientOV                          *ov.OVClient
+		server_profile_template_name      = "Test SPT"
+		server_profile_template_name_auto = "Auto-SPT"
+		enclosure_group_name              = "Auto-TestEG"
+		server_hardware_type_name         = "SY 480 Gen9 1"
+		scope                             = "Auto-Scope"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(

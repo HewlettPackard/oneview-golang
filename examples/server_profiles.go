@@ -12,7 +12,7 @@ func main() {
 	var (
 		clientOV          *ov.OVClient
 		sp_name           = "SP"
-		sp_by_spt	  = "SP-From-SPT"
+		sp_by_spt         = "SP-From-SPT"
 		new_sp_name       = "Renamed Server Profile"
 		server_hardware_1 = "0000A66101, bay 5"
 		scope             = "Auto-Scope"
@@ -54,10 +54,10 @@ func main() {
 	if err != nil {
 		fmt.Println("Server Profile Template Retrieval By Name Failed: ", err)
 	} else {
-	        ServerList, err := ovc.GetServerHardwareList([]string{""}, "", "", "", "")
+		ServerList, err := ovc.GetServerHardwareList([]string{""}, "", "", "", "")
 		hw_name, _ := ovc.GetServerHardwareTypeByUri(spt.ServerHardwareTypeURI)
-		for i := 0; i < len(ServerList.Members); i++{
-			server_name, _ =  ovc.GetServerHardwareTypeByUri(ServerList.Members[i].ServerHardwareTypeURI)
+		for i := 0; i < len(ServerList.Members); i++ {
+			server_name, _ = ovc.GetServerHardwareTypeByUri(ServerList.Members[i].ServerHardwareTypeURI)
 			if server_name.Name == hw_name.Name {
 				serverName = ServerList.Members[i]
 			}

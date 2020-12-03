@@ -11,10 +11,10 @@ import (
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
-		name_to_create = "VolumeTemplateExample"
+		ClientOV            *ov.OVClient
+		name_to_create      = "VolumeTemplateExample"
 		name_to_create_auto = "Auto-VolumeTemplate"
-		name_to_update = "VolumeTemplateExample- updated"
+		name_to_update      = "VolumeTemplateExample- updated"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -80,26 +80,26 @@ func main() {
 			SemanticType: "capacity",
 		},
 	}
-/*
-	dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
-		Required: true,
-		Type:     "string",
-		Enum: []string{"NetworkRaid0None",
-			"NetworkRaid5SingleParity",
-			"NetworkRaid10Mirror2Way",
-			"NetworkRaid10Mirror3Way",
-			"NetworkRaid10Mirror4Way",
-			"NetworkRaid6DualParity",
-		},
-		Title:       "Data Protection Level",
-		Default:     "NetworkRaid10Mirror2Way",
-		Description: "Indicates the number and configuration of data copies in the Storage Pool",
-		Meta: &ov.Meta{
-			Locked:       false,
-			SemanticType: "device-dataProtectionLevel",
-		},
-	}
-*/
+	/*
+		dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
+			Required: true,
+			Type:     "string",
+			Enum: []string{"NetworkRaid0None",
+				"NetworkRaid5SingleParity",
+				"NetworkRaid10Mirror2Way",
+				"NetworkRaid10Mirror3Way",
+				"NetworkRaid10Mirror4Way",
+				"NetworkRaid6DualParity",
+			},
+			Title:       "Data Protection Level",
+			Default:     "NetworkRaid10Mirror2Way",
+			Description: "Indicates the number and configuration of data copies in the Storage Pool",
+			Meta: &ov.Meta{
+				Locked:       false,
+				SemanticType: "device-dataProtectionLevel",
+			},
+		}
+	*/
 
 	template_version_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
@@ -133,23 +133,23 @@ func main() {
 		Default:     "Thin",
 		Enum:        []string{"Thin", "Full"},
 		Meta: &ov.Meta{
-			Locked:       true,
-			CreateOnly:   true,
-/*			SemanticType: "device-provisioningType",*/
+			Locked:     true,
+			CreateOnly: true,
+			/*			SemanticType: "device-provisioningType",*/
 		},
 	}
 
-/*	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
-		Meta: &ov.Meta{
-			Locked: true,
-		},
-		Type:        "boolean",
-		Description: "",
-		Default:     true,
-		Required:    false,
-		Title:       "Adaptive Optimization",
-	}
-*/
+	/*	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
+			Meta: &ov.Meta{
+				Locked: true,
+			},
+			Type:        "boolean",
+			Description: "",
+			Default:     true,
+			Required:    false,
+			Title:       "Adaptive Optimization",
+		}
+	*/
 
 	isDeduplicated := ov.TemplatePropertyDatatypeStructBool{
 		Meta: &ov.Meta{
@@ -173,17 +173,17 @@ func main() {
 	}
 
 	Properties := ov.TemplateProperties{
-		Name:                          &name_properties,
-		StoragePool:                   &storage_pool_properties,
-		Size:                          &size_properties,
-/*		DataProtectionLevel:           &dataProtectionLevel_properties,*/
-		SnapshotPool:                  &snapshot_pool,
-		IsDeduplicated:                &isDeduplicated,
-		TemplateVersion:               &template_version_properties,
-		Description:                   &description_properties,
-		ProvisioningType:              &provisioning_type_properties,
-/*		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,*/
-		IsShareable:                   &is_shareable_properties,
+		Name:        &name_properties,
+		StoragePool: &storage_pool_properties,
+		Size:        &size_properties,
+		/*		DataProtectionLevel:           &dataProtectionLevel_properties,*/
+		SnapshotPool:     &snapshot_pool,
+		IsDeduplicated:   &isDeduplicated,
+		TemplateVersion:  &template_version_properties,
+		Description:      &description_properties,
+		ProvisioningType: &provisioning_type_properties,
+		/*		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,*/
+		IsShareable: &is_shareable_properties,
 	}
 
 	storageVolumeTemplate := ov.StorageVolumeTemplate{

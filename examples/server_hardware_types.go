@@ -9,9 +9,8 @@ import (
 
 func main() {
 	var (
-		clientOV                  *ov.OVClient
-//		server_hardware_type_name = "SY 660 Gen9 2"
-		sort                      = "name:desc"
+		clientOV *ov.OVClient
+		sort     = "name:desc"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
