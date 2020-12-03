@@ -10,11 +10,10 @@ import (
 func main() {
 	var (
 		clientOV           *ov.OVClient
-		enc_name           = "Synergy-Encl 2"
-		new_enclosure_name = "Synergy-Encl-2"
+		new_enclosure_name = "Renamed_Enclosure"
 		path               = "/name"
 		op                 = "replace"
-		eg_name            = "<Enclosure_Group_Name>"
+//		eg_name            = "Auto-EnclosureGroup"
 	)
 
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
@@ -27,8 +26,7 @@ func main() {
 		apiversion,
 		"*")
 
-	enc_grp, _ := ovc.GetEnclosureGroupByName(eg_name)
-
+/*	enc_grp, _ := ovc.GetEnclosureGroupByName(eg_name)
 	enclosure_create_map := ov.EnclosureCreateMap{
 		EnclosureGroupUri: enc_grp.URI,
 		Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
@@ -46,7 +44,7 @@ func main() {
 	} else {
 		fmt.Println("Enclosure created successfully...")
 	}
-
+*/
 	sort := ""
 
 	enc_list, err := ovc.GetEnclosures("", "", "", sort, "")
@@ -60,7 +58,7 @@ func main() {
 		}
 	}
 
-	enclosure, err := ovc.GetEnclosureByName(enc_name)
+	enclosure, err := ovc.GetEnclosureByName(enc_list.Members[0].Name)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -92,10 +90,11 @@ func main() {
 		}
 	}
 
-	err = ovc.DeleteEnclosure(new_enclosure_name)
+/*	err = ovc.DeleteEnclosure(new_enclosure_name)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("Deleted Enclosure successfully...")
 	}
+*/
 }
