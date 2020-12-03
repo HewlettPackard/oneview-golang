@@ -15,8 +15,8 @@ func main() {
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE-Renamed"
 		scope_name          = "Auto-Scope"
-		eg_name		    = "Auto-TestEG"
-//		li_name             = "<logical_interconnect_name>"
+		eg_name             = "Auto-TestEG"
+		//		li_name             = "<logical_interconnect_name>"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -100,7 +100,7 @@ func main() {
 	scope_Uris := new([]string)
 	*scope_Uris = append(*scope_Uris, scope_uri.String())
 
-	// Update Logical Enclosure 
+	// Update Logical Enclosure
 	log_enc, _ := ovc.GetLogicalEnclosureByName(logical_enclosure)
 	log_enc.Name = logical_enclosure_1
 	log_enc.ScopesUri = scope_uri
@@ -133,11 +133,11 @@ func main() {
 	}
 
 	// Deleting Logical Enclosure
-/*	err = ovc.DeleteLogicalEnclosure(logical_enclosure_1)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("#...................... Deleted Logical Enclosure Successfully .....#")
-	}
-*/
+	/*	err = ovc.DeleteLogicalEnclosure(logical_enclosure_1)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("#...................... Deleted Logical Enclosure Successfully .....#")
+		}
+	*/
 }

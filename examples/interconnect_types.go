@@ -5,12 +5,12 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
-//	"encoding/json"
+	//	"encoding/json"
 )
 
 func main() {
 	var (
-		ClientOV              *ov.OVClient
+		ClientOV *ov.OVClient
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
@@ -33,21 +33,21 @@ func main() {
 			fmt.Println(interconnect_type_list.Members[i].URI)
 		}
 	}
-/*
-	fmt.Println("#................... Interconnect Type by Name ...............#")
-	interconnect, err := ovc.GetInterconnectTypeByName(string(interconnect_type_list.Members[0].Name))
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		interconnect, _ := json.MarshalIndent(interconnect, "", "\t");
-		fmt.Print(string(interconnect))
-	}
+	/*
+		fmt.Println("#................... Interconnect Type by Name ...............#")
+		interconnect, err := ovc.GetInterconnectTypeByName(string(interconnect_type_list.Members[0].Name))
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			interconnect, _ := json.MarshalIndent(interconnect, "", "\t");
+			fmt.Print(string(interconnect))
+		}
 
-	fmt.Println("#................... Interconnect Type by Uri ....................#")
-	int_uri, err := ovc.GetInterconnectTypeByUri(interconnect.URI)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(int_uri)
-	}*/
+		fmt.Println("#................... Interconnect Type by Uri ....................#")
+		int_uri, err := ovc.GetInterconnectTypeByUri(interconnect.URI)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(int_uri)
+		}*/
 }

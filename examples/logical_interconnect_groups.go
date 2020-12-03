@@ -65,7 +65,6 @@ func main() {
 	logicalLocation3 := ov.LogicalLocation{LocationEntries: *locationEntries3}
 	logicalLocation4 := ov.LogicalLocation{LocationEntries: *locationEntries4}
 
-
 	locationEntry_nine := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
 	locationEntry_ten := ov.LocationEntry{Type: "Enclosure", RelativeValue: 3}
 	locationEntries5 := new([]ov.LocationEntry)
@@ -80,7 +79,6 @@ func main() {
 
 	logicalLocation5 := ov.LogicalLocation{LocationEntries: *locationEntries5}
 	logicalLocation6 := ov.LogicalLocation{LocationEntries: *locationEntries6}
-
 
 	interconnect1, err := ovc.GetInterconnectTypeByName("Virtual Connect SE 40Gb F8 Module for Synergy")
 	interconnect2, err := ovc.GetInterconnectTypeByName("Synergy 10Gb Interconnect Link Module")
@@ -121,7 +119,7 @@ func main() {
 	interconnectMapTemplate := ov.InterconnectMapTemplate{InterconnectMapEntryTemplates: *interconnectMapEntryTemplates}
 	fmt.Println(&interconnectMapTemplate)
 
-	enclosureIndexes := []int{1,2,3}
+	enclosureIndexes := []int{1, 2, 3}
 
 	ethernetSettings := ov.EthernetSettings{Type: "EthernetInterconnectSettingsV7",
 		URI:                                "/settings",
