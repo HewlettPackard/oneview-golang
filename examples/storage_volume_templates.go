@@ -13,6 +13,7 @@ func main() {
 	var (
 		ClientOV       *ov.OVClient
 		name_to_create = "VolumeTemplateExample"
+		name_to_create_auto = "Auto-VolumeTemplate"
 		name_to_update = "VolumeTemplateExample- updated"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
@@ -55,7 +56,7 @@ func main() {
 		Format: "x-uri-reference",
 	}
 	snapshot_pool := ov.TemplatePropertyDatatypeStructString{
-		Required:    true,
+		Required:    false,
 		Type:        "string",
 		Title:       "Snapshot Pool",
 		Description: "A URI reference to the common provisioning group used to create snapshots",
@@ -79,7 +80,7 @@ func main() {
 			SemanticType: "capacity",
 		},
 	}
-
+/*
 	dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
 		Required: true,
 		Type:     "string",
@@ -98,6 +99,7 @@ func main() {
 			SemanticType: "device-dataProtectionLevel",
 		},
 	}
+*/
 
 	template_version_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
@@ -133,11 +135,11 @@ func main() {
 		Meta: &ov.Meta{
 			Locked:       true,
 			CreateOnly:   true,
-			SemanticType: "device-provisioningType",
+/*			SemanticType: "device-provisioningType",*/
 		},
 	}
 
-	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
+/*	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
 		Meta: &ov.Meta{
 			Locked: true,
 		},
@@ -147,6 +149,7 @@ func main() {
 		Required:    false,
 		Title:       "Adaptive Optimization",
 	}
+*/
 
 	isDeduplicated := ov.TemplatePropertyDatatypeStructBool{
 		Meta: &ov.Meta{
@@ -173,13 +176,13 @@ func main() {
 		Name:                          &name_properties,
 		StoragePool:                   &storage_pool_properties,
 		Size:                          &size_properties,
-		DataProtectionLevel:           &dataProtectionLevel_properties,
+/*		DataProtectionLevel:           &dataProtectionLevel_properties,*/
 		SnapshotPool:                  &snapshot_pool,
 		IsDeduplicated:                &isDeduplicated,
 		TemplateVersion:               &template_version_properties,
 		Description:                   &description_properties,
 		ProvisioningType:              &provisioning_type_properties,
-		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,
+/*		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,*/
 		IsShareable:                   &is_shareable_properties,
 	}
 
@@ -189,7 +192,14 @@ func main() {
 		Description:        "Volume template Example",
 	}
 
+	storageVolumeTemplateAuto := ov.StorageVolumeTemplate{
+		TemplateProperties: &Properties,
+		Name:               name_to_create_auto,
+		Description:        "Volume template Example",
+	}
+
 	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
+	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplateAuto)
 	if err != nil {
 		fmt.Println("Could not create the volume Template", err)
 	} else {

@@ -10,8 +10,8 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-		server_1 = "<server_hardware_name>"
-		server_2 = "<server_hardware_name>"
+//		server_1 = "asdasd"
+//		server_2 = "asdasd"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
@@ -23,8 +23,17 @@ func main() {
 		apiversion,
 		"*")
 
+//	filters := []string{"name matches 'SY 660 Gen9 2'"}
+	filters := []string{""}
+	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
+	if err == nil {
+		fmt.Println("Total server list :", ServerList.Members[0])
+	} else {
+		fmt.Println("Failed to fetch server List : ", err)
+	}
+
 	fmt.Println("Get server hardware list by name")
-	serverName, err := ovc.GetServerHardwareByName(server_1)
+	serverName, err := ovc.GetServerHardwareByName(ServerList.Members[0].Name)
 	if err != nil {
 		fmt.Println("Failed to fetch server hardware name: ", err)
 	} else {
@@ -61,14 +70,6 @@ func main() {
 	fmt.Println("Get server-hardware list statistics specifying parameters")
 	fmt.Println("******************")
 
-	filters := []string{"name matches 'SY 660 Gen9 2'"}
-	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
-	if err == nil {
-		fmt.Println("Total server list :", ServerList.Total)
-	} else {
-		fmt.Println("Failed to fetch server List : ", err)
-	}
-
 	fmt.Println("Get firmware inventory for a server-hardware")
 	fmt.Println("******************")
 	firmware, err := ovc.GetServerFirmwareByUri(ServerId.URI)
@@ -80,9 +81,8 @@ func main() {
 	}
 
 	fmt.Println("******************")
-	server2, err := ovc.GetServerHardwareByName(server_1)
-	server1, err := ovc.GetServerHardwareByName(server_2)
-	serverHarware, err := ovc.GetAvailableHardware(string(server2.URI), string(server1.URI))
+
+	serverHarware, err := ovc.GetAvailableHardware(ServerList.Members[0].URI, ServerList.Members[1].URI)
 
 	if err == nil {
 		fmt.Println(serverHarware.Type)
