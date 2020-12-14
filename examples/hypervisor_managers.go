@@ -11,10 +11,10 @@ import (
 func main() {
 	var (
 		ClientOV                        *ov.OVClient
-		hypervisor_manager_ip           = "172.18.13.11" //"<hypervisor_manager_ip>"
+		hypervisor_manager_ip           = "<hypervisor_manager_ip>"
 		hypervisor_manager_display_name = "HM2"
-		username                        = "dcs" //"<hypervisor_user_name>"
-		password                        = "dcs" //"<hypervisor_password>"*/
+		username                        = "<hypervisor_user_name>"
+		password                        = "<hypervisor_password>"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
