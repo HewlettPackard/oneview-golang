@@ -28,7 +28,7 @@ Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/ma
 HPE OneView SDK for Go can be installed from Source or Docker container installation methods. You can either use a docker container which will have the HPE OneView SDK for Go installed or perform local installation.
 
 ###  Docker Setup
-The light weight containerized version of the HPE OneView SDK for Ruby is available in the [Docker Store](https://store.docker.com/community/images/hewlettpackardenterprise/hpe-oneview-sdk-for-ruby). The Docker Store image tag consist of two sections: <sdk_version-OV_version>
+The light weight containerized version of the HPE OneView SDK for Go is available in the [Docker Store](https://hub.docker.com/r/hewlettpackardenterprise/hpe-oneview-sdk-for-golang). The Docker Store image tag consist of two sections: <sdk_version-OV_version>
 
 ```bash
 # Download and store a local copy of oneview-sdk-ruby and use it as a Docker Image.
@@ -49,11 +49,10 @@ $ wget https://dl.google.com/go/go1.11.3.linux-amd64.tar.gz
 ```
 
 ```bash 
-# untar with "tar -zxvf go1.11.linux-amd64.tar.gz"
-# move it to /usr/local/ and create directory for Go.
-
-$ mv go1.11.3.linux-amd64.tar.gz /usr/local/ 
-$ mkdir ~/go
+# untar with "tar -zxvf go1.11.3.linux-amd64.tar.gz"
+# move go/ to /usr/local/ 
+# mv go1.11.3.linux-amd64.tar.gz /usr/local/ 
+# mkdir ~/go
 ```
 
 ```bash 

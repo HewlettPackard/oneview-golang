@@ -3,6 +3,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v1.7.1]
 #### Bug fixes & Enhancements:
+- [#285] (https://github.com/HewlettPackard/oneview-golang/issues/285) Fix Docker Setup section in README.md
 - [#286] (https://github.com/HewlettPackard/oneview-golang/issues/286) GetIloIPAddress() does not work with GetServerHardwareList()
 
 # [v1.7.0] (2020-11-05)
