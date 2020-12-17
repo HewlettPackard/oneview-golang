@@ -115,4 +115,10 @@ func main() {
 	fmt.Println("******************")
 	iloIpaddress := serverName.GetIloIPAddress()
 	fmt.Println("ilo ip address of an server is =", iloIpaddress)
+
+	fmt.Println("Get ilo ipaddress of all servers")
+	fmt.Println("******************")
+	for _, v := range ServerList.Members {
+		fmt.Println("Server: ", v.Name, "ILO IP: ", v.GetIloIPAddress())
+	}
 }
