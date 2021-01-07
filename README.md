@@ -10,7 +10,7 @@
 
 HPE OneView makes it simple to deploy and manage today’s complex hybrid cloud infrastructure. HPE OneView can help you transform your data center to software-defined, and it supports HPE’s broad portfolio of servers, storage, and networking solutions, ensuring the simple and automated management of your hybrid infrastructure. Software-defined intelligence enables a template-driven approach for deploying, provisioning, updating, and integrating compute, storage, and networking infrastructure.
 
-The HPE OneView Go SDK provides library to easily interact with HPE OneView and HPE Image Streamer REST APIs. The HPE OneView Ruby SDK enables developers to easily build integrations and scalable solutions with HPE OneView and HPE Image Streamer.
+The HPE OneView Go SDK provides library to easily interact with HPE OneView and HPE Image Streamer REST APIs. The HPE OneView Go SDK enables developers to easily build integrations and scalable solutions with HPE OneView and HPE Image Streamer.
 
 You can find the latest supported HPE OneView Go SDK [here](https://github.com/HewlettPackard/oneview-golang/releases/latest)
 
@@ -31,7 +31,7 @@ HPE OneView SDK for Go can be installed from Source or Docker container installa
 The light weight containerized version of the HPE OneView SDK for Go is available in the [Docker Store](https://hub.docker.com/r/hewlettpackardenterprise/hpe-oneview-sdk-for-golang). The Docker Store image tag consist of two sections: <sdk_version-OV_version>
 
 ```bash
-# Download and store a local copy of oneview-sdk-ruby and use it as a Docker Image.
+# Download and store a local copy of oneview-golang and use it as a Docker Image.
 $ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.7.0-OV5.5
 # Run docker commands below given, which  will in turn create a sh session 
 # where you can create files, issue commands and execute the examples.
