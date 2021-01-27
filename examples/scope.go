@@ -30,7 +30,7 @@ func main() {
 
 	er_test := ovc.CreateScope(scope_test)
 
-	if er_test != nil{
+	if er_test != nil {
 		fmt.Println("Error Creating Scope: ", er_test)
 	}
 
