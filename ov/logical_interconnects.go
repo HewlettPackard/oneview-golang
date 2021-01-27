@@ -514,16 +514,26 @@ func (c *OVClient) UpdateLogicalInterconnectPortFlapSettings(PortFlapSetting Por
 		uri = "/rest/logical-interconnects/"
 		t   *Task
 	)
-	uri = uri + Id + "/portFlapSettings"
-	logicalInterconnect, err := c.GetLogicalInterconnectByUri(uri)
 
+	if c.APIVersion <= 2200 {
+		log.Errorf("PortFlap Configuration is supported on API 2400 or greater")
+		return nil
+	}
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	t = t.NewProfileTask(c)
 	t.ResetTask()
+	logicalInt, er_li := c.GetLogicalInterconnectByUri(uri + Id)
+	if er_li != nil {
+		t.TaskIsDone = true
+		log.Errorf("Logical Interconnect Not Found: %s", uri+Id)
+		return er_li
+	}
+	PortFlapSetting.ID = logicalInt.PortFlapProtection.ID
+	PortFlapSetting.Type = "portFlapProtection"
+	uri = uri + Id + "/portFlapSettings"
 	log.Infof("REST : %s \n %+v\n", uri, PortFlapSetting)
 	log.Infof("task -> %+v", t)
-	
 	data, err := c.RestAPICall(rest.PUT, uri, PortFlapSetting)
 	if err != nil {
 		t.TaskIsDone = true
