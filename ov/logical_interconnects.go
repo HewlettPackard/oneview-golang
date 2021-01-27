@@ -509,6 +509,42 @@ func (c *OVClient) UpdateLogicalInterconnectIgmpSettings(IgmpConfig IgmpSettings
 	return nil
 }
 
+func (c *OVClient) UpdateLogicalInterconnectPortFlapSettings(PortFlapSetting PortFlapProtection, Id string) error {
+	var (
+		uri = "/rest/logical-interconnects/"
+		t   *Task
+	)
+	uri = uri + Id + "/portFlapSettings"
+	logicalInterconnect, err := c.GetLogicalInterconnectByUri(uri)
+
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Infof("REST : %s \n %+v\n", uri, PortFlapSetting)
+	log.Infof("task -> %+v", t)
+	
+	data, err := c.RestAPICall(rest.PUT, uri, PortFlapSetting)
+	if err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error updating logicalInterConnect PortFlap Setting update request: %s", err)
+		return err
+	}
+
+	log.Debugf("Response update LogicalInterConnect PortFlap Setting  %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *OVClient) GetLogicalInterconnectEthernetSettings(Id string) (EthernetSettings, error) {
 	var (
 		uri              = "/rest/logical-interconnects/"
