@@ -275,23 +275,6 @@ type Reports struct {
 	PossibleTrafficLossTransaction bool            `json:"possibleTrafficLossTransaction,omitempty"` // "possibleTrafficLossTransaction": false,
 }
 
-type PortFlapProtection struct {
-	ConsistencyChecking          string        `json:"consistencyChecking,omitempty"`          // "consistencyChecking": ExactMatch,
-	Description                  string        `json:"description,omitempty"`                  // "description": "",
-	DetectionInterval            int           `json:"detectionInterval,omitempty"`            // "detectionInterval": 20,
-	ETAG                         string        `json:"eTag,omitempty"`                         // "eTag": "",
-	ID                           string        `json:"id,omitempty"`                           // "id": "",
-	Modified                     string        `json:"modified,omitempty"`                     // "modified" :"",
-	Name                         string        `json:"name,omitempty"`                         // "name": "",
-	NoOfSamplesDeclareFailures   int           `json:"noOfSamplesDeclareFailures,omitempty"`   // "noOfSamplesDeclareFailures": 2,
-	PortFlapProtectionMode       string        `json:"portFlapProtectionMode,omitempty"`       // "portFlapProtectionMode": Detect,
-	PortFlapThresholdPerInterval int           `json:"portFlapThresholdPerInterval,omitempty"` // "portFlapThresholdPerInterval": 2,
-	State                        string        `json:"state,omitempty"`                        // "state": "",
-	Status                       string        `json:"status,omitempty"`                       // "status": OK,
-	Type                         string        `json:"type,omitempty"`                         // "type": portFlapProtection,
-	URI                          utils.Nstring `json:"uri,omitempty"`                          // "uri": "",
-}
-
 func (c *OVClient) BulkInconsistencyValidations(ligUris map[string][]utils.Nstring) (BulkInconsistencyValidation, error) {
 	var (
 		uri     = "/rest/logical-interconnects/bulk-inconsistency-validation"
