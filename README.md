@@ -81,7 +81,7 @@ $ export ONEVIEW_OV_DOMAIN=LOCAL
 $ export ONEVIEW_SSLVERIFY=false
 $ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
-Note: Currently this SDK supports OneView API 2200 minimally, where we can test OneView API 2200 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
+Note: Currently this SDK supports OneView API 2400 minimally, where we can test OneView API 2400 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
 ### OneView Client Configuration
 
