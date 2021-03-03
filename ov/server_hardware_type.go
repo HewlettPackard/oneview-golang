@@ -78,14 +78,14 @@ type serverDisplaySchema struct {
 }
 
 type args struct {
-	ArgumentType  string        `json:argumentType,omitempty`  // "argumentType":"",
-	AttributeName string        `json:attributeName,omitempty` // "attributeName":"",
-	DefaultValue  string        `json:defaultValue,omitempty`  // "defaultValue":"",
-	HelpText      string        `json:helpText,omitempty`      // "helpText":"",
-	HideShowList  []hidShowList `json:hideShowList,omitempty`  // "hideShowList":{},
-	Label         string        `json:label,omitempty`         // "label":"",
-	UiData        []uiData      `json:uiData,omitempty`        // "uiData":{},
-	Validation    []validation  `json:validation,omitempty`    // "validation":{},
+	ArgumentType  string         `json:argumentType,omitempty`  // "argumentType":"",
+	AttributeName string         `json:attributeName,omitempty` // "attributeName":"",
+	DefaultValue  string         `json:defaultValue,omitempty`  // "defaultValue":"",
+	HelpText      string         `json:helpText,omitempty`      // "helpText":"",
+	HideShowList  []hideShowList `json:hideShowList,omitempty`  // "hideShowList":{},
+	Label         string         `json:label,omitempty`         // "label":"",
+	UiData        []uiData       `json:uiData,omitempty`        // "uiData":{},
+	Validation    []validation   `json:validation,omitempty`    // "validation":{},
 
 }
 
