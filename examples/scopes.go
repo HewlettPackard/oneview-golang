@@ -12,7 +12,7 @@ func main() {
 	var (
 		ClientOV    *ov.OVClient
 		scp_name    = "ScopeTest"
-		scp_name2    = "Auto-Scope"
+		scp_name2   = "Auto-Scope"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
 		eth_network = "Auto-ethernet_network"
