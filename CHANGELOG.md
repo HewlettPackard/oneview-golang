@@ -1,17 +1,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.9.0] (Unreleased)
+# [v6.0.0] (Unreleased)
 ### Notes
-- This release extends supports of the SDK to Oneview API Version 2600.
+- This release extends supports of the SDK to Oneview API Version 2600. Image Streamer API Version 2010.
 
 ### Oneview Features supported
+- Deploymenet Plan
 - Ethernet Network
 - Enclosure
 - Enclosure Group
 - FC Network
 - FCOE Network
 - Hypervisor Manager
+- Hypervisor Cluster Profile
 - Interconnects
 - Interconnect Types
 - Logical Enclosure

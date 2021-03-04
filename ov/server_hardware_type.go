@@ -117,26 +117,26 @@ type StorageCapability struct {
 	StandupControllerSupported bool     `json:"standupControllerSupported,omitempty"` // "standupControllerSupported,":false
 }
 type ServerHardwareType struct {
-	Adapters            []Adapter            `json:"adapters,omitempty"`            // "adapters": {},
-	BiosSettings        []BiosSetting        `json:"biosSettings,omitempty"`        //"biosSettings": {},
-	BootCapabilities    []string             `json:"bootCapabilities,omitempty"`    // "bootCapabilities":{},
-	BootModes           []string             `json:"bootModes,omitempty"`           // "bootModes":{},
-	Capabilities        []string             `json:"capabilities,omitempty"`        // "capabilities": {},
-	Category            string               `json:"category,omitempty"`            // "category": "server-hardware",
-	Created             string               `json:"created,omitempty"`             // "created": "20150831T154835.250Z",
-	Description         utils.Nstring        `json:"description,omitempty"`         // "description": "ServerHardware",
-	ETAG                string               `json:"eTag,omitempty"`                // "eTag": "1441036118675/8",
-	Family              string               `json:"family,omitempty"`              // "family":"135",
-	FormFactor          string               `json:"formFactor,omitempty"`          // "formFactor":"HalfHeight",
-	Model               string               `json:"model,omitempty"`               // "model":"",
-	Modified            string               `json:"modified,omitempty"`            // "modified": "20150831T154835.250Z",
-	Name                string               `json:"name,omitempty"`                // "name": "ServerHardware 1",
-	PxeBootPolicies     []string             `json:"pxeBootPolicies,omitempty"`     // "pxeBootPolicies":{},
-	ServerDisplaySchema *serverDisplaySchema `json:"serverDisplaySchema,omitempty"` // "serverDisplaySchema":{},
-	StorageCapabilities *StorageCapability   `json:"storageCapabilities,omitempty"` // "storageCapabilities":{..,},
-	Type                string               `json:"type,omitempty"`                // "type": "server-hardware-type-10",
-	URI                 utils.Nstring        `json:"uri,omitempty"`                 // "uri": "/rest/server-hardware-types/e2f0031b-52bd-4223-9ac1-d91cb519d548"
-	UefiClass           string               `json:"uefiClass,omitempty"`           // "uefiClass":"2"
+	Adapters            []Adapter             `json:"adapters,omitempty"`            // "adapters": {},
+	BiosSettings        []BiosSetting         `json:"biosSettings,omitempty"`        //"biosSettings": {},
+	BootCapabilities    []string              `json:"bootCapabilities,omitempty"`    // "bootCapabilities":{},
+	BootModes           []string              `json:"bootModes,omitempty"`           // "bootModes":{},
+	Capabilities        []string              `json:"capabilities,omitempty"`        // "capabilities": {},
+	Category            string                `json:"category,omitempty"`            // "category": "server-hardware",
+	Created             string                `json:"created,omitempty"`             // "created": "20150831T154835.250Z",
+	Description         utils.Nstring         `json:"description,omitempty"`         // "description": "ServerHardware",
+	ETAG                string                `json:"eTag,omitempty"`                // "eTag": "1441036118675/8",
+	Family              string                `json:"family,omitempty"`              // "family":"135",
+	FormFactor          string                `json:"formFactor,omitempty"`          // "formFactor":"HalfHeight",
+	Model               string                `json:"model,omitempty"`               // "model":"",
+	Modified            string                `json:"modified,omitempty"`            // "modified": "20150831T154835.250Z",
+	Name                string                `json:"name,omitempty"`                // "name": "ServerHardware 1",
+	PxeBootPolicies     []string              `json:"pxeBootPolicies,omitempty"`     // "pxeBootPolicies":{},
+	ServerDisplaySchema []serverDisplaySchema `json:"serverDisplaySchema,omitempty"` // "serverDisplaySchema":{},
+	StorageCapabilities *StorageCapability    `json:"storageCapabilities,omitempty"` // "storageCapabilities":{..,},
+	Type                string                `json:"type,omitempty"`                // "type": "server-hardware-type-10",
+	URI                 utils.Nstring         `json:"uri,omitempty"`                 // "uri": "/rest/server-hardware-types/e2f0031b-52bd-4223-9ac1-d91cb519d548"
+	UefiClass           string                `json:"uefiClass,omitempty"`           // "uefiClass":"2"
 }
 
 type ServerHardwareTypeList struct {
