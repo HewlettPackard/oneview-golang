@@ -70,37 +70,37 @@ type BiosSetting struct {
 	WarningText     string       `json:"warningText,omitempty"`     // "warningText":""
 }
 
-type serverDisplaySchema struct {
-	Args        []args `json:"args,omitempty"`        // "args":{},
+type ServerDisplaySchema struct {
+	Args        []Args `json:"args,omitempty"`        // "args":{},
 	HelpText    string `json:"helpText,omitempty"`    // "helpText":"",
 	Label       string `json:"label,omitempty"`       // "label":"",
 	SettingType string `json:"settingType,omitempty"` // "settingType":"",
 }
 
-type args struct {
+type Args struct {
 	ArgumentType  string         `json:argumentType,omitempty`  // "argumentType":"",
 	AttributeName string         `json:attributeName,omitempty` // "attributeName":"",
 	DefaultValue  string         `json:defaultValue,omitempty`  // "defaultValue":"",
 	HelpText      string         `json:helpText,omitempty`      // "helpText":"",
-	HideShowList  []hideShowList `json:hideShowList,omitempty`  // "hideShowList":{},
+	HideShowList  []HideShowList `json:hideShowList,omitempty`  // "hideShowList":{},
 	Label         string         `json:label,omitempty`         // "label":"",
-	UiData        []uiData       `json:uiData,omitempty`        // "uiData":{},
-	Validation    []validation   `json:validation,omitempty`    // "validation":{},
+	UiData        []UiData       `json:uiData,omitempty`        // "uiData":{},
+	Validation    []Validation   `json:validation,omitempty`    // "validation":{},
 
 }
 
-type hideShowList struct {
+type HideShowList struct {
 	FieldName   string `json:fieldName,omitempty`   // "filedName":"",
 	MatchAction string `json:matchAction,omitempty` // "matchAction":"",
 	Value       string `json:value,omitempty`       // "value":"",
 }
 
-type uiData struct {
+type UiData struct {
 	ItemType string `json:itemType,omitempty` // "itemValue":"",
 	Value    string `json:value,omitempty`    // "value":"",
 }
 
-type validation struct {
+type Validation struct {
 	ValidationType string `json:validationType,omitempty` // "validationType":"",
 	Value          string `json:value,omitempty`          // "value":"",
 }
@@ -132,7 +132,7 @@ type ServerHardwareType struct {
 	Modified            string                `json:"modified,omitempty"`            // "modified": "20150831T154835.250Z",
 	Name                string                `json:"name,omitempty"`                // "name": "ServerHardware 1",
 	PxeBootPolicies     []string              `json:"pxeBootPolicies,omitempty"`     // "pxeBootPolicies":{},
-	ServerDisplaySchema []serverDisplaySchema `json:"serverDisplaySchema,omitempty"` // "serverDisplaySchema":{},
+	ServerDisplaySchema []ServerDisplaySchema `json:"serverDisplaySchema,omitempty"` // "serverDisplaySchema":{},
 	StorageCapabilities *StorageCapability    `json:"storageCapabilities,omitempty"` // "storageCapabilities":{..,},
 	Type                string                `json:"type,omitempty"`                // "type": "server-hardware-type-10",
 	URI                 utils.Nstring         `json:"uri,omitempty"`                 // "uri": "/rest/server-hardware-types/e2f0031b-52bd-4223-9ac1-d91cb519d548"

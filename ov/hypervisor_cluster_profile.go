@@ -29,7 +29,7 @@ type HypervisorClusterProfile struct {
 	Path                          string                         `json:"path,omitempty"`                          //"path":"DC1"
 	RefreshState                  string                         `json:"refreshState,omitempty"`                  //"refreshState":"NotRefreshing"
 	ScopesUri                     string                         `json:"scopesUri,omitempty"`                     //"scopesUri":"/rest/scopes/resources/rest/hypervisor-cluster-profiles/4340293c-0701-4773"
-	SharedStorageVolumes          []sharedStorageVolumes         `json:"sharedStorageVolumes,omitempty"`          //"sharedStorageVolumes":"[]"
+	SharedStorageVolumes          []SharedStorageVolumes         `json:"sharedStorageVolumes,omitempty"`          //"sharedStorageVolumes":"[]"
 	State                         string                         `json:"state,omitempty"`                         //"state":"Active"
 	StateReason                   string                         `json:"stateReason,omitempty"`                   //"stateReason":"None"
 	Status                        string                         `json:"status,omitempty"`                        //"status":"OK"
@@ -37,9 +37,9 @@ type HypervisorClusterProfile struct {
 	URI                           utils.Nstring                  `json:"uri,omitempty"`                           //"uri":"/rest/hypervisor-cluster-profiles/4340293c-0701-4773-b863-32854b0f7d29"
 }
 
-type sharedStorageVolumes struct {
+type SharedStorageVolumes struct {
 	Action                  string                  `json:"action, omitempty"`                  //"action":"",
-	HypervisorClusterVolume hypervisorClusterVolume `json:"hypervisorClusterVolume, omitempty"` //"hypervisorClusterVolume":{},
+	HypervisorClusterVolume HypervisorClusterVolume `json:"hypervisorClusterVolume, omitempty"` //"hypervisorClusterVolume":{},
 	LunId                   string                  `json:"lunId, omitempty"`                   //"lunId":"",
 	LunType                 string                  `json:"lunType, omitempty"`                 //"lunType":"",
 	Name                    string                  `json:"name, omitempty"`                    //"name":"",
@@ -53,7 +53,7 @@ type sharedStorageVolumes struct {
 	VolumeSource            string                  `json:"volumeSource, omitempty"`            //"volumeSource":"",
 }
 
-type hypervisorClusterVolume struct {
+type HypervisorClusterVolume struct {
 	Action   string `json:"action, omitempty"`   //"action":"",
 	InUse    bool   `json:"inUse, omitempty"`    //"inUse":"",
 	Name     string `json:"name, omitempty"`     //"name":"",
