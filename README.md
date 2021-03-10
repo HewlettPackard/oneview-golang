@@ -2,10 +2,10 @@
 
 ## Build Status 
 
-OV Version | 5.60 | 5.50 | 5.40 | 5.30 |
+OV Version | 6.00 | 5.60 | 5.50 | 5.40 | 5.30 |
 | ------------- |:-------------:|-------------:|-------------:|-------------:|
-SDK Version/Tag | [v1.8.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.8.0) |[v1.7.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.7.0) | [v1.6.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.6.0) | [v1.5.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.5.0) |
-Build Status | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true)|
+SDK Version/Tag | [v6.0.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.0.0) |[v1.8.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.8.0) |[v1.7.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.7.0) | [v1.6.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.6.0) | [v1.5.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v1.5.0) |
+Build Status | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true)| ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true) | ![Build status](https://ci.appveyor.com/api/projects/status/u84505l6syp70013?svg=true)|
 
 ## Introduction
 
@@ -17,7 +17,7 @@ You can find the latest supported HPE OneView Go SDK [here](https://github.com/H
 
 ## What's New
 
-HPE OneView Go library extends support of the SDK to OneView REST API version 2400 (OneView v5.60)
+HPE OneView Go library extends support of the SDK to OneView REST API version 2600 (OneView v6.00)
 
 Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/master/CHANGELOG.md) for more information on the changes , features supported and issues fixed in this version
 
@@ -33,10 +33,10 @@ The light weight containerized version of the HPE OneView SDK for Go is availabl
 
 ```bash
 # Download and store a local copy of oneview-golang and use it as a Docker Image.
-$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.8.0-OV5.6
+$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.0.0-OV6.0
 # Run docker commands below given, which  will in turn create a sh session 
 # where you can create files, issue commands and execute the examples.
-$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v1.8.0-OV5.6 /bin/sh
+$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.0.0-OV6.0 /bin/sh
 ```
 
 ### Local Setup
@@ -81,7 +81,7 @@ $ export ONEVIEW_OV_DOMAIN=LOCAL
 $ export ONEVIEW_SSLVERIFY=false
 $ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
-Note: Currently this SDK supports OneView API 2400 minimally, where we can test OneView API 2400 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
+Note: Currently this SDK supports OneView API 2600 minimally, where we can test OneView API 2600 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
 ### OneView Client Configuration
 
