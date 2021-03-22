@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -22,7 +23,9 @@ func main() {
 		"*")
 
 	filters := []string{""}
-	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
+	ServerLists, err := ovc.GetServerHardwareList(filters, "", "", "", "")
+	total := strconv.Itoa(ServerLists.Total)
+	ServerList, err := ovc.GetServerHardwareList(filters, "", "", total, "")
 	if err == nil {
 		fmt.Println("Total server list :", ServerList.Members[0])
 	} else {
