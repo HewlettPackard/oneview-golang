@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
