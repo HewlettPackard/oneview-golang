@@ -25,7 +25,10 @@ func main() {
 	filters := []string{""}
 	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
 	if err == nil {
-		fmt.Println("Total server list :", ServerList.Members[0])
+		for i := 0; i < ServerList.Count; i++ {
+			fmt.Println(ServerList.Members[i])
+		}
+
 	} else {
 		fmt.Println("Failed to fetch server List : ", err)
 	}
