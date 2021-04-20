@@ -2,6 +2,38 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
 # [v6.1.0 unreleased]
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.
+
+### Oneview Features supported
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
 ### Bug fixes & Enhancements:
 - [#301] (https://github.com/HewlettPackard/oneview-golang/issues/301) Fix number of Server Hardware resource returned
 
@@ -15,7 +47,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added serverDisplaySchema for Server Hardware Types Resource.
 
 ### Oneview Features supported
-- Deploymenet Plan
+- Deployment Plan
 - Ethernet Network
 - Enclosure
 - Enclosure Group
