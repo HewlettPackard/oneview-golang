@@ -3,7 +3,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v6.1.0 unreleased]
 ### Bug fixes & Enhancements:
-- [#301] (https://github.com/HewlettPackard/oneview-golang/issues/301) Fix number of Server Hardware resource returned
+- [#301] (https://github.com/HewlettPackard/oneview-golang/issues/301) Fix number of Server Hardware resource returned.
+- [#307] (https://github.com/HewlettPackard/oneview-golang/issues/307) LIG Qos Attribute Issue. 
 
 # [v6.0.0] 
 ### Notes
