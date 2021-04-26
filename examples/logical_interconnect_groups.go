@@ -151,7 +151,7 @@ func main() {
 	qosActiveConfig := ov.ActiveQosConfig{Type: "QosConfiguration",
 		Category:   "qos-aggregated-configuration",
 		ConfigType: "Passthrough"}
-	qosConfig := ov.QosConfiguration{ActiveQosConfig: qosActiveConfig,
+	qosConfig := ov.QosConfiguration{ActiveQosConfig: &qosActiveConfig,
 		Type:     "qos-aggregated-configuration",
 		Category: "qos-aggregated-configuration"}
 
