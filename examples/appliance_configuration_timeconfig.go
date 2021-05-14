@@ -12,7 +12,7 @@ func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi("2800")
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
