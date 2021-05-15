@@ -27,7 +27,7 @@ func main() {
 	} else {
 		fmt.Println("#---Got the supported appliance locales.----#")
 		for i := range localelist.Members {
-			fmt.Println("Member " + strconv.Itoa(i+1))
+			fmt.Println("\nLocale " + strconv.Itoa(i+1))
 			fmt.Print("DisplayName : " + localelist.Members[i].DisplayName + "\n")
 			fmt.Print("Locale : " + localelist.Members[i].Locale + "\n")
 			fmt.Print("LocaleName : " + localelist.Members[i].LocaleName + "\n")
