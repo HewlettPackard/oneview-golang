@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
-	"github.com/HewlettPackard/oneview-golang/utils"	"github.com/docker/machine/libmachine/log"
+	"github.com/HewlettPackard/oneview-golang/utils"
+	"github.com/docker/machine/libmachine/log"
 )
-
 
 type BandwidthType struct {
 	MaximumBandwidth int `json:"maximumBandwidth,omitempty"`
@@ -43,7 +43,7 @@ type ConnectionList struct {
 	URI         utils.Nstring        `json:"uri,omitempty"`
 }
 
-func(c *OVClient) GetConnectionTemplateByName(name string) (ConnectionTemplate, error) {
+func (c *OVClient) GetConnectionTemplateByName(name string) (ConnectionTemplate, error) {
 	conntemplate, err := c.GetConnectionTemplate(fmt.Sprintf("name matches '%s'", name), "name:asc", "", "")
 	if conntemplate.Total > 0 {
 		return conntemplate.Members[0], err
@@ -125,9 +125,9 @@ func (c *OVClient) UpdateConnectionTemplate(conntemplate ConnectionTemplate) err
 	return nil
 }
 
-func(c *OVClient) GetDefaultConnectionTemplate() (ConnectionTemplate, error) {
+func (c *OVClient) GetDefaultConnectionTemplate() (ConnectionTemplate, error) {
 	var (
-		uri            = "/rest/connection-templates/defaultConnectionTemplate"
+		uri                = "/rest/connection-templates/defaultConnectionTemplate"
 		default_connection ConnectionTemplate
 	)
 
