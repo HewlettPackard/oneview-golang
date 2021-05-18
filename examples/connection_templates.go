@@ -11,7 +11,6 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-		testName = "name-1499666542-1617620776296"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
@@ -34,6 +33,7 @@ func main() {
 		}
 	}
 
+	testName := connTemplate.Members[0].Name
 	// Get connection template by name
 	connTemplate2, err := ovc.GetConnectionTemplateByName(testName)
 	if err != nil {
