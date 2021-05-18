@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 )
@@ -27,7 +28,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("#---Got Connection Templates----#")
+		fmt.Println("#-----Got Connection Templates-----#")
 		for i := range connTemplate.Members {
 			fmt.Println(connTemplate.Members[i])
 		}
@@ -39,7 +40,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("#-------------Got Connection Template by name----------------#")
+		fmt.Println("#-----Got Connection Template by name-----#")
 		fmt.Println(connTemplate2)
 	}
 
@@ -48,26 +49,48 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("#--------Got Default Connection Template-------#")
+		fmt.Println("#-----Got Default Connection Template-----#")
 		fmt.Println(default_connection)
 	}
 
+	Bandwidthoptions := ov.BandwidthType{
+		MaximumBandwidth: 8000,
+		TypicalBandwidth: 2500,
+	}
+
+	templateoptions := ov.ConnectionTemplate{
+		Bandwidth: Bandwidthoptions,
+		Name:      testName,
+		Type:      "connection-template",
+	}
+	fmt.Println(templateoptions)
 	// updating Connection Template
-	connTemplate2.Bandwidth.MaximumBandwidth = 8000
-	err = ovc.UpdateConnectionTemplate(connTemplate2)
+	// specific id can be given for update.
+	id := strings.Split(connTemplate2.URI.String(), "/")[3] // eg: id = 063f055c-2cda-4420-be9d-024d609bc534
+	template, err := ovc.UpdateConnectionTemplate(id, templateoptions)
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Connection Template has been updated with maximum bandwidth: " + strconv.Itoa(connTemplate2.Bandwidth.MaximumBandwidth))
+		fmt.Println("Connection Template has been updated with maximum bandwidth: " + strconv.Itoa(template.Bandwidth.MaximumBandwidth))
 	}
 
 	// revert back the changes
-	connTemplate2.Bandwidth.MaximumBandwidth = 10000
-	err = ovc.UpdateConnectionTemplate(connTemplate2)
+	Bandwidthoption := ov.BandwidthType{
+		MaximumBandwidth: 10000,
+		TypicalBandwidth: 2500,
+	}
+
+	templateoption := ov.ConnectionTemplate{
+		Bandwidth: Bandwidthoption,
+		Name:      testName,
+		Type:      "connection-template",
+	}
+	fmt.Println(templateoption)
+	template2, err := ovc.UpdateConnectionTemplate(id, templateoption)
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("Connection Template has been updated with maximum bandwidth: " + strconv.Itoa(connTemplate2.Bandwidth.MaximumBandwidth))
+		fmt.Println("Connection Template has been updated with maximum bandwidth: " + strconv.Itoa(template2.Bandwidth.MaximumBandwidth))
 	}
 
 }

@@ -93,11 +93,12 @@ func (c *OVClient) GetConnectionTemplate(filter string, sort string, start strin
 	return connectionlist, nil
 }
 
-func (c *OVClient) UpdateConnectionTemplate(conntemplate ConnectionTemplate) error {
-	log.Infof("Initializing update of Connection Template for %s.", conntemplate.Name)
+func (c *OVClient) UpdateConnectionTemplate(id string, conntemplate ConnectionTemplate) (ConnectionTemplate, error) {
+	log.Infof("Initializing update of Connection Template for %s.", id)
 	var (
-		uri = conntemplate.URI.String()
-		t   *Task
+		uri      = "/rest/connection-templates/" + id
+		template ConnectionTemplate
+		t        *Task
 	)
 	// refresh login
 	c.RefreshLogin()
@@ -112,17 +113,21 @@ func (c *OVClient) UpdateConnectionTemplate(conntemplate ConnectionTemplate) err
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting update Connection Template request: %s", err)
-		return err
+		return template, err
 	}
 
 	log.Debugf("Response update Connection Template %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
-		return err
+		return template, err
 	}
 
-	return nil
+	if err := json.Unmarshal(data, &template); err != nil {
+		return template, err
+	}
+
+	return template, nil
 }
 
 func (c *OVClient) GetDefaultConnectionTemplate() (ConnectionTemplate, error) {
