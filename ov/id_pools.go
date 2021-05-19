@@ -28,8 +28,8 @@ type IdPool struct {
 // Checks the range availability in the ID pool.
 func (c *OVClient) GetRangeAvailibility(poolType string, ids []string) (UpdateAllocatorList, error) {
 	var (
-		uri        = "/rest/id-pools/" + poolType + "/checkrangeavailability"
-		idList		UpdateAllocatorList
+		uri    = "/rest/id-pools/" + poolType + "/checkrangeavailability"
+		idList UpdateAllocatorList
 	)
 
 	q := make(map[string]interface{})
@@ -60,37 +60,36 @@ func (c *OVClient) GetRangeAvailibility(poolType string, ids []string) (UpdateAl
 
 // Validates a set of IDs to reserve in the pool.
 func (c *OVClient) GetValidateIds(poolType string, ids []string) (UpdateAllocatorList, error) {
-        var (
-                uri        = "/rest/id-pools/" + poolType + "/validate"
-                idList          UpdateAllocatorList
-        )
+	var (
+		uri    = "/rest/id-pools/" + poolType + "/validate"
+		idList UpdateAllocatorList
+	)
 
-        q := make(map[string]interface{})
-        if len(ids) > 0 {
-                q["idList"] = ids
-        }
+	q := make(map[string]interface{})
+	if len(ids) > 0 {
+		q["idList"] = ids
+	}
 
-        // refresh login
-        c.RefreshLogin()
-        c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-        // Setup query
-        if len(q) > 0 {
-                c.SetQueryString(q)
-        }
+	// Setup query
+	if len(q) > 0 {
+		c.SetQueryString(q)
+	}
 
-        data, err := c.RestAPICall(rest.GET, uri, nil)
-        if err != nil {
-                return idList, err
-        }
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return idList, err
+	}
 
-        log.Debugf("Get Id Lists %s", data)
-        if err := json.Unmarshal(data, &idList); err != nil {
-                return idList, err
-        }
-        return idList, nil
+	log.Debugf("Get Id Lists %s", data)
+	if err := json.Unmarshal(data, &idList); err != nil {
+		return idList, err
+	}
+	return idList, nil
 }
-
 
 // Gets a pool along with the list of ranges present in it
 func (c *OVClient) GetPoolType(poolType string) (IdPool, error) {
@@ -125,7 +124,7 @@ func (c *OVClient) GetPoolType(poolType string) (IdPool, error) {
 // Used to generate a range for validation prior to actually creating it. This API is not applicable for the IPv4 and IPv6 IDs.
 func (c *OVClient) Generate(poolType string) (StartStopFragments, error) {
 	var (
-		uri    = "/rest/id-pools/"
+		uri = "/rest/id-pools/"
 		ids StartStopFragments
 	)
 
@@ -151,15 +150,13 @@ func (c *OVClient) Generate(poolType string) (StartStopFragments, error) {
 	return ids, nil
 }
 
-
-
 // Enables or disables the pool
 func (c *OVClient) UpdatePoolType(idPool IdPool, poolType string) (IdPool, error) {
 
 	log.Infof("Initializing update of pool type for %s.", poolType)
 	var (
-		uri = "/rest/id-pools/"
-		t   *Task
+		uri      = "/rest/id-pools/"
+		t        *Task
 		response IdPool
 	)
 
@@ -193,10 +190,10 @@ func (c *OVClient) UpdatePoolType(idPool IdPool, poolType string) (IdPool, error
 		log.Errorf("Error with task un-marshal: %s", err)
 		return response, err
 	}
-        if err := json.Unmarshal([]byte(dataResponse), &response); err != nil {
+	if err := json.Unmarshal([]byte(dataResponse), &response); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-	        return response, err
-        }
+		return response, err
+	}
 	return response, nil
 }
 
@@ -205,9 +202,9 @@ func (c *OVClient) Allocator(allocateIds UpdateAllocatorList, poolType string) (
 
 	log.Infof("Initializing update of pool type for %s.", poolType)
 	var (
-		uri = "/rest/id-pools/"
-		t   *Task
-		response	 UpdateAllocatorList
+		uri      = "/rest/id-pools/"
+		t        *Task
+		response UpdateAllocatorList
 	)
 
 	if poolType == "" {
@@ -239,22 +236,22 @@ func (c *OVClient) Allocator(allocateIds UpdateAllocatorList, poolType string) (
 		log.Errorf("Error with task un-marshal: %s", err)
 		return response, err
 	}
-        if err := json.Unmarshal(data, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-	        return response, err
-        }
+		return response, err
+	}
 
 	return response, nil
 }
 
-// Collects one or more IDs to be returned to a pool. 
+// Collects one or more IDs to be returned to a pool.
 func (c *OVClient) Collector(idList UpdateCollectorList, poolType string) (UpdateCollectorList, error) {
 
 	log.Infof("Initializing update of pool type for %s.", poolType)
 	var (
-		uri = "/rest/id-pools/"
-		t   *Task
-		response	UpdateCollectorList
+		uri      = "/rest/id-pools/"
+		t        *Task
+		response UpdateCollectorList
 	)
 
 	if poolType == "" {
@@ -286,10 +283,10 @@ func (c *OVClient) Collector(idList UpdateCollectorList, poolType string) (Updat
 		log.Errorf("Error with task un-marshal: %s", err)
 		return response, err
 	}
-        if err := json.Unmarshal(data, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-	        return response, err
-        }
+		return response, err
+	}
 
 	return response, nil
 }
@@ -298,9 +295,9 @@ func (c *OVClient) UpdateValidateIds(Ids UpdateAllocatorList, poolType string) (
 
 	log.Infof("Initializing update of pool type for %s.", poolType)
 	var (
-		uri = "/rest/id-pools/"
-		t   *Task
-		response	 UpdateAllocatorList
+		uri      = "/rest/id-pools/"
+		t        *Task
+		response UpdateAllocatorList
 	)
 
 	if poolType == "" {
@@ -332,10 +329,10 @@ func (c *OVClient) UpdateValidateIds(Ids UpdateAllocatorList, poolType string) (
 		log.Errorf("Error with task un-marshal: %s", err)
 		return response, err
 	}
-        if err := json.Unmarshal(data, &response); err != nil {
+	if err := json.Unmarshal(data, &response); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-	        return response, err
-        }
+		return response, err
+	}
 
 	return response, nil
 }
