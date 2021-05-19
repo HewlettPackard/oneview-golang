@@ -1,6 +1,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v6.2.0] (unreleased)
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 3000.
+
+### Major Changes
+- Added support to ID Pools.
+
 # [v6.1.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.
