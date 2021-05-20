@@ -132,8 +132,8 @@ func (c *OVClient) UpdateConnectionTemplate(id string, conntemplate ConnectionTe
 
 func (c *OVClient) GetDefaultConnectionTemplate() (ConnectionTemplate, error) {
 	var (
-		uri                = "/rest/connection-templates/defaultConnectionTemplate"
-		default_connection ConnectionTemplate
+		uri               = "/rest/connection-templates/defaultConnectionTemplate"
+		defaultConnection ConnectionTemplate
 	)
 
 	// refresh login
@@ -141,12 +141,12 @@ func (c *OVClient) GetDefaultConnectionTemplate() (ConnectionTemplate, error) {
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 	data, err := c.RestAPICall(rest.GET, uri, nil)
 	if err != nil {
-		return default_connection, err
+		return defaultConnection, err
 	}
 
 	log.Debugf("GetDefaultConnectionTemplate %s", data)
-	if err := json.Unmarshal(data, &default_connection); err != nil {
-		return default_connection, err
+	if err := json.Unmarshal(data, &defaultConnection); err != nil {
+		return defaultConnection, err
 	}
-	return default_connection, nil
+	return defaultConnection, nil
 }
