@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Major Changes
 - Added support to ID Pools.
+- Added support to Connection Template
 
 # [v6.1.0]
 #### Notes
