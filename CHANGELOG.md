@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - This release extends supports of the SDK to Oneview API Version 3000.
 
 ### New Changes
+- Added New Resource Appliance Configuration Timeconfig
 - Added support to Connection Template
 
 # [v6.1.0]
