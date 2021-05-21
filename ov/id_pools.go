@@ -32,6 +32,10 @@ func (c *OVClient) GetRangeAvailibility(poolType string, ids []string) (UpdateAl
 		idList UpdateAllocatorList
 	)
 
+	if poolType == "" {
+		log.Errorf("Error submitting update request. Please provide a valid Pool Type")
+	}
+
 	q := make(map[string]interface{})
 	if len(ids) > 0 {
 		q["idList"] = ids
@@ -64,6 +68,10 @@ func (c *OVClient) GetValidateIds(poolType string, ids []string) (UpdateAllocato
 		uri    = "/rest/id-pools/" + poolType + "/validate"
 		idList UpdateAllocatorList
 	)
+
+	if poolType == "" {
+		log.Errorf("Error submitting update request. Please provide a valid Pool Type")
+	}
 
 	q := make(map[string]interface{})
 	if len(ids) > 0 {
