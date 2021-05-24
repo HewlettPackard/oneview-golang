@@ -282,7 +282,7 @@ func (t *Task) Wait() error {
 	return nil
 }
 
-func (c *OVClient) GetTasks(filter string, sort string, count string, view string) (TasksList, error) {
+func (c *OVClient) GetTasks(filter string, sort string, count string, view string, topCount string, childLimit string) (TasksList, error) {
 	var (
 		uri   = "/rest/tasks"
 		q     map[string]interface{}
@@ -303,6 +303,14 @@ func (c *OVClient) GetTasks(filter string, sort string, count string, view strin
 
 	if count != "" {
 		q["count"] = count
+	}
+
+	if topCount != "" {
+		q["top_count"] = topCount
+	}
+
+	if childLimit != "" {
+		q["child_limit"] = childLimit
 	}
 
 	// refresh login
@@ -367,4 +375,22 @@ func (c *OVClient) GetTasksById(filter string, sort string, count string, view s
 		return tasks, err
 	}
 	return tasks, nil
+}
+
+func (c *OVClient) PatchTask(uri string) (Task error) {
+	var (
+		tasks Task
+	)
+
+	data, err := c.RestAPICall(rest.PATCH, uri, nil)
+	if err != nil {
+		return tasks, err
+	}
+
+	log.Debugf("Patch Tasks %s", data)
+	if err := json.Unmarshal([]byte(data), &tasks); err != nil {
+		return tasks, err
+	}
+	return tasks, nil
+
 }

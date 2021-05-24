@@ -26,7 +26,7 @@ func main() {
 	sort := "name:desc"
 	count := "5"
 	fmt.Println("\nGetting all tasks present: \n")
-	task_list, err := ovc.GetTasks("", sort, count, "")
+	task_list, err := ovc.GetTasks("", sort, count, "", "", "")
 	if err != nil {
 		fmt.Println("Error getting the storage volumes ", err)
 	}
@@ -40,6 +40,30 @@ func main() {
 	task, err := ovc.GetTasksById("", "", "", "", id)
 	if err != nil {
 		fmt.Println("Error getting the task details ", err)
+	}
+	fmt.Println(task)
+
+	fmt.Println("Get a tree of tasks")
+	filter := []string{"taskState='Completed'"}
+	task_list, err := ovc.GetTasks(filter, "", 10, "tree", "", "")
+	fmt.Println(task_list.Members)
+
+	fmt.Println("Get a aggregate tree")
+	task_list, err := ovc.GetTasks(filter, "", "", "aggregatedTree", 2, 2)
+	fmt.Println(task_list.Members)
+
+	fmt.Println("Get a flat tree")
+	filter := []string{"status=Warning OR status=OK"}
+	task_list, err := ovc.GetTasks(filter, "", 1, "flat-tree")
+	fmt.Println(task_list.Members)
+
+	fmt.Println("Perform Patch operation")
+	filter := []string{"taskState"='Running', "isCancellable"='true'}
+	task_list, err = ovc.GetTasks(filter, "", "", "", "", "")
+    task_uri = tasks_list.Members[0].URI
+    task, err = tasks.patch(task_uri)
+	if err != nil {
+		fmt.Println("Error updating the task details ", err)
 	}
 	fmt.Println(task)
 
