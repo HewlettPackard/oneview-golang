@@ -45,23 +45,23 @@ func main() {
 
 	fmt.Println("Get a tree of tasks")
 	filter := []string{"taskState='Completed'"}
-	task_list, err := ovc.GetTasks(filter, "", 10, "tree", "", "")
-	fmt.Println(task_list.Members)
+	task_list_tree, err := ovc.GetTasks(filter, "", 10, "tree", "", "")
+	fmt.Println(task_list_tree.Members)
 
 	fmt.Println("Get a aggregate tree")
-	task_list, err := ovc.GetTasks(filter, "", "", "aggregatedTree", 2, 2)
-	fmt.Println(task_list.Members)
+	task_list_atree, err := ovc.GetTasks(filter, "", "", "aggregatedTree", 2, 2)
+	fmt.Println(task_list_atree.Members)
 
 	fmt.Println("Get a flat tree")
-	filter := []string{"status=Warning OR status=OK"}
-	task_list, err := ovc.GetTasks(filter, "", 1, "flat-tree")
-	fmt.Println(task_list.Members)
+	filter = []string{"status=Warning OR status=OK"}
+	task_list_flat, err := ovc.GetTasks(filter, "", 1, "flat-tree")
+	fmt.Println(task_list_flat.Members)
 
 	fmt.Println("Perform Patch operation")
-	filter := []string{"taskState"='Running', "isCancellable"='true'}
-	task_list, err = ovc.GetTasks(filter, "", "", "", "", "")
-    task_uri = tasks_list.Members[0].URI
-    task, err = tasks.patch(task_uri)
+	filter = []string{"taskState='Running'", "isCancellable='true'"}
+	task_list_patch, err := ovc.GetTasks(filter, "", "", "", "", "")
+	task_uri := tasks_list_patch.Members[0].URI
+    	task, err = tasks.patch(task_uri)
 	if err != nil {
 		fmt.Println("Error updating the task details ", err)
 	}
