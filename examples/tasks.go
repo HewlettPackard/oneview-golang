@@ -28,7 +28,7 @@ func main() {
 	fmt.Println("\nGetting all tasks present: \n")
 	task_list, err := ovc.GetTasks("", sort, count, "", "", "")
 	if err != nil {
-		fmt.Println("Error getting the storage volumes ", err)
+		fmt.Println("Error getting the tasks ", err)
 	}
 	for i := 0; i < len(task_list.Members); i++ {
 		fmt.Println(task_list.Members[i].Name, task_list.Members[i].URI)
@@ -44,27 +44,42 @@ func main() {
 	fmt.Println(task)
 
 	fmt.Println("Get a tree of tasks")
-	filter := []string{"taskState='Completed'"}
-	task_list_tree, err := ovc.GetTasks(filter, "", 10, "tree", "", "")
+	task_list_tree, err := ovc.GetTasks("taskState='Completed'", "", "10", "tree", "", "")
+	if err != nil {
+		fmt.Println("Error getting the task details with tree view ", err)
+	}
+
 	fmt.Println(task_list_tree.Members)
 
 	fmt.Println("Get a aggregate tree")
-	task_list_atree, err := ovc.GetTasks(filter, "", "", "aggregatedTree", 2, 2)
+	task_list_atree, err := ovc.GetTasks("taskState='Completed'", "", "", "aggregatedTree", "2", "2")
+	if err != nil {
+		fmt.Println("Error getting the task with status Completed and aggregatedTree", err)
+	}
+
 	fmt.Println(task_list_atree.Members)
 
 	fmt.Println("Get a flat tree")
-	filter = []string{"status=Warning OR status=OK"}
-	task_list_flat, err := ovc.GetTasks(filter, "", 1, "flat-tree")
+	task_list_flat, err := ovc.GetTasks("taskState='Completed'", "", "1", "flat-tree", "", "")
+	if err != nil {
+		fmt.Println("Error getting the task details with status Completed", err)
+	}
+
 	fmt.Println(task_list_flat.Members)
 
 	fmt.Println("Perform Patch operation")
-	filter = []string{"taskState='Running'", "isCancellable='true'"}
-	task_list_patch, err := ovc.GetTasks(filter, "", "", "", "", "")
-	task_uri := tasks_list_patch.Members[0].URI
-    	task, err = tasks.patch(task_uri)
-	if err != nil {
-		fmt.Println("Error updating the task details ", err)
+	task_list_patch, err := ovc.GetTasks("taskState='Running'", "", "", "", "", "")
+
+	for i := 0; i < len(task_list_patch.Members); i++ {
+		if task_list_patch.Members[i].IsCancellable {
+			task_uri := task_list_patch.Members[0].URI
+			task, err = ovc.PatchTask(task_uri.String())
+			if err != nil {
+				fmt.Println("Error updating the task details ", err)
+			}
+			fmt.Println(task)
+
+		}
 	}
-	fmt.Println(task)
 
 }
