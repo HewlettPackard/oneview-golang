@@ -147,8 +147,8 @@ type Task struct {
 	URI                     utils.Nstring      `json:"uri,omitempty"`           // "uri": "/rest/tasks/145F808A-A8DD-4E1B-8C86-C2379C97B3B2"
 	TaskIsDone              bool               // when true, task are done
 	IsCancellable           bool
-	Timeout                 int                // time before timeout on Executor
-	WaitTime                time.Duration      // time between task checks
+	Timeout                 int           // time before timeout on Executor
+	WaitTime                time.Duration // time between task checks
 	Client                  *OVClient
 }
 
