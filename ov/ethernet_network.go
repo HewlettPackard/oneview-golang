@@ -104,7 +104,7 @@ func (c *OVClient) GetEthernetNetworks(start string, count string, filter string
 		return ethernetNetworks, err
 	}
 
-	log.Infof("GetEthernetNetworks %s", data)
+	log.Debugf("GetEthernetNetworks %s", data)
 	if err := json.Unmarshal([]byte(data), &ethernetNetworks); err != nil {
 		return ethernetNetworks, err
 	}
