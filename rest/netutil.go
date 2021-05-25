@@ -124,7 +124,6 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 	)
 
 	Url, err = url.Parse(utils.Sanatize(c.Endpoint))
-
 	if err != nil {
 		return nil, err
 	}
@@ -183,7 +182,6 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 
 	resp, err := client.Do(req)
 	if err != nil {
-
 		return nil, err
 	}
 	defer resp.Body.Close()

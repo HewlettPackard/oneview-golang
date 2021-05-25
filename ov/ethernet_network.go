@@ -99,12 +99,6 @@ func (c *OVClient) GetEthernetNetworks(start string, count string, filter string
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	fmt.Println(uri)
-	// Setup query
-	//	if len(q) > 0 {
-	//		c.SetQueryString(q)
-	//	}
-
 	data, err := c.RestAPICall(rest.GET, uri, nil, q)
 	if err != nil {
 		return ethernetNetworks, err
