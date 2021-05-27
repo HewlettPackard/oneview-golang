@@ -2,25 +2,39 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 
+	filters := []string{""}
+	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
+	if err == nil {
+		for i := 0; i < ServerList.Count; i++ {
+			fmt.Println(ServerList.Members[i])
+		}
+
+	} else {
+		fmt.Println("Failed to fetch server List : ", err)
+	}
+
 	fmt.Println("Get server hardware list by name")
-	serverName, err := ovc.GetServerHardwareByName("0000A66101, bay 3")
+	serverName, err := ovc.GetServerHardwareByName(ServerList.Members[0].Name)
 	if err != nil {
 		fmt.Println("Failed to fetch server hardware name: ", err)
 	} else {
@@ -47,7 +61,7 @@ func main() {
 
 	fmt.Println("******************")
 
-	ServerId, err := ovc.GetServerHardwareByUri("/rest/server-hardware/36343537-3338-4E43-3736-30333036524D")
+	ServerId, err := ovc.GetServerHardwareByUri(serverName.URI)
 	if err == nil {
 		fmt.Println(ServerId.URI)
 	} else {
@@ -56,14 +70,6 @@ func main() {
 
 	fmt.Println("Get server-hardware list statistics specifying parameters")
 	fmt.Println("******************")
-
-	filters := []string{"name matches 'SYN03_Frame1, bay 3'"}
-	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
-	if err == nil {
-		fmt.Println("Total server list :", ServerList.Total)
-	} else {
-		fmt.Println("Failed to fetch server List : ", err)
-	}
 
 	fmt.Println("Get firmware inventory for a server-hardware")
 	fmt.Println("******************")
@@ -76,7 +82,8 @@ func main() {
 	}
 
 	fmt.Println("******************")
-	serverHarware, err := ovc.GetAvailableHardware("/rest/server-hardware-types/9F529AA5-2021-4A10-93ED-DDC5BD80E949", "/rest/enclosure-groups/293e8efe-c6b1-4783-bf88-2d35a8e49071")
+
+	serverHarware, err := ovc.GetAvailableHardware(ServerList.Members[0].URI, ServerList.Members[1].URI)
 
 	if err == nil {
 		fmt.Println(serverHarware.Type)
@@ -112,4 +119,10 @@ func main() {
 	fmt.Println("******************")
 	iloIpaddress := serverName.GetIloIPAddress()
 	fmt.Println("ilo ip address of an server is =", iloIpaddress)
+
+	fmt.Println("Get ilo ipaddress of all servers")
+	fmt.Println("******************")
+	for _, v := range ServerList.Members {
+		fmt.Println("Server: ", v.Name, "ILO IP: ", v.GetIloIPAddress())
+	}
 }

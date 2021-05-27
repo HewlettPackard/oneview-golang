@@ -5,28 +5,53 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV     *ov.OVClient
-		networkset   = "networkset"
 		networkset_2 = "updatednetworkset"
 		networkset_3 = "creatednetworkset"
 	)
+
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
 
+	networkUris := new([]utils.Nstring)
+
+	// Append all your networks to networkUris
+	ethernetNetwork := ov.EthernetNetwork{Name: "test_eth-1", VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4"}
+	_ = ovc.CreateEthernetNetwork(ethernetNetwork)
+	ethernet_ntw1, _ := ovc.GetEthernetNetworkByName("test_eth-1")
+
+	*networkUris = append(*networkUris, ethernet_ntw1.URI)
+
+	NetworkSet := ov.NetworkSet{Name: networkset_3,
+		NativeNetworkUri:      "",
+		NetworkUris:           *networkUris,
+		ConnectionTemplateUri: "",
+		Type:                  "network-setV5",
+		NetworkSetType:        "Large",
+	}
+	err := ovc.CreateNetworkSet(NetworkSet)
+	if err != nil {
+		fmt.Println("............... NetworkSet Creation Failed:", err)
+	} else {
+		fmt.Println(".... NetworkSet Created Success.......")
+	}
+
 	fmt.Println("#...................NetworkSet by Name ...............#")
-	net_set, err := ovc.GetNetworkSetByName(networkset)
+	net_set, err := ovc.GetNetworkSetByName(networkset_3)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -42,25 +67,6 @@ func main() {
 		for i := 0; i < len(networkset_list.Members); i++ {
 			fmt.Println(networkset_list.Members[i].Name)
 		}
-	}
-
-	networkUris := new([]utils.Nstring)
-	//append all your network and fc network uri to networkUris
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/58064275-de05-40a1-b8cf-5098f84fcaea"))
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/662f05ee-32e5-43c0-bf74-1d7574c55b44"))
-
-	NetworkSet := ov.NetworkSet{Name: networkset_3,
-		NativeNetworkUri:      "",
-		NetworkUris:           *networkUris,
-		ConnectionTemplateUri: "",
-		Type:                  "network-setV5",
-		NetworkSetType:        "Large",
-	}
-	err = ovc.CreateNetworkSet(NetworkSet)
-	if err != nil {
-		fmt.Println("............... NetworkSet Creation Failed:", err)
-	} else {
-		fmt.Println(".... NetworkSet Created Success.......")
 	}
 
 	net_set, err = ovc.GetNetworkSetByName(networkset_3)
@@ -81,10 +87,11 @@ func main() {
 	}
 
 	err = ovc.DeleteNetworkSet(networkset_2)
+	_ = ovc.DeleteEthernetNetwork("test_eth-1")
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
+		fmt.Println("#...................... Deleted Network Set Successfully .....#")
 	}
 
 }

@@ -145,6 +145,24 @@ func (c *OVClient) GetStorageSystemByName(name string) (StorageSystem, error) {
 	}
 }
 
+func (c *OVClient) GetStorageSystemByUri(uri string) (StorageSystem, error) {
+	var (
+		sSystem StorageSystem
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return sSystem, err
+	}
+	log.Debugf("GetStorageSystem %s", data)
+	if err := json.Unmarshal([]byte(data), &sSystem); err != nil {
+		return sSystem, err
+	}
+	return sSystem, nil
+}
+
 func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystemsList, error) {
 	var (
 		uri     = "/rest/storage-systems"
@@ -181,7 +199,7 @@ func (c *OVClient) GetStorageSystems(filter string, sort string) (StorageSystems
 }
 
 func (c *OVClient) CreateStorageSystem(sSystem StorageSystem) error {
-	log.Infof("Initializing creation of storage volume for %s.", sSystem.Name)
+	log.Infof("Initializing creation of storage system for %s.", sSystem.Name)
 	var (
 		uri = "/rest/storage-systems"
 		t   *Task
@@ -198,7 +216,7 @@ func (c *OVClient) CreateStorageSystem(sSystem StorageSystem) error {
 	data, err := c.RestAPICall(rest.POST, uri, sSystem)
 	if err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error submitting new storage volume request: %s", err)
+		log.Errorf("Error submitting new storage system request: %s", err)
 		return err
 	}
 

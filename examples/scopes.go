@@ -5,24 +5,35 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		ClientOV    *ov.OVClient
-		scp_name    = "updated-SD2"
+		scp_name    = "ScopeTest"
+		scp_name2   = "Auto-Scope"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "Enet1"
+		eth_network = "Auto-ethernet_network"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
+	scope_test := ov.Scope{Name: scp_name, Description: "Test from script", Type: "ScopeV3"}
+	scope_test_2 := ov.Scope{Name: scp_name2, Description: "Test from script", Type: "ScopeV3"}
+	er_test := ovc.CreateScope(scope_test)
+	er_test = ovc.CreateScope(scope_test_2)
+	if er_test != nil {
+		fmt.Println("Error Creating Scope: ", er_test)
+	}
 
 	fmt.Println("#................... Scope by Name ...............#")
 	scp, scperr := ovc.GetScopeByName(scp_name)
@@ -51,7 +62,7 @@ func main() {
 
 	er := ovc.CreateScope(scope)
 	if er != nil {
-		fmt.Println("............... Scope Creation Failed:", err)
+		fmt.Println("............... Scope Creation Failed:", er)
 	} else {
 		fmt.Println("# ................... Scope Created Successfully.................#")
 	}

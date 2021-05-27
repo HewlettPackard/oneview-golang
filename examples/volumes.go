@@ -3,39 +3,52 @@ package main
 import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
-		new_volume     = "TestVolume"
-		name_to_update = "UpdatedName"
+		ClientOV        *ov.OVClient
+		st_vol_template = "Auto-VolumeTemplate"
+		new_volume      = "TestVolume"
+		name_to_update  = "UpdatedName"
 	)
 
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 
 	// Create storage volume with name <new_volume>
+	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
 	properties := &ov.Properties{
-		Name:                new_volume,
-		Storagepool:         utils.NewNstring("/rest/storage-pools/4EF694D4-FB48-4209-8790-AB200070738C"),
-		Size:                268435456,
-		ProvisioningType:    "Thin",
-		DataProtectionLevel: "NetworkRaid10Mirror2Way",
+		Name:             new_volume,
+		Storagepool:      st_pool.URI,
+		Size:             268435456,
+		ProvisioningType: "Thin",
+	}
+	properties_auto := &ov.Properties{
+		Name:             "Auto-Volume",
+		Storagepool:      st_pool.URI,
+		Size:             268435456,
+		ProvisioningType: "Thin",
 	}
 	trueVal := true
-	storageVolume := ov.StorageVolume{TemplateURI: utils.NewNstring("/rest/storage-volume-templates/01953309-b02e-47d2-921b-aaaf0099d392"), Properties: properties, IsPermanent: &trueVal}
-
-	err := ovc.CreateStorageVolume(storageVolume)
+	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)
+	if err != nil {
+		fmt.Println(err)
+	}
+	storageVolume := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties, IsPermanent: &trueVal}
+	storageVolume_auto := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties_auto, IsPermanent: &trueVal}
+	err = ovc.CreateStorageVolume(storageVolume)
+	err = ovc.CreateStorageVolume(storageVolume_auto)
 	if err != nil {
 		fmt.Println("Could not create the volume", err)
 	}
@@ -54,6 +67,7 @@ func main() {
 		ETAG:                      update_vol.ETAG,
 		Description:               "empty",
 		TemplateVersion:           "1.1",
+		VolumeTemplateUri:         update_vol.VolumeTemplateUri,
 	}
 
 	err = ovc.UpdateStorageVolume(updated_storage_volume)

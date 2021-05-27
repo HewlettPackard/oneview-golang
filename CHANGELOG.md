@@ -1,12 +1,241 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
-# [v1.5.0] (unreleased)
-### Notes
-This release supports some more resources for Oneview appliance till API1600
+# [v6.2.0] (unreleased)
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 3000.
+
+### Major Changes
+- Added support to ID Pools.
+- Added New Resource Appliance Configuration Timeconfig
+- Added support to Connection Template
+
+# [v6.1.0]
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.
 
 ### Oneview Features supported
-- Appliance Time and Locale Configuration
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+### Bug fixes & Enhancements:
+- [#301] (https://github.com/HewlettPackard/oneview-golang/issues/301) Fix number of Server Hardware resource returned.
+- [#307] (https://github.com/HewlettPackard/oneview-golang/issues/307) LIG Qos Attribute Issue. 
+
+# [v6.0.0] 
+### Notes
+- This release extends supports of the SDK to Oneview API Version 2600. Image Streamer API Version 2010.
+
+### New Changes
+- Added Query parameter force for PUT call in Hypervisor Manager.
+- Added Shared Storage Volume for Hypervisor Cluster Profiles.
+- Added serverDisplaySchema for Server Hardware Types Resource.
+
+### Oneview Features supported
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+# [v1.8.0]
+### Notes
+- This release extends supports of the SDK to Oneview API Version 2400.
+
+### Oneview Features supported
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Hypervisor Cluster Profiles
+- Hypervisor Manager
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+#### Bug fixes & Enhancements:
+- [#285] (https://github.com/HewlettPackard/oneview-golang/issues/285) Fix Docker Setup section in README.md
+- [#286] (https://github.com/HewlettPackard/oneview-golang/issues/286) GetIloIPAddress() does not work with GetServerHardwareList()
+- [#295] (https://github.com/HewlettPackard/oneview-golang/issues/295) LIG NTP Configuration struct variable types were not correctly defined.
+
+# [v1.7.0] (2020-11-05)
+### Notes
+- This release extends supports of the SDK to Oneview API Version 2200 and Image Streamer API Version 2000.
+
+### Oneview Features supported
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Hypervisor Cluster Profiles
+- Hypervisor Manager
+- Interconnects
+- Interconnect Types
+- Logical Interconnect
+- Logical Enclosure
+- Logical Interconnect Group
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+# [v1.6.0] 
+### Notes
+- This release extends supports of the SDK to Oneview API2000.
+- Minor Bug Fixes
+
+### Oneview Features supported
+- Enclosure
+- Enclosure Group
+- Ethernet Network
+- FC Network
+- FCOE Network
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect
+- Logical Interconnect Group
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage Systems
+- Storage Volume
+- Storage Volume Attachments
+- Storage Volume Template
+- Tasks
+- Uplink Set 
+
+#### Bug fixes & Enhancements:
+- [#239] (https://github.com/HewlettPackard/oneview-golang/issues/239) CreateProfileFromTemplate not working w OV 5.20
+- [#257] (https://github.com/HewlettPackard/oneview-golang/issues/257) Add server name to ServerHardware structure in server_hardware.go
+
+### Major changes:
+- Refactored SDK to take default API version from Oneview appliance.
+- Added support for publishing Docker Image whenever a new release is created in GitHub.
+
+# [v1.5.0] (2020-07-17)
+### Notes
+- This release extends supports of the SDK to Oneview API1800.
+- Added support for Id pools IPV4 Ranges.
+- Added support for Email Notifications resource from API 1600.
+- Minor Bug Fixes
+
+### Oneview Features supported
+- Enclosure
+- Enclosure Group
+- Ethernet Network
+- FCOE Network
+- FC Network
+- Hypervisor Cluster Profile
+- Hypervisor Manager
+- Id pools IPV4 Ranges
+- Interconnects
+- Interconnect Types
+- Logical Enclosure
+- Logical Interconnect
+- Logical Interconnect Types
+- Network Set
+- Scope
+- Server Certificate
+- Server Hardware
+- Server Heardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Volume
+- Storage Volume Attachment
+- Storage Volume Template
+- Task
+- Uplink Sets
+
+#### Bug fixes & Enhancements:
+- [#56] (https://github.com/HewlettPackard/oneview-golang/issues/56) Selecting available machines should be atomic
+- [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
+- [#154] (https://github.com/HewlettPackard/oneview-golang/issues/154) Add json configuration file for creating NewOVClient to run examples
 
 # [v1.4.0] (2020-05-27)
 ### Notes

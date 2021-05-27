@@ -78,6 +78,47 @@ func TestCreateProfileFromTemplate(t *testing.T) {
 
 }
 
+// TestSubmitNewProfile functionality
+func TestSubmitNewProfile(t *testing.T) {
+	var (
+		d            *OVTest
+		c            *ov.OVClient
+		testHostName string
+		testProfile  ov.ServerProfile
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		d, c = getTestDriverA("dev")
+		testHostName = d.Tc.GetTestData(d.Env, "ServerProfileName").(string)
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		isAvailable, err := c.GetAvailableServers(testProfile.ServerHardwareURI.String())
+		assert.NoError(t, err, "GetAvailableServers get the server hardware error -> %s", err)
+		assert.Equal(t, "", isAvailable, fmt.Sprintf("Is given hardware available: %+v", isAvailable))
+
+		testServerHardware, err := c.GetServerHardwareByUri(testProfile.ServerHardwareURI)
+		assert.NoError(t, err, "SubmitNewProfile call to GetServerHardwareByUri got error -> %s", err)
+
+		testProfile, err := c.GetProfileByName(testHostName)
+		assert.NoError(t, err, "GetProfileByName with created profile -> %+v", err)
+		assert.Equal(t, "", testProfile.Name, fmt.Sprintf("Problem getting profile name, %+v", testHostName))
+
+		var pt *ov.PowerTask
+		pt = pt.NewPowerTask(testServerHardware)
+		pt.Timeout = 46 // timeout is 20 sec
+		log.Info("------- Setting Power to off")
+		err = pt.PowerExecutor(ov.P_OFF)
+		assert.NoError(t, err, "PowerExecutor threw no errors -> %s", err)
+
+	} else {
+		_, c = getTestDriverU("dev")
+		err := c.DeleteProfile("footest")
+		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, testProfile))
+	}
+
+}
+
 // find Server_Profile_scs79
 func TestGetProfileByName(t *testing.T) {
 	var (
@@ -125,7 +166,7 @@ func TestGetConnectionByName(t *testing.T) {
 		profile, err := c.GetProfileByName(testname)
 		assert.NoError(t, err, "GetProfileByName threw error -> %s", err)
 
-		for _, c := range profile.Connections {
+		for _, c := range profile.ConnectionSettings.Connections {
 			log.Debugf("connection -> %d %s %s %s", c.ID, c.Name, c.MAC, c.MacType)
 		}
 

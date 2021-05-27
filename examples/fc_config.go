@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
 )
 
 func main() {
@@ -15,20 +13,32 @@ func main() {
 		new_fc_name = "RenamedFCNetwork"
 		falseVar    = false
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
-	scope := ov.Scope{Name: "ScopTest", Description: "Test from script", Type: "ScopeV3"}
-	_ = ovc.CreateScope(scope)
-	scp, _ := ovc.GetScopeByName("ScopTest")
-	initialScopeUris := &[]utils.Nstring{scp.URI}
 
+	//To run this example  uncomment below section to fill the ip and the credentials below or use a configuration file
+	/*		ovc := ClientOV.NewOVClient(
+			"ONEVIEW_OV_USER",
+			"ONEVIEW_OV_PASSWORD",
+			"ONEVIEW_OV_DOMAIN",
+			"ONEVIEW_OV_ENDPOINT",
+			false,
+			<apiversion>,
+			"*")*/
+
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("oneview_config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.UserName,
+		config.Password,
+		config.Domain,
+		config.Endpoint,
+		config.SslVerify,
+		config.ApiVersion,
+		config.IfMatch)
+
+	initialScopeUris := &[]utils.Nstring{utils.NewNstring("/rest/scopes/8ef32b43-2478-4aea-bb68-a65d0fbfea93")}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",
@@ -75,40 +85,6 @@ func main() {
 		panic(err)
 	} else {
 		fmt.Println("Deleted FCNetworks successfully...")
-	}
-
-	fcNetwork01 := ov.FCNetwork{
-		AutoLoginRedistribution: falseVar,
-		Description:             "Test FC Network 1",
-		LinkStabilityTime:       30,
-		FabricType:              "FabricAttach",
-		Name:                    "testName1",
-		Type:                    "fc-networkV4",
-	}
-	err = ovc.CreateFCNetwork(fcNetwork01)
-
-	fcNetwork02 := ov.FCNetwork{
-		AutoLoginRedistribution: falseVar,
-		Description:             "Test FC Network 2",
-		LinkStabilityTime:       30,
-		FabricType:              "FabricAttach",
-		Name:                    "testName2",
-		Type:                    "fc-networkV4",
-	}
-	err = ovc.CreateFCNetwork(fcNetwork02)
-
-	fcNetwork1, err := ovc.GetFCNetworkByName("testName1")
-	fcNetwork2, err = ovc.GetFCNetworkByName("testName2")
-
-	network_uris := &[]utils.Nstring{fcNetwork1.URI, fcNetwork2.URI}
-	bulkDeleteFCNetwork := ov.FCNetworkBulkDelete{FCNetworkUris: *network_uris}
-	err = ovc.DeleteScope("ScopTest")
-	err = ovc.DeleteBulkFcNetwork(bulkDeleteFCNetwork)
-
-	if err != nil {
-		fmt.Println("............. FC Network Bulk-Deletion Failed:", err)
-	} else {
-		fmt.Println(".... FC Network Bulk-Delete is Successful")
 	}
 
 }

@@ -1,13 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/i3s"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"io/ioutil"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -19,10 +18,11 @@ func main() {
 		username             = os.Getenv("ONEVIEW_OV_USER")
 		password             = os.Getenv("ONEVIEW_OV_PASSWORD")
 		domain               = os.Getenv("ONEVIEW_OV_DOMAIN")
-		api_version          = 1600
-		deployment_plan_name = "DemoDeploymentPlan"
+		deployment_plan_name = "TestDP"
 		new_name             = "RenamedDeploymentPlan"
 	)
+	api_version, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	i3s_apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_I3S_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		username,
 		password,
@@ -32,7 +32,7 @@ func main() {
 		api_version,
 		"*")
 	ovc.RefreshLogin()
-	i3sc := i3sClient.NewI3SClient(i3sc_endpoint, false, api_version, ovc.APIKey)
+	i3sc := i3sClient.NewI3SClient(i3sc_endpoint, false, i3s_apiversion, ovc.APIKey)
 
 	customAttributes := new([]i3s.CustomAttribute)
 	var ca1, ca2, ca3, ca4, ca5, ca6, ca7, ca8, ca9, ca10, ca11 i3s.CustomAttribute
@@ -72,9 +72,9 @@ func main() {
 	ca4.Visible = true
 	*customAttributes = append(*customAttributes, ca4)
 
-	ca5.Constraints = "{\"ipv4static\":true,\"ipv4dhcp\":true,\"ipv4disable\":false,\"parameters\":[\"mac\"]}"
+	ca5.Constraints = "{\"ipv4static\":true,\"ipv4dhcp\":true,\"ipv4disable\":false,\"parameters\":[\"dns1\",\"dns2\",\"gateway\",\"ipaddress\",\"mac\",\"netmask\",\"vlanid\"]}"
 	ca5.Editable = true
-	ca5.ID = "8303c168-3e23-4025-9e63-2bddd644b461"
+	ca5.ID = "1b7ff92d-a4a6-4250-a93a-460209752c20"
 	ca5.Name = "ManagementNIC2"
 	ca5.Type = "nic"
 	ca5.Visible = true
@@ -136,13 +136,10 @@ func main() {
 	var deploymentPlan i3s.DeploymentPlan
 	deploymentPlan.Name = deployment_plan_name
 	deploymentPlan.Type = "OEDeploymentPlanV5"
-	deploymentPlan.OEBuildPlanURI = "/rest/build-plans/1cfc2cc7-85c7-4db8-8213-854c0bfa3ff7"
+	deploymentPlan.OEBuildPlanURI = "/rest/build-plans/5eb04d8f-99ff-4b6e-ae3b-8bfe28fc9a63"
 	deploymentPlan.CustomAttributes = *customAttributes
 	deploymentPlan.HPProvided = false
 
-	fmt.Println("HPProvided:", deploymentPlan.HPProvided)
-	file, _ := json.MarshalIndent(deploymentPlan, "", " ")
-	ioutil.WriteFile("inut.json", file, 0644)
 	fmt.Println("***********Creating Deployment Plan****************")
 	err := i3sc.CreateDeploymentPlan(deploymentPlan)
 	if err != nil {
@@ -176,10 +173,9 @@ func main() {
 	deployment_plan.Description = utils.NewNstring("Testing Deployment plan")
 	err = i3sc.UpdateDeploymentPlan(deployment_plan)
 	if err != nil {
-		//panic(err)
 		fmt.Println("Error whilw updating Deployment Plan:", err)
 	} else {
-		fmt.Println("Deployment Plan has been updated with name: " + deploymentPlan.Name)
+		fmt.Println("Deployment Plan has been updated with name: " + deployment_plan.Name)
 	}
 
 	fmt.Println("***********Deleting Deployment Plan****************")
@@ -189,4 +185,5 @@ func main() {
 	} else {
 		fmt.Println("Deleteed Deployment Plan successfully...")
 	}
+
 }

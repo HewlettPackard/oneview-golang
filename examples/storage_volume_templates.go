@@ -4,16 +4,19 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 	"time"
 )
 
 func main() {
 
 	var (
-		ClientOV       *ov.OVClient
-		name_to_create = "VolumeTemplateExample"
-		name_to_update = "VolumeTemplateExample- updated"
+		ClientOV            *ov.OVClient
+		name_to_create      = "VolumeTemplateExample"
+		name_to_create_auto = "Auto-VolumeTemplate"
+		name_to_update      = "VolumeTemplateExample- updated"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
@@ -21,7 +24,7 @@ func main() {
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 
 	name_properties := ov.TemplatePropertyDatatypeStructString{
@@ -31,56 +34,72 @@ func main() {
 		Description: "A volume name between 1 and 100 characters",
 		Maxlength:   100,
 		Minlength:   1,
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: false,
 		},
 	}
-
+	st_pool, err := ovc.GetStoragePoolByName("CPG-SSD")
+	if err != nil {
+		fmt.Println(err)
+	}
 	storage_pool_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
 		Type:        "string",
 		Title:       "Storage Pool",
-		Description: "StoragePoolURI the volume should be added to",
-		Default:     "/rest/storage-pools/52F40929-4712-4614-A082-AB200070738A",
-		Meta: ov.Meta{
+		Description: "A common provisioning group URI reference",
+		Default:     string(st_pool.URI),
+		Meta: &ov.Meta{
 			Locked:       false,
 			CreateOnly:   true,
 			SemanticType: "device-storage-pool",
 		},
 		Format: "x-uri-reference",
 	}
-
+	snapshot_pool := ov.TemplatePropertyDatatypeStructString{
+		Required:    false,
+		Type:        "string",
+		Title:       "Snapshot Pool",
+		Description: "A URI reference to the common provisioning group used to create snapshots",
+		Default:     string(st_pool.URI),
+		Meta: &ov.Meta{
+			Locked:       false,
+			SemanticType: "device-snapshot-storage-pool",
+		},
+		Format: "x-uri-reference",
+	}
 	size_properties := ov.TemplatePropertyDatatypeStructInt{
 		Required:    true,
 		Type:        "integer",
 		Title:       "Capacity",
-		Default:     1073741824,
-		Minimum:     4194304,
-		Description: "Capacity of the volume in bytes",
-		Meta: ov.Meta{
+		Default:     268435456,
+		Minimum:     268435456,
+		Maximum:     17592186044416,
+		Description: "The capacity of the volume in bytes",
+		Meta: &ov.Meta{
 			Locked:       false,
 			SemanticType: "capacity",
 		},
 	}
-
-	dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
-		Required: true,
-		Type:     "string",
-		Enum: []string{"NetworkRaid0None",
-			"NetworkRaid5SingleParity",
-			"NetworkRaid10Mirror2Way",
-			"NetworkRaid10Mirror3Way",
-			"NetworkRaid10Mirror4Way",
-			"NetworkRaid6DualParity",
-		},
-		Title:       "Data Protection Level",
-		Default:     "NetworkRaid10Mirror2Way",
-		Description: "Indicates the number and configuration of data copies in the Storage Pool",
-		Meta: ov.Meta{
-			Locked:       false,
-			SemanticType: "device-dataProtectionLevel",
-		},
-	}
+	/*
+		dataProtectionLevel_properties := ov.TemplatePropertyDatatypeStructString{
+			Required: true,
+			Type:     "string",
+			Enum: []string{"NetworkRaid0None",
+				"NetworkRaid5SingleParity",
+				"NetworkRaid10Mirror2Way",
+				"NetworkRaid10Mirror3Way",
+				"NetworkRaid10Mirror4Way",
+				"NetworkRaid6DualParity",
+			},
+			Title:       "Data Protection Level",
+			Default:     "NetworkRaid10Mirror2Way",
+			Description: "Indicates the number and configuration of data copies in the Storage Pool",
+			Meta: &ov.Meta{
+				Locked:       false,
+				SemanticType: "device-dataProtectionLevel",
+			},
+		}
+	*/
 
 	template_version_properties := ov.TemplatePropertyDatatypeStructString{
 		Required:    true,
@@ -88,7 +107,7 @@ func main() {
 		Title:       "Template version",
 		Description: "Version of the template",
 		Default:     "1.1",
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 	}
@@ -101,7 +120,7 @@ func main() {
 		Default:     "A description for the volume",
 		Maxlength:   2000,
 		Minlength:   1,
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: false,
 		},
 	}
@@ -113,26 +132,37 @@ func main() {
 		Description: "The provisioning type for the volume",
 		Default:     "Thin",
 		Enum:        []string{"Thin", "Full"},
-		Meta: ov.Meta{
-			Locked:       true,
-			CreateOnly:   true,
-			SemanticType: "device-provisioningType",
+		Meta: &ov.Meta{
+			Locked:     true,
+			CreateOnly: true,
+			/*			SemanticType: "device-provisioningType",*/
 		},
 	}
 
-	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
-		Meta: ov.Meta{
+	/*	adaptive_optimization_properties := ov.TemplatePropertyDatatypeStructBool{
+			Meta: &ov.Meta{
+				Locked: true,
+			},
+			Type:        "boolean",
+			Description: "",
+			Default:     true,
+			Required:    false,
+			Title:       "Adaptive Optimization",
+		}
+	*/
+
+	isDeduplicated := ov.TemplatePropertyDatatypeStructBool{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 		Type:        "boolean",
-		Description: "",
+		Description: "Enables or disables deduplication of the volume",
 		Default:     true,
 		Required:    false,
-		Title:       "Adaptive Optimization",
+		Title:       "Is Deduplicated",
 	}
-
 	is_shareable_properties := ov.TemplatePropertyDatatypeStructBool{
-		Meta: ov.Meta{
+		Meta: &ov.Meta{
 			Locked: true,
 		},
 		Type:        "boolean",
@@ -143,25 +173,33 @@ func main() {
 	}
 
 	Properties := ov.TemplateProperties{
-		Name:                          &name_properties,
-		StoragePool:                   &storage_pool_properties,
-		Size:                          &size_properties,
-		DataProtectionLevel:           &dataProtectionLevel_properties,
-		TemplateVersion:               &template_version_properties,
-		Description:                   &description_properties,
-		ProvisioningType:              &provisioning_type_properties,
-		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,
-		IsShareable:                   &is_shareable_properties,
+		Name:        &name_properties,
+		StoragePool: &storage_pool_properties,
+		Size:        &size_properties,
+		/*		DataProtectionLevel:           &dataProtectionLevel_properties,*/
+		SnapshotPool:     &snapshot_pool,
+		IsDeduplicated:   &isDeduplicated,
+		TemplateVersion:  &template_version_properties,
+		Description:      &description_properties,
+		ProvisioningType: &provisioning_type_properties,
+		/*		IsAdaptiveOptimizationEnabled: &adaptive_optimization_properties,*/
+		IsShareable: &is_shareable_properties,
 	}
 
 	storageVolumeTemplate := ov.StorageVolumeTemplate{
 		TemplateProperties: &Properties,
 		Name:               name_to_create,
 		Description:        "Volume template Example",
-		RootTemplateUri:    "/rest/storage-volume-templates/7adda42a-cf30-4d99-aa10-ab2000707395",
 	}
 
-	err := ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
+	storageVolumeTemplateAuto := ov.StorageVolumeTemplate{
+		TemplateProperties: &Properties,
+		Name:               name_to_create_auto,
+		Description:        "Volume template Example",
+	}
+
+	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplate)
+	err = ovc.CreateStorageVolumeTemplate(storageVolumeTemplateAuto)
 	if err != nil {
 		fmt.Println("Could not create the volume Template", err)
 	} else {
@@ -170,6 +208,7 @@ func main() {
 
 	// Get the volume template by name
 	update_vol_template, err := ovc.GetStorageVolumeTemplateByName(name_to_create)
+
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -188,6 +227,7 @@ func main() {
 
 	// Get All the volume templates present
 	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
+
 	sort := "name:desc"
 	vol_temp_list, err := ovc.GetStorageVolumeTemplates("", sort, "", "")
 	if err != nil {

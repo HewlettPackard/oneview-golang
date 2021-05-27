@@ -4,43 +4,47 @@ import (
 	"fmt"
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
 		clientOV           *ov.OVClient
-		enc_name           = "EN1"
-		new_enclosure_name = "RenamedEnclosure"
+		new_enclosure_name = "Renamed_Enclosure"
 		path               = "/name"
 		op                 = "replace"
+		//		eg_name            = "Auto-EnclosureGroup"
 	)
+
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"*")
 
-	enclosure_create_map := ov.EnclosureCreateMap{
-		EnclosureGroupUri: "/rest/enclosure_groups/05100faa-c26b-4a16-8055-911568418190",
-		Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
-		Username:          os.Getenv("ENCLOSURE_USERNAME"),
-		Password:          os.Getenv("ENCLOSURE_PASSWORD"),
-		LicensingIntent:   "OneView",
-		InitialScopeUris:  make([]string, 0),
-	}
+	/*	enc_grp, _ := ovc.GetEnclosureGroupByName(eg_name)
+		enclosure_create_map := ov.EnclosureCreateMap{
+			EnclosureGroupUri: enc_grp.URI,
+			Hostname:          os.Getenv("ENCLOSURE_HOSTNAME"),
+			Username:          os.Getenv("ENCLOSURE_USERNAME"),
+			Password:          os.Getenv("ENCLOSURE_PASSWORD"),
+			LicensingIntent:   "OneView",
+			InitialScopeUris:  make([]string, 0),
+		}
 
-	fmt.Println("#----------------Create Enclosure---------------#")
+		fmt.Println("#----------------Create Enclosure---------------#")
 
-	err := ovc.CreateEnclosure(enclosure_create_map)
-	if err != nil {
-		fmt.Println("Enclosure Creation Failed: ", err)
-	} else {
-		fmt.Println("Enclosure created successfully...")
-	}
-
+		err := ovc.CreateEnclosure(enclosure_create_map)
+		if err != nil {
+			fmt.Println("Enclosure Creation Failed: ", err)
+		} else {
+			fmt.Println("Enclosure created successfully...")
+		}
+	*/
 	sort := ""
 
 	enc_list, err := ovc.GetEnclosures("", "", "", sort, "")
@@ -54,7 +58,7 @@ func main() {
 		}
 	}
 
-	enclosure, err := ovc.GetEnclosureByName(enc_name)
+	enclosure, err := ovc.GetEnclosureByName(enc_list.Members[0].Name)
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -86,10 +90,11 @@ func main() {
 		}
 	}
 
-	err = ovc.DeleteEnclosure(new_enclosure_name)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println("Deleted Enclosure successfully...")
-	}
+	/*	err = ovc.DeleteEnclosure(new_enclosure_name)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("Deleted Enclosure successfully...")
+		}
+	*/
 }

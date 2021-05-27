@@ -5,21 +5,26 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
+	"strconv"
 )
 
 func main() {
 	var (
-		ClientOV   *ov.OVClient
-		new_uplink = "test_new"
-		upd_uplink = "test_update"
+		ClientOV         *ov.OVClient
+		new_uplink       = "test_new"
+		upd_uplink       = "test_update"
+		ethernet_network = "Auto-ethernet_network"
+		li_name          = "TestLE-Renamed-Auto-LIG"
 	)
+	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+
 	ovc := ClientOV.NewOVClient(
 		os.Getenv("ONEVIEW_OV_USER"),
 		os.Getenv("ONEVIEW_OV_PASSWORD"),
 		os.Getenv("ONEVIEW_OV_DOMAIN"),
 		os.Getenv("ONEVIEW_OV_ENDPOINT"),
 		false,
-		1600,
+		apiversion,
 		"")
 
 	fmt.Println("#................... Get-all Uplink-Sets ...............#")
@@ -36,15 +41,24 @@ func main() {
 
 	// Create Uplink Set
 	networkUris := new([]utils.Nstring)
-	*networkUris = append(*networkUris, utils.NewNstring("/rest/ethernet-networks/33fabe08-d91e-45ba-8b10-5a19d00e3b1d"))
+	ethernet_ntw, _ := ovc.GetEthernetNetworkByName(ethernet_network)
+	*networkUris = append(*networkUris, ethernet_ntw.URI)
 
 	fcNetworkUris := make([]utils.Nstring, 0)
 	fcoeNetworkUris := make([]utils.Nstring, 0)
 	portConfigInfos := make([]ov.PortConfigInfos, 0)
 	privateVlanDomains := make([]ov.PrivateVlanDomains, 0)
 
+	logicalInterconnect, _ := ovc.GetLogicalInterconnects("", "", "")
+	li := ov.LogicalInterconnect{}
+	for i := 0; i < len(logicalInterconnect.Members); i++ {
+		if logicalInterconnect.Members[i].Name == li_name {
+			li = logicalInterconnect.Members[i]
+		}
+	}
+
 	uplinkSet := ov.UplinkSet{Name: new_uplink,
-		LogicalInterconnectURI:         utils.NewNstring("/rest/logical-interconnects/d4468f89-4442-4324-9c01-624c7382db2d"),
+		LogicalInterconnectURI:         li.URI,
 		NetworkURIs:                    *networkUris,
 		FcNetworkURIs:                  fcNetworkUris,
 		FcoeNetworkURIs:                fcoeNetworkUris,
@@ -52,7 +66,7 @@ func main() {
 		ConnectionMode:                 "Auto",
 		NetworkType:                    "Ethernet",
 		EthernetNetworkType:            "Tagged",
-		Type:                           "uplink-setV6",
+		Type:                           "uplink-setV7",
 		ManualLoginRedistributionState: "NotSupported",
 		PrivateVlanDomains:             privateVlanDomains}
 
