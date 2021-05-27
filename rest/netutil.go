@@ -89,6 +89,7 @@ func (c *Client) GetQueryStrings(u *url.URL, query map[string]interface{}) {
 	}
 	return
 }
+
 // GetQueryString - get a query string for url through the Client Struct
 func (c *Client) GetQueryString(u *url.URL) {
 	if len(c.Option.Query) == 0 {
