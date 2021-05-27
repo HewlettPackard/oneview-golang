@@ -68,7 +68,7 @@ func (c *OVClient) ValidateDestinationAddress(destId string, existId []utils.Nst
 	return nil
 }
 
-func (c *OVClient) CreateSNMPv3TrapDestinations(trapOption SNMPv3Trap) error {
+func (c *OVClient) CreateSNMPv3TrapDestinations(trapOption SNMPv3Trap) (SNMPv3Trap, error) {
 	log.Infof("Initializing creation of SNMPv3 Trap Destinations for %s.", trapOption.UserID)
 	var (
 		uri      = "/rest/appliance/snmpv3-trap-forwarding/destinations"
@@ -78,7 +78,7 @@ func (c *OVClient) CreateSNMPv3TrapDestinations(trapOption SNMPv3Trap) error {
 	log.Infof("Validating SNMPv3 Trap Destinations Address %s.", trapOption.DestinationAddress)
 	err := c.ValidateDestinationAddress(trapOption.DestinationAddress, *new([]utils.Nstring))
 	if err != nil {
-		return errors.New("Invalid Destination Address")
+		return trapdata, errors.New("Invalid Destination Address")
 	}
 	log.Infof("Successfully validated the Destination Address.")
 	// refresh login
@@ -89,20 +89,20 @@ func (c *OVClient) CreateSNMPv3TrapDestinations(trapOption SNMPv3Trap) error {
 	data, err := c.RestAPICall(rest.POST, uri, trapOption)
 	if err != nil {
 		log.Errorf("Error submitting new snmpv3 trap destinations request: %s", err)
-		return err
+		return trapdata, err
 	}
 
 	log.Debugf("Response New SNMPv3 Trap Destinations %s", data)
 	if err := json.Unmarshal(data, &trapdata); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-		return err
+		return trapdata, err
 	}
 
 	if err != nil {
-		return err
+		return trapdata, err
 	}
 
-	return nil
+	return trapdata, nil
 }
 
 func (c *OVClient) GetSNMPv3TrapDestinations(filter string, sort string, start string, count string) (SNMPv3TrapList, error) {

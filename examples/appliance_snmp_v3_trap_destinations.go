@@ -29,7 +29,7 @@ func main() {
 	}
 
 	//Creating an SNMPv3 Trap Destinations
-	err := ovc.CreateSNMPv3TrapDestinations(snmpUser)
+	_, err := ovc.CreateSNMPv3TrapDestinations(snmpUser)
 	if err != nil {
 		panic(err)
 	} else {
