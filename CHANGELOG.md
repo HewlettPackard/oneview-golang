@@ -7,7 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Major Changes
 - Added support to ID Pools.
-- Added New Resource Appliance Configuration Timeconfig
+- Added support to Appliance Configuration Timeconfig
+- Added support to Appliance Time and Locale Configuration
 - Added support to Connection Template
 
 # [v6.1.0]
