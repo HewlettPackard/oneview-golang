@@ -43,41 +43,46 @@ func main() {
 	}
 	fmt.Println(task)
 
-	fmt.Println("Get a tree of tasks")
+	fmt.Println("\nGet a tree of tasks")
 	task_list_tree, err := ovc.GetTasks("taskState='Completed'", "", "10", "tree", "", "")
 	if err != nil {
 		fmt.Println("Error getting the task details with tree view ", err)
 	}
+	for i := 0; i < len(task_list_tree.Members); i++ {
+		fmt.Println(task_list_tree.Members[i].Name, task_list_tree.Members[i].URI)
+	}
 
-	fmt.Println(task_list_tree.Members)
-
-	fmt.Println("Get a aggregate tree")
+	fmt.Println("\nGet a aggregate tree\n")
 	task_list_atree, err := ovc.GetTasks("taskState='Completed'", "", "", "aggregatedTree", "2", "2")
 	if err != nil {
 		fmt.Println("Error getting the task with status Completed and aggregatedTree", err)
 	}
+	// Printing first 10 tasks
+	for i := 0; i < 10; i++ {
+		fmt.Println(task_list_atree.Members[i].Name, task_list_atree.Members[i].URI)
+	}
 
-	fmt.Println(task_list_atree.Members)
-
-	fmt.Println("Get a flat tree")
+	fmt.Println("\nGet a flat tree")
 	task_list_flat, err := ovc.GetTasks("taskState='Completed'", "", "1", "flat-tree", "", "")
 	if err != nil {
 		fmt.Println("Error getting the task details with status Completed", err)
 	}
 
-	fmt.Println(task_list_flat.Members)
+	for i := 0; i < len(task_list_flat.Members); i++ {
+		fmt.Println(task_list_flat.Members[i].Name, task_list_flat.Members[i].URI)
+	}
 
-	fmt.Println("Perform Patch operation")
+	fmt.Println("\nPerform Patch operation")
 	task_list_patch, err := ovc.GetTasks("taskState='Running'", "", "", "", "", "")
 
 	for i := 0; i < len(task_list_patch.Members); i++ {
 		if task_list_patch.Members[i].IsCancellable {
 			task_uri := task_list_patch.Members[0].URI
-			task, err = ovc.PatchTask(task_uri.String())
+			err = ovc.PatchTask(task_uri.String())
 			if err != nil {
 				fmt.Println("Error updating the task details ", err)
 			}
-			fmt.Println(task)
+			fmt.Println(task.URI, task.TaskState)
 
 		}
 	}
