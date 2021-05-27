@@ -89,7 +89,7 @@ func (c *Client) GetQueryStrings(u *url.URL, query map[string]interface{}) {
 	}
 	return
 }
-
+// GetQueryString - get a query string for url through the Client Struct
 func (c *Client) GetQueryString(u *url.URL) {
 	if len(c.Option.Query) == 0 {
 		return
@@ -114,6 +114,7 @@ func (c *Client) SetAuthHeaderOptions(headers map[string]string) {
 }
 
 // RestAPICall - general rest method caller
+// query is an variadic arg. It receives a slice of map[string]interface{}
 func (c *Client) RestAPICall(method Method, path string, options interface{}, query ...map[string]interface{}) ([]byte, error) {
 	log.Debugf("RestAPICall %s - %s%s", method, utils.Sanatize(c.Endpoint), path)
 
@@ -131,6 +132,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 
 	// Manage the query string
 	if len(query) != 0 {
+		// since query is received as slice, accessing 0th element to get filters
 		c.GetQueryStrings(Url, query[0])
 	} else {
 		c.GetQueryString(Url)
