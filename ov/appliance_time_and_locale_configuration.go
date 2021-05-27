@@ -99,4 +99,3 @@ func (c *OVClient) GetApplianceTimeandLocals(filter string, sort string, start s
 	}
 	return timelocalelist, nil
 }
-
