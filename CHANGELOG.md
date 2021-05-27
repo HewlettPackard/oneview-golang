@@ -9,7 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to ID Pools.
 - Added New Resource Appliance Configuration Timeconfig
 - Added support to Connection Template
-
+- Added support to Appliance SNMPv3 Trap Destination
+ 
 # [v6.1.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.

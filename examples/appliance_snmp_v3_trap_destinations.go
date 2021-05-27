@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
@@ -54,24 +53,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Printf("#-----Got SNMPv3 Trap Destinations of ID %v", id)
+		fmt.Printf("\n#-----Got SNMPv3 Trap Destinations of ID %v", id)
 		fmt.Println(trapId)
 	}
 
-	existingDestinations := new([]utils.Nstring)
-	*existingDestinations = append(*existingDestinations, utils.Nstring("1.1.1.1"))
-	snmpUser2 := ov.ValidateSNMPv3Address{
-		DestinationAddress:   "2.3.2.3",
-		ExistingDestinations: *existingDestinations,
-	}
-	err = ovc.ValidateDestinationAddress(snmpUser2)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Successfully validated the Destination Address.")
-	}
-
 	//updating SNMPv3 Trap Destination
+	//ID and Destination Address cannot be changed.
 	update := ov.SNMPv3Trap{
 		ID:                 trapId.ID,
 		UserID:             snmpUser.UserID,
@@ -82,7 +69,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Printf("#-----Updated SNMPv3 Trap Destinations of ID %v", update.ID)
+		fmt.Printf("\n#-----Updated SNMPv3 Trap Destinations of ID %v", response.ID)
 	}
 
 	//Delete SNMPv3 Trap Destinations by ID
@@ -90,6 +77,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Printf("#-----Deleted SNMPv3 Trap Destinations of ID %v", id)
+		fmt.Printf("\n#-----Deleted SNMPv3 Trap Destinations of ID %v\n", id)
 	}
 }

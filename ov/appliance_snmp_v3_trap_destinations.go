@@ -46,12 +46,41 @@ type ValidateSNMPv3Address struct {
 	ExistingDestinations []utils.Nstring `json:"existingDestinations,omitempty"`
 }
 
+func (c *OVClient) ValidateDestinationAddress(destId string, existId []utils.Nstring) error {
+	var (
+		uri = "/rest/appliance/snmpv3-trap-forwarding/destinations/validation"
+	)
+
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	snmpUser2 := ValidateSNMPv3Address{
+		DestinationAddress:   destId,
+		ExistingDestinations: existId,
+	}
+	log.Debugf("REST : %s \n %+v\n", uri, destId)
+	_, err := c.RestAPICall(rest.POST, uri, snmpUser2)
+	if err != nil {
+		log.Errorf("Error submitting validating destination address request: %s", err)
+		return err
+	}
+
+	return nil
+}
+
 func (c *OVClient) CreateSNMPv3TrapDestinations(trapOption SNMPv3Trap) error {
 	log.Infof("Initializing creation of SNMPv3 Trap Destinations for %s.", trapOption.UserID)
 	var (
 		uri      = "/rest/appliance/snmpv3-trap-forwarding/destinations"
 		trapdata SNMPv3Trap
 	)
+	//validating the Destination Address
+	log.Infof("Validating SNMPv3 Trap Destinations Address %s.", trapOption.DestinationAddress)
+	err := c.ValidateDestinationAddress(trapOption.DestinationAddress, *new([]utils.Nstring))
+	if err != nil {
+		return errors.New("Invalid Destination Address")
+	}
+	log.Infof("Successfully validated the Destination Address.")
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
@@ -138,40 +167,6 @@ func (c *OVClient) GetSNMPv3TrapDestinationsById(id string) (SNMPv3Trap, error) 
 	return trapId, nil
 }
 
-func (c *OVClient) ValidateDestinationAddress(validateId ValidateSNMPv3Address) error {
-	var (
-		uri = "/rest/appliance/snmpv3-trap-forwarding/destinations/validation"
-		t   *Task
-	)
-
-	c.RefreshLogin()
-	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-	log.Debugf("REST : %s \n %+v\n", uri, validateId)
-	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, validateId)
-	if err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error submitting validating destination address request: %s", err)
-		return err
-	}
-
-	log.Debugf("Validated Destination Address")
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
-	}
-	err = t.Wait()
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (c *OVClient) UpdateSNMPv3TrapDestinations(updateOption SNMPv3Trap) (SNMPv3Trap, error) {
 	if updateOption.ID == "" {
 		fmt.Println("The ID field is not set")
@@ -181,31 +176,20 @@ func (c *OVClient) UpdateSNMPv3TrapDestinations(updateOption SNMPv3Trap) (SNMPv3
 	var (
 		uri            = "/rest/appliance/snmpv3-trap-forwarding/destinations/" + updateOption.ID
 		updateResponse SNMPv3Trap
-		t              *Task
 	)
 
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
 	log.Debugf("REST : %s \n %+v\n", uri, updateOption)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, updateOption)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting update SNMPv3 Trap Destination request: %s", err)
 		return updateResponse, err
 	}
 
 	log.Debugf("Response SNMPv3 Trap Destination %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return updateResponse, err
-	}
 
 	if err := json.Unmarshal(data, &updateResponse); err != nil {
 		return updateResponse, err
@@ -218,7 +202,6 @@ func (c *OVClient) DeleteSNMPv3TrapDestinations(id string) error {
 	var (
 		trap SNMPv3Trap
 		err  error
-		t    *Task
 		uri  string
 	)
 
@@ -227,34 +210,20 @@ func (c *OVClient) DeleteSNMPv3TrapDestinations(id string) error {
 		return err
 	}
 	if trap.ID != "" {
-		t = t.NewProfileTask(c)
-		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", trap.URI, trap)
-		log.Debugf("task -> %+v", t)
 		uri = trap.URI.String()
 		if uri == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete snmp trap destination request: %s", err)
-			t.TaskIsDone = true
 			return err
+		} else {
+			return nil
 		}
 
-		log.Debugf("Response delete snmp trap destination %s", data)
-		if err := json.Unmarshal([]byte(data), &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
-		err = t.Wait()
-		if err != nil {
-			return err
-		}
-		return nil
 	} else {
 		log.Infof("SNMPv3TrapDestination could not be found to delete, %s, skipping delete ...", id)
 	}
