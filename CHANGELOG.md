@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to ID Pools.
 - Added New Resource Appliance Configuration Timeconfig
 - Added support to Connection Template
+- Added support to Firmware Drivers
 
 # [v6.1.0]
 #### Notes
