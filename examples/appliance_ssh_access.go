@@ -30,7 +30,7 @@ func main() {
 	}
 
 	sshaccess := ov.ApplianceSshAccess{
-		allowSshAccess: false
+		allowSshAccess: false,
 	}
 	fmt.Println(sshAccess)
 	err := ovc.SetSshAccess(sshaccess)

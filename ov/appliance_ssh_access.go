@@ -20,7 +20,7 @@ type ApplianceSshAccess struct {
 
 func (c *OVClient) GetSshAccess() (ApplianceSshAccess, error) {
 	var (
-		uri        = "/rest/appliance/ssh-access"
+		uri          = "/rest/appliance/ssh-access"
 		getsshaccess ApplianceSshAccess
 	)
 
