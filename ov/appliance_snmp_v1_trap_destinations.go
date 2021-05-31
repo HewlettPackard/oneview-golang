@@ -9,9 +9,10 @@ import (
 )
 
 type SNMPv1Trap struct {
-	CommunityString string `json:"communityString, omitempty"`
-	Destination     string `json:"destination,omitempty"`
-	Port            int    `json:"port,omitempty"`
+	CommunityString string        `json:"communityString, omitempty"`
+	Destination     string        `json:"destination,omitempty"`
+	Port            int           `json:"port,omitempty"`
+	URI             utils.Nstring `json:"uri,omitempty"`
 }
 
 type SNMPv1TrapList struct {
