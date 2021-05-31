@@ -11,6 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to Connection Template
 - Added support to Labels Resource.
 
+### Bug fixes & Enhancements:
+- [#315] (https://github.com/HewlettPackard/oneview-golang/issues/315) oneview_ethernet_network bug Terraform-Bug#306
+
 # [v6.1.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.
