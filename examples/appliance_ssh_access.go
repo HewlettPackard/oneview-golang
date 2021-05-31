@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
+	"encoding/json"
 	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
@@ -26,14 +26,17 @@ func main() {
 		panic(err)
 	} else {
 		fmt.Println("#--- Got the Appliance SSH access ---#")
-		fmt.Println(getsshaccess)
+		jsonResponse, _ := json.MarshalIndent(getsshaccess, "", "  ")
+		fmt.Print(string(jsonResponse), "\n\n")
 	}
 
 	sshaccess := ov.ApplianceSshAccess{
-		allowSshAccess: false,
+		AllowSshAccess: false,
 	}
-	fmt.Println(sshAccess)
-	err := ovc.SetSshAccess(sshaccess)
+	jsonResponse, _ := json.MarshalIndent(sshaccess, "", "  ")
+	fmt.Print(string(jsonResponse), "\n\n")
+//	fmt.Println(sshaccess)
+	err = ovc.SetSshAccess(sshaccess)
 	if err != nil {
 		fmt.Println("Appliance SSH access set failed: ", err)
 	} else {

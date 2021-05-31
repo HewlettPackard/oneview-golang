@@ -39,7 +39,7 @@ func (c *OVClient) GetSshAccess() (ApplianceSshAccess, error) {
 }
 
 func (c *OVClient) SetSshAccess(sshaccess ApplianceSshAccess) error {
-	log.Infof("Initializing setting of appliance SSH access for %s.", sshaccess)
+	log.Infof("Initializing setting of appliance SSH access.")
 	var (
 		uri = "/rest/appliance/ssh-access"
 		t   *Task
