@@ -9,9 +9,9 @@ import (
 )
 
 type SNMPv1Trap struct {
-	CommunityString    string `json:"Commnunity, omitempty"`
-	DestinationAddress string `json:"destinationAddress,omitempty"`
-	Port               int    `json:"port,omitempty"`
+	CommunityString string `json:"communityString, omitempty"`
+	Destination     string `json:"destination,omitempty"`
+	Port            int    `json:"port,omitempty"`
 }
 
 type SNMPv1TrapList struct {
@@ -29,12 +29,13 @@ type SNMPv1TrapList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`
 }
 
-type ValidateSNMPv1Address struct {
-	DestinationAddress   string          `json:"destinationAddress,omitempty"`
-	ExistingDestinations []utils.Nstring `json:"existingDestinations,omitempty"`
+type ValidationAddress struct {
+	CommunityString string        `json:"communityString, omitempty"`
+	Destination     string        `json:"destination,omitempty"`
+	URI             utils.Nstring `json:"uri,omitempty"`
 }
 
-func (c *OVClient) ValidateDestinationAddress(destId string, existId []utils.Nstring) error {
+func (c *OVClient) ValidateDestinationAddress(validate ValidationAddress) error {
 	var (
 		uri = "/rest/appliance/trap-destinations/validation"
 	)
@@ -42,12 +43,9 @@ func (c *OVClient) ValidateDestinationAddress(destId string, existId []utils.Nst
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	snmpUser2 := ValidateSNMPv1Address{
-		DestinationAddress:   destId,
-		ExistingDestinations: existId,
-	}
-	log.Debugf("REST : %s \n %+v\n", uri, destId)
-	_, err := c.RestAPICall(rest.POST, uri, snmpUser2)
+	log.Debugf("REST: %s \n %+v\n", uri, validate.Destination)
+	_, err := c.RestAPICall(rest.POST, uri, validate)
+
 	if err != nil {
 		log.Errorf("Error submitting validating destination address request: %s", err)
 		return err
@@ -65,8 +63,14 @@ func (c *OVClient) CreateSNMPv1TrapDestinations(trapOption SNMPv1Trap, id string
 
 	uri = uri + id
 	//validating the Destination Address
-	log.Infof("Validating SNMPv1 Trap Destinations Address %s.", trapOption.DestinationAddress)
-	err := c.ValidateDestinationAddress(trapOption.DestinationAddress, *new([]utils.Nstring))
+
+	validate := ValidationAddress{
+		CommunityString: trapOption.CommunityString,
+		Destination:     trapOption.Destination,
+		URI:             utils.Nstring(uri),
+	}
+	log.Infof("Validating SNMPv1 Trap Destinations Address %s.", validate)
+	err := c.ValidateDestinationAddress(validate)
 	if err != nil {
 		return errors.New("Invalid Destination Address")
 	}
@@ -138,7 +142,7 @@ func (c *OVClient) GetSNMPv1TrapDestinations(filter string, sort string, start s
 
 func (c *OVClient) GetSNMPv1TrapDestinationsById(id string) (SNMPv1Trap, error) {
 	var (
-		uri    = "/rest/appliance/trap-destinations/destinations/"
+		uri    = "/rest/appliance/trap-destinations/"
 		trapId SNMPv1Trap
 	)
 
@@ -189,27 +193,21 @@ func (c *OVClient) DeleteSNMPv1TrapDestinations(id string) error {
 	var (
 		trap SNMPv1Trap
 		err  error
-		uri  string
+		uri  = "/rest/appliance/trap-destinations/"
 	)
 
+	uri = uri + id
 	trap, err = c.GetSNMPv1TrapDestinationsById(id)
 	if err != nil {
 		return err
 	}
-	if trap.CommunityString != "" {
+	if trap.Destination != "" {
 		log.Debugf("REST : %s \n %+v\n", trap.CommunityString, trap)
-		if uri == "" {
-			log.Warn("Unable to post delete, no uri found.")
-			return err
-		}
 		_, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete snmp trap destination request: %s", err)
 			return err
-		} else {
-			return nil
 		}
-
 	} else {
 		log.Debugf("SNMPv1TrapDestination not found, %s, skipping delete ...", id)
 	}

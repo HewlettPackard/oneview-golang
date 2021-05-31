@@ -22,9 +22,9 @@ func main() {
 		"*")
 
 	snmpUser := ov.SNMPv1Trap{
-		DestinationAddress: "1.1.1.1",
-		Port:               162,
-		CommunityString:    "Test1",
+		Destination:     "1.1.1.12",
+		Port:            162,
+		CommunityString: "Test1",
 	}
 
 	id := "2"
@@ -57,17 +57,17 @@ func main() {
 	}
 
 	//updating SNMPv1 Trap Destination
-	//ID and Destination Address cannot be changed.
+	//Destination Address cannot be changed.
 	update := ov.SNMPv1Trap{
-		CommunityString:    "Test3",
-		Port:               190,
-		DestinationAddress: "1.1.1.1",
+		CommunityString: "Test3",
+		Port:            190,
+		Destination:     "1.1.1.12",
 	}
 	response, err := ovc.UpdateSNMPv1TrapDestinations(update, id)
 	if err != nil {
 		panic(err)
 	} else {
-		fmt.Printf("\n#-----Updated SNMPv1 Trap Destinations of port %v", response.CommunityString)
+		fmt.Printf("\n#-----Updated SNMPv1 Trap Destinations port and community string %v\n", response.CommunityString)
 	}
 
 	//Delete SNMPv1 Trap Destinations by ID

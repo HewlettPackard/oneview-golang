@@ -6,9 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - This release extends supports of the SDK to Oneview API Version 3000.
 
 ### Major Changes
-- Added support to ID Pools.
-- Added New Resource Appliance Configuration Timeconfig
+- Added support to Appliance Configuration Timeconfig
+- Added support to Appliance SNMP V1 Trap Destinations
 - Added support to Connection Template
+- Added support to ID Pools
 
 ### Bug fixes & Enhancements:
 - [#315] (https://github.com/HewlettPackard/oneview-golang/issues/315) oneview_ethernet_network bug Terraform-Bug#306
