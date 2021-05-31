@@ -1,11 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
-	"encoding/json"
-	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -35,7 +35,6 @@ func main() {
 	}
 	jsonResponse, _ := json.MarshalIndent(sshaccess, "", "  ")
 	fmt.Print(string(jsonResponse), "\n\n")
-//	fmt.Println(sshaccess)
 	err = ovc.SetSshAccess(sshaccess)
 	if err != nil {
 		fmt.Println("Appliance SSH access set failed: ", err)
