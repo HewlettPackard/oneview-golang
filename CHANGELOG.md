@@ -7,10 +7,16 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Major Changes
 - Added support to ID Pools.
-- Added New Resource Appliance Configuration Timeconfig
+- Added support to Appliance Configuration Timeconfig
+- Added support to Appliance Time and Locale Configuration
+- Added support to Appliance SSH Access
 - Added support to Connection Template
 - Added support to Appliance SNMPv3 Trap Destination
- 
+- Added support to Labels Resource.
+
+### Bug fixes & Enhancements:
+- [#315] (https://github.com/HewlettPackard/oneview-golang/issues/315) oneview_ethernet_network bug Terraform-Bug#306
+
 # [v6.1.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 2800. Image Streamer API Version 2020.
@@ -238,7 +244,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - [#141] (https://github.com/HewlettPackard/oneview-golang/issues/141) Query Parameter retains in the next endpoint call
 - [#154] (https://github.com/HewlettPackard/oneview-golang/issues/154) Add json configuration file for creating NewOVClient to run examples
 
- 
 # [v1.4.0] (2020-05-27)
 ### Notes
 - Added support for loginMsgAck attribute in login session POST request.
