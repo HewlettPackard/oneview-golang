@@ -378,20 +378,33 @@ func (c *OVClient) GetTasksById(filter string, sort string, count string, view s
 	return tasks, nil
 }
 
-func (c *OVClient) PatchTask(uri string) (Task, error) {
+func (c *OVClient) PatchTask(uri string) error {
 	var (
-		tasks Task
+		tasks *Task
 	)
 
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
+	// Creates new task with Auth to hold patch response
+	tasks = tasks.NewProfileTask(c)
+	tasks.ResetTask()
+
 	data, err := c.RestAPICall(rest.PATCH, uri, nil)
+
 	if err != nil {
-		return tasks, err
+		log.Errorf("Error submitting Patch request: %s", err)
+		return err
 	}
-
-	log.Debugf("Patch Tasks %s", data)
+	log.Debugf("Patch Task %s", data)
 	if err := json.Unmarshal([]byte(data), &tasks); err != nil {
-		return tasks, err
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
 	}
-	return tasks, nil
 
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
