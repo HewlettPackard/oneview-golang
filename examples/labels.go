@@ -41,7 +41,7 @@ func main() {
 	// Creates new labels
 	label := ov.AssignedLabel{
 		ResourceUri: utils.Nstring("/rest/server-profile-templates/b6777c57-34f1-4491-93c4-8bec773f286c"),
-		Labels:	     labels,
+		Labels:      labels,
 	}
 	responseLabel, err := ovc.CreateLabel(label)
 	if err != nil {
