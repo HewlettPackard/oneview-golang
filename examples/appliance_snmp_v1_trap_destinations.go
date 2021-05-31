@@ -71,7 +71,7 @@ func main() {
 	}
 
 	//Delete SNMPv1 Trap Destinations by ID
-	//err = ovc.DeleteSNMPv1TrapDestinations(id)
+	err = ovc.DeleteSNMPv1TrapDestinations(id)
 	if err != nil {
 		panic(err)
 	} else {
