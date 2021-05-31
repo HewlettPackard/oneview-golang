@@ -18,6 +18,7 @@ package ov
 
 import (
 	"encoding/json"
+
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -46,11 +47,6 @@ type Member struct {
 	Name     string        `json:"name,omitempty"`
 	Type     string        `json:"type,omitempty"`
 	Uri      utils.Nstring `json:"uri,omitempty"`
-}
-
-type NewLabels struct {
-	LabelNames  []string      `json:"labels,omitempty"`
-	ResourceUri utils.Nstring `json:"resourceUri,omitempty"`
 }
 
 type AssignedLabel struct {
@@ -119,7 +115,7 @@ func (c *OVClient) GetAllLabels(sort string, start string, count string, fields 
 }
 
 // CreateLabel- creates new labels
-func (c *OVClient) CreateLabel(label NewLabels) (AssignedLabel, error) {
+func (c *OVClient) CreateLabel(label AssignedLabel) (AssignedLabel, error) {
 	log.Infof("Initializing creation of labels for %s.", label.ResourceUri)
 	var (
 		uri      = "/rest/labels/resources"
@@ -197,8 +193,10 @@ func (c *OVClient) UpdateAssignedLabels(assignedLabel AssignedLabel) (AssignedLa
 // DeleteAssignedLabel- Delete all the labels for a resource.
 func (c *OVClient) DeleteAssignedLabel(resourceUri string) error {
 	var (
-		uri = "/rest/labels/resources/" + resourceUri
+		uri = "/rest/labels/resources" + resourceUri
 	)
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
 	if resourceUri != "" {
 		log.Debugf("REST : %s \n", uri)

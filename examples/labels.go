@@ -33,10 +33,15 @@ func main() {
 		fmt.Print(string(jsonResponse), "\n\n")
 	}
 
+	labels := []ov.Label{}
+	labels = append(labels, ov.Label{
+		Name: "NewestLabel",
+	})
+
 	// Creates new labels
-	label := ov.NewLabels{
+	label := ov.AssignedLabel{
 		ResourceUri: utils.Nstring("/rest/server-profile-templates/b6777c57-34f1-4491-93c4-8bec773f286c"),
-		LabelNames:  []string{"label1", "label2"},
+		Labels:	     labels,
 	}
 	responseLabel, err := ovc.CreateLabel(label)
 	if err != nil {
@@ -83,6 +88,6 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("#-------------All labels to assigned recource is deleted----------------#")
+		fmt.Println("#-------------All labels to assigned recource are deleted----------------#")
 	}
 }
