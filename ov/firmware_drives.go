@@ -145,14 +145,21 @@ func (c *OVClient) GetFirmwareBaselineByUri(id string) (FirmwareDrivers, error) 
 	return firmwareId, nil
 }
 
-func (c *OVClient) CreateCustomServicePack(sp CustomServicePack, force bool) error {
+func (c *OVClient) CreateCustomServicePack(sp CustomServicePack, force string) error {
 	var (
 		uri = "/rest/firmware-drivers/"
 		t   *Task
 	)
+	q := make(map[string]interface{})
+	if force != "" {
+		q["force"] = force
+	}
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
+	if len(q) > 0 {
+		c.SetQueryString(q)
+	}
 	t = t.NewProfileTask(c)
 	t.ResetTask()
 	log.Debugf("task -> %+v", t)
@@ -177,7 +184,7 @@ func (c *OVClient) CreateCustomServicePack(sp CustomServicePack, force bool) err
 	return nil
 }
 
-func (c *OVClient) DeleteFirmwareBaseline(id string, force bool) error {
+func (c *OVClient) DeleteFirmwareBaseline(id string, force string) error {
 	var (
 		firmware FirmwareDrivers
 		err      error
@@ -190,6 +197,13 @@ func (c *OVClient) DeleteFirmwareBaseline(id string, force bool) error {
 		return err
 	}
 	if firmware.Name != "" {
+		q := make(map[string]interface{})
+		if force != "" {
+			q["force"] = force
+		}
+		if len(q) > 0 {
+			c.SetQueryString(q)
+		}
 		t = t.NewProfileTask(c)
 		t.ResetTask()
 		log.Debugf("REST : %s \n %+v\n", firmware.Uri, firmware)

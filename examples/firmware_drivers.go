@@ -58,7 +58,7 @@ func main() {
 		InitialScopeUris:   *initialScopeUris,
 		HotfixUris:         *hotfix,
 	}
-	err = ovc.CreateCustomServicePack(customSP, false)
+	err = ovc.CreateCustomServicePack(customSP, "false") // force parameter is set as false
 	if err != nil {
 		fmt.Println(err)
 	} else {
@@ -66,7 +66,7 @@ func main() {
 	}
 
 	//Delete Firmware Baseline
-	err = ovc.DeleteFirmwareBaseline(id, false)
+	err = ovc.DeleteFirmwareBaseline(id, "false") // force parameter is set as false
 	if err != nil {
 		fmt.Println(err)
 	} else {
