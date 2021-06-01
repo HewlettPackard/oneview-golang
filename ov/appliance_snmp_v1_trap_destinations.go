@@ -30,13 +30,13 @@ type SNMPv1TrapList struct {
 	URI         utils.Nstring `json:"uri,omitempty"`
 }
 
-type ValidationAddress struct {
+type Trapv1ValidationAddress struct {
 	CommunityString string        `json:"communityString, omitempty"`
 	Destination     string        `json:"destination,omitempty"`
 	URI             utils.Nstring `json:"uri,omitempty"`
 }
 
-func (c *OVClient) ValidateDestinationAddress(validate ValidationAddress) error {
+func (c *OVClient) Trapv1ValidateDestinationAddress(validate Trapv1ValidationAddress) error {
 	var (
 		uri = "/rest/appliance/trap-destinations/validation"
 	)
@@ -63,13 +63,13 @@ func (c *OVClient) CreateSNMPv1TrapDestinations(trapOption SNMPv1Trap, id string
 	)
 
 	//validating the Destination Address
-	validate := ValidationAddress{
+	validate := Trapv1ValidationAddress{
 		CommunityString: trapOption.CommunityString,
 		Destination:     trapOption.Destination,
 		URI:             utils.Nstring(uri),
 	}
 	log.Infof("Validating SNMPv1 Trap Destinations Address %s.", validate)
-	err := c.ValidateDestinationAddress(validate)
+	err := c.Trapv1ValidateDestinationAddress(validate)
 	if err != nil {
 		return errors.New("Invalid Destination Address")
 	}
