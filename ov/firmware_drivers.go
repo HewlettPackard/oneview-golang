@@ -45,7 +45,7 @@ type FirmwareDrivers struct {
 	Mirrorlist            map[string][]string `json:"mirrorlist,omitempty"`
 	Modified              string              `json:"modified,omitempty"`
 	Name                  string              `json:"name,omitempty"`
-	ParentBundle          []parentBundle      `json:"parentBundle,omitempty"`
+	ParentBundle          parentBundle        `json:"parentBundle,omitempty"`
 	ReleaseDate           string              `json:"releaseDate,omitempty"`
 	ResourceId            string              `json:"resourceId,omitempty"`
 	ResourceState         string              `json:"resourceState,omitempty"`

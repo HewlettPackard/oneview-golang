@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"strconv"
@@ -31,7 +32,8 @@ func main() {
 	} else {
 		fmt.Println("#-----Got Firmware Baseline-----#")
 		for i := range firmware.Members {
-			fmt.Println(firmware.Members[i])
+			jsonResponse, _ := json.MarshalIndent(firmware.Members[i], "", "  ")
+			fmt.Print(string(jsonResponse), "\n\n")
 		}
 	}
 
@@ -42,7 +44,8 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#-----Got Firmware Baseline by Uri-----#")
-		fmt.Println(firmware2)
+		jsonResponse, _ := json.MarshalIndent(firmware2, "", "  ")
+		fmt.Print(string(jsonResponse), "\n\n")
 	}
 
 	//create custom service pack
