@@ -11,7 +11,7 @@ import (
 type parentBundle struct {
 	ParentBundleName string `json:"parentBundleName,omitempty"`
 	ReleaseDate      string `json:"releaseDate,omitempty"`
-	version          string `json:"version,omitempty"`
+	Version          string `json:"version,omitempty"`
 }
 
 type HotFixes struct {
