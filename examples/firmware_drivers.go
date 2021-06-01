@@ -51,7 +51,7 @@ func main() {
 	scp, _ := ovc.GetScopeByName("ScopTest")
 	initialScopeUris := &[]utils.Nstring{scp.URI}
 
-	hotfix := &[]utils.Nstring{firmware.Members[1].Uri} // iniialize Hotfix Uri
+	hotfix := &[]utils.Nstring{firmware.Members[1].Uri} // initialize Hotfix Uri
 	customSP := ov.CustomServicePack{
 		CustomBaselineName: "Custom Service Pack",
 		BaselineUri:        firmware2.Uri.String(), // initialize Service pack Uri
