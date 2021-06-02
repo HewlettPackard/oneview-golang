@@ -39,7 +39,7 @@ func main() {
 
 	id := strings.Split(firmware.Members[0].Uri.String(), "/")[3] //eg: Synergy_Custom_SPP_2021_02_01_Z7550-97110
 	// Get Firmware Baseline by id
-	firmware2, err := ovc.GetFirmwareBaselineByUri(id)
+	firmware2, err := ovc.GetFirmwareBaselineById(id)
 	if err != nil {
 		fmt.Println(err)
 	} else {
