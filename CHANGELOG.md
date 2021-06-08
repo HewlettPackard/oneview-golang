@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to ID Pools.
 - Added New Resource Appliance Configuration Timeconfig
 - Added support to Connection Template
+- Added support to ID Pools IPv4 Ranges
 
 ### Bug fixes & Enhancements:
 - [#315] (https://github.com/HewlettPackard/oneview-golang/issues/315) oneview_ethernet_network bug Terraform-Bug#306
