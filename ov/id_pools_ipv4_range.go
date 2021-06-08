@@ -308,4 +308,3 @@ func (c *OVClient) CollectId(collector UpdateCollectorList, id string) (UpdateCo
 	}
 	return collector, nil
 }
-
