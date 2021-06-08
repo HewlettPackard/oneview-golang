@@ -243,36 +243,30 @@ func (c *OVClient) DeleteIpv4Range(id string) error {
 	return nil
 }
 
-func (c *OVClient) UpdateIpv4Range(id string, ipv4 UpdateIpv4) error {
+func (c *OVClient) UpdateIpv4Range(id string, ipv4 Ipv4Range) (Ipv4Range, error) {
 	log.Infof("Initializing update of ipv4 Range")
 	var (
-		uri = "/rest/id-pools/ipv4/ranges/" + id
-		t   *Task
+		uri      = "/rest/id-pools/ipv4/ranges/" + id
+		response Ipv4Range
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
 	log.Debugf("REST : %s \n %+v\n", uri, ipv4)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, ipv4)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting update ipv4 Range request: %s", err)
-		return err
+		return response, err
 	}
 
 	log.Debugf("Response update ipv4 Range %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
+	if err := json.Unmarshal([]byte(data), &response); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
-		return err
+		return response, err
 	}
 
-	return nil
+	return response, nil
 }
 
 func (c *OVClient) AllocateId(allocator UpdateAllocatorList, id string) (UpdateAllocatorList, error) {
@@ -314,3 +308,4 @@ func (c *OVClient) CollectId(collector UpdateCollectorList, id string) (UpdateCo
 	}
 	return collector, nil
 }
+

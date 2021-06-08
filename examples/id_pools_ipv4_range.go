@@ -78,7 +78,8 @@ func main() {
 		}
 	}
 
-	//Allocates a set of IDs from an IPv4 range.
+	// Allocates a set of IDs from an IPv4 range.
+	// A set of IDs can be allocated through count parameter also.
 	idlist := new([]utils.Nstring)
 	*idlist = append(*idlist, utils.NewNstring("10.1.0.2"))
 	*idlist = append(*idlist, utils.NewNstring("10.1.0.3"))
@@ -106,22 +107,40 @@ func main() {
 		jsonResponse, _ := json.MarshalIndent(collect, "", "  ")
 		fmt.Print(string(jsonResponse), "\n\n")
 	}
-	/*
-		// Perform either of the following operations on a Range i.e., Enable Range or Edit Range
-		updateIpv4Range := ov.Updateipv4{Type: "Range", Enabled: false}
-		err = ovc.UpdateIpv4Range("a257c58c-bbe9-4174-b2a3-eada622fc555", updateIpv4Range)
-		if err != nil {
-			panic(err)
-		} else {
-			if updateIpv4Range.Enabled == false {
-				fmt.Println("Ipv4Range has disabled successfully ")
-			} else {
-				fmt.Println("Ipv4Range has enabled successfully")
-			}
-		}
-	*/
 
 	id = strings.Split(iprange.URI.String(), "/")[5] //id="a257c58c-bbe9-4174-b2a3-eada622fc555
+	// Perform either of the following operations on a Range i.e., Enable Range or Edit Range
+	// Performing Enable Range.
+	updateIpv4Range := ov.Ipv4Range{Type: "Range", Enabled: false}
+	resp, err := ovc.UpdateIpv4Range(id, updateIpv4Range)
+	if err != nil {
+		panic(err)
+	} else {
+		if resp.Enabled == false {
+			fmt.Println("Ipv4Range has disabled successfully ")
+		} else {
+			fmt.Println("Ipv4Range has enabled successfully")
+		}
+	}
+
+	// Performing Edit Range
+	fragments_2 := new([]ov.StartStopFragments)
+	fragment_1 := ov.StartStopFragments{EndAddress: "10.16.0.120", StartAddress: "10.16.0.10"}
+	*fragments_2 = append(*fragments_2, fragment_1)
+	updateRange := ov.Ipv4Range{
+		Type:               "Range",
+		StartStopFragments: *fragments_2,
+		Name:               "Renamed-Range",
+	}
+	resp_2, err := ovc.UpdateIpv4Range(id, updateRange)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Ipv4Range has updated successfully")
+		jsonResponse, _ := json.MarshalIndent(resp_2, "", "  ")
+		fmt.Print(string(jsonResponse), "\n\n")
+	}
+
 	// Deletes an IPv4 range.
 	err = ovc.DeleteIpv4Range(id)
 	if err != nil {
@@ -130,3 +149,4 @@ func main() {
 		fmt.Println("#---Deleted Ipv4Range successfully---#")
 	}
 }
+
