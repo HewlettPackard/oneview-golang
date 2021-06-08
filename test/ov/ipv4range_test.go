@@ -76,7 +76,7 @@ func GetIPv4RangebyId(t *testing.T) {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
 		testId = d.Tc.GetTestData(d.Env, "Id").(string)
-		data, err := c.GetIPv4RangebyId(testId)
+		data, err := c.GetIPv4RangebyId("", testId)
 		assert.Error(t, err, fmt.Sprintf("ALL ok, no error, caught as expected: %s,%+v\n", err, data))
 	}
 }
