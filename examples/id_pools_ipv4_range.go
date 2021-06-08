@@ -26,7 +26,7 @@ func main() {
 		apiversion,
 		"*")
 	fragments := new([]ov.StartStopFragments)
-	fragment1 := ov.StartStopFragments{EndAddress: "10.16.0.100", StartAddress: "10.16.0.10"}
+	fragment1 := ov.StartStopFragments{EndAddress: "<ip_address>", StartAddress: "<ip_address>"}
 	*fragments = append(*fragments, fragment1)
 	ipV4Range := ov.CreateIpv4Range{
 		Type:               "Range",
@@ -81,8 +81,8 @@ func main() {
 	// Allocates a set of IDs from an IPv4 range.
 	// A set of IDs can be allocated through count parameter also.
 	idlist := new([]utils.Nstring)
-	*idlist = append(*idlist, utils.NewNstring("10.1.0.2"))
-	*idlist = append(*idlist, utils.NewNstring("10.1.0.3"))
+	*idlist = append(*idlist, utils.NewNstring("<ip_address>"))
+	*idlist = append(*idlist, utils.NewNstring("<ip_address>"))
 	allocateId := ov.UpdateAllocatorList{
 		IdList: *idlist,
 	}
@@ -125,7 +125,7 @@ func main() {
 
 	// Performing Edit Range
 	fragments_2 := new([]ov.StartStopFragments)
-	fragment_1 := ov.StartStopFragments{EndAddress: "10.16.0.120", StartAddress: "10.16.0.10"}
+	fragment_1 := ov.StartStopFragments{EndAddress: "<ip_address>", StartAddress: "<ip_address>"}
 	*fragments_2 = append(*fragments_2, fragment_1)
 	updateRange := ov.Ipv4Range{
 		Type:               "Range",
@@ -149,3 +149,4 @@ func main() {
 		fmt.Println("#---Deleted Ipv4Range successfully---#")
 	}
 }
+
