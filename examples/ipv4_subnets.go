@@ -43,24 +43,21 @@ func main() {
 	fmt.Println("#--------Subnet List--------------#")
 
 	allSubnets, err := ovc.GetIPv4Subnets("", "", "", "")
-	id := strings.Split(allSubnets.Members[0].URI.String(), "/")[5]
+
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		for i := 0; i < len(allSubnets.Members); i++ {
 			fmt.Println(allSubnets.Members[i].NetworkId)
-			eachSubnet := allSubnets.Members[i]
-
-			// Gets id of the subnet created above for update and delete
-			if eachSubnet.Name == subnet.Name {
-				id = strings.Split(eachSubnet.URI.String(), "/")[5]
-			}
 		}
-
 	}
 
 	// Gets an IPv4 subnet by Id
 	fmt.Println("#-------------Get Ipv4Range by id----------------#")
+	subnetName, err := ovc.GetSubnetByNetworkId(subnet.NetworkId)
+	fmt.Println(subnetName)
+	fmt.Println(subnet.Name)
+	id := strings.Split(subnetName.URI.String(), "/")[5]
 
 	subnetById, err := ovc.GetIPv4SubnetbyId(id)
 	if err != nil {
@@ -69,13 +66,37 @@ func main() {
 		fmt.Println(subnetById.URI.String(), subnetById.Domain)
 	}
 
+	// Create Ethernet network and associate resource to the subnet
+	// Allocator and Collector needs a subnet associated with any resource
+	ethernetNetwork := ov.EthernetNetwork{
+		Name:                "SubnetNetwork",
+		VlanId:              9,
+		Purpose:             "General",
+		EthernetNetworkType: "Tagged",
+		Type:                "ethernet-networkV4",
+		SubnetUri:           subnetById.URI,
+	}
+	err = ovc.CreateEthernetNetwork(ethernetNetwork)
+
+	//Creates Range for the above subnet
+	fragments := new([]ov.StartStopFragments)
+	fragment1 := ov.StartStopFragments{EndAddress: "192.169.1.20", StartAddress: "192.169.1.10"}
+	*fragments = append(*fragments, fragment1)
+	ipV4Range := ov.CreateIpv4Range{
+		Type:               "Range",
+		Name:               "SubnetRange",
+		StartStopFragments: *fragments,
+		SubnetUri:          subnetById.URI,
+	}
+
+	err = ovc.CreateIPv4Range(ipV4Range)
+
 	// Allocates IPv4 Ips from subnet associated with a resource
 	fmt.Println("#--------IPv4 Allocation from Subnet--------------#")
-	idAllocator := strings.Split(allSubnets.Members[1].URI.String(), "/")[5]
 	allocator := ov.SubnetAllocatorList{
-		Count: 1,
+		Count: 3,
 	}
-	allocatedIds, err := ovc.AllocateIpv4Subnet(idAllocator, allocator)
+	allocatedIds, err := ovc.AllocateIpv4Subnet(id, allocator)
 	if err != nil {
 		panic(err)
 	} else {
@@ -86,12 +107,12 @@ func main() {
 		}
 	}
 
-	// Allocates IPv4 Ips from subnet associated with a resource
+	// Collects allocated IPv4 Ips
 	fmt.Println("#--------Collect IPv4 Ids allocated--------------#")
 	collect := ov.SubnetCollectorList{
 		IdList: allocatedIds.IdList,
 	}
-	collectedIds, err := ovc.CollectIpv4Subnet(idAllocator, collect)
+	collectedIds, err := ovc.CollectIpv4Subnet(id, collect)
 	if err != nil {
 		panic(err)
 	} else {
@@ -123,6 +144,9 @@ func main() {
 			fmt.Println(updatedSubnet.Name)
 		}
 	}
+
+	//Unassociate the resource from subnet before deletion
+	err = ovc.DeleteEthernetNetwork(ethernetNetwork.Name)
 
 	// Deletes an IPv4 subnet.
 	fmt.Println("#----------Delete Subnet---------#")

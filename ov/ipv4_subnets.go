@@ -2,7 +2,7 @@ package ov
 
 import (
 	"encoding/json"
-
+	"fmt"
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
@@ -77,6 +77,18 @@ func (c *OVClient) GetIPv4SubnetbyId(id string) (Ipv4Subnet, error) {
 		return ipv4Subnet, err
 	}
 	return ipv4Subnet, nil
+}
+
+func (c *OVClient) GetSubnetByNetworkId(nwId string) (Ipv4Subnet, error) {
+	var (
+		subnet Ipv4Subnet
+	)
+	subnets, err := c.GetIPv4Subnets("", "", fmt.Sprintf("networkId='%s'", nwId), "")
+	if subnets.Total > 0 {
+		return subnets.Members[0], err
+	} else {
+		return subnet, err
+	}
 }
 
 func (c *OVClient) GetIPv4Subnets(start string, count string, filter string, sort string) (SubnetList, error) {

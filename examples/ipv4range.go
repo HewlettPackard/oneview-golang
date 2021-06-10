@@ -24,7 +24,7 @@ func main() {
 	fragments := new([]ov.StartStopFragments)
 	fragment1 := ov.StartStopFragments{EndAddress: "10.16.0.100", StartAddress: "10.16.0.10"}
 	*fragments = append(*fragments, fragment1)
-	ipV4Range := ov.Createipv4Range{
+	ipV4Range := ov.CreateIpv4Range{
 		Type:               "Range",
 		Name:               "test",
 		StartStopFragments: *fragments,
@@ -72,7 +72,7 @@ func main() {
 	}
 
 	// Perform either of the following operations on a Range i.e., Enable Range or Edit Range
-	updateIpv4Range := ov.Updateipv4{Type: "Range", Enabled: false}
+	updateIpv4Range := ov.UpdateIpv4{Type: "Range", Enabled: false}
 	err = ovc.UpdateIpv4Range("a257c58c-bbe9-4174-b2a3-eada622fc555", updateIpv4Range)
 	if err != nil {
 		panic(err)
