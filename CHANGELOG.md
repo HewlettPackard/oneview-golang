@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 ### Major Changes
 - Added support to ID Pools.
+- Added support to ID Pools Ipv4 Subnets.
 - Added New Resource Appliance Configuration Timeconfig
 - Added support to Connection Template
 
