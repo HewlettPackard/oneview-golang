@@ -112,8 +112,8 @@ type ManagementProcessor struct {
 	ReapplyState      string       `json:"reapplyState,omitempty"`
 }
 type mpSettings struct {
-	Args        string `json:"args, omitempty"`
-	SettingType string `json:"settingType, omitempty"`
+	Args        map[string]interface{} `json:"args, omitempty"`
+	SettingType string                 `json:"settingType, omitempty"`
 }
 
 // ServerProfile - server profile object for ov
