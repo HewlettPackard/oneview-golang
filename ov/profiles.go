@@ -352,7 +352,7 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 
 	// power off the server so that we can add to SP
 	if server.Name != "" && server.PowerState == "off" {
-		errors.New("Server Hardware must be powered off to assign to the server profile")
+		return errors.New("Server Hardware must be powered off to assign to the server profile")
 	}
 
 	data, err := c.RestAPICall(rest.POST, uri, p)
