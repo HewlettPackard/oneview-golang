@@ -137,7 +137,6 @@ func (c *OVClient) GetIPv4Subnets(start string, count string, filter string, sor
 func (c *OVClient) CreateIPv4Subnet(subnet Ipv4Subnet) error {
 	var (
 		uri    = "/rest/id-pools/ipv4/subnets/"
-		subnet Ipv4Subnet
 	)
 	// refresh login
 	c.RefreshLogin()
@@ -247,7 +246,6 @@ func (c *OVClient) DeleteIpv4Subnet(id string) error {
 func (c *OVClient) UpdateIpv4Subnet(id string, subnet Ipv4Subnet) error {
 	var (
 		uri    = "/rest/id-pools/ipv4/subnets/" + id
-		subnet Ipv4Subnet
 	)
 	// refresh login
 	c.RefreshLogin()
