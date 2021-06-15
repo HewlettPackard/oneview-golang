@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to Firmware Drivers
 - Added support to ID Pools
 - Added support to ID Pools IPv4 Ranges
+- Added support to ID Pools Ipv4 Subnets
 - Added support to Labels Resource
 
 ### Bug fixes & Enhancements:
