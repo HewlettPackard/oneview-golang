@@ -137,15 +137,13 @@ func (c *OVClient) GetIPv4Subnets(start string, count string, filter string, sor
 func (c *OVClient) CreateIPv4Subnet(subnet Ipv4Subnet) error {
 	var (
 		uri = "/rest/id-pools/ipv4/subnets/"
-		t   = (&Task{}).NewProfileTask(c)
+		subnet Ipv4Subnet
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, subnet)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, subnet)
 	if err != nil {
 		log.Errorf("Error submitting subnet creation request: %s", err)
@@ -153,7 +151,7 @@ func (c *OVClient) CreateIPv4Subnet(subnet Ipv4Subnet) error {
 	}
 
 	log.Debugf("Response New ipv4 Subnet %s", data)
-	if err := json.Unmarshal(data, &t); err != nil {
+	if err := json.Unmarshal(data, &subnet); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
 		return err
 	}
@@ -168,28 +166,21 @@ func (c *OVClient) CreateIPv4Subnet(subnet Ipv4Subnet) error {
 func (c *OVClient) AllocateIpv4Subnet(id string, subnet SubnetAllocatorList) (SubnetAllocatorList, error) {
 	var (
 		uri             = "/rest/id-pools/ipv4/subnets/" + id + "/allocator"
-		t               *Task
 		subnetAllocator SubnetAllocatorList
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
 	log.Debugf("REST : %s \n %+v\n", uri, subnet)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, subnet)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting ipv4 allocator request: %s", err)
 		return subnetAllocator, err
 	}
 
 	log.Debugf("Response of ipv4 allocator %s", data)
 	if err := json.Unmarshal([]byte(data), &subnetAllocator); err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
 		return subnetAllocator, err
 	}
@@ -200,28 +191,21 @@ func (c *OVClient) AllocateIpv4Subnet(id string, subnet SubnetAllocatorList) (Su
 func (c *OVClient) CollectIpv4Subnet(id string, subnet SubnetCollectorList) (SubnetCollectorList, error) {
 	var (
 		uri             = "/rest/id-pools/ipv4/subnets/" + id + "/collector"
-		t               *Task
 		subnetCollector SubnetCollectorList
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
 	log.Debugf("REST : %s \n %+v\n", uri, subnet)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, subnet)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting ipv4 collection request: %s", err)
 		return subnetCollector, err
 	}
 
 	log.Debugf("Response of ipv4 Subnet Ids Collector %s", data)
 	if err := json.Unmarshal([]byte(data), &subnetCollector); err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
 		return subnetCollector, err
 	}
@@ -233,7 +217,6 @@ func (c *OVClient) DeleteIpv4Subnet(id string) error {
 	var (
 		subnet Ipv4Subnet
 		err    error
-		t      *Task
 	)
 
 	subnet, err = c.GetIPv4SubnetbyId(id)
@@ -241,21 +224,16 @@ func (c *OVClient) DeleteIpv4Subnet(id string) error {
 		return err
 	}
 	if subnet.NetworkId != "" {
-		t = t.NewProfileTask(c)
-		t.ResetTask()
 		log.Infof("URI:%s", subnet.URI)
 		log.Debugf("REST : %s \n %+v\n", subnet.URI, subnet)
-		log.Debugf("task -> %+v", t)
 
 		if subnet.URI == "" {
 			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
 			return err
 		}
 		_, err := c.RestAPICall(rest.DELETE, subnet.URI.String(), nil)
 		if err != nil {
 			log.Errorf("Error submitting subnet delete request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
 
@@ -269,27 +247,21 @@ func (c *OVClient) DeleteIpv4Subnet(id string) error {
 func (c *OVClient) UpdateIpv4Subnet(id string, subnet Ipv4Subnet) error {
 	var (
 		uri = "/rest/id-pools/ipv4/subnets/" + id
-		t   *Task
+		subnet Ipv4Subnet
 	)
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
 
-	t = t.NewProfileTask(c)
-	t.ResetTask()
-
 	log.Debugf("REST : %s \n %+v\n", uri, subnet)
-	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.PUT, uri, subnet)
 	if err != nil {
-		t.TaskIsDone = true
 		log.Errorf("Error submitting update ipv4 Subnet request: %s", err)
 		return err
 	}
 
 	log.Debugf("Response update ipv4 Subnet %s", data)
-	if err := json.Unmarshal([]byte(data), &t); err != nil {
-		t.TaskIsDone = true
+	if err := json.Unmarshal([]byte(data), &subnet); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
 		return err
 	}

@@ -25,9 +25,9 @@ func main() {
 	// Creates an IPv4 Subnet
 	subnet := ov.Ipv4Subnet{
 		Name:       "SubnetTF",
-		NetworkId:  "192.169.1.0",
-		SubnetMask: "255.255.255.0",
-		Gateway:    "192.169.1.1",
+		NetworkId:  "<networkId>",
+		SubnetMask: "<subnetMask>",
+		Gateway:    "<gateway>",
 		Domain:     "Terraform.com",
 	}
 
@@ -80,7 +80,7 @@ func main() {
 
 	//Creates Range for the above subnet
 	fragments := new([]ov.StartStopFragments)
-	fragment1 := ov.StartStopFragments{EndAddress: "192.169.1.20", StartAddress: "192.169.1.10"}
+	fragment1 := ov.StartStopFragments{EndAddress: "<endAddress>", StartAddress: "<startAddress>"}
 	*fragments = append(*fragments, fragment1)
 	ipV4Range := ov.CreateIpv4Range{
 		Type:               "Range",
@@ -128,9 +128,9 @@ func main() {
 
 	updateSubnet := ov.Ipv4Subnet{
 		Name:       "SubnetRenamed",
-		NetworkId:  "192.169.1.0",
-		SubnetMask: "255.255.255.0",
-		Gateway:    "192.169.1.1",
+		NetworkId:  "<networkId>",
+		SubnetMask: "<subnetMask>",
+		Gateway:    "<gateway>",
 	}
 
 	err = ovc.UpdateIpv4Subnet(id, updateSubnet)
