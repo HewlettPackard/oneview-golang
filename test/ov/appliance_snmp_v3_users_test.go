@@ -14,43 +14,43 @@ import (
 
 func TestCreateSNMPv3User(t *testing.T) {
 	var (
-		d        *OVTest
-		c        *ov.OVClient
-		testName string
+		d      *OVTest
+		c      *ov.OVClient
+		testId string
 	)
 	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
 		d, c = getTestDriverA("test_snmp_v3_user")
 		if c == nil {
 			t.Fatalf("Failed to execute getTestDriver() ")
 		}
-		// find out if the test ethernet network already exist
-		testName = d.Tc.GetTestData(d.Env, "Name").(string)
+		// find out if the test snmpv3 ser already exist
+		testId = d.Tc.GetTestData(d.Env, "Id").(string)
 
-		testEthNet, err := c.GetSNMPv3UserByName(testName)
+		testSnmpv3User, err := c.GetSNMPv3UserById(testId)
 		assert.NoError(t, err, "CreateSNMPv3User get the SNMPv3User error -> %s", err)
 
-		if testEthNet.URI.IsNil() {
-			testEthNet = ov.SNMPv3User{
-				Name:           testName,
-				VlanId:         7,
-				Purpose:        d.Tc.GetTestData(d.Env, "Purpose").(string),
-				SmartLink:      d.Tc.GetTestData(d.Env, "SmartLink").(bool),
-				PrivateNetwork: d.Tc.GetTestData(d.Env, "PrivateNetwork").(bool),
-				SNMPv3UserType: d.Tc.GetTestData(d.Env, "SNMPv3UserType").(string),
-				Type:           d.Tc.GetTestData(d.Env, "Type").(string),
+		if testSnmpv3User.URI.IsNil() {
+			testSnmpv3User = ov.SNMPv3User{
+				UserName:                 "user7",
+				SecurityLevel:            "Authentication and privacy",
+				AuthenticationProtocol:   "SHA1",
+				AuthenticationPassphrase: "authPass",
+				PrivacyProtocol:          "AES-128",
+				PrivacyPassphrase:        "1234567812345678",
 			}
-			err := c.CreateSNMPv3User(testEthNet)
+
+			_, err := c.CreateSNMPv3Users(testSnmpv3User)
 			assert.NoError(t, err, "CreateSNMPv3User error -> %s", err)
 
-			err = c.CreateSNMPv3User(testEthNet)
+			_, err = c.CreateSNMPv3Users(testSnmpv3User)
 			assert.Error(t, err, "CreateSNMPv3User should error because the SNMPv3User already exists, err-> %s", err)
 
 		} else {
-			log.Warnf("The SNMPv3User already exist, so skipping CreateSNMPv3User test for %s", testName)
+			log.Warnf("The SNMPv3User already exist, so skipping CreateSNMPv3User test for %s", testId)
 		}
 
 		// reload the test profile that we just created
-		testEthNet, err = c.GetSNMPv3UserByName(testName)
+		testSnmpv3User, err = c.GetSNMPv3UserById(testId)
 		assert.NoError(t, err, "GetSNMPv3User error -> %s", err)
 	}
 
