@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to Appliance SSH Access
 - Added support to Appliance SNMP V1 Trap Destinations
 - Added support to Appliance SNMPv3 Trap Destination
+- Added support to Appliance SNMPv3 User
 - Added support to Appliance Time and Locale Configuration
 - Added support to Connection Template
 - Added support to Firmware Drivers
