@@ -2,6 +2,7 @@ package ov
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -73,7 +74,7 @@ func (c *OVClient) CreateSNMPv3Users(snmpv3User SNMPv3User) (SNMPv3User, error) 
 	return snmpv3User, nil
 }
 
-func (c *OVClient) GetSNMPv3Users(filter string, sort string, start string, count string) (SNMPv3UserList, error) {
+func (c *OVClient) GetSNMPv3Users(start string, count string, filter string, sort string) (SNMPv3UserList, error) {
 	var (
 		uri            = "/rest/appliance/snmpv3-trap-forwarding/users"
 		q              = make(map[string]interface{})
@@ -133,6 +134,20 @@ func (c *OVClient) GetSNMPv3UserById(id string) (SNMPv3User, error) {
 		return snmpv3userid, err
 	}
 	return snmpv3userid, nil
+}
+
+func (c *OVClient) GetSNMPv3UserByUserName(username string) (SNMPv3User, error) {
+	var (
+		snmpv3userusername SNMPv3User
+	)
+
+	snmpv3userusernames, err := c.GetSNMPv3Users("", "", fmt.Sprintf("userName matches '%s'", username), "userName:asc")
+	if snmpv3userusernames.Total > 0 {
+		return snmpv3userusernames.Members[0], err
+	} else {
+		return snmpv3userusername, err
+	}
+
 }
 
 func (c *OVClient) UpdateSNMPv3User(updateOption SNMPv3User, id string) (SNMPv3User, error) {

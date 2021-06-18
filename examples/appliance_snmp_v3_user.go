@@ -23,7 +23,7 @@ func main() {
 		"*")
 
 	snmpv3User := ov.SNMPv3User{
-		UserName:                 "user7",
+		UserName:                 "user47",
 		SecurityLevel:            "Authentication and privacy",
 		AuthenticationProtocol:   "SHA1",
 		AuthenticationPassphrase: "authPass",
@@ -31,7 +31,7 @@ func main() {
 		PrivacyPassphrase:        "1234567812345678",
 	}
 
-	//Creating an SNMPv1 Trap Destinations
+	//Creating an SNMPv3 User
 	_, err := ovc.CreateSNMPv3Users(snmpv3User)
 	if err != nil {
 		panic(err)
@@ -40,7 +40,7 @@ func main() {
 	}
 
 	//Get all the SNMPv3 User
-	allsnmpv3user, err := ovc.GetSNMPv3Users("", "", "", "")
+	allsnmpv3user, err1 := ovc.GetSNMPv3Users("", "", "", "")
 	if err1 != nil {
 		panic(err1)
 	} else {
@@ -60,6 +60,16 @@ func main() {
 		fmt.Println(snmpv3User)
 	}
 
+	//Get SNMPv3 User by username
+	username := "user47"
+	snmpv3User, err3 := ovc.GetSNMPv3UserByUserName(username)
+	if err3 != nil {
+		panic(err3)
+	} else {
+		fmt.Printf("\n#-----Got SNMPv3 User of UserName %v", username)
+		fmt.Println(snmpv3User)
+	}
+
 	//updating SNMPv3 User
 
 	updated_snmpv3user := ov.SNMPv3User{
@@ -75,27 +85,27 @@ func main() {
 		PrivacyProtocol:          "AES-128",
 		PrivacyPassphrase:        "dsfdsfdsf545454",
 	}
-	response, err3 := ovc.UpdateSNMPv3User(updated_snmpv3user, id)
-	if err != nil {
-		panic(err3)
+	response, err4 := ovc.UpdateSNMPv3User(updated_snmpv3user, id)
+	if err4 != nil {
+		panic(err4)
 	} else {
 		fmt.Printf("\n#-----Updated SNMPv1 Trap Destinations port and community string: %v\n", response.URI)
 	}
 
-	//Delete SNMPv3 User by ID
-	err4 := ovc.DeleteSNMPv3UserById(id)
-	if err4 != nil {
-		panic(err4)
-	} else {
-		fmt.Printf("\n#-----Deleted SNMPv3 User of ID %v\n", id)
-	}
-	//Delete SNMPv3 User by ID
-	username := "user3"
-
-	err5 := ovc.DeleteSNMPv3UserByName(username)
+	// //Delete SNMPv3 User by ID
+	err5 := ovc.DeleteSNMPv3UserById(id)
 	if err5 != nil {
 		panic(err5)
 	} else {
-		fmt.Printf("\n#-----Deleted SNMPv3 User of Username %v\n", username)
+		fmt.Printf("\n#-----Deleted SNMPv3 User of ID %v\n", id)
+	}
+	//Delete SNMPv3 User by UserName
+	username1 := "user3"
+
+	err6 := ovc.DeleteSNMPv3UserByName(username1)
+	if err5 != nil {
+		panic(err6)
+	} else {
+		fmt.Printf("\n#-----Deleted SNMPv3 User of Username %v\n", username1)
 	}
 }
