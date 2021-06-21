@@ -19,10 +19,10 @@ package ov
 
 import (
 	"encoding/json"
-	"reflect"
 	"errors"
 	"fmt"
 	"os"
+	"reflect"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
