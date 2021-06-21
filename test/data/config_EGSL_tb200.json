@@ -375,6 +375,13 @@
         "MinimumVersion": 1,
         "FakeData": "foo"
       }
+    },
+    {
+      "Name": "test_snmp_v3_user",
+      "Enabled": true,
+      "Test_data": {
+        "Id": "snmpv3userid"
+      }
     }
   ]
 }
