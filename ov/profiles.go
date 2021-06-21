@@ -106,21 +106,6 @@ type AvailableTarget struct {
 	Members []Servers `json:"targets, omitempty"`
 }
 
-type ManagementProcessors struct {
-	ComplianceControl string     `json:"-"`
-	ManageMp          bool       `json:"-"`
-	MpSetting         MpSettings `json:"-"`
-	ReapplyState      string     `json:"-"`
-}
-
-type MpSettings struct {
-	AdministratorAccount AdministratorAccount `json:"-"`
-	LocalAccounts        []LocalAccounts      `json:"-"`
-	Directory            Directory            `json:"-"`
-	DirectoryGroups      []DirectoryGroups    `json:"-"`
-	KeyManager           KeyManager           `json:"-"`
-}
-
 type KeyManager struct {
 	PrimaryServerAddress   string `json:"-"`
 	PrimaryServerPort      int    `json:"-"`
@@ -134,20 +119,19 @@ type KeyManager struct {
 }
 
 type Directory struct {
-	DirectoryAuthentication    string   `json:"-, omitempty"`
-	DirectoryGenericLDAP       *bool    `json:"-, omitempty"`
-	DirectoryServerAddress     string   `json:"-, omitempty"`
-	DirectoryServerPort        int      `json:"-, omitempty"`
-	DirectoryServerCertificate string   `json:"-, omitempty"`
-	DirectoryUserContext       []string `json:"-, omitempty"`
-	IloObjectDistinguishedName string   `json:"-, omitempty"`
-	Password                   string   `json:"-, omitempty"`
-
-	KerberosAuthentication   *bool  `json:"-, omitempty"`
-	KerberosRealm            string `json:"-, omitempty"`
-	KerberosKDCServerAddress string `json:"-, omitempty"`
-	KerberosKDCServerPort    int    `json:"-, omitempty"`
-	KerberosKeytab           string `json:"-, omitempty"`
+	DirectoryAuthentication    string   `json:"-"`
+	DirectoryGenericLDAP       *bool    `json:"-"`
+	DirectoryServerAddress     string   `json:"-"`
+	DirectoryServerPort        int      `json:"-"`
+	DirectoryServerCertificate string   `json:"-"`
+	DirectoryUserContext       []string `json:"-"`
+	IloObjectDistinguishedName string   `json:"-"`
+	Password                   string   `json:"-"`
+	KerberosAuthentication     *bool    `json:"-"`
+	KerberosRealm              string   `json:"-"`
+	KerberosKDCServerAddress   string   `json:"-"`
+	KerberosKDCServerPort      int      `json:"-"`
+	KerberosKeytab             string   `json:"-"`
 }
 
 type DirectoryGroups struct {
@@ -176,16 +160,31 @@ type AdministratorAccount struct {
 	Password                   string `json:"-"`
 }
 
-type IntManagementProcessor struct {
-	ComplianceControl string      `json:"complianceControl,omitempty"` // complianceControl
-	ManageMp          bool        `json:"manageMp,omitempty"`
-	MpSettings        []MpSetting `json:"mpSettings,omitempty"`
-	ReapplyState      string      `json:"reapplyState,omitempty"`
+type ManagementProcessors struct {
+	ComplianceControl string     `json:"-"`
+	ManageMp          bool       `json:"-"`
+	MpSetting         MpSettings `json:"-"`
+	ReapplyState      string     `json:"-"`
+}
+
+type MpSettings struct {
+	AdministratorAccount AdministratorAccount `json:"-"`
+	LocalAccounts        []LocalAccounts      `json:"-"`
+	Directory            Directory            `json:"-"`
+	DirectoryGroups      []DirectoryGroups    `json:"-"`
+	KeyManager           KeyManager           `json:"-"`
 }
 
 type MpSetting struct {
 	Args        map[string]interface{} `json:"args, omitempty"`
 	SettingType string                 `json:"settingType, omitempty"`
+}
+
+type IntManagementProcessor struct {
+	ComplianceControl string      `json:"complianceControl,omitempty"` // complianceControl
+	ManageMp          bool        `json:"manageMp,omitempty"`
+	MpSettings        []MpSetting `json:"mpSettings,omitempty"`
+	ReapplyState      string      `json:"reapplyState,omitempty"`
 }
 
 // ServerProfile - server profile object for ov
