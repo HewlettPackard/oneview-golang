@@ -8,16 +8,12 @@ import (
 	"strconv"
 )
 
-func GetBoolPointer(value bool) *bool {
-	return &value
-}
-
 func main() {
 	var (
 		clientOV                          *ov.OVClient
 		server_profile_template_name      = "Test SPT"
 		server_profile_template_name_auto = "Auto-SPT"
-		enclosure_group_name              = "Auto-EG"
+		enclosure_group_name              = "Auto-TestEG"
 		server_hardware_type_name         = "SY 480 Gen9 1"
 		scope                             = "Auto-Scope"
 	)
@@ -47,7 +43,7 @@ func main() {
 	}
 
 	aa := ov.AdministratorAccount{
-		DeleteAdministratorAccount: GetBoolPointer(false),
+		DeleteAdministratorAccount: utils.GetBoolPointer(false),
 		Password:                   "password123",
 	}
 
@@ -56,11 +52,11 @@ func main() {
 		UserName:                 "Test",
 		DisplayName:              "test",
 		Password:                 "passoriutuytguytuytuytuytd",
-		UserConfigPriv:           GetBoolPointer(true),
-		RemoteConsolePriv:        GetBoolPointer(true),
-		VirtualMediaPriv:         GetBoolPointer(true),
-		VirtualPowerAndResetPriv: GetBoolPointer(true),
-		ILOConfigPriv:            GetBoolPointer(true),
+		UserConfigPriv:           utils.GetBoolPointer(true),
+		RemoteConsolePriv:        utils.GetBoolPointer(true),
+		VirtualMediaPriv:         utils.GetBoolPointer(true),
+		VirtualPowerAndResetPriv: utils.GetBoolPointer(true),
+		ILOConfigPriv:            utils.GetBoolPointer(true),
 	})
 
 	duc := []string{"OU=US,OU=Users,OU=Accounts,dc=Subdomain,dc=example,dc=com",
@@ -68,25 +64,25 @@ func main() {
 
 	d := ov.Directory{
 		DirectoryAuthentication:    "defaultSchema",
-		DirectoryGenericLDAP:       GetBoolPointer(false),
+		DirectoryGenericLDAP:       utils.GetBoolPointer(false),
 		DirectoryServerAddress:     "ldap.example.com",
 		DirectoryServerPort:        636,
 		DirectoryServerCertificate: "-----BEGIN CERTIFICATE-----\nMIIBozCCAQwCCQCWGqL41Y6YKTANBgkqhkiG9w0BAQUFADAWMRQwEgYDVQQDEwtD\nb21tb24gTmFtZTAeFw0xNzA3MTQxOTQzMjZaFw0xODA3MTQxOTQzMjZaMBYxFDAS\nBgNVBAMTC0NvbW1vbiBOYW1lMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCf\nCNTrU4AZF044Rtu8jiGR6Ce1u9K6GJE+60VCau2y4A2z5B5kKA2XnyP+2JpLRRA8\n8PjEyVJuL1fJomGF74L305j6ucetXZGcEy26XNyKFOtsBeoHtjkISYNTMxikjvC1\nXHctTYds0D6Q6u7igkN9ew8ngn61LInFqb6dLm+CmQIDAQABMA0GCSqGSIb3DQEB\nBQUAA4GBAFVOQ8zXFNHdXVa045onbkx8pgM2zK5VQ69YFtlAymFDWaS7a5M+96JW\n2c3001GDGZcW6fGqW+PEyu3COImRlEhEHaZKs511I7RfckMzZ3s7wPrQrC8WQLqI\ntiZtCWfUX7tto7YDdmfol7bHiaSbrLUv4H/B7iS9FGemA+nrghCK\n-----END CERTIFICATE-----",
 		DirectoryUserContext:       duc,
 		IloObjectDistinguishedName: "service",
 		Password:                   "kjhkjhkjhkjh0",
-		KerberosAuthentication:     GetBoolPointer(false),
+		KerberosAuthentication:     utils.GetBoolPointer(false),
 	}
 
 	dg := []ov.DirectoryGroups{}
 	dg = append(dg, ov.DirectoryGroups{
 		GroupDN:                  "ilos.example.com,ou=Groups,o=example.com",
 		GroupSID:                 "S-1-5-11",
-		UserConfigPriv:           GetBoolPointer(false),
-		RemoteConsolePriv:        GetBoolPointer(true),
-		VirtualMediaPriv:         GetBoolPointer(true),
-		VirtualPowerAndResetPriv: GetBoolPointer(true),
-		ILOConfigPriv:            GetBoolPointer(false),
+		UserConfigPriv:           utils.GetBoolPointer(false),
+		RemoteConsolePriv:        utils.GetBoolPointer(true),
+		VirtualMediaPriv:         utils.GetBoolPointer(true),
+		VirtualPowerAndResetPriv: utils.GetBoolPointer(true),
+		ILOConfigPriv:            utils.GetBoolPointer(false),
 	})
 
 	km := ov.KeyManager{
@@ -94,7 +90,7 @@ func main() {
 		PrimaryServerPort:      9000,
 		SecondaryServerAddress: "192.0.2.92",
 		SecondaryServerPort:    9000,
-		RedundancyRequired:     GetBoolPointer(true),
+		RedundancyRequired:     utils.GetBoolPointer(true),
 		GroupName:              "GRP",
 		CertificateName:        "Local CA",
 		LoginName:              "deployment",
