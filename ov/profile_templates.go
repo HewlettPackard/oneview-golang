@@ -120,10 +120,12 @@ func (c *OVClient) GetProfileTemplates(start string, count string, filter string
 	return profiles, nil
 }
 
+// IsZeroOfUnderlyingType returns true if a value is initialized.
 func IsZeroOfUnderlyingType(x interface{}) bool {
 	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
 }
 
+// SetMp maps ManagementProcessors to IntManagementProcessor struct.
 func SetMp(mp ManagementProcessors) IntManagementProcessor {
 	mps := make([]MpSetting, 0)
 	var emptyMpSettings MpSettings
@@ -133,7 +135,9 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 			args := make(map[string]interface{})
 			v := reflect.ValueOf(mp.MpSetting.AdministratorAccount)
 			typeOfS := v.Type()
+			// iterate through Administrative Account Fields
 			for i := 0; i < v.NumField(); i++ {
+				// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 				if !IsZeroOfUnderlyingType(v.Field(i).Interface()) {
 					args[strings.ToLower(string(typeOfS.Field(i).Name[0]))+typeOfS.Field(i).Name[1:]] = v.Field(i).Interface()
 				}
@@ -148,7 +152,9 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 			args := make(map[string]interface{})
 			v := reflect.ValueOf(mp.MpSetting.Directory)
 			typeOfS := v.Type()
+			// iterate through Directory Fields.
 			for i := 0; i < v.NumField(); i++ {
+				// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 				if !IsZeroOfUnderlyingType(v.Field(i).Interface()) {
 					args[strings.ToLower(string(typeOfS.Field(i).Name[0]))+typeOfS.Field(i).Name[1:]] = v.Field(i).Interface()
 				}
@@ -164,7 +170,9 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 			args := make(map[string]interface{})
 			v := reflect.ValueOf(mp.MpSetting.KeyManager)
 			typeOfS := v.Type()
+			// iterate through KeyManager Fields
 			for i := 0; i < v.NumField(); i++ {
+				// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 				if !IsZeroOfUnderlyingType(v.Field(i).Interface()) {
 					args[strings.ToLower(string(typeOfS.Field(i).Name[0]))+typeOfS.Field(i).Name[1:]] = v.Field(i).Interface()
 				}
@@ -177,11 +185,14 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 
 		if len(mp.MpSetting.DirectoryGroups) > 0 {
 			var ags []interface{}
+			// iterate through Directory Groups
 			for _, i := range mp.MpSetting.DirectoryGroups {
 				v := reflect.ValueOf(i)
 				typeOfS := v.Type()
 				arg := make(map[string]interface{})
+				// iterate through Directory Group fields.
 				for j := 0; j < v.NumField(); j++ {
+					// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 					if !IsZeroOfUnderlyingType(v.Field(j).Interface()) {
 						arg[strings.ToLower(string(typeOfS.Field(j).Name[0]))+typeOfS.Field(j).Name[1:]] = v.Field(j).Interface()
 					}
@@ -200,11 +211,14 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 
 		if len(mp.MpSetting.LocalAccounts) > 0 {
 			var ags []interface{}
+			// iterate through localAccounts
 			for _, i := range mp.MpSetting.LocalAccounts {
 				v := reflect.ValueOf(i)
 				typeOfS := v.Type()
 				arg := make(map[string]interface{})
+				// iterate through fields in local accounts
 				for j := 0; j < v.NumField(); j++ {
+					// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 					if !IsZeroOfUnderlyingType(v.Field(j).Interface()) {
 						arg[strings.ToLower(string(typeOfS.Field(j).Name[0]))+typeOfS.Field(j).Name[1:]] = v.Field(j).Interface()
 					}
