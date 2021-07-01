@@ -597,6 +597,13 @@ func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 	t.ResetTask()
 	log.Debugf("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
+
+	var emptyMgmtProcessorsStruct ManagementProcessors
+	if !reflect.DeepEqual(p.ManagementProcessors, emptyMgmtProcessorsStruct) {
+		mp := SetMp(p.ManagementProcessors)
+		p.ManagementProcessor = mp
+	}
+
 	data, err := c.RestAPICall(rest.PUT, uri, p)
 	if err != nil {
 		t.TaskIsDone = true
