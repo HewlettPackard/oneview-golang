@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
@@ -13,9 +14,9 @@ func main() {
 		clientOV                          *ov.OVClient
 		server_profile_template_name      = "Test SPT"
 		server_profile_template_name_auto = "Auto-SPT"
-		enclosure_group_name              = "Auto-TestEG"
+		enclosure_group_name              = "EG" //"Auto-TestEG"
 		server_hardware_type_name         = "SY 480 Gen9 1"
-		scope                             = "Auto-Scope"
+		scope                             = "testing" //"Auto-Scope"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 	ovc := clientOV.NewOVClient(
@@ -154,6 +155,15 @@ func main() {
 	} else {
 		fmt.Println("#----------------Server Profile Template by Name---------------#")
 		fmt.Println(spt.Name)
+	}
+
+	fmt.Println("Server Profile Template refresh using PATCH request")
+	options := new([]ov.Options)
+	*options = append(*options, ov.Options{"replace", "/refreshState", "RefreshPending"})
+
+	err = ovc.PatchServerProfileTemplate(spt, *options) //patchRequest)
+	if err != nil {
+		fmt.Println("Refresh failed", err)
 	}
 
 	spt.Name = "Renamed Test SPT"

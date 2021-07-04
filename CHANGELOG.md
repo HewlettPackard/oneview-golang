@@ -18,6 +18,47 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to ID Pools IPv4 Ranges
 - Added support to ID Pools Ipv4 Subnets
 - Added support to Labels Resource
+- 
+- ### Oneview Features supported
+- Appliance Configuration Timeconfig
+- Appliance SSH Access
+- Appliance SNMP V1 Trap Destinations
+- Appliance SNMPv3 Trap Destination
+- Appliance SNMPv3 User
+- Appliance Time and Locale Configuration
+- Connection Template
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Firmware Drivers
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- ID Pools
+- ID Pools IPv4 Ranges
+- ID Pools Ipv4 Subnets- 
+- Interconnects
+- Interconnect Types
+- Labels Resource
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
 
 ### Bug fixes & Enhancements:
 - [#315] (https://github.com/HewlettPackard/oneview-golang/issues/315) oneview_ethernet_network bug Terraform-Bug#306
