@@ -14,7 +14,8 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-		id       = "b1b869f8-3d5a-4d4a-b0a2-fb6634f045d6"
+		id       = "ebb4dac4-6f9f-48b4-b356-fd371a026899"
+		eg_name  = "EG_For_IPV4Range"
 	)
 	apiversion, _ := strconv.Atoi("ONEVIEW_APIVERSION")
 	ovc := ClientOV.NewOVClient(
@@ -28,11 +29,12 @@ func main() {
 	fragments := new([]ov.StartStopFragments)
 	fragment1 := ov.StartStopFragments{EndAddress: "<ip_address>", StartAddress: "<ip_address>"}
 	*fragments = append(*fragments, fragment1)
+
 	ipV4Range := ov.CreateIpv4Range{
 		Type:               "Range",
 		Name:               "test",
 		StartStopFragments: *fragments,
-		SubnetUri:          "/rest/id-pools/ipv4/subnets/40f76df9-1e39-4e5a-81fc-14614efea5e8",
+		SubnetUri:          "/rest/id-pools/ipv4/subnets/c04b28fe-f6fe-4a40-bc23-c17ccdf4c777",
 	}
 
 	// Gets an IPv4 range
@@ -46,8 +48,9 @@ func main() {
 	}
 
 	// Creates an IPv4 range
-	fmt.Println(ipV4Range)
+
 	iprange, err := ovc.CreateIPv4Range(ipV4Range)
+	fmt.Println(iprange.URI)
 	if err != nil {
 		fmt.Println("IPv4 Range Creation Failed: ", err)
 	} else {
@@ -76,6 +79,18 @@ func main() {
 		for i := range freeFragments.Members {
 			fmt.Println(freeFragments.Members[i])
 		}
+	}
+	//Create a resource which can assigned the ipv4range
+	scp, _ := ovc.GetScopeByName("Auto-Scope")
+	initialScopeUris := new([]utils.Nstring)
+	*initialScopeUris = append(*initialScopeUris, scp.URI)
+	iprange1 := new([]utils.Nstring)
+	*iprange1 = append(*iprange1, iprange.URI)
+
+	enclosureGroup := ov.EnclosureGroup{Name: eg_name, IpAddressingMode: "ipPool", IpRangeUris: *iprange1, InitialScopeUris: *initialScopeUris, EnclosureCount: 3}
+	err = ovc.CreateEnclosureGroup(enclosureGroup)
+	if err != nil {
+		panic(err)
 	}
 
 	// Allocates a set of IDs from an IPv4 range.
@@ -140,6 +155,12 @@ func main() {
 		jsonResponse, _ := json.MarshalIndent(resp_2, "", "  ")
 		fmt.Print(string(jsonResponse), "\n\n")
 	}
+	//Delete Enclosure group
+	err = ovc.DeleteEnclosureGroup(eg_name)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Deleted EnclosureGroup successfully...")
 
 	// Deletes an IPv4 range.
 	err = ovc.DeleteIpv4Range(id)
@@ -148,4 +169,5 @@ func main() {
 	} else {
 		fmt.Println("#---Deleted Ipv4Range successfully---#")
 	}
+
 }
