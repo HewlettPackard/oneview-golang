@@ -145,7 +145,7 @@ type DirectoryGroups struct {
 }
 
 type HostName struct {
-	Hostname 		string `json:"-"`
+	Hostname string `json:"-"`
 }
 
 type LocalAccounts struct {
@@ -177,7 +177,7 @@ type MpSettings struct {
 	Directory            Directory            `json:"-"`
 	DirectoryGroups      []DirectoryGroups    `json:"-"`
 	KeyManager           KeyManager           `json:"-"`
-	HostName	     HostName		  `json:"-"`
+	HostName             HostName             `json:"-"`
 }
 
 type MpSetting struct {
