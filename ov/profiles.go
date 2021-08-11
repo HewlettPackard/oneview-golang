@@ -144,10 +144,6 @@ type DirectoryGroups struct {
 	ILOConfigPriv            *bool  `json:"-"`
 }
 
-type HostName struct {
-	Hostname string `json:"-"`
-}
-
 type LocalAccounts struct {
 	UserName                 string `json:"-"`
 	DisplayName              string `json:"-"`
@@ -177,7 +173,6 @@ type MpSettings struct {
 	Directory            Directory            `json:"-"`
 	DirectoryGroups      []DirectoryGroups    `json:"-"`
 	KeyManager           KeyManager           `json:"-"`
-	HostName             HostName             `json:"-"`
 }
 
 type MpSetting struct {
@@ -522,13 +517,13 @@ func (c *OVClient) SubmitDeleteProfile(p ServerProfile) (t *Task, err error) {
 	}
 	data, err := c.RestAPICall(rest.DELETE, uri, nil)
 	if err != nil {
-		log.Errorf("Error submitting new profile request: %s", err)
+		log.Errorf("Error submitting delete profile request: %s", err)
 		t.TaskIsDone = true
 		return t, err
 	}
 
 	log.Debugf("Response delete profile %s", data)
-	if err := json.Unmarshal(data, &t); err != nil {
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
 		return t, err
@@ -546,7 +541,6 @@ func (c *OVClient) DeleteProfile(name string) error {
 		profile       ServerProfile
 		err           error
 	)
-
 	servernamemsg = "'no server'"
 	profile, err = c.GetProfileByName(name)
 	if err != nil {
@@ -573,12 +567,15 @@ func (c *OVClient) DeleteProfile(name string) error {
 
 		// submit delete task
 		t, err := c.SubmitDeleteProfile(profile)
-		if c.APIVersion < 1000 {
-			err = t.Wait()
-			if err != nil {
-				return err
-			}
+		if err != nil {
+			return err
 		}
+
+		err = t.Wait()
+		if err != nil {
+			return err
+		}
+		return nil
 
 		// check for task execution
 
