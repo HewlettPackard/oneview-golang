@@ -636,24 +636,6 @@ func (c *OVClient) Patch(id string, operation []PatchData) error {
 	return nil
 }
 
-// Reset iLO
-func (c *OVClient) SetMpState(serverHardwareId string, value string) error {
-	patchOperation := PatchData{
-		Op:    "replace",
-		Path:  "/mpState",
-		Value: value,
-	}
-	operation := []PatchData{patchOperation}
-	log.Debugf("Update server Hardware's mpState\n")
-	err := c.Patch(serverHardwareId, operation)
-	if err != nil {
-		log.Errorf("Error while updating mpState: %s", err)
-		return err
-	}
-
-	return nil
-}
-
 // Update the server into/out of maintenance mode
 func (c *OVClient) SetMaintenanceMode(serverHardwareId string, value string) error {
 	patchOperation := PatchData{

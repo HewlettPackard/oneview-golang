@@ -223,15 +223,6 @@ func main() {
 		fmt.Println("PowerState is already", power["powerState"])
 	}
 
-	fmt.Println("-----------------------------")
-	fmt.Println("Perform an iLO reset for the given server:")
-	err = ovc.SetMpState(ServerList.Members[0].UUID.String(), "Reset")
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("iLo has been reset")
-	}
-
 	fmt.Println("----------------------")
 	fmt.Println("Get power status of a server:")
 	powerState, err := serverName.GetPowerState()
