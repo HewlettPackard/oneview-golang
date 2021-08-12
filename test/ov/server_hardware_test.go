@@ -177,7 +177,7 @@ func TestAddMultipleRackServers(t *testing.T) {
 		testName = d.Tc.GetTestData(d.Env, "Name").(string)
 
 		testSh := ov.ServerHardware{
-			MpHostsAndRanges:   d.Tc.GetTestData(d.Env, "MpHostsAndRanges"),
+			MpHostsAndRanges:   utils.Nstring(d.Tc.GetTestData(d.Env, "MpHostsAndRanges").(string)),
 			Username:           d.Tc.GetTestData(d.Env, "Username").(string),
 			Password:           d.Tc.GetTestData(d.Env, "Password").(string),
 			ConfigurationState: d.Tc.GetTestData(d.Env, "ConfigurationState").(string),
