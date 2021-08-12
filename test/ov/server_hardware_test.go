@@ -143,7 +143,7 @@ func TestAddRackServers(t *testing.T) {
 				ConfigurationState: d.Tc.GetTestData(d.Env, "ConfigurationState").(string),
 				LicensingIntent:    d.Tc.GetTestData(d.Env, "LicensingIntent").(string),
 			}
-			servHard, err := c.AddRackServer(testSh)
+			err := c.AddRackServer(testSh)
 			assert.NoError(t, err, "Add server hardware error -> %s", err)
 
 			err = c.AddRackServer(testSh)
@@ -176,18 +176,18 @@ func TestAddMultipleRackServers(t *testing.T) {
 		// find out if the test server hardware already exist
 		testName = d.Tc.GetTestData(d.Env, "Name").(string)
 
-		testSh = ov.ServerHardware{
-			MpHostsAndRanges:   d.Tc.GetTestData(d.Env, "MpHostsAndRanges").(string),
+		testSh := ov.ServerHardware{
+			MpHostsAndRanges:   d.Tc.GetTestData(d.Env, "MpHostsAndRanges").String(),
 			Username:           d.Tc.GetTestData(d.Env, "Username").(string),
 			Password:           d.Tc.GetTestData(d.Env, "Password").(string),
 			ConfigurationState: d.Tc.GetTestData(d.Env, "ConfigurationState").(string),
 			LicensingIntent:    d.Tc.GetTestData(d.Env, "LicensingIntent").(string),
 		}
-		servHard, err := c.AddMultipleRackServers(testSh)
+		err := c.AddMultipleRackServers(testSh)
 		assert.NoError(t, err, "Add server hardware error -> %s", err)
 
 		err = c.AddMultipleRackServers(testSh)
-		ssert.Error(t, err, "AddRackServer should give error because hardware already exists, err-> %s", err)
+		assert.Error(t, err, "AddRackServer should give error because hardware already exists, err-> %s", err)
 
 		// reload the test profile that we just created
 		testSh, err = c.GetServerHardwareByName(testName)
