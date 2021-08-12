@@ -175,9 +175,9 @@ func TestAddMultipleRackServers(t *testing.T) {
 		}
 		// find out if the test server hardware already exist
 		testName = d.Tc.GetTestData(d.Env, "Name").(string)
-
+		hostsRanges := make([]utils.Nstring, 0)
 		testSh := ov.ServerHardware{
-			MpHostsAndRanges:   utils.Nstring(d.Tc.GetTestData(d.Env, "MpHostsAndRanges").(string)),
+			MpHostsAndRanges:   hostsRanges,
 			Username:           d.Tc.GetTestData(d.Env, "Username").(string),
 			Password:           d.Tc.GetTestData(d.Env, "Password").(string),
 			ConfigurationState: d.Tc.GetTestData(d.Env, "ConfigurationState").(string),
