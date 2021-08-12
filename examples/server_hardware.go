@@ -30,7 +30,7 @@ func main() {
 		Username:           "<username>",
 		Password:           "<password>",
 		Force:              false,
-		LicensingIntent:    "OneViewNoiLO",
+		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
 	}
 
@@ -45,7 +45,7 @@ func main() {
 		Username:           "<username>",
 		Password:           "<password>",
 		Force:              false,
-		LicensingIntent:    "OneView",
+		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
 	}
 
