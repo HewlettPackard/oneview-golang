@@ -83,7 +83,7 @@ type ServerHardware struct {
 	Force                 bool            `json:"force,omitempty"`              // "force": false,
 	FormFactor            string          `json:"formFactor,omitempty"`         // "formFactor": "HalfHeight",
 	Generation            string          `json:"generation,omitempty"`         // "generation":,
-	Hostname              string          `json:"hostname,omitempty"`           // "hostname": "172.1.1.1"
+	Hostname              string          `json:"hostname,omitempty"`           // "hostname": "17.1.1.1"
 	HostOsType            int             `json:"hostOsType,omitempty"`
 	InitialScopeUris      []utils.Nstring `json:"initialScopeUris,omitempty"`
 	LicensingIntent       string          `json:"licensingIntent,omitempty"`    // "licensingIntent": "OneView",
@@ -196,6 +196,12 @@ type PatchData struct {
 	Value string `json:"value,omitempty"` //"value": "On"
 }
 
+type PatchPowerData struct {
+	Op    string                 `json:"op,omitempty"`    //"op": "replace",
+	Path  string                 `json:"path,omitempty"`  //"path": "/uidState",
+	Value map[string]interface{} `json:"value,omitempty"` //"value": "On"
+}
+
 // server hardware power off
 func (s ServerHardware) PowerOff() error {
 	var pt *PowerTask
@@ -272,16 +278,19 @@ func (c *OVClient) AddMultipleRackServers(rackServer ServerHardware) error {
 	log.Debugf("task -> %+v", t)
 	data, err := c.RestAPICall(rest.POST, uri, rackServer)
 	if err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error submitting multiple rack servers addition: %s", err)
 		return err
 	}
 
 	log.Debugf("Response for multiple Rackservers %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
 		return err
 	}
 
+	err = t.Wait()
 	if err != nil {
 		return err
 	}
@@ -534,9 +543,9 @@ func (c *OVClient) RefreshServerHardware(id string, hardware ServerHardware) err
 	return nil
 }
 
-// Updates Firmware Version to minimum firmware version
+// Updates iLO Firmware Version to minimum firmware version
 // supported by Oneview appliance
-func (c *OVClient) UpdateFirmwareVersion(id string) error {
+func (c *OVClient) UpdateiLOFirmwareVersion(id string) error {
 	var (
 		uri = "/rest/server-hardware/" + id + "/mpFirmwareVersion"
 		t   *Task
@@ -561,8 +570,24 @@ func (c *OVClient) UpdateFirmwareVersion(id string) error {
 	return nil
 }
 
-// Performs patch operation to update SH attributes
-func (c *OVClient) Patch(id string, operation []PatchData) error {
+func (c *OVClient) SetOneTimeBoot(serverHardwareId string, value string) error {
+	patchOperation := PatchData{
+		Op:    "replace",
+		Path:  "/oneTimeBoot",
+		Value: value,
+	}
+	operation := []PatchData{patchOperation}
+	fmt.Println("Update server Hardware's oneTimeBoot\n")
+	err := c.Patch(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating oneTimeBoot: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *OVClient) PatchPowerState(id string, operation []PatchPowerData) error {
 	var (
 		uri = "/rest/server-hardware/" + id
 		t   *Task
@@ -570,7 +595,6 @@ func (c *OVClient) Patch(id string, operation []PatchData) error {
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-
 	log.Debugf("REST : %s \n %+v\n", uri, operation)
 	data, err := c.RestAPICall(rest.PATCH, uri, operation)
 	if err != nil {
@@ -581,6 +605,126 @@ func (c *OVClient) Patch(id string, operation []PatchData) error {
 	log.Debugf("Response of Patch %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Performs patch operation to update SH attributes
+func (c *OVClient) Patch(id string, operation []PatchData) error {
+	var (
+		uri = "/rest/server-hardware/" + id
+		t   *Task
+	)
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	log.Debugf("REST : %s \n %+v\n", uri, operation)
+	data, err := c.RestAPICall(rest.PATCH, uri, operation)
+	if err != nil {
+		log.Errorf("Error while doing Patch: %s", err)
+		return err
+	}
+
+	log.Debugf("Response of Patch %s", data)
+	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Reset iLO
+func (c *OVClient) SetMpState(serverHardwareId string, value string) error {
+	patchOperation := PatchData{
+		Op:    "replace",
+		Path:  "/mpState",
+		Value: value,
+	}
+	operation := []PatchData{patchOperation}
+	log.Debugf("Update server Hardware's mpState\n")
+	err := c.Patch(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating mpState: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Update the server into/out of maintenance mode
+func (c *OVClient) SetMaintenanceMode(serverHardwareId string, value string) error {
+	patchOperation := PatchData{
+		Op:    "replace",
+		Path:  "/maintenanceMode",
+		Value: value,
+	}
+	operation := []PatchData{patchOperation}
+	log.Debugf("Update server Hardware's maintenance mode\n")
+	err := c.Patch(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating maintenance mode: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Turn the server UID light On/Off
+func (c *OVClient) SetUidState(serverHardwareId string, value string) error {
+	patchOperation := PatchData{
+		Op:    "replace",
+		Path:  "/uidState",
+		Value: value,
+	}
+	operation := []PatchData{patchOperation}
+	log.Debugf("Update server Hardware's uidState\n")
+	err := c.Patch(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating uidState: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Set the server product ID and SerialNumber together
+func (c *OVClient) SetSerialAndPartNumber(serverHardwareId string, partNo string, serialNo string) error {
+	patchPart := PatchData{
+		Op:    "replace",
+		Path:  "/partNumber",
+		Value: partNo,
+	}
+	patchSerial := PatchData{
+		Op:    "replace",
+		Path:  "/serialNumber",
+		Value: serialNo,
+	}
+	operation := []PatchData{patchPart, patchSerial}
+	log.Debugf("Update server Hardware's part number\n")
+	err := c.Patch(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating part number: %s", err)
+		return err
+	}
+
+	return nil
+}
+
+// Update the power state of the server
+func (c *OVClient) SetPowerState(serverHardwareId string, powerState map[string]interface{}) error {
+	patchOperation := PatchPowerData{
+		Op:    "replace",
+		Path:  "/powerState",
+		Value: powerState,
+	}
+	operation := []PatchPowerData{patchOperation}
+	log.Debugf("Update server Hardware's power state\n")
+	err := c.PatchPowerState(serverHardwareId, operation)
+	if err != nil {
+		log.Errorf("Error while updating power state: %s", err)
 		return err
 	}
 

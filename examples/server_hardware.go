@@ -26,34 +26,30 @@ func main() {
 	fmt.Println("-----------------------------")
 	fmt.Println("Add Single Rack server to the appliance:")
 	rackServer := ov.ServerHardware{
-		Hostname:           "<serverIp>",
-		Username:           "<userName>",
-		Password:           "<password>",
+		Hostname:           "172.18.31.20",
+		Username:           "dcs",
+		Password:           "dcs",
 		Force:              false,
-		LicensingIntent:    "OneView",
+		LicensingIntent:    "OneViewNoiLO",
 		ConfigurationState: "Managed",
 	}
 
 	err := ovc.AddRackServer(rackServer)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Added rack-server successfully.")
-	}
+	fmt.Println("Added rack-server successfully.")
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add multiple Rack servers:")
-	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress5>"}
+	hostsAndRanges := &[]utils.Nstring{"172.18.31.18-172.18.31.19"}
 	multipleRackServers := ov.ServerHardware{
 		MpHostsAndRanges:   *hostsAndRanges,
-		Username:           "<userName>",
-		Password:           "<password>",
+		Username:           "dcs",
+		Password:           "dcs",
 		Force:              false,
 		LicensingIntent:    "OneView",
 		ConfigurationState: "Managed",
 	}
 
-	err := ovc.AddMultipleRackServers(multipleRackServers)
+	err = ovc.AddMultipleRackServers(multipleRackServers)
 	if err != nil {
 		panic(err)
 	} else {
@@ -64,6 +60,7 @@ func main() {
 	fmt.Println("Get Server Hardware List:")
 	filters := []string{""}
 	ServerList, err := ovc.GetServerHardwareList(filters, "", "", "", "")
+
 	if err == nil {
 		for i := 0; i < ServerList.Count; i++ {
 			fmt.Println(ServerList.Members[i].Name)
@@ -86,43 +83,6 @@ func main() {
 
 	} else {
 		fmt.Println("Failed to fetch Firmware List : ", err)
-	}
-
-	fmt.Println("-----------------------------")
-	fmt.Println("Refresh Server hardware:")
-	refreshState := ov.ServerHardware{
-		RefreshState: "RefreshPending",
-	}
-	err = ovc.RefreshServerHardware(ServerList.Members[0].UUID.String(), refreshState)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Server hardware refreshed successfully")
-	}
-
-	fmt.Println("-----------------------------")
-	fmt.Println("Update Firmware Version to minimum iLO Firmware Version:")
-	err = ovc.UpdateFirmwareVersion(ServerList.Members[0].UUID.String())
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("Updated firmware version successfully")
-	}
-
-	fmt.Println("-----------------------------")
-	patchOperation := ov.PatchData{
-		Op:    "replace",
-		Path:  "/oneTimeBoot",
-		Value: "USB",
-	}
-	operation := []ov.PatchData{patchOperation}
-	fmt.Println("Perform Patch operation on ", patchOperation.Path)
-	err = ovc.Patch(ServerList.Members[0].UUID.String(), operation)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println(patchOperation.Path, "value changed from",
-			ServerList.Members[0].OneTimeBoot, "to", patchOperation.Value)
 	}
 
 	fmt.Println("-----------------------------")
@@ -178,6 +138,112 @@ func main() {
 		fmt.Println(serverHarware.Type)
 	} else {
 		fmt.Println("Failed to fetch server hardware by URI: ", err)
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Refresh Server hardware:")
+	refreshState := ov.ServerHardware{
+		RefreshState: "RefreshPending",
+	}
+	err = ovc.RefreshServerHardware(ServerList.Members[0].UUID.String(), refreshState)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Server hardware refreshed successfully")
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Update Firmware Version to minimum iLO Firmware Version:")
+	err = ovc.UpdateiLOFirmwareVersion(ServerList.Members[0].UUID.String())
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Updated firmware version successfully")
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Update oneTimeBoot to Network")
+	bootOption := "Network" //bootOption can also be Normal, CDROM, HDD, USB
+	err = ovc.SetOneTimeBoot(ServerList.Members[0].UUID.String(), bootOption)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Onetimeboot value changed from",
+			ServerList.Members[0].OneTimeBoot, "to", bootOption)
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Update uidState to On")
+	uidState := "On"
+	err = ovc.SetUidState(ServerList.Members[0].UUID.String(), uidState)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("UidState value changed from",
+			ServerList.Members[0].UidState, "to", uidState)
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Put the server into maintenance mode:")
+	maintenanceMode := "true"
+	err = ovc.SetMaintenanceMode(ServerList.Members[0].UUID.String(), maintenanceMode)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("MaintenanceMode value changed from",
+			ServerList.Members[0].MaintenanceMode, "to", maintenanceMode)
+	}
+
+	// Change Power state using PATCH
+	fmt.Println("-----------------------------")
+	fmt.Println("Power off a server that is on, using the momentary press control:")
+	power := map[string]interface{}{"powerState": "Off", "powerControl": "PressAndHold"}
+	if power["powerState"] != ServerList.Members[0].PowerState {
+		err = ovc.SetPowerState(ServerList.Members[0].UUID.String(), power)
+		if err != nil {
+			panic(err)
+		} else {
+			fmt.Println("PowerState changed from", ServerList.Members[0].PowerState, "to", power["powerState"])
+		}
+	} else {
+		fmt.Println("PowerState is already", power["powerState"])
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Power on a server that is off, using press and hold control:")
+	power = map[string]interface{}{"powerState": "On", "powerControl": "MomentaryPress"}
+	if power["powerState"] != ServerList.Members[0].PowerState {
+		err = ovc.SetPowerState(ServerList.Members[0].UUID.String(), power)
+		if err != nil {
+			panic(err)
+		} else {
+			fmt.Println("PowerState changed from", ServerList.Members[0].PowerState, "to", power["powerState"])
+		}
+	} else {
+		fmt.Println("PowerState is already", power["powerState"])
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Update Serial Number and Part Number")
+	partNumber := "875763-S01"
+	serialNumber := "MXQ1004211"
+	fmt.Println(ServerList.Members[0].UUID.String())
+	err = ovc.SetSerialAndPartNumber(ServerList.Members[0].UUID.String(), partNumber, serialNumber)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("PartNumber value changed from",
+
+			ServerList.Members[0].PartNumber, "to", partNumber)
+	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println("Perform an iLO reset for the given server:")
+	err = ovc.SetMpState(ServerList.Members[0].UUID.String(), "Reset")
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("iLo has been reset")
 	}
 
 	fmt.Println("----------------------")
