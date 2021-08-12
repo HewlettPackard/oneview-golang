@@ -26,9 +26,9 @@ func main() {
 	fmt.Println("-----------------------------")
 	fmt.Println("Add Single Rack server to the appliance:")
 	rackServer := ov.ServerHardware{
-		Hostname:           "172.18.31.20",
-		Username:           "dcs",
-		Password:           "dcs",
+		Hostname:           "<serverIp>",
+		Username:           "<username>",
+		Password:           "<password>",
 		Force:              false,
 		LicensingIntent:    "OneViewNoiLO",
 		ConfigurationState: "Managed",
@@ -39,11 +39,11 @@ func main() {
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add multiple Rack servers:")
-	hostsAndRanges := &[]utils.Nstring{"172.18.31.18-172.18.31.19"}
+	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress2>"}
 	multipleRackServers := ov.ServerHardware{
 		MpHostsAndRanges:   *hostsAndRanges,
-		Username:           "dcs",
-		Password:           "dcs",
+		Username:           "<username>",
+		Password:           "<password>",
 		Force:              false,
 		LicensingIntent:    "OneView",
 		ConfigurationState: "Managed",
@@ -221,20 +221,6 @@ func main() {
 		}
 	} else {
 		fmt.Println("PowerState is already", power["powerState"])
-	}
-
-	fmt.Println("-----------------------------")
-	fmt.Println("Update Serial Number and Part Number")
-	partNumber := "875763-S01"
-	serialNumber := "MXQ1004211"
-	fmt.Println(ServerList.Members[0].UUID.String())
-	err = ovc.SetSerialAndPartNumber(ServerList.Members[0].UUID.String(), partNumber, serialNumber)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("PartNumber value changed from",
-
-			ServerList.Members[0].PartNumber, "to", partNumber)
 	}
 
 	fmt.Println("-----------------------------")

@@ -690,29 +690,6 @@ func (c *OVClient) SetUidState(serverHardwareId string, value string) error {
 	return nil
 }
 
-// Set the server product ID and SerialNumber together
-func (c *OVClient) SetSerialAndPartNumber(serverHardwareId string, partNo string, serialNo string) error {
-	patchPart := PatchData{
-		Op:    "replace",
-		Path:  "/partNumber",
-		Value: partNo,
-	}
-	patchSerial := PatchData{
-		Op:    "replace",
-		Path:  "/serialNumber",
-		Value: serialNo,
-	}
-	operation := []PatchData{patchPart, patchSerial}
-	log.Debugf("Update server Hardware's part number\n")
-	err := c.Patch(serverHardwareId, operation)
-	if err != nil {
-		log.Errorf("Error while updating part number: %s", err)
-		return err
-	}
-
-	return nil
-}
-
 // Update the power state of the server
 func (c *OVClient) SetPowerState(serverHardwareId string, powerState map[string]interface{}) error {
 	patchOperation := PatchPowerData{
