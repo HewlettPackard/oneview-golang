@@ -1,6 +1,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 
+# [v6.3.0]
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 3200.
+
+### New Changes
+- Supported new endpoints for Server Hardware resource.
+  - POST    /rest/server-hardware
+  - POST    /rest/server-hardware/discovery
+  - PUT     /rest/server-hardware/{id}/refreshState
+  - PUT     /rest/server-hardware/{id}/mpFirmwareVersion
+  - GET     /rest/server-hardware/*/firmware
+  - PATCH   /rest/server-hardware/{id}
+
 # [v6.2.0] 
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 3000.
@@ -18,8 +31,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added support to ID Pools IPv4 Ranges
 - Added support to ID Pools Ipv4 Subnets
 - Added support to Labels Resource
-- 
-- ### Oneview Features supported
+
+### Oneview Features supported
 - Appliance Configuration Timeconfig
 - Appliance SSH Access
 - Appliance SNMP V1 Trap Destinations
