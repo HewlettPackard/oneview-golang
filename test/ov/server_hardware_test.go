@@ -197,7 +197,8 @@ func TestAddMultipleRackServers(t *testing.T) {
 }
 
 func TestDeleteServerHardware(t *testing.T) {
-	var (
+	var (   
+		d          *OVTest
 		c          *ov.OVClient
 		testHW_URI utils.Nstring
 		testSH     ov.ServerHardware

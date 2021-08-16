@@ -726,7 +726,7 @@ func (c *OVClient) DeleteServerHardware(uri utils.Nstring) error {
 		}
 		_, err := c.RestAPICall(rest.DELETE, hardware.URI.String(), nil)
 		if err != nil {
-			log.Errorf("Error submitting subnet delete request: %s", err)
+			log.Errorf("Error submitting server hardware delete request: %s", err)
 			return err
 		}
 
