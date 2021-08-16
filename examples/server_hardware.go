@@ -22,6 +22,10 @@ func main() {
 		false,
 		apiversion,
 		"*")
+	scope := ov.Scope{Name: "ScopeHardware", Description: "Test from script", Type: "ScopeV3"}
+	_ = ovc.CreateScope(scope)
+	scp, _ := ovc.GetScopeByName("ScopeHardware")
+	initialScopeUris := &[]utils.Nstring{scp.URI}
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add Single Rack server to the appliance:")
@@ -32,6 +36,7 @@ func main() {
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
+		InitialScopeUris:   *initialScopeUris,
 	}
 
 	err := ovc.AddRackServer(rackServer)
@@ -39,7 +44,7 @@ func main() {
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add multiple Rack servers:")
-	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress2>"}
+	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress5>"}
 	multipleRackServers := ov.ServerHardware{
 		MpHostsAndRanges:   *hostsAndRanges,
 		Username:           "<username>",
@@ -47,6 +52,7 @@ func main() {
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
+		InitialScopeUris:   *initialScopeUris,
 	}
 
 	err = ovc.AddMultipleRackServers(multipleRackServers)
@@ -257,4 +263,22 @@ func main() {
 	for _, v := range ServerList.Members {
 		fmt.Println("Server: ", v.Name, "ILO IP: ", v.GetIloIPAddress())
 	}
+
+	hardwareType, err := ovc.GetServerHardwareTypeByUri(ServerList.Members[0].ServerHardwareTypeURI)
+	if hardwareType.Platform == "RackServer" {
+		fmt.Println("-----------------------------")
+		fmt.Println("Delete Server hardware:")
+		if ServerList.Members[0].State == "NoProfileApplied" {
+			err = ovc.DeleteServerHardware(ServerList.Members[0].URI)
+			if err != nil {
+				panic(err)
+			} else {
+				fmt.Println("Server hardware deleted successfully")
+			}
+		} else {
+			fmt.Println("Server hardware cannot be removed while being used by a server profile.")
+		}
+
+	}
+
 }

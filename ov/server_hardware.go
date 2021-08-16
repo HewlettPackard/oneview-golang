@@ -598,13 +598,20 @@ func (c *OVClient) PatchPowerState(id string, operation []PatchPowerData) error 
 	log.Debugf("REST : %s \n %+v\n", uri, operation)
 	data, err := c.RestAPICall(rest.PATCH, uri, operation)
 	if err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error while doing Patch: %s", err)
 		return err
 	}
 
 	log.Debugf("Response of Patch %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
 		return err
 	}
 
@@ -620,16 +627,24 @@ func (c *OVClient) Patch(id string, operation []PatchData) error {
 	// refresh login
 	c.RefreshLogin()
 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
 	log.Debugf("REST : %s \n %+v\n", uri, operation)
 	data, err := c.RestAPICall(rest.PATCH, uri, operation)
 	if err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error while doing Patch: %s", err)
 		return err
 	}
 
 	log.Debugf("Response of Patch %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
+		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
+		return err
+	}
+
+	err = t.Wait()
+	if err != nil {
 		return err
 	}
 
@@ -687,5 +702,37 @@ func (c *OVClient) SetPowerState(serverHardwareId string, powerState map[string]
 		return err
 	}
 
+	return nil
+}
+
+// Delete the rack server using URI
+func (c *OVClient) DeleteServerHardware(uri utils.Nstring) error {
+	var (
+		hardware ServerHardware
+		err      error
+	)
+
+	hardware, err = c.GetServerHardwareByUri(uri)
+	if err != nil {
+		return err
+	}
+	if hardware.Name != "" {
+		log.Infof("URI:%s", hardware.URI)
+		log.Debugf("REST : %s \n %+v\n", hardware.URI, hardware)
+
+		if hardware.URI == "" {
+			log.Warn("Unable to post delete, no uri found.")
+			return err
+		}
+		_, err := c.RestAPICall(rest.DELETE, hardware.URI.String(), nil)
+		if err != nil {
+			log.Errorf("Error submitting subnet delete request: %s", err)
+			return err
+		}
+
+		return nil
+	} else {
+		log.Infof("Server hardware could not be found to delete, %s, skipping delete ...", hardware.Name)
+	}
 	return nil
 }
