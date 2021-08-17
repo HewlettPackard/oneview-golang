@@ -195,3 +195,30 @@ func TestAddMultipleRackServers(t *testing.T) {
 	}
 
 }
+
+func TestDeleteServerHardware(t *testing.T) {
+	var (
+		d          *OVTest
+		c          *ov.OVClient
+		testHW_URI utils.Nstring
+		testSH     ov.ServerHardware
+	)
+	if os.Getenv("ONEVIEW_TEST_ACCEPTANCE") == "true" {
+		_, c = getTestDriverA("test_server_hardware")
+		testHW_URI = utils.Nstring(d.Tc.GetTestData(d.Env, "HardwareURI").(string))
+		if c == nil {
+			t.Fatalf("Failed to execute getTestDriver() ")
+		}
+
+		err := c.DeleteServerHardware(testHW_URI)
+		assert.NoError(t, err, "DeleteServerHardware err-> %s", err)
+
+		testSH, err = c.GetServerHardwareByUri(testHW_URI)
+		assert.NoError(t, err, "GetServerHardwareByUri with uri -> %+v", err)
+		assert.Equal(t, "", testSH.Name, fmt.Sprintf("Problem getting server hardware wtih name, %+v", testSH))
+	} else {
+		_, c = getTestDriverU("test_server_hardware")
+		err := c.DeleteServerHardware(testHW_URI)
+		assert.Error(t, err, fmt.Sprintf("All ok, no error, caught as expected: %s,%+v\n", err, testSH))
+	}
+}

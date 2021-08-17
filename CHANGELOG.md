@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
   - PUT     /rest/server-hardware/{id}/mpFirmwareVersion
   - GET     /rest/server-hardware/*/firmware
   - PATCH   /rest/server-hardware/{id}
+  - DELETE  /rest/server-hardware/{id}
 
 # [v6.2.0] 
 #### Notes
