@@ -497,8 +497,7 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		Connections: template.ConnectionSettings.Connections,
 	}
 	log.Debugf("new_template -> %+v", new_template)
-	new_template.ServerHardwareURI = blade.URI
-	new_template.Description += " " + name
+	new_template.ServerHardwareURI = blade.URI	
 	new_template.Name = name
 	log.Debugf("new_template -> %+v", new_template)
 
