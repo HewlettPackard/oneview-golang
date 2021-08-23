@@ -144,8 +144,8 @@ type DirectoryGroups struct {
 	ILOConfigPriv            *bool  `json:"-"`
 }
 
-type HostName struct {
-	Hostname string `json:"-"`
+type ProfileHost struct {
+	HostName string `json:"-"`
 }
 
 type LocalAccounts struct {
@@ -177,7 +177,7 @@ type MpSettings struct {
 	Directory            Directory            `json:"-"`
 	DirectoryGroups      []DirectoryGroups    `json:"-"`
 	KeyManager           KeyManager           `json:"-"`
-	HostName             HostName             `json:"-"`
+	ProfileHost          ProfileHost          `json:"-"`
 }
 
 type MpSetting struct {
