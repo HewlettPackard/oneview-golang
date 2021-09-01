@@ -44,6 +44,14 @@ func main() {
 		fmt.Println(connTemplate2)
 	}
 
+	templatebyUri, err := ovc.GetConnectionTemplateByURI(connTemplate2.URI)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#-----Got Connection Template by URI-----#")
+		fmt.Println(templatebyUri)
+	}
+
 	// Get the default connection template
 	default_connection, err := ovc.GetDefaultConnectionTemplate()
 	if err != nil {
