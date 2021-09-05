@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func newTrue() *bool {
@@ -179,7 +180,7 @@ func main() {
 
 	fmt.Println("....  Updating Logical Interconnect QOS Configuration.....")
 	liActiveQosConfig := ov.ActiveQosConfig{Type: "QosConfiguration", Category: "qos-aggregated-configuration", ConfigType: "Passthrough"}
-	liQosConfig := ov.QosConfiguration{Type: "qos-aggregated-configuration", Category: "qos-aggregated-configuration", ActiveQosConfig: liActiveQosConfig}
+	liQosConfig := ov.QosConfiguration{Type: "qos-aggregated-configuration", Category: "qos-aggregated-configuration", ActiveQosConfig: &liActiveQosConfig}
 
 	err_qos := ovc.UpdateLogicalInterconnectQosConfigurations(liQosConfig, id)
 	if err_qos != nil {
