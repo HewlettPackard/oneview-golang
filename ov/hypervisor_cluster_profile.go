@@ -73,7 +73,7 @@ type HypervisorClusterSettings struct {
 }
 
 type HypervisorHostProfileTemplate struct {
-	DataStoreNameSync         bool                       `json:"dataStoreNameSync,omitempty"`         //"dataStoreNameSync"
+	DataStoreNameSync         *bool                      `json:"dataStoreNameSync,omitempty"`         //"dataStoreNameSync"
 	DeploymentManagerType     string                     `json:"deploymentManagerType,omitempty"`     //"deploymentManagerType":"I3S"
 	DeploymentPlan            *DeploymentPlan            `json:"deploymentPlan,omitempty"`            //"deploymentPlan":""
 	HostConfigPolicy          *HostConfigPolicy          `json:"hostConfigPolicy,omitempty"`          //"hostConfigPolicy":""

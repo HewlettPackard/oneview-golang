@@ -46,7 +46,6 @@ type UplinkSet struct {
 	Category                       string               `json:"category,omitempty"`                       //"category":"uplink-sets",
 	ConnectionMode                 string               `json:"connectionMode,omitempty"`                 // "connectionMode":"Auto",
 	Created                        string               `json:"created,omitempty"`                        //"created":"20150831T154835.250Z",
-	DcbxOverride                   *DcbxOverride        `json:"dcbxOverride,omitempty"`                   //dcbxOverride
 	Description                    utils.Nstring        `json:"description,omitempty"`                    // "description": "Uplink-set 1",
 	Etag                           string               `json:"eTag,omitempty"`                           // "eTag": "1441036118675/8",
 	Name                           string               `json:"name,omitempty"`                           // "name": "Uplink77",
@@ -70,11 +69,6 @@ type UplinkSet struct {
 	Status                         string               `json:"status,omitempty"`                         // "status": "Critical",
 	PrivateVlanDomains             []PrivateVlanDomains `json:"privateVlanDomains,omitempty"`             //"privateVlanDomains: []",
 
-}
-type DcbxOverride struct {
-	Enabled bool `json:"enabled,omitempty"` //"Enabled"
-	Rocev1  bool `json:"rocev1,omitempty"`  //"Enabled"
-	Rocev2  bool `json:"rocev2,omitempty"`  //"Enabled"
 }
 
 type UplinkSetList struct {
