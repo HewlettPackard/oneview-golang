@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -40,13 +41,13 @@ func main() {
 		Size:             268435456,
 		ProvisioningType: "Thin",
 	}
-	trueVal := true
+
 	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)
 	if err != nil {
 		fmt.Println(err)
 	}
-	storageVolume := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties, IsPermanent: &trueVal}
-	storageVolume_auto := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties_auto, IsPermanent: &trueVal}
+	storageVolume := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties}
+	storageVolume_auto := ov.StorageVolume{TemplateURI: vol_template.URI, Properties: properties_auto}
 	err = ovc.CreateStorageVolume(storageVolume)
 	err = ovc.CreateStorageVolume(storageVolume_auto)
 	if err != nil {
