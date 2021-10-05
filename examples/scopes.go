@@ -96,7 +96,7 @@ func main() {
 		fmt.Println(scp_list.Members[i].Name)
 	}
 
-	scopesInResource, err := ovc.GetScopeFromResource("/rest/ethernet-networks/643c6652-ab20-431b-a99b-63ef3e5c4919")
+	scopesInResource, err := ovc.GetScopeFromResource(eth_uri.URI.String())
 	if err == nil {
 		fmt.Println(scopesInResource)
 	}
