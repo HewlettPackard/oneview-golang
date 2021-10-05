@@ -15,7 +15,7 @@ func main() {
 		scp_name2   = "Auto-Scope"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "Auto-Ethernet-1"
+		eth_network = "Auto-ethernet_network"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
