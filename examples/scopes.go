@@ -103,9 +103,9 @@ func main() {
 
 	scopesInResource.ScopeUris = []string{up_list.Members[0].URI.String()}
 	err = ovc.UpdateScopeForResource(scopesInResource)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err)
-	} else{
+	} else {
 		fmt.Printf("resource %s updated\n", scopesInResource.ResourceUri)
 	}
 
