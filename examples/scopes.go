@@ -15,7 +15,7 @@ func main() {
 		scp_name2   = "Auto-Scope"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "Auto-ethernet_network"
+		eth_network = "Auto-Ethernet-1"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -27,6 +27,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
+
 	scope_test := ov.Scope{Name: scp_name, Description: "Test from script", Type: "ScopeV3"}
 	scope_test_2 := ov.Scope{Name: scp_name2, Description: "Test from script", Type: "ScopeV3"}
 	er_test := ovc.CreateScope(scope_test)
@@ -86,12 +87,6 @@ func main() {
 		fmt.Println(up_list.Members[i].Name)
 	}
 
-	err = ovc.DeleteScope(upd_scope)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("#...................... Deleted Scope Successfully .....#")
-	}
 	scp_list, err = ovc.GetScopes("", "", "", "", sort)
 	if err != nil {
 		fmt.Println(err)
@@ -99,5 +94,23 @@ func main() {
 	fmt.Println("# ................... Scopes List .................#")
 	for i := 0; i < len(scp_list.Members); i++ {
 		fmt.Println(scp_list.Members[i].Name)
+	}
+
+	scopesInResource, err := ovc.GetScopeFromResource("/rest/ethernet-networks/643c6652-ab20-431b-a99b-63ef3e5c4919")
+	if err == nil {
+		fmt.Println(scopesInResource)
+	}
+
+	scopesInResource.ScopeUris = []string{up_list.Members[0].URI.String()}
+	err = ovc.UpdateScopeForResource(scopesInResource)
+	if err != nil{
+		fmt.Println(err)
+	} else{
+		fmt.Printf("resource %s updated\n", scopesInResource.ResourceUri)
+	}
+
+	err = ovc.DeleteScope(upd_scope)
+	if err != nil {
+		panic(err)
 	}
 }
