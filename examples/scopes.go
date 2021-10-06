@@ -15,7 +15,7 @@ func main() {
 		scp_name2   = "Auto-Scope"
 		new_scope   = "new-scope"
 		upd_scope   = "update-scope"
-		eth_network = "Auto-Ethernet-1"
+		eth_network = "Auto-ethernet_network"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -96,7 +96,7 @@ func main() {
 		fmt.Println(scp_list.Members[i].Name)
 	}
 
-	scopesInResource, err := ovc.GetScopeFromResource("/rest/ethernet-networks/643c6652-ab20-431b-a99b-63ef3e5c4919")
+	scopesInResource, err := ovc.GetScopeFromResource(eth_uri.URI.String())
 	if err == nil {
 		fmt.Println(scopesInResource)
 	}
