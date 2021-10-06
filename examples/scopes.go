@@ -101,6 +101,12 @@ func main() {
 		fmt.Println(scopesInResource)
 	}
 
+	scopeByUri, err := ovc.GetScopeByUri(up_list.Members[0].URI.String())
+	if err == nil {
+		fmt.Println("#.................Scope by Uri ..............#")
+		fmt.Println(scopeByUri)
+	}
+
 	scopesInResource.ScopeUris = []string{up_list.Members[0].URI.String()}
 	err = ovc.UpdateScopeForResource(scopesInResource)
 	if err != nil {

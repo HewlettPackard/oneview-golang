@@ -287,3 +287,24 @@ func (c *OVClient) UpdateScopeForResource(scp Scope) error {
 
 	return nil
 }
+
+// GetScopeByUri - get scopes by uri 
+func (c *OVClient) GetScopeByUri(uri string) (Scope, error) {
+	var (
+		scope Scope
+	)
+
+	// refresh login
+	c.RefreshLogin()
+	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+	data, err := c.RestAPICall(rest.GET, uri, nil)
+	if err != nil {
+		return scope, err
+	}
+
+	log.Debugf("GetScopeByUri %s", data)
+	if err := json.Unmarshal([]byte(data), &scope); err != nil {
+		return scope, err
+	}
+	return scope, nil
+}
