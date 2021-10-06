@@ -98,6 +98,7 @@ func main() {
 
 	scopesInResource, err := ovc.GetScopeFromResource(eth_uri.URI.String())
 	if err == nil {
+		fmt.Println("#.................Scopes assigned to a resource ..............#")
 		fmt.Println(scopesInResource)
 	}
 

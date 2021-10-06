@@ -3,7 +3,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [v6.4.0] (Unreleased)
 ### New Changes
-- Added `GetScopeFromResource(resourceUri)` and `UpdateScopeForResource(scopes)` to extend support more endpoints for scope resource.
+- Added `GetScopeByUri`, `GetScopeFromResource(resourceUri)` and `UpdateScopeForResource(scopes)` to extend support more endpoints for scope resource.
+  - GET    /rest/scopes/{id}
   - GET    /rest/scopes/resources/** 
   - PUT    /rest/scopes/resources/**
 
