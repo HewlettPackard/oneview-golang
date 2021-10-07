@@ -20,9 +20,11 @@ type LogicalEnclosure struct {
 	EnclosureUris             []utils.Nstring            `json:"enclosureUris,omitempty"`             // "enclosureUris":""
 	Enclosures                map[string]Enclosures      `json:"enclosures,omitempty"`                // "enclosures":"[]",
 	Firmware                  *LogicalEnclosureFirmware  `json:"firmware,omitempty"`                  // "firmware":"",
+	FirmwareBaselineUri       utils.Nstring              `json:"firmwareBaselineUri, omitempty"`      // "firmwareBaselineUri": "/rest/firmware-drivers/Synergy_Custom_SPP_2021_02_01_Z7550-97110",
+	ForceInstallFirmware      bool                       `json:"forceInstallFirmware, omitempty"`     // "forceInstallFirmware": true,
 	IpAddressingMode          string                     `json:"ipAddressingMode,omitempty"`          // "ipAddressingMode":"DHCP",
-	Ipv4Ranges                []Ipv4Ranges               `json:"ipv4Ranges,omitempty"`                //"ipv4Ranges":"[]"
-	LogicalInterconnectUris   []utils.Nstring            `json:"logicalInterconnectUris,omitempty"`   //"logicalInterconnectUris":"[]",
+	Ipv4Ranges                []Ipv4Ranges               `json:"ipv4Ranges,omitempty"`                // "ipv4Ranges":"[]"
+	LogicalInterconnectUris   []utils.Nstring            `json:"logicalInterconnectUris,omitempty"`   // "logicalInterconnectUris":"[]",
 	Modified                  string                     `json:"modified,omitempty"`                  // "modified": "20150831T154835.25Z",
 	Name                      string                     `json:"name,omitempty"`                      // "name": "Ethernet Network 1",
 	PowerMode                 string                     `json:"powerMode,omitempty"`                 // "powerMode": "RedundantPowerFeed",
