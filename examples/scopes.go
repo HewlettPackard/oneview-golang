@@ -27,6 +27,7 @@ func main() {
 		false,
 		apiversion,
 		"*")
+
 	scope_test := ov.Scope{Name: scp_name, Description: "Test from script", Type: "ScopeV3"}
 	scope_test_2 := ov.Scope{Name: scp_name2, Description: "Test from script", Type: "ScopeV3"}
 	er_test := ovc.CreateScope(scope_test)
@@ -86,12 +87,6 @@ func main() {
 		fmt.Println(up_list.Members[i].Name)
 	}
 
-	err = ovc.DeleteScope(upd_scope)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("#...................... Deleted Scope Successfully .....#")
-	}
 	scp_list, err = ovc.GetScopes("", "", "", "", sort)
 	if err != nil {
 		fmt.Println(err)
@@ -99,5 +94,30 @@ func main() {
 	fmt.Println("# ................... Scopes List .................#")
 	for i := 0; i < len(scp_list.Members); i++ {
 		fmt.Println(scp_list.Members[i].Name)
+	}
+
+	scopesInResource, err := ovc.GetScopeFromResource(eth_uri.URI.String())
+	if err == nil {
+		fmt.Println("#.................Scopes assigned to a resource ..............#")
+		fmt.Println(scopesInResource)
+	}
+
+	scopeByUri, err := ovc.GetScopeByUri(up_list.Members[0].URI.String())
+	if err == nil {
+		fmt.Println("#.................Scope by Uri ..............#")
+		fmt.Println(scopeByUri)
+	}
+
+	scopesInResource.ScopeUris = []string{up_list.Members[0].URI.String()}
+	err = ovc.UpdateScopeForResource(scopesInResource)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Printf("resource %s updated\n", scopesInResource.ResourceUri)
+	}
+
+	err = ovc.DeleteScope(upd_scope)
+	if err != nil {
+		panic(err)
 	}
 }
