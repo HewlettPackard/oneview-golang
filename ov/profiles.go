@@ -87,23 +87,23 @@ type Options struct {
 }
 
 type Servers struct {
-	EnclosureGroupName     string   `json:"enclosureGroupName, omitempty"`
-	EnclosureName          string   `json:"enclosureGroupName, omitempty"`
-	EnclosureUri           string   `json:"enclosureGroupName, omitempty"`
-	EnclosureBay           int      `json:"enclosureBay, omitempty"`
-	ServerHardwareName     string   `json:"serverHardwareName, omitempty"`
-	ServerHardwareUri      string   `json:"serverHardwareUri, omitempty"`
-	ServerHardwareTypeName string   `json:"serverHardwareTypeName, omitempty"`
-	ServerHardwareTypeUri  string   `json:"serverHardwareTypeUri, omitempty"`
-	EnclosureGroupUri      string   `json:"enclosuregroupUri, omitempty"`
-	PowerState             string   `json:"powerState, omitempty"`
-	FormFactor             []string `json:"formFactor, omitempty"`
-	ServerHardwareStatus   string   `json:"serverHardwareStatus, omitempty"`
+	EnclosureGroupName     string   `json:"enclosureGroupName,omitempty"`
+	EnclosureName          string   `json:"enclosureName,omitempty"`
+	EnclosureUri           string   `json:"enclosureUri,omitempty"`
+	EnclosureBay           int      `json:"enclosureBay,omitempty"`
+	ServerHardwareName     string   `json:"serverHardwareName,omitempty"`
+	ServerHardwareUri      string   `json:"serverHardwareUri,omitempty"`
+	ServerHardwareTypeName string   `json:"serverHardwareTypeName,omitempty"`
+	ServerHardwareTypeUri  string   `json:"serverHardwareTypeUri,omitempty"`
+	EnclosureGroupUri      string   `json:"enclosuregroupUri,omitempty"`
+	PowerState             string   `json:"powerState,omitempty"`
+	FormFactor             []string `json:"formFactor,omitempty"`
+	ServerHardwareStatus   string   `json:"serverHardwareStatus,omitempty"`
 }
 
 type AvailableTarget struct {
-	Type    string    `json:"type, omitempty"`
-	Members []Servers `json:"targets, omitempty"`
+	Type    string    `json:"type,omitempty"`
+	Members []Servers `json:"targets,omitempty"`
 }
 
 type KeyManager struct {
@@ -144,8 +144,8 @@ type DirectoryGroups struct {
 	ILOConfigPriv            *bool  `json:"-"`
 }
 
-type HostName struct {
-	Hostname string `json:"-"`
+type IloHostName struct {
+	HostName string `json:"-"`
 }
 
 type LocalAccounts struct {
@@ -177,12 +177,12 @@ type MpSettings struct {
 	Directory            Directory            `json:"-"`
 	DirectoryGroups      []DirectoryGroups    `json:"-"`
 	KeyManager           KeyManager           `json:"-"`
-	HostName             HostName             `json:"-"`
+	IloHostName          IloHostName          `json:"-"`
 }
 
 type MpSetting struct {
-	Args        map[string]interface{} `json:"args, omitempty"`
-	SettingType string                 `json:"settingType, omitempty"`
+	Args        map[string]interface{} `json:"args,omitempty"`
+	SettingType string                 `json:"settingType,omitempty"`
 }
 
 type IntManagementProcessor struct {
@@ -382,10 +382,12 @@ func (c *OVClient) GetAvailableServers(ServerHardwareUri string) (bool, error) {
 	}
 
 	for i := 0; i < len(profiles.Members); i++ {
+
 		if profiles.Members[i].ServerHardwareUri == ServerHardwareUri {
 			isHardwareAvailable = true
 		}
 	}
+
 	return isHardwareAvailable, nil
 }
 
@@ -408,8 +410,8 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 
 	// Get available server hardwares to assign it to SP
 	if p.ServerHardwareURI != "" {
-		isHardwareAvailable, err := c.GetAvailableServers(p.ServerHardwareURI.String())
 
+		isHardwareAvailable, err := c.GetAvailableServers(p.ServerHardwareURI.String())
 		if err != nil || isHardwareAvailable == false {
 			log.Errorf("Error getting available Hardware: %s", p.ServerHardwareURI.String())
 			if err != nil {
@@ -492,17 +494,34 @@ func (c *OVClient) CreateProfileFromTemplate(name string, template ServerProfile
 		new_template.Type = "ServerProfileV12"
 	}
 	new_template.ServerProfileTemplateURI = template.URI // create relationship
+	new_template.Description = template.ServerProfileDescription
 	new_template.ConnectionSettings = ConnectionSettings{
 		Connections: template.ConnectionSettings.Connections,
 	}
+	c.Cleanup(&new_template)
 	log.Debugf("new_template -> %+v", new_template)
 	new_template.ServerHardwareURI = blade.URI
-	new_template.Description += " " + name
 	new_template.Name = name
 	log.Debugf("new_template -> %+v", new_template)
 
 	err = c.SubmitNewProfile(new_template)
 	return err
+}
+
+func (c *OVClient) Cleanup(template *ServerProfile) {
+	// Bios is a pointer value to struct, handling for creating SP without BIOS settings.
+	if template.Bios != nil {
+		template.Bios.ComplianceControl = ""
+	}
+	template.Boot.ComplianceControl = ""
+	template.BootMode.ComplianceControl = ""
+	template.ConnectionSettings.ComplianceControl = ""
+	template.Firmware.ComplianceControl = ""
+	template.LocalStorage.ComplianceControl = ""
+	template.ManagementProcessor.ComplianceControl = ""
+	template.OSDeploymentSettings.ComplianceControl = ""
+	template.SanStorage.ComplianceControl = ""
+
 }
 
 // submit new profile template
@@ -573,12 +592,15 @@ func (c *OVClient) DeleteProfile(name string) error {
 
 		// submit delete task
 		t, err := c.SubmitDeleteProfile(profile)
-		if c.APIVersion < 1000 {
-			err = t.Wait()
-			if err != nil {
-				return err
-			}
+		if err != nil {
+			return err
 		}
+
+		err = t.Wait()
+		if err != nil {
+			return err
+		}
+		return nil
 
 		// check for task execution
 

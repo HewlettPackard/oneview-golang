@@ -98,12 +98,16 @@ func main() {
 		Password:               "Passw0rd",
 	}
 
+	host := ov.IloHostName{
+		HostName: "{serverProfileName}",
+	}
 	mps := ov.MpSettings{
 		AdministratorAccount: aa,
 		LocalAccounts:        la,
 		Directory:            d,
 		DirectoryGroups:      dg,
 		KeyManager:           km,
+		IloHostName:          host,
 	}
 
 	mp := ov.ManagementProcessors{

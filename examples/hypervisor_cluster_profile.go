@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
@@ -40,7 +41,6 @@ func main() {
 		fmt.Println("Error fetching scope: ", scperr)
 	}
 	*initialScopeUris = append(*initialScopeUris, scp.URI)
-
 	server_profile_template, err := ovc.GetProfileTemplateByName(server_profile_template_name)
 	if err != nil {
 		fmt.Println("Server Profile Template Retrieval Failed: ", err)
@@ -57,7 +57,7 @@ func main() {
 		Hostprefix:               "test"}
 
 	hypervisorclustprof := ov.HypervisorClusterProfile{
-		Type:                          "HypervisorClusterProfileV5",
+		Type:                          "HypervisorClusterProfileV6",
 		Name:                          hcp_name,
 		Description:                   "",
 		HypervisorType:                "Vmware",
@@ -143,4 +143,5 @@ func main() {
 			fmt.Println("#---------------HypervisorClusterProfile Deleted---------------#")
 		}
 	}
+
 }

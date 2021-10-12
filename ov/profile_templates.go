@@ -165,12 +165,12 @@ func SetMp(mp ManagementProcessors) IntManagementProcessor {
 			})
 		}
 
-		var emptyHostname HostName
-		if !reflect.DeepEqual(mp.MpSetting.HostName, emptyHostname) {
+		var emptyHostname IloHostName
+		if !reflect.DeepEqual(mp.MpSetting.IloHostName, emptyHostname) {
 			args := make(map[string]interface{})
-			v := reflect.ValueOf(mp.MpSetting.HostName)
+			v := reflect.ValueOf(mp.MpSetting.IloHostName)
 			typeOfS := v.Type()
-			// iterate through HostName Fields.
+			// iterate through IloHostName Fields.
 			for i := 0; i < v.NumField(); i++ {
 				// only adds fields that are initialized in order to bypass adding default/uninitialized values.
 				if !IsZeroOfUnderlyingType(v.Field(i).Interface()) {
@@ -330,10 +330,20 @@ func (c *OVClient) DeleteProfileTemplate(name string) error {
 			t.TaskIsDone = true
 			return err
 		}
-		_, err := c.RestAPICall(rest.DELETE, uri, nil)
+		data, err := c.RestAPICall(rest.DELETE, uri, nil)
 		if err != nil {
 			log.Errorf("Error submitting delete server profile template request: %s", err)
 			t.TaskIsDone = true
+			return err
+		}
+		log.Debugf("Response delete profile_template %s", data)
+		if err := json.Unmarshal([]byte(data), &t); err != nil {
+			t.TaskIsDone = true
+			log.Errorf("Error with task un-marshal: %s", err)
+			return err
+		}
+		err = t.Wait()
+		if err != nil {
 			return err
 		}
 
