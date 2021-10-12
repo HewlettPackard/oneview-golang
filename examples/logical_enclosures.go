@@ -15,8 +15,8 @@ func main() {
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE-Renamed"
 		scope_name          = "Auto-Scope"
-		eg_name             = "Auto-TestEG"
-		//		li_name             = "<logical_interconnect_name>"
+		eg_name             = "EG"
+		firmware_baseline   = utils.NewNstring("/rest/firmware-drivers/Synergy_Custom_SPP_2021_02_01_Z7550-97110")
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -38,8 +38,11 @@ func main() {
 	enc_grp, err := ovc.GetEnclosureGroupByName(eg_name)
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure,
-		EnclosureUris:     *enclosureUris,
-		EnclosureGroupUri: enc_grp.URI}
+		EnclosureUris:        *enclosureUris,
+		EnclosureGroupUri:    enc_grp.URI,
+		FirmwareBaselineUri:  firmware_baseline,
+		ForceInstallFirmware: true,
+	}
 
 	er := ovc.CreateLogicalEnclosure(logicalEnclosure)
 	if er != nil {
@@ -93,6 +96,23 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+	}
+
+	// Update Logical Enclosure Firmware
+	updateFirmware := ov.LogicalEnclosureFirmware{
+		FirmwareBaselineUri:                       firmware_baseline,
+		FirmwareUpdateOn:                          "EnclosureOnly",
+		ForceInstallFirmware:                      false,
+		LogicalInterconnectUpdateMode:             "Parallel",
+		UpdateFirmwareOnUnmanagedInterconnect:     true,
+		ValidateIfLIFirmwareUpdateIsNonDisruptive: true,
+	}
+
+	err = ovc.UpdateLogicalEnclosureFirmware(log_en.URI.String(), updateFirmware)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#.............Logical Enclosure Firmware Updated Successfully .....#")
 	}
 
 	scope1, err := ovc.GetScopeByName(scope_name)
