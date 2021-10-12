@@ -88,9 +88,9 @@ type Ipv4Ranges struct {
 }
 
 type PatchFirmware struct {
-	Op    string                   `json:"op,omitempty"`    //"op": "replace",
-	Path  string                   `json:"path,omitempty"`  //"path": "/firmware",
-	Value LogicalEnclosureFirmware `json:"value,omitempty"` //"value": {}
+	Op    string                    `json:"op,omitempty"`    //"op": "replace",
+	Path  string                    `json:"path,omitempty"`  //"path": "/firmware",
+	Value *LogicalEnclosureFirmware `json:"value,omitempty"` //"value": {}
 }
 
 type LogicalEnclosureFirmware struct {
@@ -383,7 +383,7 @@ func (c *OVClient) UpdateLogicalEnclosureFirmware(uri string, patchData LogicalE
 	firmwareUpdate := PatchFirmware{
 		Op:    "replace",
 		Path:  "/firmware",
-		Value: patchData,
+		Value: &patchData,
 	}
 
 	operation := []PatchFirmware{firmwareUpdate}
@@ -393,7 +393,7 @@ func (c *OVClient) UpdateLogicalEnclosureFirmware(uri string, patchData LogicalE
 
 	t = t.NewProfileTask(c)
 	t.ResetTask()
-	fmt.Printf("REST : %s \n %+v\n", uri, operation)
+	log.Debugf("REST : %s \n %+v\n", uri, operation)
 	data, err := c.RestAPICall(rest.PATCH, uri, operation)
 	if err != nil {
 		t.TaskIsDone = true
