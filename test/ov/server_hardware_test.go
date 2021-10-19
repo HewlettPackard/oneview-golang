@@ -143,10 +143,10 @@ func TestAddRackServers(t *testing.T) {
 				ConfigurationState: d.Tc.GetTestData(d.Env, "ConfigurationState").(string),
 				LicensingIntent:    d.Tc.GetTestData(d.Env, "LicensingIntent").(string),
 			}
-			err := c.AddRackServer(testSh)
+			_, err := c.AddRackServer(testSh)
 			assert.NoError(t, err, "Add server hardware error -> %s", err)
 
-			err = c.AddRackServer(testSh)
+			_, err = c.AddRackServer(testSh)
 			assert.Error(t, err, "AddRackServer should give error because hardware already exists, err-> %s", err)
 
 		} else {
