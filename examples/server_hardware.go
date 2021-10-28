@@ -39,7 +39,7 @@ func main() {
 		InitialScopeUris:   *initialScopeUris,
 	}
 
-	err := ovc.AddRackServer(rackServer)
+	_, err := ovc.AddRackServer(rackServer)
 	fmt.Println("Added rack-server successfully.")
 
 	fmt.Println("-----------------------------")
