@@ -1,19 +1,58 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
-# [v6.4.0]
+# [v6.4.0] (Unreleased)
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 3400.
 
 ### New Changes
 - Supported new endpoint for Logical Enclosure resource.
   - PATCH /rest/logical-enclosure/{id}
-
-# [v6.4.0] (Unreleased)
-### New Changes
+- 
 - Added `GetScopeByUri`, `GetScopeFromResource(resourceUri)` and `UpdateScopeForResource(scopes)` to extend support more endpoints for scope resource.
   - GET    /rest/scopes/{id}
   - GET    /rest/scopes/resources/** 
   - PUT    /rest/scopes/resources/**
+
+### Oneview Features supported
+- Appliance Configuration Timeconfig
+- Appliance SSH Access
+- Appliance SNMP V1 Trap Destinations
+- Appliance SNMPv3 Trap Destination
+- Appliance SNMPv3 User
+- Appliance Time and Locale Configuration
+- Connection Template
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Firmware Drivers
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- ID Pools
+- ID Pools IPv4 Ranges
+- ID Pools Ipv4 Subnets- 
+- Interconnects
+- Interconnect Types
+- Labels Resource
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
 
 # [v6.3.0]
 #### Notes
