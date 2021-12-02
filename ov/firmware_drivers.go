@@ -2,6 +2,7 @@ package ov
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -86,12 +87,16 @@ type CustomServicePack struct {
 	InitialScopeUris   []utils.Nstring `json:"initialScopeUris,omitempty"`
 }
 
-func (c *OVClient) GetFirmwareBaselineList(sort string, start string, count string) (FirmwareDriversList, error) {
+func (c *OVClient) GetFirmwareBaselineList(filter string,sort string, start string, count string) (FirmwareDriversList, error) {
 	var (
 		uri      = "/rest/firmware-drivers"
 		firmware FirmwareDriversList
 		q        = make(map[string]interface{})
 	)
+
+	if len(filter) > 0 {
+		q["filter"] = filter
+	}
 
 	if sort != "" {
 		q["sort"] = sort
@@ -143,6 +148,16 @@ func (c *OVClient) GetFirmwareBaselineById(id string) (FirmwareDrivers, error) {
 		return firmwareId, err
 	}
 	return firmwareId, nil
+}
+
+func (c *OVClient) GetFirmwareBaselineByName(name string) (FirmwareDrivers, error) {
+	firmwareList, err := c.GetFirmwareBaselineList(fmt.Sprintf("name matches '%s'", name), "name:asc", "", "")
+
+	if firmwareList.Total > 0 {
+		return firmwareList.Members[0], err
+	}
+
+	return FirmwareDrivers{}, err
 }
 
 func (c *OVClient) CreateCustomServicePack(sp CustomServicePack, force string) error {

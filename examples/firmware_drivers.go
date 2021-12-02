@@ -26,7 +26,7 @@ func main() {
 		"*")
 
 	// Get all the Firmware Baseline available
-	firmware, err := ovc.GetFirmwareBaselineList("", "", "")
+	firmware, err := ovc.GetFirmwareBaselineList("", "", "", "")
 	if err != nil {
 		panic(err)
 	} else {
