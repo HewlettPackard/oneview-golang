@@ -26,7 +26,7 @@ func main() {
 		"*")
 
 	// Get all the Firmware Baseline available
-	firmware, err := ovc.GetFirmwareBaselineList("", "", "", "")
+	firmware, err := ovc.GetFirmwareBaselineList("", "", "")
 	if err != nil {
 		panic(err)
 	} else {
@@ -44,6 +44,19 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#-----Got Firmware Baseline by Uri-----#")
+		jsonResponse, _ := json.MarshalIndent(firmware2, "", "  ")
+		fmt.Print(string(jsonResponse), "\n\n")
+	}
+
+	//Get Firmware by baseline name and version
+
+	nameversion := firmware.Members[0].Name + "," + firmware.Members[0].Version //Server Pack for Synergy,SY-2021.02.01
+
+	firmware2, err = ovc.GetFirmwareBaselineByNameandVersion(nameversion)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#-----Got Firmware Baseline by Name and Version-----#")
 		jsonResponse, _ := json.MarshalIndent(firmware2, "", "  ")
 		fmt.Print(string(jsonResponse), "\n\n")
 	}

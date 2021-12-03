@@ -2,7 +2,8 @@ package ov
 
 import (
 	"encoding/json"
-	"fmt"
+	"errors"
+	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -87,16 +88,12 @@ type CustomServicePack struct {
 	InitialScopeUris   []utils.Nstring `json:"initialScopeUris,omitempty"`
 }
 
-func (c *OVClient) GetFirmwareBaselineList(filter string,sort string, start string, count string) (FirmwareDriversList, error) {
+func (c *OVClient) GetFirmwareBaselineList(sort string, start string, count string) (FirmwareDriversList, error) {
 	var (
 		uri      = "/rest/firmware-drivers"
 		firmware FirmwareDriversList
 		q        = make(map[string]interface{})
 	)
-
-	if len(filter) > 0 {
-		q["filter"] = filter
-	}
 
 	if sort != "" {
 		q["sort"] = sort
@@ -150,16 +147,30 @@ func (c *OVClient) GetFirmwareBaselineById(id string) (FirmwareDrivers, error) {
 	return firmwareId, nil
 }
 
-func (c *OVClient) GetFirmwareBaselineByName(name string) (FirmwareDrivers, error) {
-	firmwareList, err := c.GetFirmwareBaselineList(fmt.Sprintf("name matches '%s'", name), "name:asc", "", "")
+func (c *OVClient) GetFirmwareBaselineByNameandVersion(name string) (FirmwareDrivers, error) {
+	fwNameVersion := strings.SplitAfter(name, ",")
+	if len(fwNameVersion) < 2 {
+		return FirmwareDrivers{}, errors.New("provide firmware name and version separated by comma")
+	}
+	fwname, version := fwNameVersion[0], fwNameVersion[1]
+
+	firmwareList, err := c.GetFirmwareBaselineList("", "", "")
 
 	if firmwareList.Total > 0 {
-		return firmwareList.Members[0], err
-	}
 
+		for i := range firmwareList.Members {
+			if firmwareList.Members[i].Name != fwname && firmwareList.Members[i].Version != version {
+				continue
+			} else {
+
+				return firmwareList.Members[i], err
+
+			}
+		}
+
+	}
 	return FirmwareDrivers{}, err
 }
-
 func (c *OVClient) CreateCustomServicePack(sp CustomServicePack, force string) error {
 	var (
 		uri = "/rest/firmware-drivers/"
