@@ -44,13 +44,13 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#-----Got Firmware Baseline by Uri-----#")
-		jsonResponse, _ := json.MarshalIndent(firmware2, "", "  ")
-		fmt.Print(string(jsonResponse), "\n\n")
+
 	}
 
-	//Get Firmware by baseline name and version
+	//Get Firmware by either giving baseline name and version separated by comma or only baseline name
 
 	nameversion := firmware.Members[0].Name + "," + firmware.Members[0].Version //Server Pack for Synergy,SY-2021.02.01
+	//nameversion := firmware.Members[0].Name //Server Pack for Synergy
 
 	firmware2, err = ovc.GetFirmwareBaselineByNameandVersion(nameversion)
 	if err != nil {
@@ -59,6 +59,7 @@ func main() {
 		fmt.Println("#-----Got Firmware Baseline by Name and Version-----#")
 		jsonResponse, _ := json.MarshalIndent(firmware2, "", "  ")
 		fmt.Print(string(jsonResponse), "\n\n")
+
 	}
 
 	//create custom service pack
