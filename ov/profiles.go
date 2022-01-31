@@ -438,9 +438,15 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 		return errors.New("Server Hardware must be powered off to assign to the server profile")
 	}
 
+	serverHardwareType, err := c.GetServerHardwareTypeByUri(p.ServerHardwareTypeURI)
+	if err != nil {
+		log.Warnf("Error getting server hardware type %s", err)
+	}
+	serverHarwdareTypeName := serverHardwareType.Name
+
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(p.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(p.ManagementProcessors)
+		mp := SetMp(serverHarwdareTypeName, p.ManagementProcessors)
 		p.ManagementProcessor = mp
 	}
 
@@ -629,9 +635,15 @@ func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 	log.Debugf("REST : %s \n %+v\n", uri, p)
 	log.Debugf("task -> %+v", t)
 
+	serverHardwareType, err := c.GetServerHardwareTypeByUri(p.ServerHardwareTypeURI)
+	if err != nil {
+		log.Warnf("Error getting server hardware type %s", err)
+	}
+	serverHardwareTypeName := serverHardwareType.Name
+
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(p.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(p.ManagementProcessors)
+		mp := SetMp(serverHardwareTypeName, p.ManagementProcessors)
 		p.ManagementProcessor = mp
 	}
 
