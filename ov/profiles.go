@@ -442,11 +442,11 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile) (err error) {
 	if err != nil {
 		log.Warnf("Error getting server hardware type %s", err)
 	}
-	serverHarwdareTypeName := serverHardwareType.Name
+	serverHarwdareTypeGen := serverHardwareType.Generation
 
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(p.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(serverHarwdareTypeName, p.ManagementProcessors)
+		mp := SetMp(serverHarwdareTypeGen, p.ManagementProcessors)
 		p.ManagementProcessor = mp
 	}
 
@@ -639,11 +639,11 @@ func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 	if err != nil {
 		log.Warnf("Error getting server hardware type %s", err)
 	}
-	serverHardwareTypeName := serverHardwareType.Name
+	serverHardwareTypeGen := serverHardwareType.Generation
 
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(p.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(serverHardwareTypeName, p.ManagementProcessors)
+		mp := SetMp(serverHardwareTypeGen, p.ManagementProcessors)
 		p.ManagementProcessor = mp
 	}
 

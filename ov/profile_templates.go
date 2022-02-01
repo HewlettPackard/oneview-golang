@@ -128,7 +128,7 @@ func IsZeroOfUnderlyingType(x interface{}) bool {
 }
 
 // SetMp maps ManagementProcessors to IntManagementProcessor struct.
-func SetMp(sht string, mp ManagementProcessors) IntManagementProcessor {
+func SetMp(shtgen string, mp ManagementProcessors) IntManagementProcessor {
 	mps := make([]MpSetting, 0)
 	var emptyMpSettings MpSettings
 	if !reflect.DeepEqual(mp.MpSetting, emptyMpSettings) {
@@ -243,9 +243,8 @@ func SetMp(sht string, mp ManagementProcessors) IntManagementProcessor {
 						arg[strings.ToLower(string(typeOfS.Field(j).Name[0]))+typeOfS.Field(j).Name[1:]] = v.Field(j).Interface()
 					}
 				}
-				//Check generation of server
-				gen := sht[6:11]
-				if gen != "Gen10" || gen != "Gen11" {
+				//Check generation of server. Gen 9 and below does support some iLO attributes.
+				if shtgen != "Gen10" || shtgen != "Gen11" {
 					delete(arg, "loginPriv")
 					delete(arg, "hostBIOSConfigPriv")
 					delete(arg, "hostNICConfigPriv")
@@ -291,11 +290,11 @@ func (c *OVClient) CreateProfileTemplate(serverProfileTemplate ServerProfile) er
 	if err != nil {
 		log.Warnf("Error getting server hardware type %s", err)
 	}
-	serverHardwareTypeName := serverHardwareType.Name
+	serverHardwareTypeGen := serverHardwareType.Generation
 
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(serverProfileTemplate.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(serverHardwareTypeName, serverProfileTemplate.ManagementProcessors)
+		mp := SetMp(serverHardwareTypeGen, serverProfileTemplate.ManagementProcessors)
 		serverProfileTemplate.ManagementProcessor = mp
 	}
 
@@ -388,11 +387,11 @@ func (c *OVClient) UpdateProfileTemplate(serverProfileTemplate ServerProfile) er
 	if err != nil {
 		log.Warnf("Error getting server hardware type %s", err)
 	}
-	serverHardwareTypeName := serverHardwareType.Name
+	serverHardwareTypeGen := serverHardwareType.Generation
 
 	var emptyMgmtProcessorsStruct ManagementProcessors
 	if !reflect.DeepEqual(serverProfileTemplate.ManagementProcessors, emptyMgmtProcessorsStruct) {
-		mp := SetMp(serverHardwareTypeName, serverProfileTemplate.ManagementProcessors)
+		mp := SetMp(serverHardwareTypeGen, serverProfileTemplate.ManagementProcessors)
 		serverProfileTemplate.ManagementProcessor = mp
 	}
 
