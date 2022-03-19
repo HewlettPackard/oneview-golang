@@ -1,10 +1,10 @@
 # HPE OneView SDK for GoLang
 
 ## Build Status 
-|      OV Version |                                                                                                                                                                             6.50 |                                                                                                                                                                             6.40 |                                                                                                                                                                             6.30 |                                                                                                                                                                            6.20 |                                                                                                                                                                            6.10 |                                                                                                                                                                            6.00 |
-| --------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| SDK Version/Tag |                                                                                                   [v6.5.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.5.0) |                                                                                                   [v6.4.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.4.0) |                                                                                                   [v6.3.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.3.0) |                                                                                                  [v6.2.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.2.0) |                                                                                                  [v6.1.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.1.0) |                                                                                                  [v6.0.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.0.0) |
-|    Build Status | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1675861580) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1394488243) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1212617100) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/998462546) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/789405541) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/638584153) |
+|      OV Version |   6.60 |   6.50 |  6.40 | 6.30 |  6.20 | 6.10 | 6.00 |
+| --------------: |  -----------: |-----------: | ------------: | -------------: |-----------: | ----------: |-----------: |
+| SDK Version/Tag |   [v6.6.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.6.0)|   [v6.5.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.5.0) |  [v6.4.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.4.0) |  [v6.3.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.3.0) |  [v6.2.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.2.0) |  [v6.1.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.1.0) | [v6.0.0](https://github.com/HewlettPackard/oneview-golang/releases/tag/v6.0.0) |
+|    Build Status |[![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1815837404)  |[![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1675861580) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1675861580) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1394488243) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/1212617100) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/998462546) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/789405541) | [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/638584153) |
 ## Introduction
 
 HPE OneView makes it simple to deploy and manage today’s complex hybrid cloud infrastructure. HPE OneView can help you transform your data center to software-defined, and it supports HPE’s broad portfolio of servers, storage, and networking solutions, ensuring the simple and automated management of your hybrid infrastructure. Software-defined intelligence enables a template-driven approach for deploying, provisioning, updating, and integrating compute, storage, and networking infrastructure.
@@ -15,7 +15,7 @@ You can find the latest supported HPE OneView Go SDK [here](https://github.com/H
 
 ## What's New
 
-HPE OneView Go library extends support of the SDK to OneView REST API version 3600 (OneView v6.50)
+HPE OneView Go library extends support of the SDK to OneView REST API version 3800 (OneView v6.60)
 
 Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/master/CHANGELOG.md) for more information on the changes , features supported and issues fixed in this version
 
@@ -31,10 +31,10 @@ The light weight containerized version of the HPE OneView SDK for Go is availabl
 
 ```bash
 # Download and store a local copy of oneview-golang and use it as a Docker Image.
-$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.5.0-OV6.5
+$ docker pull hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.6.0-OV6.6
 # Run docker commands below given, which  will in turn create a sh session 
 # where you can create files, issue commands and execute the examples.
-$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.5.0-OV6.5 /bin/sh
+$ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v6.6.0-OV6.6 /bin/sh
 ```
 
 ### Local Setup
@@ -79,7 +79,7 @@ $ export ONEVIEW_OV_DOMAIN=LOCAL
 $ export ONEVIEW_SSLVERIFY=false
 $ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
-Note: Currently this SDK supports OneView API 3600 minimally, where we can test OneView API 3400 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
+Note: Currently this SDK supports OneView API 3800 minimally, where we can test OneView API 3800 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
 ### OneView Client Configuration
 
