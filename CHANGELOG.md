@@ -2,7 +2,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
 # [v6.6.0]
 #### Notes
-- This release extends supports of the SDK to Oneview API Version 3600.
+- This release extends supports of the SDK to Oneview API Version 3800.
 
 ### Oneview Features supported
 - Appliance Configuration Timeconfig
