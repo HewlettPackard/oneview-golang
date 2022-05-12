@@ -16,10 +16,10 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v1
       with:
-        go-version: 1.11
+        go-version: 1.15
 
     - name: Install Go Overalls
-      run: go get -u github.com/mattn/goveralls
+      run: go get github.com/mattn/goveralls
 
     - name: Install Go Lint
       run: go get -u golang.org/x/lint/golint
