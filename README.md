@@ -44,13 +44,13 @@ $ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v7.0.0-OV7.
 ```bash 
 # Install the dependent packages
 $ apt-get install build-essential git wget
-$ wget https://dl.google.com/go/go1.11.3.linux-amd64.tar.gz
+$ wget https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz
 ```
 
 ```bash 
-# untar with "tar -zxvf go1.11.3.linux-amd64.tar.gz"
+# untar with "tar -zxvf go1.15.2.linux-amd64.tar.gz"
 # move go/ to /usr/local/ 
-# mv go1.11.3.linux-amd64.tar.gz /usr/local/ 
+# mv go1.15.2.linux-amd64.tar.gz /usr/local/ 
 # mkdir ~/go
 ```
 
@@ -226,7 +226,7 @@ $ make test
 ```
 
 #### Without docker
-* Install golang 1.5 or higher(We recommend using Go 1.11)
+* Install golang 1.5 or higher(We recommend using Go 1.15)
 * Install go packages listed in .travis.yml
 
 The Test Data for these Tests are  supplied through JSON file stored at `test/data for example config_EGSL_tb200.json`
