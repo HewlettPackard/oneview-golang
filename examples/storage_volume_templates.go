@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -224,6 +225,14 @@ func main() {
 		}
 	}
 	time.Sleep(2 * time.Second)
+	// Get Root template
+
+	st_vol_root, err := ovc.GetRootStorageVolumeTemplate()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(st_vol_root)
 
 	// Get All the volume templates present
 	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
