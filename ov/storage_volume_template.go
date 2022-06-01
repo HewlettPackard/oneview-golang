@@ -2,6 +2,7 @@ package ov
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
@@ -125,16 +126,40 @@ func (c *OVClient) GetStorageVolumeTemplateByName(name string) (StorageVolumeTem
 	}
 }
 
-func (c *OVClient) GetRootStorageVolumeTemplate() (StorageVolumeTemplate, error) {
+func (c *OVClient) GetRootStorageVolumeTemplate(storage_pool_uri string) (StorageVolumeTemplate, error) {
 	var (
 		sVolTemplate StorageVolumeTemplate
 	)
-	sVolTemplates, err := c.GetStorageVolumeTemplates("isRoot = 'true'", "name:asc", "", "")
-	if sVolTemplates.Total > 0 {
-		return sVolTemplates.Members[0], err
-	} else {
-		return sVolTemplate, err
+	s_pool, _ := c.GetStoragePoolByUri(storage_pool_uri)
+
+	s_sys, er_sys := c.GetStorageSystemByUri(string(s_pool.StorageSystemUri))
+
+	if er_sys != nil {
+		log.Errorf("Error finding Storage System ")
+		return sVolTemplate, errors.New("error finding Storage System ")
 	}
+	vol_temp_list, _ := c.GetStorageVolumeTemplates("", "name:desc", "", "")
+	for i := 0; i < len(vol_temp_list.Members); i++ {
+
+		if vol_temp_list.Members[i].IsRoot && vol_temp_list.Members[i].Family == s_sys.Family {
+			sVolTemplate = vol_temp_list.Members[i]
+			break
+		}
+	}
+	if sVolTemplate.URI == "" {
+		log.Errorf("Not able to fetch correct Root Template URI")
+		return sVolTemplate, errors.New("error finding root template uri ")
+	}
+	return sVolTemplate, nil
+	// var (
+	// 	sVolTemplate StorageVolumeTemplate
+	// )
+	// sVolTemplates, err := c.GetStorageVolumeTemplates("isRoot = 'true'", "name:asc", "", "")
+	// if sVolTemplates.Total > 0 {
+	// 	return sVolTemplates.Members[0], err
+	// } else {
+	// 	return sVolTemplate, err
+	// }
 }
 
 func (c *OVClient) GetStorageVolumeTemplates(filter string, sort string, start string, count string) (StorageVolumeTemplateList, error) {

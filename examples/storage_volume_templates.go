@@ -227,7 +227,7 @@ func main() {
 	time.Sleep(2 * time.Second)
 	// Get Root template
 
-	st_vol_root, err := ovc.GetRootStorageVolumeTemplate()
+	st_vol_root, err := ovc.GetRootStorageVolumeTemplate(string(st_pool.URI))
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -45,7 +45,7 @@ func main() {
 
 	//Create Storage volume with root template
 
-	root_vol_template, err := ovc.GetRootStorageVolumeTemplate()
+	root_vol_template, err := ovc.GetRootStorageVolumeTemplate(string(st_pool.URI))
 	if err != nil {
 		fmt.Println(err)
 	}
