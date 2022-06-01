@@ -13,6 +13,7 @@ func main() {
 	var (
 		ClientOV        *ov.OVClient
 		st_vol_template = "Auto-VolumeTemplate"
+		root_volume     = "volume_without_template"
 		new_volume      = "TestVolume"
 		name_to_update  = "UpdatedName"
 	)
@@ -27,14 +28,14 @@ func main() {
 		apiversion,
 		"*")
 
-	// Create storage volume with name <new_volume>
 	st_pool, _ := ovc.GetStoragePoolByName("CPG-SSD")
-	properties := &ov.Properties{
-		Name:             new_volume,
+	properties_root := &ov.Properties{
+		Name:             root_volume,
 		Storagepool:      st_pool.URI,
 		Size:             268435456,
 		ProvisioningType: "Thin",
 	}
+
 	properties_auto := &ov.Properties{
 		Name:             "Auto-Volume",
 		Storagepool:      st_pool.URI,
@@ -42,6 +43,26 @@ func main() {
 		ProvisioningType: "Thin",
 	}
 
+	//Create Storage volume with root template
+
+	root_vol_template, err := ovc.GetRootStorageVolumeTemplate()
+	if err != nil {
+		fmt.Println(err)
+	}
+	storageVolume_with_root_volume_template := ov.StorageVolume{TemplateURI: root_vol_template.URI, Properties: properties_root}
+
+	err = ovc.CreateStorageVolume(storageVolume_with_root_volume_template)
+
+	if err != nil {
+		fmt.Println("Could not create the volume", err)
+	}
+	// Create storage volume with name <new_volume>
+	properties := &ov.Properties{
+		Name:             new_volume,
+		Storagepool:      st_pool.URI,
+		Size:             268435456,
+		ProvisioningType: "Thin",
+	}
 	vol_template, err := ovc.GetStorageVolumeTemplateByName(st_vol_template)
 	if err != nil {
 		fmt.Println(err)
@@ -95,6 +116,13 @@ func main() {
 	// Delete the created volume
 	fmt.Println("\nDeleting the volume with name : UpdatedName")
 	err = ovc.DeleteStorageVolume(name_to_update)
+	if err != nil {
+		fmt.Println("Delete Unsuccessful", err)
+	}
+
+	// Delete the created volume without template
+	fmt.Println("\nDeleting the volume with name : root_volume")
+	err = ovc.DeleteStorageVolume(root_volume)
 	if err != nil {
 		fmt.Println("Delete Unsuccessful", err)
 	}
