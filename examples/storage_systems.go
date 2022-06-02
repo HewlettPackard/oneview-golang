@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
 func main() {
@@ -14,10 +15,10 @@ func main() {
 		name2_to_create = "ThreePAR-2"
 		name_to_create  = "ThreePAR-1"
 		managed_domain  = "TestDomain" //Variable to update the managedDomain
-		username        = "<storage_password>"
-		password        = "<storage_username>"
-		host_ip         = "<storage_IP>"
-		host2_ip        = "<another_Storage_IP>"
+		username        = "dcs"
+		password        = "dcs"
+		host_ip         = "172.18.11.11"
+		host2_ip        = "172.18.11.12"
 		family          = "StoreServ"
 		//		description    = ""
 	)
@@ -89,6 +90,12 @@ func main() {
 	volume_sets, _ := ovc.GetVolumeSets(update_system.URI)
 	fmt.Println(volume_sets.Members)
 
+	// Get Volume templates
+
+	// Get volume sets
+	fmt.Println("\n Getting volume templates of:", name_to_create)
+	volume_templates, _ := ovc.GeStorgaeSystemtVolumeTemplates(update_system.URI, "", "", "", "")
+	fmt.Println(volume_templates.Members)
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name2_to_create)
 	err = ovc.DeleteStorageSystem(name2_to_create)
