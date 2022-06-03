@@ -3,7 +3,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 
 
-# [v7.1.0](unreleased)
+# [v7.1.0] (unreleased)
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 4200.
 
@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Appliance Configuration Timeconfig
 - Appliance SSH Access
 
-[v7.0.0]
+# [v7.0.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 4000.
 
