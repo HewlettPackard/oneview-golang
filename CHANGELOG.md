@@ -11,11 +11,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Supported new endpoint for Logical Enclosure resource.
   - GET /rest/storage-systems/{id}/templates
 
-
-### Oneview Features supported
-- Appliance Configuration Timeconfig
-- Appliance SSH Access
-
 # [v7.0.0]
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 4000.
