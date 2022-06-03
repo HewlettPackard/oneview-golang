@@ -227,12 +227,14 @@ func main() {
 	time.Sleep(2 * time.Second)
 	// Get Root template
 
-	st_vol_root, err := ovc.GetRootStorageVolumeTemplate(string(st_pool.URI))
+	st_vol_root, err := ovc.GetRootStorageVolumeTemplates(string(st_pool.URI))
 	if err != nil {
 		fmt.Println(err)
 	}
+	if st_vol_root.Count == 1 {
+		fmt.Println(st_vol_root.Members[0])
 
-	fmt.Println(st_vol_root)
+	}
 
 	// Get All the volume templates present
 	fmt.Println("\nGetting all the storage volume templates present in the system: \n")
