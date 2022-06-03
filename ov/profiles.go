@@ -523,6 +523,8 @@ func (c *OVClient) Cleanup(template *ServerProfile) {
 	if template.Bios != nil {
 		template.Bios.ComplianceControl = ""
 	}
+
+	template.IscsiInitiatorName = ""
 	template.ServerProfileDescription = ""
 	template.Boot.ComplianceControl = ""
 	template.BootMode.ComplianceControl = ""
