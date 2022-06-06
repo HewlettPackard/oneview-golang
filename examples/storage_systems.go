@@ -15,10 +15,10 @@ func main() {
 		name2_to_create = "ThreePAR-2"
 		name_to_create  = "ThreePAR-1"
 		managed_domain  = "TestDomain" //Variable to update the managedDomain
-		username        = "dcs"
-		password        = "dcs"
-		host_ip         = "172.18.11.11"
-		host2_ip        = "172.18.11.12"
+		username        = "<storage_username>"
+		password        = "<storage_password>"
+		host_ip         = "<storage_IP>"
+		host2_ip        = "<another_Storage_IP>"
 		family          = "StoreServ"
 		//		description    = ""
 	)
