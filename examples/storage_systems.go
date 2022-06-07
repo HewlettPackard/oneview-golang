@@ -94,7 +94,7 @@ func main() {
 
 	// Get volume sets
 	fmt.Println("\n Getting volume templates of:", name_to_create)
-	volume_templates, _ := ovc.GeStorgaeSystemtVolumeTemplates(update_system.URI, "", "", "", "")
+	volume_templates, _ := ovc.GeVolumeTemplatesForStorageSystem(update_system.URI, "", "", "", "")
 	fmt.Println(volume_templates.Members)
 	// Delete the created system
 	fmt.Println("\nDeleting the system with name : ", name2_to_create)

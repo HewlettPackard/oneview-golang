@@ -126,9 +126,9 @@ func (c *OVClient) GetStorageVolumeTemplateByName(name string) (StorageVolumeTem
 	}
 }
 
-func (c *OVClient) GetRootStorageVolumeTemplates(storage_pool_uri string) (StorageVolumeTemplateList, error) {
+func (c *OVClient) GetRootStorageVolumeTemplate(storage_pool_uri string) (StorageVolumeTemplate, error) {
 	var (
-		sVolTemplates StorageVolumeTemplateList
+		sVolTemplate StorageVolumeTemplate
 	)
 	s_pool, _ := c.GetStoragePoolByUri(storage_pool_uri)
 
@@ -136,15 +136,16 @@ func (c *OVClient) GetRootStorageVolumeTemplates(storage_pool_uri string) (Stora
 
 	if er_sys != nil {
 		log.Errorf("Error finding Storage System ")
-		return sVolTemplates, errors.New("error finding Storage System ")
+		return sVolTemplate, errors.New("error finding Storage System ")
 	}
 
-	vol_temp_list, err := c.GeStorgaeSystemtVolumeTemplates(s_sys.URI, "isRoot = 'true'", "", "", "")
-	if vol_temp_list.Total > 0 {
-		return vol_temp_list, err
+	vol_temp_list, err := c.GeVolumeTemplatesForStorageSystem(s_sys.URI, "isRoot = 'true'", "", "", "")
+	//We expect only one root template for a given storage system
+	if vol_temp_list.Total == 1 {
+		return vol_temp_list.Members[0], err
 	} else {
 		log.Errorf("Not able to fetch correct Root Template URI")
-		return sVolTemplates, err
+		return sVolTemplate, err
 	}
 
 }

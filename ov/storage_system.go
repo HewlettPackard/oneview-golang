@@ -359,7 +359,7 @@ func (c *OVClient) GetVolumeSets(uri utils.Nstring) (VolumeSetList, error) {
 	return volume_sets, nil
 }
 
-func (c *OVClient) GeStorgaeSystemtVolumeTemplates(uri utils.Nstring, filter string, sort string, start string, count string) (StorageVolumeTemplateList, error) {
+func (c *OVClient) GeVolumeTemplatesForStorageSystem(uri utils.Nstring, filter string, sort string, start string, count string) (StorageVolumeTemplateList, error) {
 
 	var (
 		volumeTemplates StorageVolumeTemplateList
@@ -382,8 +382,7 @@ func (c *OVClient) GeStorgaeSystemtVolumeTemplates(uri utils.Nstring, filter str
 	if len(q) > 0 {
 		c.SetQueryString(q)
 	}
-	// c.RefreshLogin()
-	// c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
+
 	main_uri = main_uri + "/templates"
 	data, err := c.RestAPICall(rest.GET, main_uri, nil)
 	if err != nil {
