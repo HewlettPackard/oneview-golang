@@ -2,6 +2,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)# 
 
 
+# [v7.2.0]
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 4400.
+
+#### Bug fixes & Enhancements:
+- [#368] (https://github.com/HewlettPackard/oneview-golang/issues/368) GetStorageVolumes() Unmarshal Error
 
 # [v7.1.0]
 #### Notes
