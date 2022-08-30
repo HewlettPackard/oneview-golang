@@ -3,10 +3,11 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
+
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
 	"github.com/docker/machine/libmachine/log"
-	"strconv"
 )
 
 type LogicalInterconnectGroup struct {
@@ -118,8 +119,9 @@ type LogicalLocation struct {
 }
 
 type LocationEntry struct {
-	RelativeValue int    `json:"relativeValue,omitempty"` //"relativeValue": 2,
-	Type          string `json:"type,omitempty"`          //"type": "StackingMemberId",
+	RelativeValue interface{} `json:"relativeValue,omitempty"` //"relativeValue": 2
+	Type          string      `json:"type,omitempty"`          //"type": "StackingMemberId",
+
 }
 type NtpConfiguration struct {
 	RelativeValue       int             `json:"relativeValue,omitempty"`       //"relativeValue": 2,
@@ -600,7 +602,11 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 
 	log.Debugf("REST : %s \n %+v\n", uri, logicalInterconnectGroup)
 	log.Debugf("task -> %+v", t)
-	data, err := c.RestAPICall(rest.POST, uri, logicalInterconnectGroup)
+
+	//Modify the port num to relative value
+	lig, _ := c.ReplaceLigPortToRelativeValue(logicalInterconnectGroup)
+	//fmt.Print(lig1)
+	data, err := c.RestAPICall(rest.POST, uri, lig)
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new logical interconnect group request: %s", err)
@@ -620,6 +626,110 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	}
 
 	return nil
+}
+
+func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (LogicalInterconnectGroup, error) {
+
+	mapenntryTemplate := lig.InterconnectMapTemplate.InterconnectMapEntryTemplates
+	mapenntryTemplateMap := make(map[string]string)
+	interconnectTypeMap := make(map[string]map[string]int)
+	for _, mapentryt := range mapenntryTemplate {
+
+		key := ""
+		for _, locationenty := range mapentryt.LogicalLocation.LocationEntries {
+
+			if locationenty.Type == "Enclosure" {
+				if val, ok := locationenty.RelativeValue.(string); ok {
+					key = "E" + string(val) + key //strconv.Itoa(locationenty.RelativeValue) + key
+				}
+			}
+			if locationenty.Type == "Bay" {
+				if val, ok := locationenty.RelativeValue.(string); ok {
+					key = key + "B" + string(val) //strconv.Itoa(locationenty.RelativeValue)
+				}
+			}
+
+		}
+		mapenntryTemplateMap[key] = mapentryt.PermittedInterconnectTypeUri.String()
+
+	}
+
+	UplinkSet := lig.UplinkSets
+	uplinkSetMap := make(map[string]string)
+	for i, us := range UplinkSet {
+
+		for j, us1 := range us.LogicalPortConfigInfos {
+			key := ""
+			portName := ""
+			portCheck := false
+			newLogicalLocation := make(map[string][]LocationEntry, 0)
+			for _, us2 := range us1.LogicalLocation.LocationEntries {
+
+				if us2.Type == "Enclosure" {
+					if val, ok := us2.RelativeValue.(string); ok {
+						key = key + "E" + string(val) + key
+					}
+					// strconv.Itoa(
+					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], us2)
+				}
+				if us2.Type == "Bay" {
+					if val, ok := us2.RelativeValue.(string); ok {
+						key = key + "B" + string(val) //strconv.Itoa(us2.RelativeValue)
+					}
+					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], us2)
+				}
+				if us2.Type == "Port" {
+					if val, ok := us2.RelativeValue.(string); ok {
+						portName = string(val) //strconv.Itoa(us2.RelativeValue)
+					}
+				}
+				uplinkSetMap[key] = portName
+			}
+			if interconnectype, ok := mapenntryTemplateMap[key]; ok {
+				fmt.Println(interconnectype)
+
+				if _, ok = interconnectTypeMap[interconnectype]; !ok {
+					interconnectypeInfo, _ := c.GetInterconnectTypeByUri(utils.Nstring(interconnectype))
+					interconnectTypeMap[interconnectype] = filterUplinkPort(interconnectypeInfo)
+
+				}
+				portInfo := interconnectTypeMap[interconnectype]
+				if _, ok := portInfo[portName]; ok {
+					portCheck = true
+					lEntry := LocationEntry{Type: "Port", RelativeValue: strconv.Itoa(portInfo[portName])}
+					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], lEntry)
+
+				}
+				if portCheck {
+
+					us1.LogicalLocation.LocationEntries = newLogicalLocation["locationEntries"]
+
+				}
+				us.LogicalPortConfigInfos[j] = us1
+
+			}
+
+		}
+		lig.UplinkSets[i] = us
+
+	}
+	fmt.Printf("%+v\n\n", lig)
+
+	return lig, nil
+
+}
+func filterUplinkPort(inType InterconnectType) map[string]int {
+
+	portInfos := inType.PortInfos
+	portMap := make(map[string]int)
+	for _, port := range portInfos {
+		if port.UplinkCapable {
+			portName := port.PortName
+			portMap[portName] = port.PortNumber
+		}
+	}
+	return portMap
+
 }
 
 func (c *OVClient) DeleteLogicalInterconnectGroup(name string) error {
