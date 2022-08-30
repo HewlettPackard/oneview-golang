@@ -653,6 +653,7 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 		mapenntryTemplateMap[key] = mapentryt.PermittedInterconnectTypeUri.String()
 
 	}
+	//fmt.Println("hi232324", mapenntryTemplateMap)
 
 	UplinkSet := lig.UplinkSets
 	uplinkSetMap := make(map[string]string)
@@ -667,7 +668,7 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 
 				if us2.Type == "Enclosure" {
 					if val, ok := us2.RelativeValue.(string); ok {
-						key = key + "E" + string(val) + key
+						key = "E" + string(val) + key
 					}
 					// strconv.Itoa(
 					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], us2)
@@ -685,8 +686,9 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 				}
 				uplinkSetMap[key] = portName
 			}
+			fmt.Println("hi232324", uplinkSetMap)
 			if interconnectype, ok := mapenntryTemplateMap[key]; ok {
-				fmt.Println(interconnectype)
+				fmt.Println("hi232324")
 
 				if _, ok = interconnectTypeMap[interconnectype]; !ok {
 					interconnectypeInfo, _ := c.GetInterconnectTypeByUri(utils.Nstring(interconnectype))
@@ -713,6 +715,7 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 		lig.UplinkSets[i] = us
 
 	}
+
 	fmt.Printf("%+v\n\n", lig)
 
 	return lig, nil
@@ -728,6 +731,8 @@ func filterUplinkPort(inType InterconnectType) map[string]int {
 			portMap[portName] = port.PortNumber
 		}
 	}
+	fmt.Println("hi")
+	fmt.Println(portMap)
 	return portMap
 
 }
