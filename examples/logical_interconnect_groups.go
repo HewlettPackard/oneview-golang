@@ -20,10 +20,10 @@ func newFalse() *bool {
 
 func main() {
 	var (
-		clientOV *ov.OVClient
-		lig_name = "TestLIG-GO2"
-		lig_type = "logical-interconnect-groupV8"
-		//new_lig_name = "RenamedLogicalInterConnectGroupGO"
+		clientOV     *ov.OVClient
+		lig_name     = "TestLIG-GO"
+		lig_type     = "logical-interconnect-groupV8"
+		new_lig_name = "RenamedLogicalInterConnectGroupGO"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
@@ -302,62 +302,62 @@ func main() {
 		fmt.Println(".....Logical Interconnect Group Creation Success....")
 	}
 
-	// logicalInterconnectGroupAuto := ov.LogicalInterconnectGroup{Type: lig_type,
-	// 	EthernetSettings:        &ethernetSettings,
-	// 	IgmpSettings:            &igmpSettings,
-	// 	Name:                    "Auto-LIG1",
-	// 	TelemetryConfiguration:  &telemetryConfig,
-	// 	InterconnectMapTemplate: &interconnectMapTemplate,
-	// 	EnclosureType:           "SY12000",
-	// 	EnclosureIndexes:        enclosureIndexes,
-	// 	InterconnectBaySet:      3,
-	// 	RedundancyType:          "HighlyAvailable",
-	// 	SnmpConfiguration:       &snmpConfig,
-	// 	QosConfiguration:        &qosConfig}
-	// er = ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroupAuto)
+	logicalInterconnectGroupAuto := ov.LogicalInterconnectGroup{Type: lig_type,
+		EthernetSettings:        &ethernetSettings,
+		IgmpSettings:            &igmpSettings,
+		Name:                    "Auto-LIG1",
+		TelemetryConfiguration:  &telemetryConfig,
+		InterconnectMapTemplate: &interconnectMapTemplate,
+		EnclosureType:           "SY12000",
+		EnclosureIndexes:        enclosureIndexes,
+		InterconnectBaySet:      3,
+		RedundancyType:          "HighlyAvailable",
+		SnmpConfiguration:       &snmpConfig,
+		QosConfiguration:        &qosConfig}
+	er = ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroupAuto)
 
-	// if er != nil {
-	// 	fmt.Println("........Logical Interconnect Group Creation failed:", er)
-	// } else {
-	// 	fmt.Println(".....Logical Interconnect Group Creation Success....")
-	// }
+	if er != nil {
+		fmt.Println("........Logical Interconnect Group Creation failed:", er)
+	} else {
+		fmt.Println(".....Logical Interconnect Group Creation Success....")
+	}
 
-	// fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
-	// sort := "name:desc"
-	// logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups(10, "", "", sort, 0)
-	// fmt.Println(logicalInterconnectGroupList)
+	fmt.Println("#..........Getting Logical Interconnect Group Collection.....")
+	sort := "name:desc"
+	logicalInterconnectGroupList, _ := ovc.GetLogicalInterconnectGroups(10, "", "", sort, 0)
+	fmt.Println(logicalInterconnectGroupList)
 
-	// fmt.Println("....  Logical Interconnect Group by Name.....")
-	// lig, _ := ovc.GetLogicalInterconnectGroupByName(lig_name)
-	// fmt.Println(lig)
+	fmt.Println("....  Logical Interconnect Group by Name.....")
+	lig, _ := ovc.GetLogicalInterconnectGroupByName(lig_name)
+	fmt.Println(lig)
 
-	// fmt.Println("... Logical Interconnect Group by URI ....")
-	// uri := lig.URI
-	// lig_uri, _ := ovc.GetLogicalInterconnectGroupByUri(uri)
-	// fmt.Println(lig_uri)
+	fmt.Println("... Logical Interconnect Group by URI ....")
+	uri := lig.URI
+	lig_uri, _ := ovc.GetLogicalInterconnectGroupByUri(uri)
+	fmt.Println(lig_uri)
 
-	// // fmt.Println("... Getting setting for the specified Logical Interconnect Group ....")
-	// // lig_s, _ := ovc.GetLogicalInterconnectGroupSettings(uri.String())
-	// // fmt.Println(lig_s)
+	fmt.Println("... Getting setting for the specified Logical Interconnect Group ....")
+	lig_s, _ := ovc.GetLogicalInterconnectGroupSettings(uri.String())
+	fmt.Println(lig_s)
 
-	// // fmt.Println("...Listing Logical Interconnect Group Default Settings .. ")
-	// // lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
-	// // fmt.Println(lig_ds)
+	fmt.Println("...Listing Logical Interconnect Group Default Settings .. ")
+	lig_ds, _ := ovc.GetLogicalInterconnectGroupDefaultSettings()
+	fmt.Println(lig_ds)
 
-	// fmt.Println("... Updating LogicalInterconnectGroup ...")
-	// fmt.Println("")
-	// lig_uri.Name = new_lig_name
-	// err = ovc.UpdateLogicalInterconnectGroup(lig_uri)
-	// if err != nil {
-	// 	panic(err)
-	// } else {
-	// 	fmt.Println(".....Updated Logical Interconnect Group Successfully....")
-	// }
-	// fmt.Println("... Deleting LogicalInterconnectGroup ...")
-	// del_err := ovc.DeleteLogicalInterconnectGroup(lig_uri.Name)
-	// if del_err != nil {
-	// 	panic(del_err)
-	// } else {
-	// 	fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
-	// }
+	fmt.Println("... Updating LogicalInterconnectGroup ...")
+	fmt.Println("")
+	lig_uri.Name = new_lig_name
+	err = ovc.UpdateLogicalInterconnectGroup(lig_uri)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println(".....Updated Logical Interconnect Group Successfully....")
+	}
+	fmt.Println("... Deleting LogicalInterconnectGroup ...")
+	del_err := ovc.DeleteLogicalInterconnectGroup(lig_uri.Name)
+	if del_err != nil {
+		panic(del_err)
+	} else {
+		fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
+	}
 }

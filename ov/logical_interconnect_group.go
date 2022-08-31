@@ -604,7 +604,11 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 	log.Debugf("task -> %+v", t)
 
 	//Modify the port num to relative value
-	lig, _ := c.ReplaceLigPortToRelativeValue(logicalInterconnectGroup)
+	lig, err := c.ReplaceLigPortToRelativeValue(logicalInterconnectGroup)
+	if err != nil {
+		log.Errorf("Error replacing portname with relative value")
+		return err
+	}
 	//fmt.Print(lig1)
 	data, err := c.RestAPICall(rest.POST, uri, lig)
 	if err != nil {
@@ -640,12 +644,12 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 
 			if locationenty.Type == "Enclosure" {
 				if val, ok := locationenty.RelativeValue.(string); ok {
-					key = "E" + string(val) + key //strconv.Itoa(locationenty.RelativeValue) + key
+					key = "E" + string(val) + key
 				}
 			}
 			if locationenty.Type == "Bay" {
 				if val, ok := locationenty.RelativeValue.(string); ok {
-					key = key + "B" + string(val) //strconv.Itoa(locationenty.RelativeValue)
+					key = key + "B" + string(val)
 				}
 			}
 
@@ -653,7 +657,6 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 		mapenntryTemplateMap[key] = mapentryt.PermittedInterconnectTypeUri.String()
 
 	}
-	//fmt.Println("hi232324", mapenntryTemplateMap)
 
 	UplinkSet := lig.UplinkSets
 	uplinkSetMap := make(map[string]string)
@@ -670,54 +673,60 @@ func (c *OVClient) ReplaceLigPortToRelativeValue(lig LogicalInterconnectGroup) (
 					if val, ok := us2.RelativeValue.(string); ok {
 						key = "E" + string(val) + key
 					}
-					// strconv.Itoa(
+
 					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], us2)
 				}
 				if us2.Type == "Bay" {
 					if val, ok := us2.RelativeValue.(string); ok {
-						key = key + "B" + string(val) //strconv.Itoa(us2.RelativeValue)
+						key = key + "B" + string(val)
 					}
 					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], us2)
 				}
 				if us2.Type == "Port" {
 					if val, ok := us2.RelativeValue.(string); ok {
-						portName = string(val) //strconv.Itoa(us2.RelativeValue)
+						portName = string(val)
 					}
 				}
 				uplinkSetMap[key] = portName
 			}
-			fmt.Println("hi232324", uplinkSetMap)
-			if interconnectype, ok := mapenntryTemplateMap[key]; ok {
-				fmt.Println("hi232324")
+			//Checking if portname provided is actually relative value. We will get relative value only if portname is provided.
 
-				if _, ok = interconnectTypeMap[interconnectype]; !ok {
-					interconnectypeInfo, _ := c.GetInterconnectTypeByUri(utils.Nstring(interconnectype))
-					interconnectTypeMap[interconnectype] = filterUplinkPort(interconnectypeInfo)
+			if _, err := strconv.Atoi(portName); err != nil {
+				if interconnectype, ok := mapenntryTemplateMap[key]; ok {
+
+					if _, ok = interconnectTypeMap[interconnectype]; !ok {
+						interconnectypeInfo, _ := c.GetInterconnectTypeByUri(utils.Nstring(interconnectype))
+						interconnectTypeMap[interconnectype] = filterUplinkPort(interconnectypeInfo)
+
+					}
+					portInfo := interconnectTypeMap[interconnectype]
+					if _, ok := portInfo[portName]; ok {
+						portCheck = true
+						lEntry := LocationEntry{Type: "Port", RelativeValue: strconv.Itoa(portInfo[portName])}
+						newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], lEntry)
+
+					}
+					if portCheck {
+
+						us1.LogicalLocation.LocationEntries = newLogicalLocation["locationEntries"]
+
+					} else {
+
+						return lig, fmt.Errorf("portname %s is invalid", portName)
+
+					}
+					us.LogicalPortConfigInfos[j] = us1
+
+				} else {
+					return lig, fmt.Errorf("Enclosure/Bay/Port configuration provided are not valid")
 
 				}
-				portInfo := interconnectTypeMap[interconnectype]
-				if _, ok := portInfo[portName]; ok {
-					portCheck = true
-					lEntry := LocationEntry{Type: "Port", RelativeValue: strconv.Itoa(portInfo[portName])}
-					newLogicalLocation["locationEntries"] = append(newLogicalLocation["locationEntries"], lEntry)
-
-				}
-				if portCheck {
-
-					us1.LogicalLocation.LocationEntries = newLogicalLocation["locationEntries"]
-
-				}
-				us.LogicalPortConfigInfos[j] = us1
 
 			}
-
+			lig.UplinkSets[i] = us
 		}
-		lig.UplinkSets[i] = us
 
 	}
-
-	fmt.Printf("%+v\n\n", lig)
-
 	return lig, nil
 
 }
@@ -731,8 +740,7 @@ func filterUplinkPort(inType InterconnectType) map[string]int {
 			portMap[portName] = port.PortNumber
 		}
 	}
-	fmt.Println("hi")
-	fmt.Println(portMap)
+
 	return portMap
 
 }
