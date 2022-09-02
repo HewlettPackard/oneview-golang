@@ -587,51 +587,6 @@ func (c *OVClient) GetLogicalInterconnectGroups(count int, filter string, scopeU
 	return logicalInterconnectGroups, nil
 }
 
-// func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup LogicalInterconnectGroup) error {
-// 	log.Infof("Initializing creation of logicalInterconnectGroup for %s.", logicalInterconnectGroup.Name)
-// 	var (
-// 		uri = "/rest/logical-interconnect-groups"
-// 		t   *Task
-// 	)
-// 	// refresh login
-// 	c.RefreshLogin()
-// 	c.SetAuthHeaderOptions(c.GetAuthHeaderMap())
-
-// 	t = t.NewProfileTask(c)
-// 	t.ResetTask()
-
-// 	log.Debugf("REST : %s \n %+v\n", uri, logicalInterconnectGroup)
-// 	log.Debugf("task -> %+v", t)
-
-// 	//Modify the port num to relative value
-// 	lig, err := c.ReplaceLigPortToRelativeValue(logicalInterconnectGroup)
-// 	if err != nil {
-// 		log.Errorf("Error replacing portname with relative value")
-// 		return err
-// 	}
-// 	//fmt.Print(lig1)
-// 	data, err := c.RestAPICall(rest.POST, uri, lig)
-// 	if err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error submitting new logical interconnect group request: %s", err)
-// 		return err
-// 	}
-
-// 	log.Debugf("Response New LogicalInterconnectGroup %s", data)
-// 	if err := json.Unmarshal([]byte(data), &t); err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error with task un-marshal: %s", err)
-// 		return err
-// 	}
-
-// 	err = t.Wait()
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
 func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup LogicalInterconnectGroup) error {
 	log.Infof("Initializing creation of logicalInterconnectGroup for %s.", logicalInterconnectGroup.Name)
 	var (
