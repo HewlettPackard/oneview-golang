@@ -37,14 +37,14 @@ func main() {
 		"*")
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
-	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_second := ov.LocationEntry{Type: "Enclosure", RelativeValue: "3"}
+	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_second := ov.LocationEntry{Type: "Enclosure", RelativeValue: 3}
 	locationEntries1 := new([]ov.LocationEntry)
 	*locationEntries1 = append(*locationEntries1, locationEntry_first)
 	*locationEntries1 = append(*locationEntries1, locationEntry_second)
 
-	locationEntry_third := ov.LocationEntry{Type: "Bay", RelativeValue: "6"}
-	locationEntry_four := ov.LocationEntry{Type: "Enclosure", RelativeValue: "3"}
+	locationEntry_third := ov.LocationEntry{Type: "Bay", RelativeValue: 6}
+	locationEntry_four := ov.LocationEntry{Type: "Enclosure", RelativeValue: 3}
 	locationEntries2 := new([]ov.LocationEntry)
 	*locationEntries2 = append(*locationEntries2, locationEntry_third)
 	*locationEntries2 = append(*locationEntries2, locationEntry_four)
@@ -52,14 +52,14 @@ func main() {
 	logicalLocation1 := ov.LogicalLocation{LocationEntries: *locationEntries1}
 	logicalLocation2 := ov.LogicalLocation{LocationEntries: *locationEntries2}
 
-	locationEntry_five := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_six := ov.LocationEntry{Type: "Enclosure", RelativeValue: "2"}
+	locationEntry_five := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_six := ov.LocationEntry{Type: "Enclosure", RelativeValue: 2}
 	locationEntries3 := new([]ov.LocationEntry)
 	*locationEntries3 = append(*locationEntries3, locationEntry_five)
 	*locationEntries3 = append(*locationEntries3, locationEntry_six)
 
-	locationEntry_seven := ov.LocationEntry{Type: "Bay", RelativeValue: "6"}
-	locationEntry_eight := ov.LocationEntry{Type: "Enclosure", RelativeValue: "2"}
+	locationEntry_seven := ov.LocationEntry{Type: "Bay", RelativeValue: 6}
+	locationEntry_eight := ov.LocationEntry{Type: "Enclosure", RelativeValue: 2}
 	locationEntries4 := new([]ov.LocationEntry)
 	*locationEntries4 = append(*locationEntries4, locationEntry_seven)
 	*locationEntries4 = append(*locationEntries4, locationEntry_eight)
@@ -67,14 +67,14 @@ func main() {
 	logicalLocation3 := ov.LogicalLocation{LocationEntries: *locationEntries3}
 	logicalLocation4 := ov.LogicalLocation{LocationEntries: *locationEntries4}
 
-	locationEntry_nine := ov.LocationEntry{Type: "Bay", RelativeValue: "6"}
-	locationEntry_ten := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
+	locationEntry_nine := ov.LocationEntry{Type: "Bay", RelativeValue: 6}
+	locationEntry_ten := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
 	locationEntries5 := new([]ov.LocationEntry)
 	*locationEntries5 = append(*locationEntries5, locationEntry_nine)
 	*locationEntries5 = append(*locationEntries5, locationEntry_ten)
 
-	locationEntry_eleven := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_twelle := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
+	locationEntry_eleven := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_twelle := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
 	locationEntries6 := new([]ov.LocationEntry)
 	*locationEntries6 = append(*locationEntries6, locationEntry_eleven)
 	*locationEntries6 = append(*locationEntries6, locationEntry_twelle)
@@ -161,9 +161,13 @@ func main() {
 	networkUris2 := []utils.Nstring{"/rest/fc-networks/5900d2f8-cfde-4ecd-81b9-750843d22a18"}
 	networkUris3 := []utils.Nstring{"/rest/fc-networks/8a1c4708-6439-4b62-8a2b-841f9b36ceae"}
 	//************************uplink set 1**************************************************
-	locationEntry_usfirst1 := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_ussecond1 := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
-	locationEntry_usthird1 := ov.LocationEntry{Type: "Port", RelativeValue: "Q1"}
+
+	portname1_1 := "Q1"
+	interconnectypeUri11 := interconnect1.URI
+	relativeValueport11, _ := ovc.GetRelativeValue(portname1_1, interconnectypeUri11)
+	locationEntry_usfirst1 := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_ussecond1 := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
+	locationEntry_usthird1 := ov.LocationEntry{Type: "Port", RelativeValue: relativeValueport11}
 	locationEntriesus1 := new([]ov.LocationEntry)
 	*locationEntriesus1 = append(*locationEntriesus1, locationEntry_usfirst1)
 	*locationEntriesus1 = append(*locationEntriesus1, locationEntry_ussecond1)
@@ -192,9 +196,15 @@ func main() {
 	}
 	//*****************************uplink set 2********************************
 	//First port
-	locationEntry_usfirst2 := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_ussecond2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
-	locationEntry_usthird2 := ov.LocationEntry{Type: "Port", RelativeValue: "Q2:1"}
+
+	//get port relative value
+
+	portname2_1 := "Q2:1"
+	interconnectypeUri21 := interconnect1.URI
+	relativeValueport21, _ := ovc.GetRelativeValue(portname2_1, interconnectypeUri21)
+	locationEntry_usfirst2 := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_ussecond2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
+	locationEntry_usthird2 := ov.LocationEntry{Type: "Port", RelativeValue: relativeValueport21}
 	locationEntriesus2 := new([]ov.LocationEntry)
 	*locationEntriesus2 = append(*locationEntriesus2, locationEntry_usfirst2)
 	*locationEntriesus2 = append(*locationEntriesus2, locationEntry_ussecond2)
@@ -206,9 +216,12 @@ func main() {
 		LogicalLocation: logicalLocationus2,
 	}
 	// second port
-	locationEntry_usfirst2_2 := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_ussecond2_2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
-	locationEntry_usthird2_2 := ov.LocationEntry{Type: "Port", RelativeValue: "Q2:2"}
+	portname2_2 := "Q2:2"
+	interconnectypeUri22 := interconnect1.URI
+	relativeValueport22, _ := ovc.GetRelativeValue(portname2_2, interconnectypeUri22)
+	locationEntry_usfirst2_2 := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_ussecond2_2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
+	locationEntry_usthird2_2 := ov.LocationEntry{Type: "Port", RelativeValue: relativeValueport22}
 	locationEntriesus2_2 := new([]ov.LocationEntry)
 	*locationEntriesus2_2 = append(*locationEntriesus2_2, locationEntry_usfirst2_2)
 	*locationEntriesus2_2 = append(*locationEntriesus2_2, locationEntry_ussecond2_2)
@@ -237,9 +250,12 @@ func main() {
 
 	//********************************uplink set 3********************************************
 	//First port
-	locationEntry_usfirst3 := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_ussecond3 := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
-	locationEntry_usthird3 := ov.LocationEntry{Type: "Port", RelativeValue: "Q3:1"}
+	portname3_1 := "Q3:1"
+	interconnectypeUri31 := interconnect1.URI
+	relativeValueport31, _ := ovc.GetRelativeValue(portname3_1, interconnectypeUri31)
+	locationEntry_usfirst3 := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_ussecond3 := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
+	locationEntry_usthird3 := ov.LocationEntry{Type: "Port", RelativeValue: relativeValueport31}
 	locationEntriesus3 := new([]ov.LocationEntry)
 	*locationEntriesus3 = append(*locationEntriesus3, locationEntry_usfirst3)
 	*locationEntriesus3 = append(*locationEntriesus3, locationEntry_ussecond3)
@@ -251,9 +267,12 @@ func main() {
 		LogicalLocation: logicalLocationus3,
 	}
 	// second port
-	locationEntry_usfirst3_2 := ov.LocationEntry{Type: "Bay", RelativeValue: "3"}
-	locationEntry_ussecond3_2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: "1"}
-	locationEntry_usthird3_2 := ov.LocationEntry{Type: "Port", RelativeValue: "Q3:2"}
+	portname3_2 := "Q3:2"
+	interconnectypeUri32 := interconnect1.URI
+	relativeValueport32, _ := ovc.GetRelativeValue(portname3_2, interconnectypeUri32)
+	locationEntry_usfirst3_2 := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
+	locationEntry_ussecond3_2 := ov.LocationEntry{Type: "Enclosure", RelativeValue: 1}
+	locationEntry_usthird3_2 := ov.LocationEntry{Type: "Port", RelativeValue: relativeValueport32}
 	locationEntriesus3_2 := new([]ov.LocationEntry)
 	*locationEntriesus3_2 = append(*locationEntriesus3_2, locationEntry_usfirst3_2)
 	*locationEntriesus3_2 = append(*locationEntriesus3_2, locationEntry_ussecond3_2)
