@@ -624,10 +624,10 @@ func (c *OVClient) CreateLogicalInterconnectGroup(logicalInterconnectGroup Logic
 
 	return nil
 }
-func (c *OVClient) GetRelativeValue(portname string, intUri utils.Nstring) (int, error) {
+func (c *OVClient) GetRelativeValue(portname string, interconnectTypeUri utils.Nstring) (int, error) {
 
 	var portnum int
-	interconnectypeInfo, _ := c.GetInterconnectTypeByUri(intUri)
+	interconnectypeInfo, _ := c.GetInterconnectTypeByUri(interconnectTypeUri)
 	portnum, err := filterUplinkPort(interconnectypeInfo, portname)
 	if err != nil {
 		return portnum, err
