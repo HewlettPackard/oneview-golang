@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -13,15 +11,18 @@ func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 	scope := ov.Scope{Name: "ScopeHardware", Description: "Test from script", Type: "ScopeV3"}
 	_ = ovc.CreateScope(scope)
 	scp, _ := ovc.GetScopeByName("ScopeHardware")
@@ -30,9 +31,9 @@ func main() {
 	fmt.Println("-----------------------------")
 	fmt.Println("Add Single Rack server to the appliance:")
 	rackServer := ov.ServerHardware{
-		Hostname:           "<serverIp>",
-		Username:           "<username>",
-		Password:           "<password>",
+		Hostname:           "172.18.41.1",
+		Username:           "dcs",
+		Password:           "dcs",
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
@@ -44,11 +45,11 @@ func main() {
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add multiple Rack servers:")
-	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress5>"}
+	hostsAndRanges := &[]utils.Nstring{"172.18.41.2-172.18.41.7"}
 	multipleRackServers := ov.ServerHardware{
 		MpHostsAndRanges:   *hostsAndRanges,
-		Username:           "<username>",
-		Password:           "<password>",
+		Username:           "dcs",
+		Password:           "dcs",
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",

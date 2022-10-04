@@ -2,45 +2,73 @@ package main
 
 import (
 	"fmt"
+	"sort"
+	"strings"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
-	"strings"
 )
 
 func main() {
+
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	var (
 		ClientOV            *ov.OVClient
 		logical_enclosure   = "TestLE"
 		logical_enclosure_1 = "TestLE-Renamed"
 		scope_name          = "Auto-Scope"
-		eg_name             = "EG"
+		eg_name             = config.EgName
 		firmware_baseline   = utils.NewNstring("/rest/firmware-drivers/Synergy_Custom_SPP_2021_02_01_Z7550-97110")
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
-	fmt.Println("#................... Create Logical Enclosure ...............#")
+	//** getting enclosures uris************************************//
+	enc_list, err := ovc.GetEnclosures("", "", "", "", "")
+	enc_list_uris := make([]string, 0)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#----------------Enclosure List after Updating---------#")
+		for i := 0; i < len(enc_list.Members); i++ {
+			fmt.Println(enc_list.Members[i].Name)
+			enc_list_uris = append(enc_list_uris, string(enc_list.Members[i].URI))
+		}
+	}
+	fmt.Println(enc_list_uris)
+	sort.Strings(enc_list_uris)
+	fmt.Println(enc_list_uris)
 	enclosureUris := new([]utils.Nstring)
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
-	*enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
+
+	for i := 0; i < len(enc_list_uris); i++ {
+		*enclosureUris = append(*enclosureUris, utils.NewNstring(enc_list_uris[i]))
+
+	}
+
+	fmt.Println(*enclosureUris)
+
+	// fmt.Println("#................... Create Logical Enclosure ...............#")
+	// enclosureUris := new([]utils.Nstring)
+	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
+	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
+	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
 
 	enc_grp, err := ovc.GetEnclosureGroupByName(eg_name)
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure,
-		EnclosureUris:        *enclosureUris,
-		EnclosureGroupUri:    enc_grp.URI,
-		FirmwareBaselineUri:  firmware_baseline,
+		EnclosureUris:     *enclosureUris,
+		EnclosureGroupUri: enc_grp.URI,
+		//FirmwareBaselineUri:  firmware_baseline,
 		ForceInstallFirmware: true,
 	}
 

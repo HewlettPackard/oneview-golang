@@ -1,10 +1,13 @@
 {
-      "username":"<ov_username>",
-      "password":"<ov_password>",
-      "endpoint":"<ov_ip>",
-      "domain": "LOCAL",
-      "apiversion":<ov_apiversion>,
-      "sslverify":false,
-      "ifmatch":"*"
-
+      "OVCred":    {
+          "username":"",
+          "password":"",
+          "endpoint":"",
+          "domain": "LOCAL",
+          "apiversion":4200,
+          "sslverify":false,
+          "ifmatch":"*"
+    
+    }
+ 
 }

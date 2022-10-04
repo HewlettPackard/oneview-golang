@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -20,21 +18,25 @@ func newFalse() *bool {
 
 func main() {
 	var (
-		clientOV     *ov.OVClient
-		lig_name     = "TestLIG-GO"
-		lig_type     = "logical-interconnect-groupV8"
-		new_lig_name = "RenamedLogicalInterConnectGroupGO"
+		ClientOV      *ov.OVClient
+		lig_name_auto = "Auto-LIG-GO"
+		lig_name      = "Test-LIG-GO"
+		lig_type      = "logical-interconnect-groupV8"
+		new_lig_name  = "RenamedLogicalInterConnectGroupGO"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
 
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	fmt.Println("#..........Creating Logical Interconnect Group.....#")
 	locationEntry_first := ov.LocationEntry{Type: "Bay", RelativeValue: 3}
@@ -157,9 +159,27 @@ func main() {
 	qosConfig := ov.QosConfiguration{ActiveQosConfig: &qosActiveConfig,
 		Type:     "qos-aggregated-configuration",
 		Category: "qos-aggregated-configuration"}
-	networkUris := []utils.Nstring{"/rest/ethernet-networks/bf5a6091-ef32-4983-90b7-d5a3848c7274"}
-	networkUris2 := []utils.Nstring{"/rest/fc-networks/5900d2f8-cfde-4ecd-81b9-750843d22a18"}
-	networkUris3 := []utils.Nstring{"/rest/fc-networks/8a1c4708-6439-4b62-8a2b-841f9b36ceae"}
+
+	// Get FC networks and ethernet work details
+
+	EthNetworkMgmt, err := ovc.GetEthernetNetworkByName(config.MgmtNetworkName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	EthNetworkIscsi, err := ovc.GetEthernetNetworkByName(config.IscsiNetworkName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fcNetwork, err := ovc.GetFCNetworkByName(config.FcNetworkName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	networkUris := []utils.Nstring{EthNetworkMgmt.URI}
+	networkUris2 := []utils.Nstring{EthNetworkIscsi.URI}
+	networkUris3 := []utils.Nstring{fcNetwork.URI}
+	// networkUris := []utils.Nstring{"/rest/ethernet-networks/bf5a6091-ef32-4983-90b7-d5a3848c7274"}
+	// networkUris2 := []utils.Nstring{"/rest/fc-networks/5900d2f8-cfde-4ecd-81b9-750843d22a18"}
+	// networkUris3 := []utils.Nstring{"/rest/fc-networks/8a1c4708-6439-4b62-8a2b-841f9b36ceae"}
 	//************************uplink set 1**************************************************
 
 	portname1_1 := "Q1"
@@ -238,13 +258,14 @@ func main() {
 	*logicalportconfigInfos2 = append(*logicalportconfigInfos2, logicalportconfigInfous2_2)
 
 	uplinkSet2 := ov.UplinkSets{
-		EthernetNetworkType:    "NotApplicable",
+		EthernetNetworkType:    "Tagged",
+		LacpTimer:              "Short",
 		LogicalPortConfigInfos: *logicalportconfigInfos2,
 		Mode:                   "Auto",
 		FcMode:                 "NA",
-		LoadBalancingMode:      "None",
+		LoadBalancingMode:      "SourceAndDestinationMac",
 		Name:                   "us2",
-		NetworkType:            "FibreChannel",
+		NetworkType:            "Ethernet",
 		NetworkUris:            networkUris2,
 	}
 
@@ -304,7 +325,7 @@ func main() {
 	logicalInterconnectGroup := ov.LogicalInterconnectGroup{Type: lig_type,
 		EthernetSettings:        &ethernetSettings,
 		IgmpSettings:            &igmpSettings,
-		Name:                    lig_name,
+		Name:                    lig_name_auto,
 		TelemetryConfiguration:  &telemetryConfig,
 		InterconnectMapTemplate: &interconnectMapTemplate,
 		EnclosureType:           "SY12000",
@@ -314,6 +335,20 @@ func main() {
 		SnmpConfiguration:       &snmpConfig,
 		QosConfiguration:        &qosConfig,
 		UplinkSets:              uplinkSets}
+
+	// Check if LIG already exist
+	_, err_exist := ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroup.Name)
+	if err_exist == nil {
+		fmt.Println(".... Logical interconnect group already exist. Deleting....")
+		del_err1 := ovc.DeleteLogicalInterconnectGroup(logicalInterconnectGroup.Name)
+
+		if del_err1 != nil {
+			panic(del_err1)
+		} else {
+			fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
+		}
+
+	}
 	er := ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroup)
 	if er != nil {
 		fmt.Println("........Logical Interconnect Group Creation failed:", er)
@@ -321,10 +356,10 @@ func main() {
 		fmt.Println(".....Logical Interconnect Group Creation Success....")
 	}
 
-	logicalInterconnectGroupAuto := ov.LogicalInterconnectGroup{Type: lig_type,
+	logicalInterconnectGroupTest := ov.LogicalInterconnectGroup{Type: lig_type,
 		EthernetSettings:        &ethernetSettings,
 		IgmpSettings:            &igmpSettings,
-		Name:                    "Auto-LIG1",
+		Name:                    lig_name,
 		TelemetryConfiguration:  &telemetryConfig,
 		InterconnectMapTemplate: &interconnectMapTemplate,
 		EnclosureType:           "SY12000",
@@ -333,7 +368,21 @@ func main() {
 		RedundancyType:          "HighlyAvailable",
 		SnmpConfiguration:       &snmpConfig,
 		QosConfiguration:        &qosConfig}
-	er = ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroupAuto)
+
+	// Check if LIG already exist
+	_, err_exist = ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroupTest.Name)
+	if err_exist == nil {
+		fmt.Println(".... Logical interconnect group already exist. Deleting....")
+		del_err1 := ovc.DeleteLogicalInterconnectGroup(logicalInterconnectGroupTest.Name)
+
+		if del_err1 != nil {
+			panic(del_err1)
+		} else {
+			fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
+		}
+
+	}
+	er = ovc.CreateLogicalInterconnectGroup(logicalInterconnectGroupTest)
 
 	if er != nil {
 		fmt.Println("........Logical Interconnect Group Creation failed:", er)
