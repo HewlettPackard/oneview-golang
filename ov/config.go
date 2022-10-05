@@ -14,11 +14,12 @@ type Configuration struct {
 	OVCred                 *OVCred
 	IdPoolsIpv4Subnet      *IdPoolsIpv4Subnet
 	IdPoolsIpv4SubnetRange *IdPoolsIpv4SubnetRange
-	LigName                string `json:"ligName"`
-	EgName                 string `json:"egName"`
-	MgmtNetworkName        string `json:"mgmtName"`
-	IscsiNetworkName       string `json:"iscsiNetworkName"`
-	FcNetworkName          string `json:"fcNetworkName"`
+	ServerProfileConfig    *ServerProfileConfig `json:"server_profile,omitempty"`
+	LigName                string               `json:"ligName"`
+	EgName                 string               `json:"egName"`
+	MgmtNetworkName        string               `json:"mgmtName"`
+	IscsiNetworkName       string               `json:"iscsiNetworkName"`
+	FcNetworkName          string               `json:"fcNetworkName"`
 }
 type OVCred struct {
 	UserName   string `json:"username"`
@@ -69,7 +70,7 @@ type ServerProfileTemplateConfig struct {
 type ServerProfileConfig struct {
 	InventoryHostName        string `json:"connection_network_name"`
 	ServerProfileDescription string `json:"server_profile_template_name"`
-	ServerHardwareTypeName   string `json:"server_hardware_type_name"`
+	ServerHardwareName       string `json:"server_hardware_name"`
 	EnclosureGroupName       string `json:"enclosure_group_name"`
 	ServerProfileName        string `json:"server_profile_name"`
 	NetworkNamestring        string `json:"network_name"`
