@@ -12,14 +12,14 @@ import (
 
 type Configuration struct {
 	OVCred                 *OVCred
-	IdPoolsIpv4Subnet      *IdPoolsIpv4Subnet
-	IdPoolsIpv4SubnetRange *IdPoolsIpv4SubnetRange
-	ServerProfileConfig    *ServerProfileConfig `json:"server_profile,omitempty"`
-	LigName                string               `json:"ligName"`
-	EgName                 string               `json:"egName"`
-	MgmtNetworkName        string               `json:"mgmtName"`
-	IscsiNetworkName       string               `json:"iscsiNetworkName"`
-	FcNetworkName          string               `json:"fcNetworkName"`
+	IdPoolsIpv4Subnet      *IdPoolsIpv4Subnet      `json:"id_pools_ipv4_subnet,omitempty"`
+	IdPoolsIpv4SubnetRange *IdPoolsIpv4SubnetRange `json:"id_pools_ipv4_range,omitempty"`
+	ServerProfileConfig    *ServerProfileConfig    `json:"server_profile,omitempty"`
+	LigName                string                  `json:"ligName"`
+	EgName                 string                  `json:"egName"`
+	MgmtNetworkName        string                  `json:"mgmtName"`
+	IscsiNetworkName       string                  `json:"iscsiNetworkName"`
+	FcNetworkName          string                  `json:"fcNetworkName"`
 }
 type OVCred struct {
 	UserName   string `json:"username"`
