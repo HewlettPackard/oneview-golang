@@ -1,0 +1,65 @@
+{
+    "OVCred": {
+        "username": "",
+        "password": "",
+        "endpoint": "",
+        "domain": "local",
+        "apiversion": "",
+        "sslverify": false,
+        "ifmatch": "*"
+    },
+    "id_pools_ipv4_subnet": {
+        "domain": "",
+        "network_id": "",
+        "end_address": "",
+        "newDomain": "",
+        "start_address": "",
+        "subnet_name": "Test IPv4 Subnet",
+        "gateway": "",
+        "type": "",
+        "dnsServers": [],
+        "subnetmask": ""
+    },
+    "id_pools_ipv4_range": {
+        "networkId": "",
+        "domain": "",
+        "range_name": "",
+        "disabled_range_name": "",
+        "gateway": "",
+        "start_address": "",
+        "subnet_name": "",
+        "end_address1": "",
+        "subnetmask": "",
+        "end_address2": "",
+        "type": "Subnet",
+        "dnsServers": [],
+        "idList": [
+            "",
+            ""
+        ]
+    },
+    "server_profile_template": {
+        "connection_network_name": "",
+        "server_profile_template_name": "",
+        "server_hardware_type_name": "",
+        "enclosure_group_name": ""
+    },
+    "server_profile": {
+        "inventory_hostname": "",
+        "server_profile_description": "",
+        "server_hardware_type_name": "",
+        "server_hardware_name": "",
+        "enclosure_group_name": "",
+        "server_profile_name": "",
+        "network_name": "",
+        "ov_template": ""
+    },     
+    
+    "ligName":"",
+    "egName":"",
+    "mgmtNetworkName":"",
+    "iscsiNetworkName":"",
+    "fcNetworkName":""
+
+
+}
