@@ -11,22 +11,23 @@ import (
 )
 
 type Configuration struct {
-	OVCred                 *OVCred
-	IdPoolsIpv4Subnet      *IdPoolsIpv4Subnet      `json:"id_pools_ipv4_subnet,omitempty"`
-	IdPoolsIpv4SubnetRange *IdPoolsIpv4SubnetRange `json:"id_pools_ipv4_range,omitempty"`
-	ServerProfileConfig    *ServerProfileConfig    `json:"server_profile,omitempty"`
-	LigName                string                  `json:"ligName"`
-	EgName                 string                  `json:"egName"`
-	MgmtNetworkName        string                  `json:"mgmtName"`
-	IscsiNetworkName       string                  `json:"iscsiNetworkName"`
-	FcNetworkName          string                  `json:"fcNetworkName"`
+	OVCred                      *OVCred
+	IdPoolsIpv4Subnet           *IdPoolsIpv4Subnet           `json:"id_pools_ipv4_subnet,omitempty"`
+	IdPoolsIpv4SubnetRange      *IdPoolsIpv4SubnetRange      `json:"id_pools_ipv4_range,omitempty"`
+	ServerProfileConfig         *ServerProfileConfig         `json:"server_profile,omitempty"`
+	ServerProfileTemplateConfig *ServerProfileTemplateConfig `json:"server_profile_template,omitempty"`
+	LigName                     string                       `json:"ligName"`
+	EgName                      string                       `json:"egName"`
+	MgmtNetworkName             string                       `json:"mgmtName"`
+	IscsiNetworkName            string                       `json:"iscsiNetworkName"`
+	FcNetworkName               string                       `json:"fcNetworkName"`
 }
 type OVCred struct {
 	UserName   string `json:"username"`
 	Password   string `json:"password"`
 	Endpoint   string `json:"endpoint"`
 	Domain     string `json:"domain"`
-	ApiVersion int    `json:"apiversion"`
+	ApiVersion int    `json:"apiversion,string"`
 	SslVerify  bool   `json:"sslverify"`
 	IfMatch    string `json:"ifmatch"`
 }
@@ -42,7 +43,7 @@ type IdPoolsIpv4Subnet struct {
 	SubnetMask   string        `json:"subnetmask"`    //: "255.255.192.0",
 	Gateway      string        `json:"gateway"`       //: "10.1.0.1",
 	Type         string        `json:"type"`          //: "Subnet",
-	DnsServers   string        `json:"dnsServers"`    //: []
+	DnsServers   []string      `json:"dnsServers"`    //: []
 }
 
 type IdPoolsIpv4SubnetRange struct {
@@ -57,7 +58,7 @@ type IdPoolsIpv4SubnetRange struct {
 	SubnetMask   string          `json:"subnetmask"`    //: "255.255.192.0",
 	Gateway      string          `json:"gateway"`       //: "10.1.0.1",
 	Type         string          `json:"type"`          //: "Subnet",
-	DnsServers   string          `json:"dnsServers"`    //: []
+	DnsServers   []string        `json:"dnsServers"`    //: []
 	IdList       []utils.Nstring `json:"idList"`
 }
 type ServerProfileTemplateConfig struct {

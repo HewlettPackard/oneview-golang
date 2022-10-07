@@ -2,37 +2,41 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
+
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	var (
-		clientOV                          *ov.OVClient
+		ClientOV                          *ov.OVClient
 		server_profile_template_name      = "Test SPT"
-		server_profile_template_name_auto = "Auto-SPT"
-		enclosure_group_name              = "EG" //"Auto-TestEG"
-		server_hardware_type_name         = "SY 480 Gen9 1"
-		scope                             = "testing" //"Auto-Scope"
+		server_profile_template_name_auto = config.ServerProfileTemplateConfig.ServerPrpofileTemplateName
+		enclosure_group_name              = config.ServerProfileTemplateConfig.EnclosureGroupName
+		server_hardware_type_name         = config.ServerProfileTemplateConfig.ServerHardwareTypeName
+		scope                             = "Auto-Scope"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
 
 	enc_grp, err := ovc.GetEnclosureGroupByName(enclosure_group_name)
 
 	conn_settings := ov.ConnectionSettings{
+
 		ManageConnections: true,
 	}
 
