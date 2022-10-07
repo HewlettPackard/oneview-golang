@@ -19,7 +19,7 @@ func main() {
 		server_profile_template_name_auto = config.ServerProfileTemplateConfig.ServerPrpofileTemplateName
 		enclosure_group_name              = config.ServerProfileTemplateConfig.EnclosureGroupName
 		server_hardware_type_name         = config.ServerProfileTemplateConfig.ServerHardwareTypeName
-		scope                             = "Auto-Scope"
+		scopeName                         = "Spt-Scope"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -40,12 +40,16 @@ func main() {
 		ManageConnections: true,
 	}
 
-	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName(scope)
+	sptScope := ov.Scope{Name: scopeName, Description: "Test from script", Type: "ScopeV3"}
 
-	if scperr != nil {
-		*initialScopeUris = append(*initialScopeUris, scp.URI)
+	errSPT := ovc.CreateScope(sptScope)
+
+	if errSPT != nil {
+		fmt.Println("Error Creating Scope: ", errSPT)
 	}
+	scope, _ := ovc.GetScopeByName(scopeName)
+
+	initialScopeUris := &[]utils.Nstring{scope.URI}
 
 	aa := ov.AdministratorAccount{
 		DeleteAdministratorAccount: utils.GetBoolPointer(false),
@@ -135,7 +139,7 @@ func main() {
 		EnclosureGroupURI:     enc_grp.URI,
 		ServerHardwareTypeURI: server_hardware_type.URI,
 		ConnectionSettings:    conn_settings,
-		InitialScopeUris:      *initialScopeUris,
+		//InitialScopeUris:      *initialScopeUris,
 	}
 
 	err = ovc.CreateProfileTemplate(server_profile_template)
@@ -198,5 +202,11 @@ func main() {
 		fmt.Println("Server Profile Template Delete Failed: ", err)
 	} else {
 		fmt.Println("#----------------Server Profile Template Deleted---------------#")
+	}
+	err = ovc.DeleteScope(scopeName)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Deleted scope successfully...")
 	}
 }

@@ -35,10 +35,10 @@ func main() {
 
 	spScope := ov.Scope{Name: scopeName, Description: "Test from script", Type: "ScopeV3"}
 
-	errFC := ovc.CreateScope(spScope)
+	errSP := ovc.CreateScope(spScope)
 
-	if errFC != nil {
-		fmt.Println("Error Creating Scope: ", errFC)
+	if errSP != nil {
+		fmt.Println("Error Creating Scope: ", errSP)
 	}
 	scope, _ := ovc.GetScopeByName(scopeName)
 
