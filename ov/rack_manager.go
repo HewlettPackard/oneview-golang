@@ -29,32 +29,34 @@ import (
 
 // RackManager object for OV
 type RackManager struct {
-	Category                   string        `json:"category,omitempty"`
-	Created                    string        `json:"created,omitempty"` // "created": "20150831T154835.250Z",
-	ETAG                       string        `json:"eTag,omitempty"`    // "eTag": "1441036118675/8"
-	Hostname                   utils.Nstring `json:"hostname,omitempty"`
-	Id                         string        `json:"id,omitempty"`               // "43A48BDB-5FAC-42F5-9D1C-A280F48246AD"
-	LicensingIntent            string        `json:"licensingIntent,omitempty"`  //OneViewNoiLO"
-	Location                   string        `json:"location,omitempty"`         // null
-	Model                      string        `json:"model,omitempty"`            // null
-	Modified                   string        `json:"modified,omitempty"`         // "modified": "20150902T175611.657Z",
-	Name                       string        `json:"name,omitempty"`             //
-	PartNumber                 string        `json:"partNumber,omitempty"`       // "affinity": "Bay",
-	RefreshState               string        `json:"refreshState,omitempty"`     //Current refresh State of this Server Profile
-	RemoteSupportUri           utils.Nstring `json:"remoteSupportUri,omitempty"` // "
-	Password                   utils.Nstring `json:"password,omitempty"`
-	ScopesUri                  utils.Nstring `json:"scopesUri,omitempty"`                  // "scopesUri":
-	SerialNumber               utils.Nstring `json:"serialNumber,omitempty"`               // "serialNumber": "2M25090RMW",
-	State                      string        `json:"state,omitempty"`                      // "state": "Normal",
-	Status                     string        `json:"status,omitempty"`                     // "status": "Critical",
-	SubResources               *SubResource  `json:"subResources,omitempty"`               // "subResources":[]
-	SupportDataCollectionState string        `json:"supportDataCollectionState,omitempty"` //supportDataCollectionState
-	SupportDataCollectionType  string        `json:"supportDataCollectionType,omitempty"`
-	SupportDataCollectionsUri  string        `json:"supportDataCollectionsUri,omitempty"`
-	SupportState               string        `json:"supportState,omitempty"`
-	Type                       string        `json:"type,omitempty"` // "type": "ServerProfileV4",
-	URI                        utils.Nstring `json:"uri,omitempty"`  // "uri": "/rest/server-profiles/9979b3a4-
-	UserName                   string        `json:"username,omitempty"`
+	Category                   string          `json:"category,omitempty"`
+	Created                    string          `json:"created,omitempty"` // "created": "20150831T154835.250Z",
+	ETAG                       string          `json:"eTag,omitempty"`    // "eTag": "1441036118675/8"
+	Force                      bool            `json:"force,omitempty"`
+	Hostname                   utils.Nstring   `json:"hostname,omitempty"`
+	Id                         string          `json:"id,omitempty"` // "43A48BDB-5FAC-42F5-9D1C-A280F48246AD"
+	InitialScopeUris           []utils.Nstring `json:"initialScopeUris,omitempty"`
+	LicensingIntent            string          `json:"licensingIntent,omitempty"`  //OneViewNoiLO"
+	Location                   string          `json:"location,omitempty"`         // null
+	Model                      string          `json:"model,omitempty"`            // null
+	Modified                   string          `json:"modified,omitempty"`         // "modified": "20150902T175611.657Z",
+	Name                       string          `json:"name,omitempty"`             //
+	PartNumber                 string          `json:"partNumber,omitempty"`       // "affinity": "Bay",
+	RefreshState               string          `json:"refreshState,omitempty"`     //Current refresh State of this Server Profile
+	RemoteSupportUri           utils.Nstring   `json:"remoteSupportUri,omitempty"` // "
+	Password                   utils.Nstring   `json:"password,omitempty"`
+	ScopesUri                  utils.Nstring   `json:"scopesUri,omitempty"`                  // "scopesUri":
+	SerialNumber               utils.Nstring   `json:"serialNumber,omitempty"`               // "serialNumber": "2M25090RMW",
+	State                      string          `json:"state,omitempty"`                      // "state": "Normal",
+	Status                     string          `json:"status,omitempty"`                     // "status": "Critical",
+	SubResources               *SubResource    `json:"subResources,omitempty"`               // "subResources":[]
+	SupportDataCollectionState string          `json:"supportDataCollectionState,omitempty"` //supportDataCollectionState
+	SupportDataCollectionType  string          `json:"supportDataCollectionType,omitempty"`
+	SupportDataCollectionsUri  string          `json:"supportDataCollectionsUri,omitempty"`
+	SupportState               string          `json:"supportState,omitempty"`
+	Type                       string          `json:"type,omitempty"` // "type": "ServerProfileV4",
+	URI                        utils.Nstring   `json:"uri,omitempty"`  // "uri": "/rest/server-profiles/9979b3a4-
+	UserName                   string          `json:"username,omitempty"`
 }
 
 type SubResource struct {
