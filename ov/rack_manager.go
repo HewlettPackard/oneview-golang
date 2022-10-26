@@ -20,7 +20,7 @@ package ov
 import (
 	"encoding/json"
 	"fmt"
-	"time"
+	"path"
 
 	"github.com/HewlettPackard/oneview-golang/rest"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -68,9 +68,9 @@ type SubResource struct {
 type subresourceDat struct {
 	Type     string        `json:"type,omitempty"`
 	URI      string        `json:"uri,omitempty"`
-	Modified time.Time     `json:"modified,omitempty"`
+	Modified string        `json:"modified,omitempty"`
 	State    string        `json:"state,omitempty"`
-	Etag     interface{}   `json:"etag,omitempty"`
+	Etag     string        `json:"etag,omitempty"`
 	Count    int           `json:"count,omitempty"`
 	Data     []interface{} `json:"data,omitempty"`
 }
@@ -103,9 +103,10 @@ func (c *OVClient) GetRackManagerByName(name string) (RackManager, error) {
 	}
 }
 
-func (c *OVClient) GetRackManagerByUri(uri string) (RackManager, error) {
+func (c *OVClient) GetRackManagerById(Id string) (RackManager, error) {
 	var (
-		rm RackManager
+		rm  RackManager
+		uri = "/rest/rack-managers/" + Id
 	)
 	// refresh login
 	c.RefreshLogin()
@@ -169,13 +170,13 @@ func (c *OVClient) GetRackManagerList(start string, count string, filter string,
 }
 
 // Add rack manager- Add  new rack manager
-func (c *OVClient) AddRackManager(rm RackManager) (resourceUri string, err error) {
+func (c *OVClient) AddRackManager(rm RackManager) (resourceId string, err error) {
 
 	log.Infof("Initializing adding of RackManager %s.", rm.Hostname)
 	var (
-		uri   = "/rest/rack-managers"
-		rmUri = ""
-		t     *Task
+		uri  = "/rest/rack-managers"
+		rmId = ""
+		t    *Task
 	)
 
 	// refresh login
@@ -190,23 +191,23 @@ func (c *OVClient) AddRackManager(rm RackManager) (resourceUri string, err error
 	if err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error submitting new add RackManager request: %s", err)
-		return rmUri, err
+		return rmId, err
 	}
 
 	log.Debugf("Response New RackrManager %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
 		log.Errorf("Error with task un-marshal: %s", err)
-		return rmUri, err
+		return rmId, err
 	}
 
 	err = t.Wait()
 	if err != nil {
-		return rmUri, err
+		return rmId, err
 	}
-
-	rmUri = string(t.AssociatedRes.ResourceURI)
-	return rmUri, nil
+	rmUri := string(t.AssociatedRes.ResourceURI)
+	rmId = path.Base(rmUri)
+	return rmId, nil
 }
 
 // delete a profile, assign the server and remove the profile from the system

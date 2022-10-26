@@ -57,13 +57,13 @@ func main() {
 		//InitialScopeUris: *initialScopeUris,
 	}
 
-	rmUri, err := ovc.AddRackManager(rackManager)
+	rmId, err := ovc.AddRackManager(rackManager)
 	if err != nil {
 		fmt.Println("............... Add Rack Manager Failed:", err)
 	} else {
-		fmt.Println(".... Create Rack Manager Success", rmUri)
+		fmt.Println(".... Create Rack Manager Success", rmId)
 	}
-	rmCreated, err := ovc.GetRackManagerByUri(rmUri)
+	rmCreated, err := ovc.GetRackManagerById(rmId)
 	fmt.Println(rmCreated.Name)
 	rmcName := rmCreated.Name
 
