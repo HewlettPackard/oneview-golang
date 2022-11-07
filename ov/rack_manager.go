@@ -173,7 +173,7 @@ func (c *OVClient) GetRackManagerList(start string, count string, filter string,
 // Add rack manager- Add  new rack manager
 func (c *OVClient) AddRackManager(rm RackManager) (resourceId string, err error) {
 
-	log.Infof("Initializing adding of RackManager %s.", rm.Hostname)
+	log.Debugf("Initializing adding of RackManager %s.", rm.Hostname)
 	var (
 		uri   = "/rest/rack-managers"
 		rmUri = ""
