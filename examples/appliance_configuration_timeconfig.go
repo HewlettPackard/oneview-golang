@@ -10,17 +10,7 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-	)
-	// apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	// ovc := ClientOV.NewOVClient(
-	// 	os.Getenv("ONEVIEW_OV_USER"),
-	// 	os.Getenv("ONEVIEW_OV_PASSWORD"),
-	// 	os.Getenv("ONEVIEW_OV_DOMAIN"),
-	// 	os.Getenv("ONEVIEW_OV_ENDPOINT"),
-	// 	false,
-	// 	apiversion,
-	// 	"*")
-
+	)	
 	config, config_err := ov.LoadConfigFile("oneview_config.json")
 	if config_err != nil {
 		fmt.Println(config_err)
