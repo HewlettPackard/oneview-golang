@@ -10,7 +10,7 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-	)	
+	)
 	config, config_err := ov.LoadConfigFile("oneview_config.json")
 	if config_err != nil {
 		fmt.Println(config_err)
