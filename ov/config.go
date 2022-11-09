@@ -90,10 +90,12 @@ func LoadConfigFile(configFile string) (Configuration, error) {
 		return config, err
 	}
 	jsonParser := json.NewDecoder(configF)
-	err_unmarhsal := jsonParser.Decode(&config)
-	if err_unmarhsal != nil {
+
+	err_unmarshal := jsonParser.Decode(&config)
+	if err_unmarshal != nil {
 		fmt.Println("error unmarshaling json file")
-		fmt.Println(err_unmarhsal)
+		fmt.Println(err_unmarshal)
+
 	}
 
 	return config, nil
