@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 		sp_name           = "SP"
 		sp_by_spt         = "SP-From-SPT"
 		new_sp_name       = "Renamed Server Profile"
-		server_hardware_1 = "0000A66101, bay 5"
+		server_hardware_1 = "0000A66101, bay 3"
 		scope             = "Auto-Scope"
 		spt_name          = "Auto-SPT"
 	)
@@ -146,12 +147,12 @@ func main() {
 		}
 	}
 
-	task, err := ovc.SubmitDeleteProfile(sp1)
+	err = ovc.DeleteProfile(sp1.Name)
 	if err != nil {
 		fmt.Println("Server Profile Delete Request Failed: ", err)
 	} else {
 		fmt.Println("#----------------Server Profile Delete---------------#")
-		fmt.Println("Task URI: ", task.URI)
+		//fmt.Println("Task URI: ", task.URI)
 	}
 
 	err = ovc.DeleteProfile(new_sp_name)

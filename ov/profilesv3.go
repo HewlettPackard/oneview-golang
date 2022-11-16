@@ -112,76 +112,76 @@ type CustomizeServer struct {
 }
 
 // CustomizeServer - Customize Server
-func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
-	s, err := c.GetProfileByName(cs.ProfileName)
-	if err != nil || s.URI.IsNil() {
-		return fmt.Errorf("Server not found\n %+v", err)
-	}
+// func (c *OVClient) CustomizeServer(cs CustomizeServer) error {
+// 	s, err := c.GetProfileByName(cs.ProfileName)
+// 	if err != nil || s.URI.IsNil() {
+// 		return fmt.Errorf("Server not found\n %+v", err)
+// 	}
 
-	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
-	if err != nil {
-		return err
-	}
+// 	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	osDeploymentPlan, err := c.GetOSDeploymentPlanByName(cs.OSDeploymentBuildPlan)
-	if err != nil || osDeploymentPlan.URI.IsNil() {
-		return fmt.Errorf("osDeploymentPlan not found: %s\n %+v", cs.OSDeploymentBuildPlan, err)
-	}
+// 	osDeploymentPlan, err := c.GetOSDeploymentPlanByName(cs.OSDeploymentBuildPlan)
+// 	if err != nil || osDeploymentPlan.URI.IsNil() {
+// 		return fmt.Errorf("osDeploymentPlan not found: %s\n %+v", cs.OSDeploymentBuildPlan, err)
+// 	}
 
-	serverDeploymentAttributes := make([]OSCustomAttribute, len(osDeploymentPlan.AdditionalParameters))
-	for i := 0; i < len(osDeploymentPlan.AdditionalParameters); i++ {
-		customAttribute := &osDeploymentPlan.AdditionalParameters[i]
-		if val, ok := cs.OSDeploymentAttributes[customAttribute.Name]; ok {
-			customAttribute.Value = val
-		}
-		serverDeploymentAttributes[i].Name = customAttribute.Name
-		serverDeploymentAttributes[i].Value = customAttribute.Value
-	}
+// 	serverDeploymentAttributes := make([]OSCustomAttribute, len(osDeploymentPlan.AdditionalParameters))
+// 	for i := 0; i < len(osDeploymentPlan.AdditionalParameters); i++ {
+// 		customAttribute := &osDeploymentPlan.AdditionalParameters[i]
+// 		if val, ok := cs.OSDeploymentAttributes[customAttribute.Name]; ok {
+// 			customAttribute.Value = val
+// 		}
+// 		serverDeploymentAttributes[i].Name = customAttribute.Name
+// 		serverDeploymentAttributes[i].Value = customAttribute.Value
+// 	}
 
-	s.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
-	s.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
+// 	// s.OSDeploymentSettings.OSDeploymentPlanUri = osDeploymentPlan.URI
+// 	// s.OSDeploymentSettings.OSCustomAttributes = serverDeploymentAttributes
 
-	s.ConnectionSettings.Connections, err = c.ManageI3SConnections(s.ConnectionSettings.Connections, cs.EthernetNetworkName)
-	if err != nil {
-		return err
-	}
+// 	s.ConnectionSettings.Connections, err = c.ManageI3SConnections(s.ConnectionSettings.Connections, cs.EthernetNetworkName)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = c.UpdateServerProfile(s)
-	if err != nil {
-		return err
-	}
+// 	err = c.UpdateServerProfile(s)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = blade.PowerOn()
-	if err != nil {
-		return err
-	}
+// 	err = blade.PowerOn()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func (c *OVClient) DeleteOSBuildPlanFromServer(profileName string) error {
-	s, err := c.GetProfileByName(profileName)
-	if err != nil || s.URI.IsNil() {
-		return fmt.Errorf("Server not found\n %+v", err)
-	}
+// func (c *OVClient) DeleteOSBuildPlanFromServer(profileName string) error {
+// 	s, err := c.GetProfileByName(profileName)
+// 	if err != nil || s.URI.IsNil() {
+// 		return fmt.Errorf("Server not found\n %+v", err)
+// 	}
 
-	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
-	if err != nil {
-		return err
-	}
+// 	blade, err := c.GetServerHardwareByUri(s.ServerHardwareURI)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = blade.PowerOff()
-	if err != nil {
-		return err
-	}
+// 	err = blade.PowerOff()
+// 	if err != nil {
+// 		return err
+// 	}
 
-	s.OSDeploymentSettings.OSDeploymentPlanUri = utils.NewNstring("")
-	//s.OSDeploymentSettings.OSCustomAttributes = nil
+// 	s.OSDeploymentSettings.OSDeploymentPlanUri = utils.NewNstring("")
+// 	//s.OSDeploymentSettings.OSCustomAttributes = nil
 
-	err = c.UpdateServerProfile(s)
-	if err != nil {
-		return err
-	}
+// 	err = c.UpdateServerProfile(s)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
