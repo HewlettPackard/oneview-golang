@@ -26,7 +26,6 @@ export ONEVIEW_OV_USER=username
 export ONEVIEW_OV_PASSWORD=password
 export ONEVIEW_OV_DOMAIN=LOCAL
 
-export ONEVIEW_I3S_ENDPOINT=https://15.x.x.x
 
 export ONEVIEW_SSLVERIFY=true
 
