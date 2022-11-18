@@ -15,7 +15,7 @@ func main() {
 		hcp_name                     = "test"
 		new_hcp                      = "test_new"
 		scope                        = "testing"
-		server_profile_template_name = "SPT"
+		server_profile_template_name = "Auto-SPT"
 		hypervisor_manager_ip        = "<hypervisor_manager_ip>"
 	)
 	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
@@ -46,15 +46,11 @@ func main() {
 		fmt.Println("Server Profile Template Retrieval Failed: ", err)
 	}
 
-	deploymentPlan := ov.DeploymentPlan{
-		ServerPassword: "dcs"}
-
-	fmt.Println(deploymentPlan)
-
 	hypervisorHostProfileTemplate := ov.HypervisorHostProfileTemplate{
 		ServerProfileTemplateUri: server_profile_template.URI,
-		DeploymentPlan:           &deploymentPlan,
-		Hostprefix:               "test"}
+		Hostprefix:               "test",
+		DeploymentManagerType:    "UserManaged",
+	}
 
 	hypervisorclustprof := ov.HypervisorClusterProfile{
 		Type:                          "HypervisorClusterProfileV6",
