@@ -59,7 +59,8 @@
     "egName":"",
     "mgmtNetworkName":"",
     "iscsiNetworkName":"",
-    "fcNetworkName":""
+    "fcNetworkName":"",
+    "serverCertificateIp":""
 
 
 }

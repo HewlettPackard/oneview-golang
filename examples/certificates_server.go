@@ -2,29 +2,31 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
 )
 
 func main() {
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	var (
 		ClientOV                *ov.OVClient
-		server_certificate_ip                 = "<Server IP>"
+		server_certificate_ip                 = config.ServerCertificateIp
 		server_certificate_name               = "new_test_certificate"
 		new_cert_base64data     utils.Nstring = "---BEGIN CERTIFICATE----END CERTIFICATE------"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-
+	// Use configuratin file to set the ip and  credentails
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	server_cert, err := ovc.GetServerCertificateByIp(server_certificate_ip)
 	if err != nil {

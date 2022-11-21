@@ -21,6 +21,7 @@ type Configuration struct {
 	MgmtNetworkName             string                       `json:"mgmtName"`
 	IscsiNetworkName            string                       `json:"iscsiNetworkName"`
 	FcNetworkName               string                       `json:"fcNetworkName"`
+	ServerCertificateIp         string                       `json:"serverCertificateIp"`
 }
 type OVCred struct {
 	UserName   string `json:"username"`
