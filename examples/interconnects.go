@@ -2,24 +2,27 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"os"
-	"strconv"
 )
 
 func main() {
 	var (
-		clientOV *ov.OVClient
+		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	sort := "name:desc"
 	interconnect_list, err := ovc.GetInterconnects("", "", "", sort)
