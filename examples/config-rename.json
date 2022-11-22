@@ -53,7 +53,13 @@
         "server_profile_name": "",
         "network_name": "",
         "ov_template": ""
-    },     
+    }, 
+    "hypervisor_manager":{
+        "hypervisor_manager_ip":"",
+        "hypervisor_manager_username":"",
+        "hypervisor_manager_password":"" 
+
+    },    
     
     "ligName":"",
     "egName":"",

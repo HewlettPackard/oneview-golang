@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -11,22 +9,36 @@ import (
 
 func main() {
 	var (
-		clientOV                     *ov.OVClient
+		ClientOV *ov.OVClient
+	)
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
+
+	var (
 		hcp_name                     = "test"
 		new_hcp                      = "test_new"
-		scope                        = "testing"
-		server_profile_template_name = "SPT"
-		hypervisor_manager_ip        = "<hypervisor_manager_ip>"
+		scope                        = "ScopeTest"
+		server_profile_template_name = "Auto-SPT"
+		hypervisor_manager_ip        = config.HypervisorManagerConfig.IpAddress
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+
+	initialScopeUris := new([]utils.Nstring)
+	scp, scperr := ovc.GetScopeByName(scope)
+	if scperr != nil {
+		fmt.Println("Error fetching scope: ", scperr)
+	}
+	*initialScopeUris = append(*initialScopeUris, scp.URI)
 
 	hypervisor_manager, err := ovc.GetHypervisorManagerByName(hypervisor_manager_ip)
 	if err != nil {
@@ -35,25 +47,14 @@ func main() {
 		fmt.Println("Hypervisor Manager: ", hypervisor_manager.URI)
 	}
 
-	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName(scope)
-	if scperr != nil {
-		fmt.Println("Error fetching scope: ", scperr)
-	}
-	*initialScopeUris = append(*initialScopeUris, scp.URI)
 	server_profile_template, err := ovc.GetProfileTemplateByName(server_profile_template_name)
 	if err != nil {
 		fmt.Println("Server Profile Template Retrieval Failed: ", err)
 	}
 
-	deploymentPlan := ov.DeploymentPlan{
-		ServerPassword: "dcs"}
-
-	fmt.Println(deploymentPlan)
-
 	hypervisorHostProfileTemplate := ov.HypervisorHostProfileTemplate{
 		ServerProfileTemplateUri: server_profile_template.URI,
-		DeploymentPlan:           &deploymentPlan,
+		DeploymentManagerType:    "UserManaged",
 		Hostprefix:               "test"}
 
 	hypervisorclustprof := ov.HypervisorClusterProfile{

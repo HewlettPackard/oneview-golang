@@ -2,38 +2,45 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
 )
 
 func main() {
 	var (
-		ClientOV                        *ov.OVClient
-		hypervisor_manager_ip           = "<hypervisor_manager_ip>"
-		hypervisor_manager_display_name = "HM2"
-		username                        = "<hypervisor_user_name>"
-		password                        = "<hypervisor_password>"
+		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
+
+	var (
+		hypervisor_manager_ip           = config.HypervisorManagerConfig.IpAddress
+		hypervisor_manager_display_name = "HM2"
+		username                        = config.HypervisorManagerConfig.Username
+		password                        = config.HypervisorManagerConfig.Password
+	)
 	scp, _ := ovc.GetScopeByName("ScopeTest")
 	initialScopeUris := &[]utils.Nstring{(scp.URI)}
-	// Adding Hypervisor Manager Server Certificate to Oneview for Secure conection
+	//Adding Hypervisor Manager Server Certificate to Oneview for Secure conection
 	server_cert, err := ovc.GetServerCertificateByIp(hypervisor_manager_ip)
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println("Fetched Hypervisor Manager Server Certificate.")
+		fmt.Println("Fetched Hypervisor Manager Server Certificate.", server_cert)
 	}
+
 	server_cert.CertificateDetails[0].AliasName = "Hypervisor Manager Server Certificate"
 	server_cert.Type = ""
 	er := ovc.CreateServerCertificate(server_cert)
@@ -43,7 +50,8 @@ func main() {
 		fmt.Println("Imported Hypervisor Manager Server Certificate to Oneview for secure connection successfully.")
 	}
 
-	hypervisorManager := ov.HypervisorManager{DisplayName: "HM1",
+	hypervisorManager := ov.HypervisorManager{
+		DisplayName:      "HM1",
 		Name:             hypervisor_manager_ip,
 		Username:         username,
 		Password:         password,
@@ -79,7 +87,7 @@ func main() {
 
 	hypervisor_mgr.DisplayName = hypervisor_manager_display_name
 	force := ""
-	if apiversion > 2400 {
+	if config.OVCred.ApiVersion > 2400 {
 		force = "true"
 		err = ovc.UpdateHypervisorManager(hypervisor_mgr, force)
 		fmt.Println("works")
@@ -106,4 +114,12 @@ func main() {
 	} else {
 		fmt.Println("#...................... Deleted Hypervisor Manager Successfully .....#")
 	}
+	//Create Hm for Automation
+	err = ovc.CreateHypervisorManager(hypervisorManager)
+	if err != nil {
+		fmt.Println("............... Create Hypervisor Manager Failed:", err)
+	} else {
+		fmt.Println(".... Create Hypervisor Manager Success")
+	}
+
 }

@@ -2,29 +2,32 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
-	"os"
-	"strconv"
 )
 
 func main() {
 	var (
-		clientOV           *ov.OVClient
+		ClientOV           *ov.OVClient
 		new_enclosure_name = "Renamed_Enclosure"
 		path               = "/name"
 		op                 = "replace"
 		//		eg_name            = "Auto-EnclosureGroup"
 	)
 
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	/*	enc_grp, _ := ovc.GetEnclosureGroupByName(eg_name)
 		enclosure_create_map := ov.EnclosureCreateMap{
@@ -65,7 +68,7 @@ func main() {
 		fmt.Println("#----------------Enclosure by Name----------------#")
 		fmt.Println(enclosure.Name)
 	}
-
+	oldName := enclosure.Name
 	uri := enclosure.URI
 	enclosure, err = ovc.GetEnclosurebyUri(uri)
 	if err != nil {
@@ -88,6 +91,21 @@ func main() {
 		for i := 0; i < len(enc_list.Members); i++ {
 			fmt.Println(enc_list.Members[i].Name)
 		}
+	}
+
+	enc_list, err = ovc.GetEnclosures("", "", "", sort, "")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#----------------Enclosure List after Updating---------#")
+		for i := 0; i < len(enc_list.Members); i++ {
+			fmt.Println(enc_list.Members[i].Name)
+		}
+	}
+
+	err = ovc.UpdateEnclosure(op, path, oldName, enclosure)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	/*	err = ovc.DeleteEnclosure(new_enclosure_name)

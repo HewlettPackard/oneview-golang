@@ -16,6 +16,7 @@ type Configuration struct {
 	IdPoolsIpv4SubnetRange      *IdPoolsIpv4SubnetRange      `json:"id_pools_ipv4_range,omitempty"`
 	ServerProfileConfig         *ServerProfileConfig         `json:"server_profile,omitempty"`
 	ServerProfileTemplateConfig *ServerProfileTemplateConfig `json:"server_profile_template,omitempty"`
+	HypervisorManagerConfig     *HypervisorManagerConfig     `json:"hypervisor_manager,omitempty"`
 	LigName                     string                       `json:"ligName"`
 	EgName                      string                       `json:"egName"`
 	MgmtNetworkName             string                       `json:"mgmtName"`
@@ -67,6 +68,11 @@ type ServerProfileTemplateConfig struct {
 	ServerPrpofileTemplateName string `json:"server_profile_template_name"`
 	ServerHardwareTypeName     string `json:"server_hardware_type_name"`
 	EnclosureGroupName         string `json:"enclosure_group_name"`
+}
+type HypervisorManagerConfig struct {
+	Username  string `json:"hypervisor_manager_username"`
+	Password  string `json:"hypervisor_manager_password"`
+	IpAddress string `json:"hypervisor_manager_ip"`
 }
 
 type ServerProfileConfig struct {
