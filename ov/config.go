@@ -17,6 +17,7 @@ type Configuration struct {
 	ServerProfileConfig         *ServerProfileConfig         `json:"server_profile,omitempty"`
 	ServerProfileTemplateConfig *ServerProfileTemplateConfig `json:"server_profile_template,omitempty"`
 	HypervisorManagerConfig     *HypervisorManagerConfig     `json:"hypervisor_manager,omitempty"`
+	StorageSystemConfig         *StorageSystemConfig         `json:"storage_system,omitempty"`
 	LigName                     string                       `json:"ligName"`
 	EgName                      string                       `json:"egName"`
 	MgmtNetworkName             string                       `json:"mgmtName"`
@@ -73,6 +74,13 @@ type HypervisorManagerConfig struct {
 	Username  string `json:"hypervisor_manager_username"`
 	Password  string `json:"hypervisor_manager_password"`
 	IpAddress string `json:"hypervisor_manager_ip"`
+}
+type StorageSystemConfig struct {
+	Username   string `json:"storage_username"`
+	Password   string `json:"storage_password"`
+	IpAddress  string `json:"storage_IP"`
+	IpAddress2 string `json:"storage_IP2"`
+	Family     string `json:"storage_family"`
 }
 
 type ServerProfileConfig struct {

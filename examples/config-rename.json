@@ -60,7 +60,13 @@
         "hypervisor_manager_password":"" 
 
     },    
-    
+    "storage_system":{
+        "storage_username": "",
+        "storage_password": "",
+        "storage_IP": "",
+        "storage_IP2": "",
+        "storage_family": ""
+    },    
     "ligName":"",
     "egName":"",
     "mgmtNetworkName":"",
