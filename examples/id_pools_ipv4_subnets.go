@@ -32,11 +32,6 @@ func main() {
 		Gateway:    config.IdPoolsIpv4Subnet.Gateway,
 		Domain:     config.IdPoolsIpv4Subnet.Domain,
 	}
-	// 	Name:       config.IdPoolsIpv4Subnet.SubnetName,
-	// 	SubnetMask: "255.255.0.0",
-	// 	Gateway:    "172.16.0.1",
-	// 	Domain:     "Golang.com",
-	// }
 
 	fmt.Println("#-----------------Creating Subnet----------------#")
 	err := ovc.CreateIPv4Subnet(subnet)

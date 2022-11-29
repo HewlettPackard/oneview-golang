@@ -15,8 +15,7 @@ import (
 func main() {
 	var (
 		ClientOV *ov.OVClient
-		//id       = "ebb4dac4-6f9f-48b4-b356-fd371a026899"
-		eg_name = "EG_For_IPV4Range"
+		eg_name  = "EG_For_IPV4Range"
 	)
 	config, config_err := ov.LoadConfigFile("config.json")
 	if config_err != nil {
@@ -32,14 +31,9 @@ func main() {
 		config.OVCred.ApiVersion,
 		config.OVCred.IfMatch)
 
-	//Create subnet
 	// Creates an IPv4 Subnet
 	subnet := ov.Ipv4Subnet{
-		// Name:       "SubnetGO",
-		// NetworkId:  "172.16.0.0",
-		// SubnetMask: "255.255.0.0",
-		// Gateway:    "172.16.0.1",
-		// Domain:     "Golang.com",
+
 		Name:       config.IdPoolsIpv4SubnetRange.SubnetName,
 		NetworkId:  config.IdPoolsIpv4SubnetRange.NetworkId,
 		SubnetMask: config.IdPoolsIpv4SubnetRange.SubnetMask,
@@ -57,8 +51,7 @@ func main() {
 	//Gets an IPv4 subnet by Id
 	fmt.Println("#-------------Get Ipv4Range by id----------------#")
 	subnetName, err := ovc.GetSubnetByNetworkId(subnet.NetworkId)
-	fmt.Println(subnetName)
-	fmt.Println(subnet.Name)
+
 	subnet_id := strings.Split(subnetName.URI.String(), "/")[5]
 
 	subnetById, err := ovc.GetIPv4SubnetbyId(subnet_id)
@@ -149,8 +142,6 @@ func main() {
 	idlist := new([]utils.Nstring)
 	*idlist = append(*idlist, config.IdPoolsIpv4SubnetRange.IdList[0])
 	*idlist = append(*idlist, config.IdPoolsIpv4SubnetRange.IdList[1])
-	// *idlist = append(*idlist, utils.NewNstring("172.16.0.44"))
-	// *idlist = append(*idlist, utils.NewNstring("172.16.0.49"))
 	allocateId := ov.UpdateAllocatorList{
 		IdList: *idlist,
 	}
@@ -227,60 +218,7 @@ func main() {
 	} else {
 		fmt.Println("#---Deleted Ipv4Range successfully---#")
 	}
-	//**************** Create mgmt network for automation ******************************//
 
-	// subnetMgmt := ov.Ipv4Subnet{
-	// 	Name:       config.IdPoolsIpv4SubnetRange.SubnetName,
-	// 	NetworkId:  config.IdPoolsIpv4SubnetRange.NetworkId,
-	// 	SubnetMask: config.IdPoolsIpv4SubnetRange.SubnetMask,
-	// 	Gateway:    config.IdPoolsIpv4SubnetRange.Gateway,
-	// 	Domain:     config.IdPoolsIpv4SubnetRange.Domain,
-	// }
-
-	// err1 := ovc.CreateIPv4Subnet(subnetMgmt)
-	// if err1 != nil {
-	// 	panic(err)
-	// } else {
-	// 	fmt.Println("IPv4 Subnet created successfully...")
-	// }
-	// ///
-	// fmt.Println("#-------------Get Ipv4Range by id----------------#")
-	// subnetName1, err := ovc.GetSubnetByNetworkId(subnet.NetworkId)
-	// fmt.Println(subnetName1)
-	// fmt.Println(subnet.Name)
-	// subnet_id = strings.Split(subnetName1.URI.String(), "/")[5]
-
-	// //
-	// subnetById1, err2 := ovc.GetIPv4SubnetbyId(subnet_id)
-	// if err1 != nil {
-	// 	fmt.Println(err2)
-	// } else {
-	// 	fmt.Println(subnetById.URI.String(), subnetById1.Domain)
-	// }
-
-	// // Create ip4 range
-	// fragments = new([]ov.StartStopFragments)
-	// fragment1 = ov.StartStopFragments{EndAddress: config.IdPoolsIpv4SubnetRange.EndAddress1, StartAddress: config.IdPoolsIpv4SubnetRange.StartAddress}
-	// *fragments = append(*fragments, fragment1)
-
-	// ipV4Range_iscsi := ov.CreateIpv4Range{
-	// 	Type:               "Range",
-	// 	Name:               "iscsi",
-	// 	StartStopFragments: *fragments,
-	// 	SubnetUri:          subnetById1.URI,
-	// }
-
-	// // // // Creates an IPv4 range
-
-	// iprange, err3 := ovc.CreateIPv4Range(ipV4Range_iscsi)
-	// fmt.Println(iprange.URI)
-	// if err3 != nil {
-	// 	fmt.Println("IPv4 Range Creation Failed: ", err3)
-	// } else {
-	// 	fmt.Println("IPv4 Range created successfully...")
-	// 	jsonResponse, _ := json.MarshalIndent(ipV4Range, "", "  ")
-	// 	fmt.Print(string(jsonResponse), "\n\n")
-	// }
 	//******************* Create iscsi network for automation*****************************
 	err1 := ovc.CreateIPv4Subnet(subnet)
 	if err1 != nil {

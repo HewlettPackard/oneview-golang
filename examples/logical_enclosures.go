@@ -57,12 +57,7 @@ func main() {
 
 	fmt.Println(*enclosureUris)
 
-	// fmt.Println("#................... Create Logical Enclosure ...............#")
-	// enclosureUris := new([]utils.Nstring)
-	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66101"))
-	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66102"))
-	// *enclosureUris = append(*enclosureUris, utils.NewNstring("/rest/enclosures/0000000000A66103"))
-
+	fmt.Println("#................... Create Logical Enclosure ...............#")
 	enc_grp, err := ovc.GetEnclosureGroupByName(eg_name)
 
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure,
