@@ -61,7 +61,6 @@ func main() {
 	fmt.Println(subnet.Name)
 	id := strings.Split(subnetName.URI.String(), "/")[5]
 	fmt.Println(id)
-	fmt.Println("Hi ID")
 
 	subnetById, err := ovc.GetIPv4SubnetbyId(id)
 	if err != nil {
