@@ -177,9 +177,6 @@ func main() {
 	networkUris := []utils.Nstring{EthNetworkMgmt.URI}
 	networkUris2 := []utils.Nstring{EthNetworkIscsi.URI}
 	networkUris3 := []utils.Nstring{fcNetwork.URI}
-	// networkUris := []utils.Nstring{"/rest/ethernet-networks/bf5a6091-ef32-4983-90b7-d5a3848c7274"}
-	// networkUris2 := []utils.Nstring{"/rest/fc-networks/5900d2f8-cfde-4ecd-81b9-750843d22a18"}
-	// networkUris3 := []utils.Nstring{"/rest/fc-networks/8a1c4708-6439-4b62-8a2b-841f9b36ceae"}
 	//************************uplink set 1**************************************************
 
 	portname1_1 := "Q1"
