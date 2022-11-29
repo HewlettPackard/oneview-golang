@@ -23,6 +23,7 @@ func main() {
 		config.OVCred.SslVerify,
 		config.OVCred.ApiVersion,
 		config.OVCred.IfMatch)
+
 	scope := ov.Scope{Name: "ScopeHardware", Description: "Test from script", Type: "ScopeV3"}
 	_ = ovc.CreateScope(scope)
 	scp, _ := ovc.GetScopeByName("ScopeHardware")
@@ -31,9 +32,9 @@ func main() {
 	fmt.Println("-----------------------------")
 	fmt.Println("Add Single Rack server to the appliance:")
 	rackServer := ov.ServerHardware{
-		Hostname:           "172.18.41.1",
-		Username:           "dcs",
-		Password:           "dcs",
+		Hostname:           "<serverIp>",
+		Username:           "<username>",
+		Password:           "<password>",
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
@@ -45,11 +46,11 @@ func main() {
 
 	fmt.Println("-----------------------------")
 	fmt.Println("Add multiple Rack servers:")
-	hostsAndRanges := &[]utils.Nstring{"172.18.41.2-172.18.41.7"}
+	hostsAndRanges := &[]utils.Nstring{"<ipAddress1>-<ipAddress5>"}
 	multipleRackServers := ov.ServerHardware{
 		MpHostsAndRanges:   *hostsAndRanges,
-		Username:           "dcs",
-		Password:           "dcs",
+		Username:           "<username>",
+		Password:           "<password>",
 		Force:              false,
 		LicensingIntent:    "OneView", //OneView or OneViewNoiLO for Managed
 		ConfigurationState: "Managed",
