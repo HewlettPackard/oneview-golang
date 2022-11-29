@@ -20,7 +20,7 @@ type Configuration struct {
 	StorageSystemConfig         *StorageSystemConfig         `json:"storage_system,omitempty"`
 	LigName                     string                       `json:"ligName"`
 	EgName                      string                       `json:"egName"`
-	MgmtNetworkName             string                       `json:"mgmtName"`
+	MgmtNetworkName             string                       `json:"mgmtNetworkName"`
 	IscsiNetworkName            string                       `json:"iscsiNetworkName"`
 	FcNetworkName               string                       `json:"fcNetworkName"`
 	ServerCertificateIp         string                       `json:"serverCertificateIp"`
