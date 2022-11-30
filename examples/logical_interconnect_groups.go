@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -166,6 +167,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	EthNetworkIscsi, err := ovc.GetEthernetNetworkByName(config.IscsiNetworkName)
 	if err != nil {
 		fmt.Println(err)
@@ -174,6 +176,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	networkUris := []utils.Nstring{EthNetworkMgmt.URI}
 	networkUris2 := []utils.Nstring{EthNetworkIscsi.URI}
 	networkUris3 := []utils.Nstring{fcNetwork.URI}
@@ -334,8 +337,9 @@ func main() {
 		UplinkSets:              uplinkSets}
 
 	// Check if LIG already exist
-	_, err_exist := ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroup.Name)
-	if err_exist == nil {
+	lig_exist, _ := ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroup.Name)
+
+	if !reflect.DeepEqual(ov.LogicalInterconnectGroup{}, lig_exist) {
 		fmt.Println(".... Logical interconnect group already exist. Deleting....")
 		del_err1 := ovc.DeleteLogicalInterconnectGroup(logicalInterconnectGroup.Name)
 
@@ -367,8 +371,8 @@ func main() {
 		QosConfiguration:        &qosConfig}
 
 	// Check if LIG already exist
-	_, err_exist = ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroupTest.Name)
-	if err_exist == nil {
+	lig_exist1, _ := ovc.GetLogicalInterconnectGroupByName(logicalInterconnectGroupTest.Name)
+	if !reflect.DeepEqual(ov.LogicalInterconnectGroup{}, lig_exist1) {
 		fmt.Println(".... Logical interconnect group already exist. Deleting....")
 		del_err1 := ovc.DeleteLogicalInterconnectGroup(logicalInterconnectGroupTest.Name)
 
@@ -425,4 +429,5 @@ func main() {
 	} else {
 		fmt.Println(".....Deleted Logical Interconnect Group Successfully....")
 	}
+
 }

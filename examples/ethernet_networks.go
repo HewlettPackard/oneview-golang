@@ -158,7 +158,7 @@ func main() {
 	}
 
 	//ISCSI
-	ethernetNetworkIscsi := ov.EthernetNetwork{Name: ethernet_network_iscsi, VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	ethernetNetworkIscsi := ov.EthernetNetwork{Name: ethernet_network_iscsi, VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
 	er2 := ovc.CreateEthernetNetwork(ethernetNetworkIscsi)
 	if er2 != nil {
 		fmt.Println("............. Ethernet Network Iscsi creation Failed:", err)
