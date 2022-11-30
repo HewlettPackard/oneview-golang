@@ -21,7 +21,6 @@ func main() {
 		logical_enclosure_1 = "TestLE-Renamed"
 		scope_name          = "Auto-Scope"
 		eg_name             = config.EgName
-		firmware_baseline   = utils.NewNstring("/rest/firmware-drivers/Synergy_Custom_SPP_2021_02_01_Z7550-97110")
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -63,7 +62,7 @@ func main() {
 	logicalEnclosure := ov.LogicalEnclosure{Name: logical_enclosure,
 		EnclosureUris:     *enclosureUris,
 		EnclosureGroupUri: enc_grp.URI,
-		//FirmwareBaselineUri:  firmware_baseline,
+
 		ForceInstallFirmware: true,
 	}
 
