@@ -536,36 +536,36 @@ func (c *OVClient) Cleanup(template *ServerProfile) {
 }
 
 // submit new profile template
-// func (c *OVClient) SubmitDeleteProfile(p ServerProfile) (t *Task, err error) {
-// 	var (
-// 		uri = p.URI.String()
-// 	)
+func (c *OVClient) SubmitDeleteProfile(p ServerProfile) (t *Task, err error) {
+	var (
+		uri = p.URI.String()
+	)
 
-// 	t = t.NewProfileTask(c)
-// 	t.ResetTask()
-// 	log.Debugf("REST : %s \n %+v\n", uri, p)
-// 	log.Debugf("task -> %+v", t)
-// 	if uri == "" {
-// 		log.Warn("Unable to post delete, no uri found.")
-// 		t.TaskIsDone = true
-// 		return t, err
-// 	}
-// 	data, err := c.RestAPICall(rest.DELETE, uri, nil)
-// 	if err != nil {
-// 		log.Errorf("Error submitting new profile request: %s", err)
-// 		t.TaskIsDone = true
-// 		return t, err
-// 	}
+	t = t.NewProfileTask(c)
+	t.ResetTask()
+	log.Debugf("REST : %s \n %+v\n", uri, p)
+	log.Debugf("task -> %+v", t)
+	if uri == "" {
+		log.Warn("Unable to post delete, no uri found.")
+		t.TaskIsDone = true
+		return t, err
+	}
+	data, err := c.RestAPICall(rest.DELETE, uri, nil)
+	if err != nil {
+		log.Errorf("Error submitting new profile request: %s", err)
+		t.TaskIsDone = true
+		return t, err
+	}
 
-// 	log.Debugf("Response delete profile %s", data)
-// 	if err := json.Unmarshal(data, &t); err != nil {
-// 		t.TaskIsDone = true
-// 		log.Errorf("Error with task un-marshal: %s", err)
-// 		return t, err
-// 	}
+	log.Debugf("Response delete profile %s", data)
+	if err := json.Unmarshal(data, &t); err != nil {
+		t.TaskIsDone = true
+		log.Errorf("Error with task un-marshal: %s", err)
+		return t, err
+	}
 
-// 	return t, err
-// }
+	return t, err
+}
 
 // delete a profile, assign the server and remove the profile from the system
 func (c *OVClient) DeleteProfile(name string) error {
@@ -575,7 +575,6 @@ func (c *OVClient) DeleteProfile(name string) error {
 		server        ServerHardware
 		profile       ServerProfile
 		err           error
-		t             *Task
 	)
 
 	servernamemsg = "'no server'"
@@ -601,58 +600,26 @@ func (c *OVClient) DeleteProfile(name string) error {
 		if server.Name != "" {
 			server.PowerOff()
 		}
-		t = t.NewProfileTask(c)
-		t.ResetTask()
-		log.Debugf("REST : %s \n %+v\n", profile.URI, profile)
-		log.Debugf("task -> %+v", t)
-		uri := profile.URI.String()
-		if uri == "" {
-			log.Warn("Unable to post delete, no uri found.")
-			t.TaskIsDone = true
-			return err
-		}
-		data, err := c.RestAPICall(rest.DELETE, uri, nil)
+
+		// submit delete task
+		t, err := c.SubmitDeleteProfile(profile)
 		if err != nil {
-			log.Errorf("Error submitting delete request: %s", err)
-			t.TaskIsDone = true
 			return err
 		}
 
-		log.Debugf("Response delete profile %s", data)
-		if err := json.Unmarshal(data, &t); err != nil {
-			t.TaskIsDone = true
-			log.Errorf("Error with task un-marshal: %s", err)
-			return err
-		}
 		err = t.Wait()
 		if err != nil {
 			return err
 		}
 		return nil
+
+		// check for task execution
+
 	} else {
-		log.Infof("profile could not be found to delete, %s, skipping delete ...", name)
+		log.Infof("Profile could not be found to delete, %s, skipping delete ...", name)
 	}
 	return nil
 }
-
-// 	// submit delete task
-// 	// t, err := c.SubmitDeleteProfile(profile)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	err = t.Wait()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-
-// 	// check for task execution
-
-// } else {
-// 	log.Infof("Profile could not be found to delete, %s, skipping delete ...", name)
-// }
-// return nil
 
 func (c *OVClient) UpdateServerProfile(p ServerProfile) error {
 	log.Infof("Initializing update of server profile for %s.", p.Name)
