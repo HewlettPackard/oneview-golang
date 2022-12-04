@@ -28,7 +28,13 @@ func main() {
 		config.OVCred.SslVerify,
 		config.OVCred.ApiVersion,
 		config.OVCred.IfMatch)
-
+	ethernetNetworkAuto := ov.EthernetNetwork{Name: eth_network, VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4"}
+	er1 := ovc.CreateEthernetNetwork(ethernetNetworkAuto)
+	if er1 != nil {
+		fmt.Println("............. Ethernet Network Mgmt creation Failed:", er1)
+	} else {
+		fmt.Println("......Ethernet Network Mgmt creation is Successful")
+	}
 	scope_test := ov.Scope{Name: scp_name, Description: "Test from script", Type: "ScopeV3"}
 	scope_test_2 := ov.Scope{Name: scp_name2, Description: "Test from script", Type: "ScopeV3"}
 	er_test := ovc.CreateScope(scope_test)
@@ -120,5 +126,11 @@ func main() {
 	err = ovc.DeleteScope(upd_scope)
 	if err != nil {
 		panic(err)
+	}
+	err = ovc.DeleteEthernetNetwork(eth_network)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
 	}
 }
