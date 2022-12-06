@@ -9,7 +9,6 @@ import (
 
 func main() {
 	var (
-
 		ClientOV *ov.OVClient
 	)
 
@@ -24,7 +23,6 @@ func main() {
 		server_hardware = config.ServerProfileConfig.ServerHardwareName
 		scopeName       = "SP-Scope"
 		spt_name        = config.ServerProfileConfig.OvTemplatestring
-
 	)
 	ovc := ClientOV.NewOVClient(
 		config.OVCred.UserName,
@@ -166,7 +164,6 @@ func main() {
 		fmt.Println("#----------------Server Profile Delete---------------#")
 		//fmt.Println("Task URI: ", task.URI)
 	}
-
 
 	err = ovc.DeleteProfile(new_sp_name)
 	err = ovc.DeleteProfile(sp_by_spt)

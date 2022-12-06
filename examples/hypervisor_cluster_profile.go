@@ -31,7 +31,6 @@ func main() {
 		scope                        = "ScopeTest"
 		server_profile_template_name = "Auto-SPT"
 		hypervisor_manager_ip        = config.HypervisorManagerConfig.IpAddress
-
 	)
 
 	initialScopeUris := new([]utils.Nstring)
