@@ -21,6 +21,7 @@ func main() {
 		logical_enclosure_1 = "TestLE-Renamed"
 		scope_name          = "Auto-Scope"
 		eg_name             = config.EgName
+		firmware_baseline   = "<firmware-baseline-uri>"
 	)
 
 	ovc := ClientOV.NewOVClient(
@@ -118,6 +119,23 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#............. Update From Group Logical Enclosure Successfully .....#")
+	}
+
+	// Update Logical Enclosure Firmware
+	updateFirmware := ov.LogicalEnclosureFirmware{
+		FirmwareBaselineUri:                       firmware_baseline,
+		FirmwareUpdateOn:                          "EnclosureOnly",
+		ForceInstallFirmware:                      false,
+		LogicalInterconnectUpdateMode:             "Parallel",
+		UpdateFirmwareOnUnmanagedInterconnect:     true,
+		ValidateIfLIFirmwareUpdateIsNonDisruptive: true,
+	}
+
+	err = ovc.UpdateLogicalEnclosureFirmware(log_en.URI.String(), updateFirmware)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("#.............Logical Enclosure Firmware Updated Successfully .....#")
 	}
 
 	scope1, err := ovc.GetScopeByName(scope_name)
