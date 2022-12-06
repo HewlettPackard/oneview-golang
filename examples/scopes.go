@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 )
@@ -127,10 +126,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	err = ovc.DeleteEthernetNetwork(eth_network)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println("#...................... Deleted Ethernet Network Successfully .....#")
 	}
+
 }

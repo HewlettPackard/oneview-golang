@@ -31,6 +31,7 @@ func main() {
 		scope                        = "ScopeTest"
 		server_profile_template_name = "Auto-SPT"
 		hypervisor_manager_ip        = config.HypervisorManagerConfig.IpAddress
+
 	)
 
 	initialScopeUris := new([]utils.Nstring)
@@ -56,7 +57,6 @@ func main() {
 		ServerProfileTemplateUri: server_profile_template.URI,
 		DeploymentManagerType:    "UserManaged",
 		Hostprefix:               "test"}
-
 	hypervisorclustprof := ov.HypervisorClusterProfile{
 		Type:                          "HypervisorClusterProfileV6",
 		Name:                          hcp_name,
