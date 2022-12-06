@@ -19,6 +19,10 @@ HPE OneView Go library extends support of the SDK to OneView REST API version 46
 
 Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/master/CHANGELOG.md) for more information on the changes , features supported and issues fixed in this version
 
+### HPE Synergy Image Streamer
+
+From Release 8.1, Image streamer is no longer supported.
+
 ## Getting Started 
 
 ## Installation and Configuration
