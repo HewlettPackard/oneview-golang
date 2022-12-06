@@ -333,13 +333,3 @@
 | <sub>/rest/storage-volumes/{id}</sub>                                                           |            PUT            |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark: |:white_check_mark:| :white_check_mark:|:white_check_mark:|
 | <sub>/rest/storage-volumes/{id}</sub>                                                           |          DELETE           |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    | :white_check_mark:       | :white_check_mark:       | :white_check_mark:       | :white_check_mark: |:white_check_mark:| :white_check_mark:|:white_check_mark:|
 | 
-## HPE Synergy Image Streamer 
- 
-| Endpoints                                | Verb   |       V1600        |       V2000        |       V2010        |       V2020        | 
-| ---------------------------------------- | ------ | :----------------: | :----------------: | :----------------: | :----------------: | 
-| **Deployment Plans**                     | 
-| <sub> /rest/deployment-plans </sub>      | POST   | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
-| <sub> /rest/deployment-plans </sub>      | GET    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
-| <sub> /rest/deployment-plans/{id} </sub> | GET    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
-| <sub> /rest/deployment-plans/{id} </sub> | PUT    | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | 
-| <sub> /rest/deployment-plans/{id} </sub> | DELETE | :white_check_mark: | :white_check_mark: | :white_check_mark: | :white_check_mark: | 

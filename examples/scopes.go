@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/HewlettPackard/oneview-golang/ov"
-	"github.com/HewlettPackard/oneview-golang/utils"
 	"os"
 	"strconv"
+
+	"github.com/HewlettPackard/oneview-golang/ov"
+	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
@@ -120,4 +121,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	err = ovc.DeleteScope(scp_name)
+	if err != nil {
+		panic(err)
+	}
+
 }
