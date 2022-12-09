@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 )
@@ -11,27 +9,33 @@ import (
 func main() {
 
 	var (
-		ClientOV        *ov.OVClient
+		ClientOV *ov.OVClient
+	)
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
+	var (
 		name2_to_create = "ThreePAR-2"
 		name_to_create  = "ThreePAR-1"
 		managed_domain  = "TestDomain" //Variable to update the managedDomain
-		username        = "<storage_username>"
-		password        = "<storage_password>"
-		host_ip         = "<storage_IP>"
-		host2_ip        = "<another_Storage_IP>"
-		family          = "StoreServ"
+		username        = config.StorageSystemConfig.Username
+		password        = config.StorageSystemConfig.Password
+		host_ip         = config.StorageSystemConfig.IpAddress
+		host2_ip        = config.StorageSystemConfig.IpAddress2
+		family          = config.StorageSystemConfig.Family
 		//		description    = ""
-	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
 
+	)
 	// Create storage system
 	storageSystem := ov.StorageSystem{Hostname: host_ip, Username: username, Password: password, Family: family}
 	storageSystem_2 := ov.StorageSystem{Hostname: host2_ip, Username: username, Password: password, Family: family}

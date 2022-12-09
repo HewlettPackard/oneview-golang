@@ -27,7 +27,9 @@ var failmodelist = [...]string{
 func (o FailModeData) String() string { return failmodelist[o-1] }
 
 // Equal helper for stage
-func (o FailModeData) Equal(s string) bool { return (strings.ToUpper(s) == strings.ToUpper(o.String())) }
+func (o FailModeData) Equal(s string) bool {
+	return (strings.ToUpper(s) == strings.ToUpper(o.String()))
+}
 
 // OSDNicDataV2 network interface
 type OSDNicDataV2 struct {

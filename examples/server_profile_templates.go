@@ -2,46 +2,54 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
 )
 
 func main() {
+
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	var (
-		clientOV                          *ov.OVClient
+		ClientOV                          *ov.OVClient
 		server_profile_template_name      = "Test SPT"
-		server_profile_template_name_auto = "Auto-SPT"
-		enclosure_group_name              = "EG" //"Auto-TestEG"
-		server_hardware_type_name         = "SY 480 Gen9 1"
-		scope                             = "testing" //"Auto-Scope"
+		server_profile_template_name_auto = config.ServerProfileTemplateConfig.ServerPrpofileTemplateName
+		enclosure_group_name              = config.ServerProfileTemplateConfig.EnclosureGroupName
+		server_hardware_type_name         = config.ServerProfileTemplateConfig.ServerHardwareTypeName
+		scopeName                         = "Spt-Scope"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	server_hardware_type, err := ovc.GetServerHardwareTypeByName(server_hardware_type_name)
 
 	enc_grp, err := ovc.GetEnclosureGroupByName(enclosure_group_name)
 
 	conn_settings := ov.ConnectionSettings{
+
 		ManageConnections: true,
 	}
 
-	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName(scope)
+	sptScope := ov.Scope{Name: scopeName, Description: "Test from script", Type: "ScopeV3"}
 
-	if scperr != nil {
-		*initialScopeUris = append(*initialScopeUris, scp.URI)
+	errSPT := ovc.CreateScope(sptScope)
+
+	if errSPT != nil {
+		fmt.Println("Error Creating Scope: ", errSPT)
 	}
+	scope, _ := ovc.GetScopeByName(scopeName)
+
+	initialScopeUris := &[]utils.Nstring{scope.URI}
 
 	aa := ov.AdministratorAccount{
 		DeleteAdministratorAccount: utils.GetBoolPointer(false),
@@ -131,7 +139,7 @@ func main() {
 		EnclosureGroupURI:     enc_grp.URI,
 		ServerHardwareTypeURI: server_hardware_type.URI,
 		ConnectionSettings:    conn_settings,
-		InitialScopeUris:      *initialScopeUris,
+		//InitialScopeUris:      *initialScopeUris,
 	}
 
 	err = ovc.CreateProfileTemplate(server_profile_template)
@@ -194,5 +202,11 @@ func main() {
 		fmt.Println("Server Profile Template Delete Failed: ", err)
 	} else {
 		fmt.Println("#----------------Server Profile Template Deleted---------------#")
+	}
+	err = ovc.DeleteScope(scopeName)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Deleted scope successfully...")
 	}
 }

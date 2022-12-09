@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 	"strings"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
@@ -13,23 +11,26 @@ func main() {
 	var (
 		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi("ONEVIEW_APIVERSION")
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
 	// Creates an IPv4 Subnet
 	subnet := ov.Ipv4Subnet{
-		Name:       "SubnetTF",
-		NetworkId:  "<networkId>",
-		SubnetMask: "<subnetMask>",
-		Gateway:    "<gateway>",
-		Domain:     "Terraform.com",
+		Name:       config.IdPoolsIpv4Subnet.SubnetName,
+		NetworkId:  config.IdPoolsIpv4Subnet.NetworkId,
+		SubnetMask: config.IdPoolsIpv4Subnet.SubnetMask,
+		Gateway:    config.IdPoolsIpv4Subnet.Gateway,
+		Domain:     config.IdPoolsIpv4Subnet.Domain,
 	}
 
 	fmt.Println("#-----------------Creating Subnet----------------#")
@@ -59,6 +60,7 @@ func main() {
 	fmt.Println(subnetName)
 	fmt.Println(subnet.Name)
 	id := strings.Split(subnetName.URI.String(), "/")[5]
+	fmt.Println(id)
 
 	subnetById, err := ovc.GetIPv4SubnetbyId(id)
 	if err != nil {
@@ -81,7 +83,7 @@ func main() {
 
 	//Creates Range for the above subnet
 	fragments := new([]ov.StartStopFragments)
-	fragment1 := ov.StartStopFragments{EndAddress: "<endAddress>", StartAddress: "<startAddress>"}
+	fragment1 := ov.StartStopFragments{EndAddress: config.IdPoolsIpv4Subnet.EndAddress, StartAddress: config.IdPoolsIpv4Subnet.StartAddress}
 	*fragments = append(*fragments, fragment1)
 	ipV4Range := ov.CreateIpv4Range{
 		Type:               "Range",
@@ -90,7 +92,7 @@ func main() {
 		SubnetUri:          subnetById.URI,
 	}
 
-	err = ovc.CreateIPv4Range(ipV4Range)
+	_, err = ovc.CreateIPv4Range(ipV4Range)
 
 	// Allocates IPv4 Ips from subnet associated with a resource
 	fmt.Println("#--------IPv4 Allocation from Subnet--------------#")
@@ -128,10 +130,10 @@ func main() {
 	fmt.Println("#-----------Updates Subnet-------------#")
 
 	updateSubnet := ov.Ipv4Subnet{
-		Name:       "SubnetRenamed",
-		NetworkId:  "<networkId>",
-		SubnetMask: "<subnetMask>",
-		Gateway:    "<gateway>",
+		Name:       "SubnetGO-renamed",
+		NetworkId:  config.IdPoolsIpv4Subnet.NetworkId,
+		SubnetMask: config.IdPoolsIpv4Subnet.SubnetMask,
+		Gateway:    config.IdPoolsIpv4Subnet.Gateway,
 	}
 
 	err = ovc.UpdateIpv4Subnet(id, updateSubnet)

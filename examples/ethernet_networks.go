@@ -2,31 +2,38 @@ package main
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
-	"strings"
 )
 
 func main() {
 	var (
-		ClientOV           *ov.OVClient
-		ethernet_network   = "eth1"
-		ethernet_network_1 = "eth77"
-		ethernet_network_2 = "eth88"
+		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+
 	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"")
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 	ovVer, _ := ovc.GetAPIVersion()
 	fmt.Println(ovVer)
+	var (
+		ethernet_network       = "eth1"
+		ethernet_network_1     = "eth77"
+		ethernet_network_2     = "eth88"
+		ethernet_network_mgmt  = "mgmt_nw"
+		ethernet_network_iscsi = "iscsi_nw"
+	)
 
 	scope := ov.Scope{Name: "ScopeTest", Description: "Test from script", Type: "ScopeV3"}
 	_ = ovc.CreateScope(scope)
@@ -36,9 +43,6 @@ func main() {
 	fmt.Println("#................... Creating Ethernet Network ...............#")
 	ethernetNetwork := ov.EthernetNetwork{Name: ethernet_network, VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
 	er := ovc.CreateEthernetNetwork(ethernetNetwork)
-
-	ethernetNetworkAuto := ov.EthernetNetwork{Name: "Auto-ethernet_network", VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4"}
-	er = ovc.CreateEthernetNetwork(ethernetNetworkAuto)
 
 	ethernet_nw, err := ovc.GetEthernetNetworkByName(ethernet_network)
 	if err != nil {
@@ -77,7 +81,7 @@ func main() {
 
 	bandwidth := ov.Bandwidth{MaximumBandwidth: 10000, TypicalBandwidth: 2000}
 
-	ethernetNetwork = ov.EthernetNetwork{Name: "eth77", VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	ethernetNetwork = ov.EthernetNetwork{Name: ethernet_network_1, VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
 	er = ovc.CreateEthernetNetwork(ethernetNetwork)
 
 	bulkEthernetNetwork := ov.BulkEthernetNetwork{VlanIdRange: "2-4", Purpose: "General", NamePrefix: "Test_eth", SmartLink: false, PrivateNetwork: false, Bandwidth: bandwidth, Type: "bulk-ethernet-networkV2"}
@@ -142,4 +146,24 @@ func main() {
 	} else {
 		fmt.Println("....  Ethernet Network Bulk-Delete is Successful")
 	}
+
+	//*************Create ethernet network for automation*****************/
+	//Mgmt
+	ethernetNetworkMgmt := ov.EthernetNetwork{Name: ethernet_network_mgmt, VlanId: 9, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	er1 := ovc.CreateEthernetNetwork(ethernetNetworkMgmt)
+	if er1 != nil {
+		fmt.Println("............. Ethernet Network Mgmt creation Failed:", er1)
+	} else {
+		fmt.Println("......Ethernet Network Mgmt creation is Successful")
+	}
+
+	//ISCSI
+	ethernetNetworkIscsi := ov.EthernetNetwork{Name: ethernet_network_iscsi, VlanId: 10, Purpose: "General", SmartLink: false, PrivateNetwork: false, ConnectionTemplateUri: "", EthernetNetworkType: "Tagged", Type: "ethernet-networkV4", InitialScopeUris: *initialScopeUris}
+	er2 := ovc.CreateEthernetNetwork(ethernetNetworkIscsi)
+	if er2 != nil {
+		fmt.Println("............. Ethernet Network Iscsi creation Failed:", er2)
+	} else {
+		fmt.Println("......Ethernet Network Iscsi creation is Successful")
+	}
+
 }

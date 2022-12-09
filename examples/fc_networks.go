@@ -2,33 +2,55 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
 )
 
 func main() {
 	var (
-		ClientOV    *ov.OVClient
-		testName    = "TestFCNetworkGOsdk"
-		new_fc_name = "RenamedFCNetwork"
-		falseVar    = false
+		ClientOV      *ov.OVClient
+		testName      = "TestFCNetworkGOsdk"
+		new_fc_name   = "RenamedFCNetwork"
+		fc_automation = "FC_GO"
+		falseVar      = false
+		scopeName     = "fcScope"
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := ClientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
-	scope := ov.Scope{Name: "ScopTest", Description: "Test from script", Type: "ScopeV3"}
-	_ = ovc.CreateScope(scope)
-	scp, _ := ovc.GetScopeByName("ScopTest")
-	initialScopeUris := &[]utils.Nstring{scp.URI}
 
+	//To run this example  uncomment below section to fill the ip and the credentials below or use a configuration file
+	/*		ovc := ClientOV.NewOVClient(
+			"ONEVIEW_OV_USER",
+			"ONEVIEW_OV_PASSWORD",
+			"ONEVIEW_OV_DOMAIN",
+			"ONEVIEW_OV_ENDPOINT",
+			false,
+			<apiversion>,
+			"*")*/
+
+	// Use configuratin file to set the ip and  credentails
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
+
+	fcScope := ov.Scope{Name: scopeName, Description: "Test from script", Type: "ScopeV3"}
+
+	errFC := ovc.CreateScope(fcScope)
+
+	if errFC != nil {
+		fmt.Println("Error Creating Scope: ", errFC)
+	}
+	scope, _ := ovc.GetScopeByName(scopeName)
+
+	initialScopeUris := &[]utils.Nstring{scope.URI}
 	fcNetwork := ov.FCNetwork{
 		AutoLoginRedistribution: falseVar,
 		Description:             "Test FC Network",
@@ -76,39 +98,29 @@ func main() {
 	} else {
 		fmt.Println("Deleted FCNetworks successfully...")
 	}
-
-	fcNetwork01 := ov.FCNetwork{
-		AutoLoginRedistribution: falseVar,
-		Description:             "Test FC Network 1",
-		LinkStabilityTime:       30,
-		FabricType:              "FabricAttach",
-		Name:                    "testName1",
-		Type:                    "fc-networkV4",
-	}
-	err = ovc.CreateFCNetwork(fcNetwork01)
-
-	fcNetwork02 := ov.FCNetwork{
-		AutoLoginRedistribution: falseVar,
-		Description:             "Test FC Network 2",
-		LinkStabilityTime:       30,
-		FabricType:              "FabricAttach",
-		Name:                    "testName2",
-		Type:                    "fc-networkV4",
-	}
-	err = ovc.CreateFCNetwork(fcNetwork02)
-
-	fcNetwork1, err := ovc.GetFCNetworkByName("testName1")
-	fcNetwork2, err = ovc.GetFCNetworkByName("testName2")
-
-	network_uris := &[]utils.Nstring{fcNetwork1.URI, fcNetwork2.URI}
-	bulkDeleteFCNetwork := ov.FCNetworkBulkDelete{FCNetworkUris: *network_uris}
-	err = ovc.DeleteScope("ScopTest")
-	err = ovc.DeleteBulkFcNetwork(bulkDeleteFCNetwork)
-
+	err = ovc.DeleteScope(scopeName)
 	if err != nil {
-		fmt.Println("............. FC Network Bulk-Deletion Failed:", err)
+		panic(err)
 	} else {
-		fmt.Println(".... FC Network Bulk-Delete is Successful")
+		fmt.Println("Deleted scope successfully...")
+	}
+
+	//****** create fc for automation*******************/
+	fcNetworkAuto := ov.FCNetwork{
+		AutoLoginRedistribution: falseVar,
+		Description:             "Test FC Network",
+		LinkStabilityTime:       30,
+		FabricType:              "FabricAttach",
+		Name:                    fc_automation,
+		Type:                    "fc-networkV4", //The Type value is for API>500.
+		//InitialScopeUris:        *initialScopeUris, //added for API>500
+	}
+
+	err1 := ovc.CreateFCNetwork(fcNetworkAuto)
+	if err1 != nil {
+		fmt.Println("Fc Network Creation Failed: ", err1)
+	} else {
+		fmt.Println("Fc Network created successfully...")
 	}
 
 }

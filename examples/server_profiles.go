@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
@@ -11,30 +9,42 @@ import (
 
 func main() {
 	var (
-		clientOV          *ov.OVClient
-		sp_name           = "SP"
-		sp_by_spt         = "SP-From-SPT"
-		new_sp_name       = "Renamed Server Profile"
-		server_hardware_1 = "0000A66101, bay 3"
-		scope             = "Auto-Scope"
-		spt_name          = "Auto-SPT"
+		ClientOV *ov.OVClient
 	)
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
 
-	initialScopeUris := new([]utils.Nstring)
-	scp, scperr := ovc.GetScopeByName(scope)
-	if scperr != nil {
-		*initialScopeUris = append(*initialScopeUris, scp.URI)
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
 	}
-	serverName, err := ovc.GetServerHardwareByName(server_hardware_1)
+	var (
+		sp_name         = config.ServerProfileConfig.ServerProfileName
+		sp_by_spt       = "sp_from_spt"
+		new_sp_name     = "Renamed Server Profile"
+		server_hardware = config.ServerProfileConfig.ServerHardwareName
+		scopeName       = "SP-Scope"
+		spt_name        = config.ServerProfileConfig.OvTemplatestring
+	)
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
+
+	spScope := ov.Scope{Name: scopeName, Description: "Test from script", Type: "ScopeV3"}
+
+	errSP := ovc.CreateScope(spScope)
+
+	if errSP != nil {
+		fmt.Println("Error Creating Scope: ", errSP)
+	}
+	scope, _ := ovc.GetScopeByName(scopeName)
+
+	initialScopeUris := &[]utils.Nstring{scope.URI}
+	serverName, err := ovc.GetServerHardwareByName(server_hardware)
+	fmt.Println(serverName.URI)
 	server_profile_create_map := ov.ServerProfile{
 		Type:              "ServerProfileV12",
 		Name:              sp_name,
@@ -161,6 +171,12 @@ func main() {
 		fmt.Println("Server Profile Delete Failed: ", err)
 	} else {
 		fmt.Println("#----------------Server Profile Deleted---------------#")
+	}
+	err = ovc.DeleteScope(scopeName)
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println("Deleted scope successfully...")
 	}
 
 }

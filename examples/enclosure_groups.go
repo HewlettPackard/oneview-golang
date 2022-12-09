@@ -2,31 +2,33 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/HewlettPackard/oneview-golang/ov"
 	"github.com/HewlettPackard/oneview-golang/utils"
-	"os"
-	"strconv"
 )
 
 func main() {
 	var (
-		clientOV    *ov.OVClient
+		ClientOV    *ov.OVClient
 		eg_name     = "TestEG"
 		new_eg_name = "RenamedEnclosureGroup"
 		//script      = "#TEST COMMAND"
 	)
 
-	apiversion, _ := strconv.Atoi(os.Getenv("ONEVIEW_APIVERSION"))
-	ovc := clientOV.NewOVClient(
-		os.Getenv("ONEVIEW_OV_USER"),
-		os.Getenv("ONEVIEW_OV_PASSWORD"),
-		os.Getenv("ONEVIEW_OV_DOMAIN"),
-		os.Getenv("ONEVIEW_OV_ENDPOINT"),
-		false,
-		apiversion,
-		"*")
+	config, config_err := ov.LoadConfigFile("config.json")
+	if config_err != nil {
+		fmt.Println(config_err)
+	}
+	ovc := ClientOV.NewOVClient(
+		config.OVCred.UserName,
+		config.OVCred.Password,
+		config.OVCred.Domain,
+		config.OVCred.Endpoint,
+		config.OVCred.SslVerify,
+		config.OVCred.ApiVersion,
+		config.OVCred.IfMatch)
 
-	lig, _ := ovc.GetLogicalInterconnectGroupByName("Auto-LIG")
+	lig, _ := ovc.GetLogicalInterconnectGroupByName(config.LigName)
 
 	ibMappings := new([]ov.InterconnectBayMap)
 	interconnectBay1 := ov.InterconnectBayMap{InterconnectBay: 3, LogicalInterconnectGroupUri: lig.URI}
@@ -40,14 +42,14 @@ func main() {
 	*initialScopeUris = append(*initialScopeUris, scp.URI)
 
 	enclosureGroup := ov.EnclosureGroup{Name: eg_name, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "External", EnclosureCount: 3}
-	enclosureGroup_auto := ov.EnclosureGroup{Name: "Auto-TestEG", InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "External", EnclosureCount: 3}
+	enclosureGroup_auto := ov.EnclosureGroup{Name: config.EgName, InterconnectBayMappings: *ibMappings, InitialScopeUris: *initialScopeUris, IpAddressingMode: "External", EnclosureCount: 3}
 	/*
 		 This is used for C7000 only
 		enclosureGroup := ov.EnclosureGroup{Name: eg_name, InitialScopeUris: *initialScopeUris, InterconnectBayMappings: *ibMappings}
 	*/
 
 	err := ovc.CreateEnclosureGroup(enclosureGroup)
-	_ = ovc.CreateEnclosureGroup(enclosureGroup_auto)
+	//_ = ovc.CreateEnclosureGroup(enclosureGroup_auto)
 	if err != nil {
 		fmt.Println("Enclosure Group Creation Failed: ", err)
 	} else {
@@ -131,5 +133,13 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("Deleted EnclosureGroup successfully...")
+
+	//*******Create EG for automation*************************//
+	err = ovc.CreateEnclosureGroup(enclosureGroup_auto)
+	if err != nil {
+		fmt.Println("Enclosure Group Creation Failed: ", err)
+	} else {
+		fmt.Println("Enclosure Group created successfully...")
+	}
 
 }
