@@ -234,4 +234,4 @@ Note: ```$ make test``` runs all the above mentioned tests.
 
 [HPE OneView Community Forums](http://hpe.com/info/oneviewcommunity)
 
-Learn more about HPE OneView at [hpe.com/info/oneview](https://hpe.com/info/oneview)
+Learn more about HPE OneView at [hpe.com/info/oneview](https://hpe.com/info/oneview)| [![Build status](https://github.com/HewlettPackard/oneview-golang/actions/workflows/ci.yml/badge.svg)](https://github.com/HewlettPackard/oneview-golang/actions/runs/5065825316) 
