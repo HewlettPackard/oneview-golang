@@ -1,0 +1,33 @@
+name: Raise a Pull Request
+
+on:
+  push:
+    branches:
+      - "PR"  # Support wildcard matching
+
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Debug information
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "GitHub Token: ${{ secrets.GITHUB_TOKEN }}"
+          echo "Source Branch: ${{ github.ref }}"
+          echo "Destination Branch: master"
+
+      - name: Raise pull request
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: "PR"                                 # If blank, default: triggered branch
+          destination_branch: "master" # If blank, default: master
+          pr_label: "automation" 
+          pr_title: "OV8.4 Validation" # Title of pull request
+          pr_reviewer: "nabhajit-ray,AvijitOS"
+          pr_body: ":crown: *An automated PR*"              # Full markdown support, requires pr_title to be set
+          pr_template: ".github/pull_request_template.md"   # Path to pull request template, requires pr_title to be set, excludes pr_body                         
+          pr_allow_empty: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
