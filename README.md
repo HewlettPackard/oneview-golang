@@ -234,4 +234,4 @@ Note: ```$ make test``` runs all the above mentioned tests.
 
 [HPE OneView Community Forums](http://hpe.com/info/oneviewcommunity)
 
-Learn more about HPE OneView at [hpe.com/info/oneview](https://hpe.com/info/oneview)|
+Learn more about HPE OneView at [hpe.com/info/oneview](https://hpe.com/info/oneview)
