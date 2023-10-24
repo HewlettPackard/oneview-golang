@@ -17,7 +17,7 @@ jobs:
         env:
           GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          CUSTOM_TAG: "v8.5.0"
+          CUSTOM_TAG: "v8.6.0"
       - name: Display
         run: echo ${{ steps.tag_and_prepare_release.outputs.new_tag }}
       - uses: actions/checkout@v2
@@ -26,4 +26,4 @@ jobs:
           name:  ${{ steps.tag_and_prepare_release.outputs.new_tag }}
           tag: ${{ steps.tag_and_prepare_release.outputs.new_tag }}
           body: See the <a href="https://github.com/HewlettPackard/oneview-golang/blob/master/CHANGELOG.md">CHANGELOG.md</a> for details.
-          token:  ${{secrets.GITHUB_TOKEN}} 
+          token:  ${{secrets.GITHUB_TOKEN}}
