@@ -23,6 +23,10 @@ func main() {
 		server_hardware = config.ServerProfileConfig.ServerHardwareName
 		scopeName       = "SP-Scope"
 		spt_name        = config.ServerProfileConfig.OvTemplatestring
+
+		// you can optionally ignore certain warnings when creatig a server profile
+		// omit flag parameter in SubmitNewProfile() or CreateProfileFromTemplate() for default value (none)
+		ignoreFlags = []ov.ForceFlag{ov.ForceIgnoreServerHealth}
 	)
 	ovc := ClientOV.NewOVClient(
 		config.OVCred.UserName,
@@ -52,7 +56,7 @@ func main() {
 		InitialScopeUris:  *initialScopeUris,
 	}
 
-	err = ovc.SubmitNewProfile(server_profile_create_map)
+	err = ovc.SubmitNewProfile(server_profile_create_map, ignoreFlags...)
 	if err != nil {
 		fmt.Println("Server Profile Create Failed: ", err)
 	} else {
@@ -76,7 +80,7 @@ func main() {
 		if err != nil {
 			fmt.Println("Failed to fetch server hardware name: ", err)
 		} else {
-			err = ovc.CreateProfileFromTemplate(sp_by_spt, spt, serverName)
+			err = ovc.CreateProfileFromTemplate(sp_by_spt, spt, serverName, ignoreFlags...)
 			if err != nil {
 				fmt.Println("Server Profile Create Failed: ", err)
 			} else {
