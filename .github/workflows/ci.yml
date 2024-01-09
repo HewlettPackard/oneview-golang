@@ -19,7 +19,7 @@ jobs:
         go-version: 1.18
 
     - name: Install Go Overalls
-      run: go install github.com/mattn/goveralls
+      run: go install github.com/mattn/goveralls@latest
 
     - name: Install Go Lint
       run: go install -u golang.org/x/lint/golint
