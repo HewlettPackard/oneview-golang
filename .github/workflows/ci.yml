@@ -22,7 +22,7 @@ jobs:
       run: go install github.com/mattn/goveralls@latest
 
     - name: Install Go Lint
-      run: go get -u golang.org/x/lint/golint
+      run: go install golang.org/x/lint/golint@latest
 
     - name: Running Test Script
       run: make test
