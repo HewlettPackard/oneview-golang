@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 	"reflect"
 	"strings"
 
@@ -452,20 +451,15 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile, ignoreFlags ...ForceFlag) (
 
 		isHardwareAvailable, err := c.GetAvailableServers(p.ServerHardwareURI.String())
 		if err != nil || isHardwareAvailable == false {
-			log.Errorf("Error getting available Hardware: %s", p.ServerHardwareURI.String())
 			if err != nil {
-				log.Warnf("Error: %s", err)
+				return fmt.Errorf("error getting available hardware: %v", err)
 			}
-			os.Exit(1)
 		}
-
-		server, err = c.GetServerHardwareByUri(p.ServerHardwareURI)
 	}
 
 	server, err = c.GetServerHardwareByUri(p.ServerHardwareURI)
-
 	if err != nil {
-		log.Warnf("Problem getting server hardware, %s", err)
+		return fmt.Errorf("problem getting server hardware, %v", err)
 	}
 
 	// power off the server so that we can add to SP
@@ -475,8 +469,9 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile, ignoreFlags ...ForceFlag) (
 
 	serverHardwareType, err := c.GetServerHardwareTypeByUri(server.ServerHardwareTypeURI)
 	if err != nil {
-		log.Warnf("Error getting server hardware type %s", err)
+		return fmt.Errorf("Error getting server hardware type %v", err)
 	}
+
 	serverHarwdareTypeGen := serverHardwareType.Generation
 
 	var emptyMgmtProcessorsStruct ManagementProcessors
@@ -499,15 +494,14 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile, ignoreFlags ...ForceFlag) (
 	data, err := c.RestAPICall(rest.POST, uri, p, forceFlags)
 	if err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error submitting new profile request: %s", err)
-		return err
+		return fmt.Errorf("Error submitting new profile request: %v", err)
 	}
 
 	log.Debugf("Response New Profile %s", data)
 	if err := json.Unmarshal([]byte(data), &t); err != nil {
 		t.TaskIsDone = true
-		log.Errorf("Error with task un-marshal: %s", err)
-		return err
+
+		return fmt.Errorf("Error with task un-marshal: %s", err)
 	}
 
 	err = t.Wait()
