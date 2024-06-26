@@ -17,7 +17,7 @@
 <br /> 
  
 ## HPE OneView 
-|  Endpoints  |  Verb  |  v4600  |  v4800  |  v5000  |  v5200  | v5400               | v5600               | v5800               | v6000 | v6200 |v6400 |
+|  Endpoints  |  Verb  |  v4600  |  v4800  |  v5000  |  v5200  | v5400               | v5600               | v5800               | v6000 | v6200 |v6400 | v6600               |
 | ----------------------------------------------------------------------------------------------- | :-----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: | :----------------------: |:----------------------: |
 | **Appliance Configuration Timeconfig**                                                          | 
 | <sub>/rest/appliance/configuration/timeconfig/locales</sub>                                     |            GET            |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |    :white_check_mark:    |
