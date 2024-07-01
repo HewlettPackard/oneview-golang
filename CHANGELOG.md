@@ -5,9 +5,6 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 #### Notes
 - This release extends supports of the SDK to Oneview API Version 6600
 
-### New Changes
-- Fixed hardware check during profile creation
-
 ### Oneview Features supported
 - Appliance Configuration Timeconfig
 - Appliance SSH Access
