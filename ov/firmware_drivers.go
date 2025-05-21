@@ -43,7 +43,6 @@ type FirmwareDrivers struct {
 	IsoFileName           string              `json:"isoFileName,omitempty"`
 	LastTaskUri           string              `json:"lastTaskUri,omitempty"`
 	Locations             map[string]string   `json:"locations,omitempty"`
-	Mirrorlist            map[string][]string `json:"mirrorlist,omitempty"`
 	Modified              string              `json:"modified,omitempty"`
 	Name                  string              `json:"name,omitempty"`
 	ParentBundle          parentBundle        `json:"parentBundle,omitempty"`
