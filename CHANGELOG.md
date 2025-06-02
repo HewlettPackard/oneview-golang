@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 #### Bug fixes & Enhancements:
 - (https://github.com/HewlettPackard/oneview-golang/pull/429) Added support for hostNVMeQualifiedNameType and hostNVMeQualifiedName 
+- (https://github.com/HewlettPackard/oneview-golang/pull/431) Removing mirror list from FW bundle response.
 
 ### Oneview Features supported
 - Appliance Configuration Timeconfig
