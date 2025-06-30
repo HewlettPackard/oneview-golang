@@ -11,15 +11,15 @@ ENV NO_PROXY=${no_proxy}
 
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
-# RUN apt-get update && apt-get install -y \
-#     python3 \
-#  && rm -rf /var/lib/apt/lists/*
-RUN apt update -y
-
-RUN apt install python3-pip -y
-
-
+# Install Python 3 and pip
+RUN apt-get update -y && \
+    apt-get install -y python3 python3-pip && \
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY . /go/src/github.com/HewlettPackard/oneview-golang
+
+# Build Go project (optional)
 RUN go build github.com/HewlettPackard/oneview-golang
 
