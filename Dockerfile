@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 
-# Install Go manually and necessary tools
-RUN apt-get update && apt-get install -y wget git tar build-essential && \
+# Install Go manually, required tools, and python3-pip
+RUN apt-get update && \
+    apt-get install -y wget git tar build-essential python3-pip && \
     wget https://golang.org/dl/go1.11.linux-amd64.tar.gz && \
     tar -C /usr/local -xzf go1.11.linux-amd64.tar.gz && \
     rm go1.11.linux-amd64.tar.gz && \
@@ -20,4 +21,4 @@ WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 COPY . .
 
 # Build the Go project
-RUN go build github.com/HewlettPackard/oneview-golang
+RUN go build .
