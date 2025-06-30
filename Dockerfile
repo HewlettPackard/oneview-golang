@@ -14,10 +14,14 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     apt-get clean
 
-# Copy project
 COPY . .
 
-# Build the Go app
+# install glide (assuming base image has go)
+RUN curl https://glide.sh/get | sh
+
+# install dependencies
+RUN glide install
+
 RUN go build -o oneview-golang .
 
 CMD ["./oneview-golang"]
