@@ -1,12 +1,13 @@
-FROM golang:1.20
+FROM golang:1.11
 
-WORKDIR /app
+ENV USER root
+WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
-COPY go.mod ./
-RUN go mod download || true  # `|| true` to avoid failure if go.sum is missing
+# Install python3 and pip
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . .
-
-RUN go build -o oneview-golang
-
-CMD ["./oneview-golang"]
+COPY . /go/src/github.com/HewlettPackard/oneview-golang
+RUN go build github.com/HewlettPackard/oneview-golang
