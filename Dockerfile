@@ -1,7 +1,7 @@
-FROM golang:latest
-
-ENV USER root
+FROM golang:1.11
+ 
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
-
-COPY . /go/src/github.com/HewlettPackard/oneview-golang
-RUN go build github.com/HewlettPackard/oneview-golang
+COPY . .
+ 
+RUN go mod tidy
+RUN go build -o oneview-golang
