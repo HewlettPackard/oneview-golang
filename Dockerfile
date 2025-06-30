@@ -1,13 +1,6 @@
 FROM golang:1.11
 
 ENV USER root
-ARG http_proxy
-ARG https_proxy
-ARG no_proxy
-
-ENV HTTP_PROXY=${http_proxy}
-ENV HTTPS_PROXY=${https_proxy}
-ENV NO_PROXY=${no_proxy}
 
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
