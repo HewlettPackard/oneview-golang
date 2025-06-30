@@ -12,6 +12,11 @@ RUN go mod download
 COPY . .
 
 # Build the application
+
+RUN go mod tidy
+
+RUN go mod vendor
+
 RUN go build -o oneview-golang .
 
 # Optionally set the entrypoint
