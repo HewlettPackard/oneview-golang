@@ -1,7 +1,18 @@
-FROM golang:1.11
+FROM golang:latest
 
-ENV USER root
-WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
+WORKDIR /app
 
-COPY . /go/src/github.com/HewlettPackard/oneview-golang
-RUN go build github.com/HewlettPackard/oneview-golang
+# Copy go.mod and go.sum first to leverage Docker cache
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the rest of the code
+COPY . .
+
+# Build the application
+RUN go build -o oneview-golang .
+
+# Optionally set the entrypoint
+CMD ["./oneview-golang"]
