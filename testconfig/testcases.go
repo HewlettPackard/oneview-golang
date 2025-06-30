@@ -8,18 +8,20 @@ import (
 
 // test case objects
 // { "name" : "PROTEST",
-//   "cases": [
-//      {
-//         "name": "TestName1",   // function name of the test case
-//         "enabled": true,        // flag to determine if we do the test case or skip
-//         "TestData" : map[string][interface{ }] // list of test data by name
-//         "ExpectsData" : map[string][interface{}] // expects results
-//      },
-//      {
-//        ....
-//      },
+//
+//	"cases": [
+//	   {
+//	      "name": "TestName1",   // function name of the test case
+//	      "enabled": true,        // flag to determine if we do the test case or skip
+//	      "TestData" : map[string][interface{ }] // list of test data by name
+//	      "ExpectsData" : map[string][interface{}] // expects results
+//	   },
+//	   {
+//	     ....
+//	   },
+//
 // ]
-//}
+// }
 type TestCases struct {
 	Name        string                 `json:"name,omitempty"`
 	Enabled     bool                   `json:"enabled,omitempty"`
