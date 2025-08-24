@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Dave Collins <dave@davec.name>
+ * Copyright (c) 2013-2016 Dave Collins <dave@davec.name>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -64,8 +64,17 @@ type ConfigState struct {
 	// inside these interface methods.  As a result, this option relies on
 	// access to the unsafe package, so it will not have any effect when
 	// running in environments without access to the unsafe package such as
-	// Google App Engine or with the "disableunsafe" build tag specified.
+	// Google App Engine or with the "safe" build tag specified.
 	DisablePointerMethods bool
+
+	// DisablePointerAddresses specifies whether to disable the printing of
+	// pointer addresses. This is useful when diffing data structures in tests.
+	DisablePointerAddresses bool
+
+	// DisableCapacities specifies whether to disable the printing of capacities
+	// for arrays, slices, maps and channels. This is useful when diffing
+	// data structures in tests.
+	DisableCapacities bool
 
 	// ContinueOnMethod specifies whether or not recursion should continue once
 	// a custom error or Stringer interface is invoked.  The default, false,
@@ -245,15 +254,15 @@ pointer addresses used to indirect to the final value.  It provides the
 following features over the built-in printing facilities provided by the fmt
 package:
 
-	* Pointers are dereferenced and followed
-	* Circular data structures are detected and handled properly
-	* Custom Stringer/error interfaces are optionally invoked, including
-	  on unexported types
-	* Custom types which only implement the Stringer/error interfaces via
-	  a pointer receiver are optionally invoked when passing non-pointer
-	  variables
-	* Byte arrays and slices are dumped like the hexdump -C command which
-	  includes offsets, byte values in hex, and ASCII output
+  - Pointers are dereferenced and followed
+  - Circular data structures are detected and handled properly
+  - Custom Stringer/error interfaces are optionally invoked, including
+    on unexported types
+  - Custom types which only implement the Stringer/error interfaces via
+    a pointer receiver are optionally invoked when passing non-pointer
+    variables
+  - Byte arrays and slices are dumped like the hexdump -C command which
+    includes offsets, byte values in hex, and ASCII output
 
 The configuration options are controlled by modifying the public members
 of c.  See ConfigState for options documentation.
@@ -286,12 +295,12 @@ func (c *ConfigState) convertArgs(args []interface{}) (formatters []interface{})
 
 // NewDefaultConfig returns a ConfigState with the following default settings.
 //
-// 	Indent: " "
-// 	MaxDepth: 0
-// 	DisableMethods: false
-// 	DisablePointerMethods: false
-// 	ContinueOnMethod: false
-// 	SortKeys: false
+//	Indent: " "
+//	MaxDepth: 0
+//	DisableMethods: false
+//	DisablePointerMethods: false
+//	ContinueOnMethod: false
+//	SortKeys: false
 func NewDefaultConfig() *ConfigState {
 	return &ConfigState{Indent: " "}
 }
