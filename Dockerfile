@@ -1,7 +1,18 @@
 FROM golang:1.11
 
 ENV USER root
+
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
+# Install Python 3 and pip
+RUN apt-get update -y && \
+    apt-get install -y python3 python3-pip && \
+    ln -sf /usr/bin/python3 /usr/bin/python && \
+    ln -sf /usr/bin/pip3 /usr/bin/pip && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY . /go/src/github.com/HewlettPackard/oneview-golang
+
+# Build Go project (optional)
 RUN go build github.com/HewlettPackard/oneview-golang
+
