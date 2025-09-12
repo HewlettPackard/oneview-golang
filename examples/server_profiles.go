@@ -67,7 +67,7 @@ func main() {
 	if err != nil {
 		fmt.Println("Server Profile Create Failed: ", err)
 	} else {
-		
+
 		if err != nil {
 			fmt.Println("Error marshaling task:", err)
 		} else {

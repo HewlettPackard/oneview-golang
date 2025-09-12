@@ -511,8 +511,8 @@ func (c *OVClient) SubmitNewProfile(p ServerProfile, ignoreFlags ...ForceFlag) (
 
 // SubmitNewProfileAsync - submit new profile template
 func (c *OVClient) SubmitNewProfileAsync(
-    p ServerProfile,
-    ignoreFlags ...ForceFlag,
+	p ServerProfile,
+	ignoreFlags ...ForceFlag,
 ) (*Task, error) {
 	var err error
 	log.Infof("Initializing creation of server profile for %s.", p.Name)
