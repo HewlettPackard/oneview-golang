@@ -63,6 +63,20 @@ func main() {
 		fmt.Println("#----------------Server Profile Created---------------#")
 	}
 
+	task, err := ovc.SubmitNewProfileAsync(server_profile_create_map, ignoreFlags...)
+	if err != nil {
+		fmt.Println("Server Profile Create Failed: ", err)
+	} else {
+		
+		if err != nil {
+			fmt.Println("Error marshaling task:", err)
+		} else {
+			fmt.Println("Task URI:")
+			fmt.Println(string(task.URI))
+		}
+		fmt.Println("#----------------Server Profile Creation Task Initiated---------------#")
+	}
+
 	sort := ""
 	server_name := ov.ServerHardwareType{}
 	spt, err := ovc.GetProfileTemplateByName(spt_name)
