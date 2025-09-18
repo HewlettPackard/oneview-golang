@@ -63,6 +63,29 @@ func main() {
 		fmt.Println("#----------------Server Profile Created---------------#")
 	}
 
+	// Example: Submit a new Server Profile asynchronously
+	//
+	// This example demonstrates how to use the `SubmitNewProfileAsync` function to create
+	// a new server profile in OneView. The call is asynchronous, meaning it immediately
+	// returns a Task object instead of waiting for the operation to finish.
+	//
+	// The returned Task contains the URI that can be polled or monitored until the
+	// profile creation completes. If the server hardware already has a profile assigned
+	// or if the hardware is powered on, an error will be returned.
+	task, err := ovc.SubmitNewProfileAsync(server_profile_create_map, ignoreFlags...)
+	if err != nil {
+		fmt.Println("Server Profile Create Failed: ", err)
+	} else {
+
+		if err != nil {
+			fmt.Println("Error marshaling task:", err)
+		} else {
+			fmt.Println("Task URI:")
+			fmt.Println(string(task.URI))
+		}
+		fmt.Println("#----------------Server Profile Creation Task Initiated---------------#")
+	}
+
 	sort := ""
 	server_name := ov.ServerHardwareType{}
 	spt, err := ovc.GetProfileTemplateByName(spt_name)
