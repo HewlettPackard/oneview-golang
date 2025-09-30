@@ -297,7 +297,8 @@ func (s Server) GetInterfaceFromMac(mac string) (Interface, error) {
 }
 
 // GetPublicIPV4 returns the public ip interface
-//                 usually called after an os build plan is applied
+//
+//	usually called after an os build plan is applied
 func (s Server) GetPublicIPV4() (string, error) {
 	var position int
 	position, inetItem := s.GetValueItem("public_ip", "server")
@@ -552,7 +553,7 @@ func (c *ICSPClient) GetServerByName(name string) (Server, error) {
 	return srv, nil
 }
 
-//GetServerByHostName use the server hostname automatically assigned to get the server
+// GetServerByHostName use the server hostname automatically assigned to get the server
 func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
 	var (
 		servers ServerList
@@ -580,7 +581,7 @@ func (c *ICSPClient) GetServerByHostName(hostname string) (Server, error) {
 	return srv, nil
 }
 
-//GetServerBySerialNumber use the serial number to find the server
+// GetServerBySerialNumber use the serial number to find the server
 func (c *ICSPClient) GetServerBySerialNumber(serial string) (Server, error) {
 	var (
 		servers ServerList
