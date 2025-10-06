@@ -141,7 +141,7 @@ type KeyManager struct {
 	PrimaryServerAddress   string `json:"-"`
 	PrimaryServerPort      int    `json:"-"`
 	SecondaryServerAddress string `json:"-"`
-	SecondaryServerPort    int    `json:"-"`
+	SecondaryServerPort    *int   `json:"-"`
 	RedundancyRequired     *bool  `json:"-"`
 	GroupName              string `json:"-"`
 	CertificateName        string `json:"-"`
@@ -270,6 +270,7 @@ type ServerProfile struct {
 	ServiceManager             string                 `json:"serviceManager,omitempty"`             //Name of a service manager that is designated owner of the profile
 	State                      string                 `json:"state,omitempty"`                      // "state": "Normal",
 	Status                     string                 `json:"status,omitempty"`                     // "status": "Critical",
+	TaskID                     utils.Nstring          `json:"taskId,omitempty"`                    
 	TaskURI                    utils.Nstring          `json:"taskUri,omitempty"`                    // "taskUri": "/rest/tasks/6F0DF438-7D30-41A2-A36D-62AB866BC7E8",
 	TemplateCompliance         string                 `json:"templateCompliance,omitempty"`         // v2 Compliant, NonCompliant, Unknown
 	Type                       string                 `json:"type,omitempty"`                       // "type": "ServerProfileV4",
