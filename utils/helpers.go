@@ -23,8 +23,8 @@ func GetBoolPointer(value bool) *bool {
 
 // GetOptionalIntPointer  returns pointer value
 func GetOptionalIntPointer(value int) *int {
-    if value == 0 {
-        return nil
-    }
-    return &value
+	if value == 0 {
+		return nil
+	}
+	return &value
 }
