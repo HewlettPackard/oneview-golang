@@ -1,6 +1,110 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)#
 
+# [v10.2.0]
+
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 7800
+
+#### Bug fixes & Enhancements:
+- (https://github.com/HewlettPackard/oneview-golang/pull/429) Added support for hostNVMeQualifiedNameType and hostNVMeQualifiedName 
+- (https://github.com/HewlettPackard/oneview-golang/pull/431) Removing mirror list from FW bundle response.
+
+### Oneview Features supported
+- Appliance Configuration Timeconfig
+- Appliance SSH Access
+- Appliance SNMP V1 Trap Destinations
+- Appliance SNMPv3 Trap Destination
+- Appliance SNMPv3 User
+- Appliance Time and Locale Configuration
+- Connection Template
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Firmware Drivers
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- ID Pools
+- ID Pools IPv4 Ranges
+- ID Pools Ipv4 Subnets- 
+- Interconnects
+- Interconnect Types
+- Labels Resource
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Rack Managers
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+
+# [v10.1.0]
+
+#### Notes
+- This release extends supports of the SDK to Oneview API Version 7800
+
+#### Bug fixes & Enhancements:
+- (https://github.com/HewlettPackard/oneview-golang/pull/429) Added support for hostNVMeQualifiedNameType and hostNVMeQualifiedName 
+- (https://github.com/HewlettPackard/oneview-golang/pull/431) Removing mirror list from FW bundle response.
+
+### Oneview Features supported
+- Appliance Configuration Timeconfig
+- Appliance SSH Access
+- Appliance SNMP V1 Trap Destinations
+- Appliance SNMPv3 Trap Destination
+- Appliance SNMPv3 User
+- Appliance Time and Locale Configuration
+- Connection Template
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Firmware Drivers
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- ID Pools
+- ID Pools IPv4 Ranges
+- ID Pools Ipv4 Subnets- 
+- Interconnects
+- Interconnect Types
+- Labels Resource
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Rack Managers
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
+
 # [v10.0.0]
 
 #### Notes
