@@ -15,10 +15,10 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup environment for Docker image publish
       run: |
-        echo "RELEASE_VERSION=$(echo ${GITHUB_REF:10})" >> $GITHUB_ENV
+        echo "RELEASE_VERSION=$(echo ${GITHUB_REF:11})" >> $GITHUB_ENV
     - name: Login to Docker Hub
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
     - name: Build the tagged Docker image
-      run: docker build . --file Dockerfile --tag hewlettpackardenterprise/hpe-oneview-sdk-for-golang:${{ env.RELEASE_VERSION }}-OV10.2
+      run: docker build . --file Dockerfile --tag hewlettpackardenterprise/hpe-oneview-sdk-for-golang:${{ env.RELEASE_VERSION }}-OV11.0
     - name: Push the tagged Docker image
-      run: docker push hewlettpackardenterprise/hpe-oneview-sdk-for-golang:${{ env.RELEASE_VERSION }}-OV10.2
+      run: docker push hewlettpackardenterprise/hpe-oneview-sdk-for-golang:${{ env.RELEASE_VERSION }}-OV11.0
