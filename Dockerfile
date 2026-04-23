@@ -18,13 +18,11 @@ ENV no_proxy=$NO_PROXY
 RUN apt-get update \
     -o Acquire::AllowInsecureRepositories=true \
     -o Acquire::AllowDowngradeToInsecureRepositories=true && \
-    apt-get install -y --allow-unauthenticated \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
         python3 \
         python3-pip && \
-    ln -s /usr/bin/python3 /usr/bin/python && \
-    pip3 install --no-cache-dir --upgrade pip && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 COPY . .
 
