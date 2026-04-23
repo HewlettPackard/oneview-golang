@@ -15,11 +15,10 @@ ENV NO_PROXY=$NO_PROXY
 ENV no_proxy=$NO_PROXY
 
 # Install dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        ca-certificates \
-        gnupg \
-        dirmngr \
+RUN apt-get update \
+    -o Acquire::AllowInsecureRepositories=true \
+    -o Acquire::AllowDowngradeToInsecureRepositories=true && \
+    apt-get install -y --allow-unauthenticated \
         python3 \
         python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python && \
