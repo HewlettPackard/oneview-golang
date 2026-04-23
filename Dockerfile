@@ -25,5 +25,3 @@ RUN apt-get update \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 COPY . .
-
-RUN go env -w GO111MODULE=off && go build ./...
