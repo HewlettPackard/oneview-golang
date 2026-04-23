@@ -26,4 +26,4 @@ RUN apt-get update \
 
 COPY . .
 
-RUN go build github.com/HewlettPackard/oneview-golang
+RUN go env -w GO111MODULE=off && go build ./...
