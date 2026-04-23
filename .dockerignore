@@ -5,7 +5,6 @@ cover
 .git
 .gitignore
 node_modules
-vendor
 firmware
 *.log
 *.txt
