@@ -1,7 +1,27 @@
-FROM golang:1.11
+FROM golang:1.20
 
-ENV USER root
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 
-COPY . /go/src/github.com/HewlettPackard/oneview-golang
-RUN go build github.com/HewlettPackard/oneview-golang
+# Proxy config (CRITICAL for your environment)
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+
+ENV HTTP_PROXY=$HTTP_PROXY
+ENV HTTPS_PROXY=$HTTPS_PROXY
+ENV http_proxy=$HTTP_PROXY
+ENV https_proxy=$HTTPS_PROXY
+ENV NO_PROXY=$NO_PROXY
+ENV no_proxy=$NO_PROXY
+
+# Install dependencies
+RUN apt-get update \
+    -o Acquire::AllowInsecureRepositories=true \
+    -o Acquire::AllowDowngradeToInsecureRepositories=true && \
+    apt-get install -y --no-install-recommends --allow-unauthenticated \
+        python3 \
+        python3-pip && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+COPY . .
