@@ -54,7 +54,7 @@ func TestNewNetConfig(t *testing.T) {
 
 // TODO TestNewNetConfigInterface - verify we can create an interface type
 
-//TestNetConfigAddAllDHCP - verify we can convert a servers interfaces to dhcp
+// TestNetConfigAddAllDHCP - verify we can convert a servers interfaces to dhcp
 func TestNetConfigAddAllDHCP(t *testing.T) {
 	var (
 		d *ICSPTest

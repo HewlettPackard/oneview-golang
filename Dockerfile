@@ -1,4 +1,4 @@
-FROM golang:1.11
+FROM golang:1.23
 
 ENV USER root
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
