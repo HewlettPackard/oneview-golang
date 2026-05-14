@@ -5,7 +5,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -201,7 +201,7 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 	// RESET QUERY PARAMETERS AFTER EVERY CALL
 	c.SetQueryString(nil)
 
-	data, err := ioutil.ReadAll(resp.Body)
+	data, err := io.ReadAll(resp.Body)
 	if !c.isOkStatus(resp.StatusCode) {
 		type apiErr struct {
 			Message string `json:"message"`
