@@ -1,7 +1,7 @@
-# PQC Story 1+3: Go 1.24+ provides native PQC hybrid key exchange in crypto/tls.
-# No OpenSSL dependency needed.
-# See: PQC Enablement Checklist Section 1.1.1, 2.1.4
-FROM golang:1.24
+# PQC Story 1: Go 1.26+ provides finalized FIPS 203 PQC hybrid key exchange (X25519MLKEM768)
+# in crypto/tls, enabled by default. No OpenSSL dependency needed.
+# See: PQC Enablement Checklist Section 2.1.4
+FROM golang:1.26
 
 WORKDIR /go/src/github.com/HewlettPackard/oneview-golang
 

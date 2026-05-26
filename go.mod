@@ -1,6 +1,6 @@
 module github.com/HewlettPackard/oneview-golang
 
-go 1.24
+go 1.26
 
 require (
 	github.com/docker/machine v0.16.2
