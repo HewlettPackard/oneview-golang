@@ -1,5 +1,16 @@
 All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)#
+This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html)
+
+# [Unreleased]
+
+#### Bug fixes & Enhancements
+- Updated module/toolchain baseline to Go 1.26.
+- Updated CI workflow to Go 1.26.
+- Updated Docker build image to `golang:1.26`.
+- Refactored REST transport to per-client HTTP transport.
+- Enforced TLS 1.3 minimum for REST calls.
+- Wired `SSLVerify` into TLS configuration (`InsecureSkipVerify: !SSLVerify`).
+- Moved proxy configuration to per-request/per-client transport handling.
 
 # [v11.3.0]
 
