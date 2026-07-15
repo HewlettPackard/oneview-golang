@@ -3,6 +3,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 # [Unreleased]
 
+#### Notes
+- This release extends supports of the SDK to Oneview API Version <api_version>
+
 #### Bug fixes & Enhancements
 - Updated module/toolchain baseline to Go 1.26.
 - Updated CI workflow to Go 1.26.
@@ -11,6 +14,49 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Enforced TLS 1.3 minimum for REST calls.
 - Wired `SSLVerify` into TLS configuration (`InsecureSkipVerify: !SSLVerify`).
 - Moved proxy configuration to per-request/per-client transport handling.
+
+### Oneview Features supported
+- Appliance Configuration Timeconfig
+- Appliance SSH Access
+- Appliance SNMP V1 Trap Destinations
+- Appliance SNMPv3 Trap Destination
+- Appliance SNMPv3 User
+- Appliance Time and Locale Configuration
+- Connection Template
+- Deployment Plan
+- Ethernet Network
+- Enclosure
+- Enclosure Group
+- FC Network
+- FCOE Network
+- Firmware Drivers
+- Hypervisor Manager
+- Hypervisor Cluster Profile
+- ID Pools
+- ID Pools IPv4 Ranges
+- ID Pools Ipv4 Subnets- 
+- Interconnects
+- Interconnect Types
+- Labels Resource
+- Logical Enclosure
+- Logical Interconnect Group
+- Logical Interconnects
+- Network Set
+- Rack Managers
+- Scope
+- Server Certificates
+- Server Hardware
+- Server Hardware Types
+- Server Profile
+- Server Profile Template
+- Storage Pool
+- Storage System
+- Storage Template
+- Storage Volume
+- Storage Volume Attachments
+- Tasks
+- Uplink Set
+
 
 # [v11.3.0]
 
