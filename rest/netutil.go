@@ -71,6 +71,10 @@ func (c *Client) newHTTPClient() *http.Client {
 		// CurvePreferences is deprecated in Go 1.26 and must NOT be used.
 	}
 
+	// TEMP DEBUG: remove after Jenkins validation is complete.
+	log.Infof("SHYAMALA TEMP TLS CONFIG => SSLVerify=%t InsecureSkipVerify=%t MinVersion=0x%04x",
+		c.SSLVerify, tlsConfig.InsecureSkipVerify, tlsConfig.MinVersion)
+
 	transport := &http.Transport{
 		TLSClientConfig: tlsConfig,
 	}
@@ -212,6 +216,18 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	// TEMP DEBUG: remove after Jenkins validation is complete.
+	if resp.TLS != nil {
+		log.Debugf("SHYAMALA TEMP TLS HANDSHAKE => complete=%t version=0x%04x cipher=%s serverName=%s verifiedChains=%d",
+			resp.TLS.HandshakeComplete,
+			resp.TLS.Version,
+			tls.CipherSuiteName(resp.TLS.CipherSuite),
+			resp.TLS.ServerName,
+			len(resp.TLS.VerifiedChains))
+	} else {
+		log.Debugf("SHYAMALA TEMP TLS HANDSHAKE => no TLS state on response")
+	}
 
 	// TODO: CLeanup Later
 	// DEBUGGING WHILE WE WORK
