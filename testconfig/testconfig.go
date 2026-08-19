@@ -5,22 +5,24 @@ package testconfig
 // configured for various test target environments.
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 
 	"github.com/docker/machine/libmachine/log"
 )
 
-//
 // test case objects
-//  see testcases.go for test case methods
+//
+//	see testcases.go for test case methods
+//
 // { "name" : "PROTEST",
-//   "cases": [
-//      {
-//        ...
-//      },
+//
+//	"cases": [
+//	   {
+//	     ...
+//	   },
+//
 // ]
-//}
+// }
 type TestConfig struct {
 	Cases []TestCases `json:"cases,omitempty"` // "cases":[]
 	Name  string      `json:"name,omitempty"`  // "name": "PROTEST",
@@ -49,7 +51,6 @@ func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
 // log.Infof("tc compare s -> %s\n", tc.EqualFaceS(tc.GetExpectsData("TestGetAPIVersion", "FakeData"), "foo"))
 // log.Infof("get no test data -> %+v \n", tc.GetTestData("TestGetAPIVersion", "Surprise"))
 // log.Infof("is test enabled -> %+v \n", tc.IsTestEnabled("TestGetAPIVersion"))
-//
 func (tc *TestConfig) GetTestingConfiguration(config_name string) {
 	var (
 		package_root  string
@@ -64,10 +65,10 @@ func (tc *TestConfig) GetTestingConfiguration(config_name string) {
 		test_data_dir = Pkg.JoinPath([]string{package_full_dir,
 			os.Getenv("TESTCONFIG_JSON_DATA_DIR")})
 		if found, _ := Pkg.DirExists(test_data_dir); found == true {
-			files, _ := ioutil.ReadDir(test_data_dir)
+			files, _ := os.ReadDir(test_data_dir)
 			for _, f := range files {
 				log.Debugf("working on f -> %+v", f)
-				data, err := ioutil.ReadFile(Pkg.JoinPath([]string{test_data_dir, f.Name()}))
+				data, err := os.ReadFile(Pkg.JoinPath([]string{test_data_dir, f.Name()}))
 				if err != nil {
 					log.Errorf("File error : %v\n", err)
 					os.Exit(1)

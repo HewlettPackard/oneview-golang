@@ -30,6 +30,15 @@ From Release 8.1, Image streamer is no longer supported.
 ## Installation
 HPE OneView SDK for Go can be installed from Source or Docker container installation methods. You can either use a docker container which will have the HPE OneView SDK for Go installed or perform local installation.
 
+### PQC and TLS Requirements
+
+- Go 1.26 or later is required.
+- OneView API communication enforces TLS 1.3 minimum.
+- PQC hybrid key exchange support is provided by Go 1.26+ `crypto/tls` defaults.
+- `ONEVIEW_SSLVERIFY` controls certificate validation:
+  - `true`: validates certificate chain and hostname.
+  - `false`: skips certificate validation (recommended only for lab/test environments).
+
 ###  Docker Setup
 The light weight containerized version of the HPE OneView SDK for Go is available in the [Docker Store](https://hub.docker.com/r/hewlettpackardenterprise/hpe-oneview-sdk-for-golang). The Docker Store image tag consist of two sections: <sdk_version-OV_version>
 
@@ -48,13 +57,13 @@ $ docker run -it hewlettpackardenterprise/hpe-oneview-sdk-for-golang:v11.4.0-OV1
 ```bash 
 # Install the dependent packages
 $ apt-get install build-essential git wget
-$ wget https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz
+$ wget https://go.dev/dl/go1.26.5.linux-amd64.tar.gz
 ```
 
 ```bash 
-# untar with "tar -zxvf go1.15.2.linux-amd64.tar.gz"
+# untar with "tar -zxvf go1.26.5.linux-amd64.tar.gz"
 # move go/ to /usr/local/ 
-# mv go1.15.2.linux-amd64.tar.gz /usr/local/ 
+# mv go/ /usr/local/ 
 # mkdir ~/go
 ```
 
@@ -83,7 +92,7 @@ $ export ONEVIEW_OV_DOMAIN=LOCAL
 $ export ONEVIEW_SSLVERIFY=false
 $ export ONEVIEW_APIVERSION=<ov_apiversion>
 ```
-Note: Currently this SDK supports OneView API 8200 minimally, where we can test OneView API 8200 version with this SDK. If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
+Note: This SDK supports newer OneView API versions (see release notes and `endpoints-support.md`). If API version is not provided then appliance's API version will be used. If API version used is not supported then error will be thrown.
 
 ### OneView Client Configuration
 
@@ -187,7 +196,7 @@ $ make test
 ```
 
 #### Without docker
-* Install golang 1.5 or higher(We recommend using Go 1.15)
+* Install golang 1.26 or higher (Go 1.26+ required for PQC-ready TLS defaults)
 * Install go packages listed in .travis.yml
 
 The Test Data for these Tests are  supplied through JSON file stored at `test/data for example config_EGSL_tb200.json`

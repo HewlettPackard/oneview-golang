@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -98,6 +99,50 @@ func TestHeaderAuthenticaiton(t *testing.T) {
 		t.Logf("Expected response body to be %q, got %q instead", out, s)
 		t.Fail()
 	}
+}
+
+func TestNewHTTPClientTLSConfig(t *testing.T) {
+	t.Run("SSLVerify true enables cert verification", func(t *testing.T) {
+		c := &Client{SSLVerify: true}
+		hc := c.newHTTPClient()
+		transport, ok := hc.Transport.(*http.Transport)
+		if !ok {
+			t.Fatalf("expected *http.Transport, got %T", hc.Transport)
+		}
+
+		if transport.TLSClientConfig == nil {
+			t.Fatal("expected TLSClientConfig to be initialized")
+		}
+
+		if transport.TLSClientConfig.MinVersion != tls.VersionTLS13 {
+			t.Fatalf("expected MinVersion TLS1.3, got %v", transport.TLSClientConfig.MinVersion)
+		}
+
+		if transport.TLSClientConfig.InsecureSkipVerify {
+			t.Fatal("expected InsecureSkipVerify=false when SSLVerify=true")
+		}
+	})
+
+	t.Run("SSLVerify false disables cert verification", func(t *testing.T) {
+		c := &Client{SSLVerify: false}
+		hc := c.newHTTPClient()
+		transport, ok := hc.Transport.(*http.Transport)
+		if !ok {
+			t.Fatalf("expected *http.Transport, got %T", hc.Transport)
+		}
+
+		if transport.TLSClientConfig == nil {
+			t.Fatal("expected TLSClientConfig to be initialized")
+		}
+
+		if transport.TLSClientConfig.MinVersion != tls.VersionTLS13 {
+			t.Fatalf("expected MinVersion TLS1.3, got %v", transport.TLSClientConfig.MinVersion)
+		}
+
+		if !transport.TLSClientConfig.InsecureSkipVerify {
+			t.Fatal("expected InsecureSkipVerify=true when SSLVerify=false")
+		}
+	})
 }
 
 func getServer(h func(http.ResponseWriter, *http.Request)) (*httptest.Server, string, string) {
