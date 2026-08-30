@@ -11,16 +11,19 @@ import (
 	"github.com/docker/machine/libmachine/log"
 )
 
-//
 // test case objects
-//  see testcases.go for test case methods
+//
+//	see testcases.go for test case methods
+//
 // { "name" : "PROTEST",
-//   "cases": [
-//      {
-//        ...
-//      },
+//
+//	"cases": [
+//	   {
+//	     ...
+//	   },
+//
 // ]
-//}
+// }
 type TestConfig struct {
 	Cases []TestCases `json:"cases,omitempty"` // "cases":[]
 	Name  string      `json:"name,omitempty"`  // "name": "PROTEST",
@@ -49,7 +52,6 @@ func (tc *TestConfig) UnMarshallTestingConfig(json_data []byte) {
 // log.Infof("tc compare s -> %s\n", tc.EqualFaceS(tc.GetExpectsData("TestGetAPIVersion", "FakeData"), "foo"))
 // log.Infof("get no test data -> %+v \n", tc.GetTestData("TestGetAPIVersion", "Surprise"))
 // log.Infof("is test enabled -> %+v \n", tc.IsTestEnabled("TestGetAPIVersion"))
-//
 func (tc *TestConfig) GetTestingConfiguration(config_name string) {
 	var (
 		package_root  string

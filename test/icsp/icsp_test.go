@@ -16,7 +16,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/icsp"
 )
 
-//TODO: need to learn a better way of how integration testing works with bats
+// TODO: need to learn a better way of how integration testing works with bats
 // and use that instead
 // Acceptance test
 // 1) craete an environment, /.oneview.env, script to export these values:
@@ -25,15 +25,15 @@ import (
 // ONEVIEW_ICSP_USER=user
 // ONEVIEW_ICSP_DOMAIN=LOCAL
 // ONEVIEW_SSLVERIFY=true
-// 2) setup gotest container
-//    docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name testicsp docker-machine
-//    exit
-//    docker start goaccept
-// 3) setup alias:
-//   alias testicsp='docker exec goaccept godep go test -test.v=true --short'
-// 4) to refresh env options, use
-//    docker rm -f testicsp
-//    ... repeat steps 2
+//  2. setup gotest container
+//     docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name testicsp docker-machine
+//     exit
+//     docker start goaccept
+//  3. setup alias:
+//     alias testicsp='docker exec goaccept godep go test -test.v=true --short'
+//  4. to refresh env options, use
+//     docker rm -f testicsp
+//     ... repeat steps 2
 type ICSPTest struct {
 	Tc     *testconfig.TestConfig
 	Client *icsp.ICSPClient
@@ -95,7 +95,7 @@ func getTestDriverU() (*ICSPTest, *icsp.ICSPClient) {
 }
 
 // implement create server unt test
-//TODO: This test requires a server profile to have been created
+// TODO: This test requires a server profile to have been created
 func TestCreateServer(t *testing.T) {
 	var (
 		d              *ICSPTest
@@ -148,7 +148,7 @@ func TestInterface(t *testing.T) {
 }
 
 // TestPreApplyDeploymentJobs - setup some information from icsp
-//TODO: This test requires a server profile to have been created
+// TODO: This test requires a server profile to have been created
 func TestPreApplyDeploymentJobs(t *testing.T) {
 	var (
 		d                     *ICSPTest
@@ -204,7 +204,7 @@ func TestPreApplyDeploymentJobs(t *testing.T) {
 
 // integrated acceptance test
 // TestSaveServer implement save server
-//TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
+// TODO: a workaround to figuring out how to bubble up public ip address information from the os to icsp after os build plan provisioning
 // @docker_user@ "@public_key@" @docker_hostname@ "@proxy_config@" "@proxy_enable@" "@interface@"
 func TestApplyDeploymentJobs(t *testing.T) {
 	var (
@@ -262,8 +262,8 @@ func TestApplyDeploymentJobs(t *testing.T) {
 	}
 }
 
-//TestPostApplyDeploymentJobs test job Task
-//TODO: This test requires a server profile to have been created
+// TestPostApplyDeploymentJobs test job Task
+// TODO: This test requires a server profile to have been created
 func TestPostApplyDeploymentJobs(t *testing.T) {
 	var (
 		d *ICSPTest
