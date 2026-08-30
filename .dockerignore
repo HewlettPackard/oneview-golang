@@ -2,3 +2,13 @@
 *.log
 cover
 .dockerfile*
+.git
+.gitignore
+node_modules
+firmware
+*.log
+*.txt
+test
+testconfig
+sdkAutomator
+build
