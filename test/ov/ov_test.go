@@ -10,7 +10,7 @@ import (
 	"github.com/HewlettPackard/oneview-golang/ov"
 )
 
-//TODO: need to learn a better way of how integration testing works with bats
+// TODO: need to learn a better way of how integration testing works with bats
 // and use that instead
 // Acceptance test
 // 1) craete an environment, /.oneview.env, script to export these values:
@@ -19,15 +19,15 @@ import (
 // ONEVIEW_OV_USER=user
 // ONEVIEW_OV_DOMAIN=LOCAL
 // ONEVIEW_SSLVERIFY=true
-// 2) setup gotest container
-//    docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name goaccept docker-machine
-//    exit
-//    docker start goaccept
-// 3) setup alias:
-//   alias goaccept='docker exec goaccept godep go test -test.v=true --short'
-// 4) to refresh env options, use
-//    docker rm -f goaccept
-//    ... repeat steps 2
+//  2. setup gotest container
+//     docker run -it --env-file ./.oneview.env -v $(pwd):/go/src/github.com/docker/machine --name goaccept docker-machine
+//     exit
+//     docker start goaccept
+//  3. setup alias:
+//     alias goaccept='docker exec goaccept godep go test -test.v=true --short'
+//  4. to refresh env options, use
+//     docker rm -f goaccept
+//     ... repeat steps 2
 type OVTest struct {
 	Tc     *testconfig.TestConfig
 	Client *ov.OVClient
