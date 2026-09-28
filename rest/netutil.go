@@ -156,11 +156,9 @@ func (c *Client) RestAPICall(method Method, path string, options interface{}, qu
 		return nil, fmt.Errorf("Error with request: %v - %q", Url, err)
 	}
 
-	// Build TLS config from the client settings.
-	// MinVersion TLS 1.3 enables Go's PQC hybrid key exchange (X25519MLKEM768) automatically on Go 1.24+.
+	// Build TLS config from the client settings, honoring SSLVerify.
 	tlsConfig := &tls.Config{
-		MinVersion:         tls.VersionTLS13,
-		InsecureSkipVerify: !c.SSLVerify, // honor SSLVerify: true=verify, false=skip
+		InsecureSkipVerify: !c.SSLVerify, // true=verify, false=skip
 	}
 	transport := &http.Transport{
 		TLSClientConfig: tlsConfig,
