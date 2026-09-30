@@ -310,7 +310,7 @@ func TestGetServerBySerialNumber(t *testing.T) {
 	}
 }
 
-//TODO: implement test for delete
+// TODO: implement test for delete
 func TestDeleteServer(t *testing.T) {
 	var c *icsp.ICSPClient
 	if os.Getenv("ICSP_TEST_ACCEPTANCE") == "true" {
