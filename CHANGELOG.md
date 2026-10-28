@@ -3,7 +3,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 # [v11.5.0]
 
 #### Notes
-- This release extends supports of the SDK to Oneview API Version 9000
+- This release extends supports of the SDK to Oneview API Version 9200
 
 ### Oneview Features supported
 - Appliance Configuration Timeconfig
