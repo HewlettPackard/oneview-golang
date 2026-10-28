@@ -15,7 +15,7 @@ You can find the latest supported HPE OneView Go SDK [here](https://github.com/H
 
 ## What's New
 
-HPE OneView Go library extends support of the SDK to OneView REST API version 9000 (OneView v11.50)
+HPE OneView Go library extends support of the SDK to OneView REST API version 9200 (OneView v11.50)
 
 Please refer to [notes](https://github.com/HewlettPackard/oneview-golang/blob/master/CHANGELOG.md) for more information on the changes , features supported and issues fixed in this version
 
